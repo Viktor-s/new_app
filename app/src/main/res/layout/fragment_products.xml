@@ -1,13 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Large Text"
-        android:id="@+id/textView" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/ProductTitile"
+                android:text="@string/product_title_credit"/>
+
+            <ImageView
+                android:id="@+id/credit_without_bail_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/credit_without_bail"/>
+
+            <TextView
+                android:id="@+id/credit_without_bail_text"
+                style="@style/ProductDescription"
+                android:text="@string/product_description_credit_without_bail" />
+
+            <ImageView
+                android:id="@+id/credit_bail_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/airline_tickets"/>
+
+            <TextView
+                android:id="@+id/credit_bail_text"
+                style="@style/ProductDescription"
+                android:text="@string/product_description_credit_bail" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+
+
+
 </LinearLayout>
