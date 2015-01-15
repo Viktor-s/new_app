@@ -2,6 +2,7 @@ package me.justup.upme.fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,9 @@ import static me.justup.upme.utils.LogUtils.*;
 
 public class NewsFragment extends Fragment {
     private static final String TAG = makeLogTag(NewsFragment.class);
+
+    private RecyclerView mRecyclerView;
+
 
 
     @Override
