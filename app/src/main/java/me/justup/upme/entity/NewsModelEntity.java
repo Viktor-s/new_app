@@ -1,4 +1,4 @@
-package me.justup.upme.model;
+package me.justup.upme.entity;
 
 import android.graphics.drawable.Drawable;
 

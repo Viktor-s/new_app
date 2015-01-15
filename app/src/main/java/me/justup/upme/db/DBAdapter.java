@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.justup.upme.R;
-import me.justup.upme.model.NewsModelEntity;
+import me.justup.upme.entity.NewsModelEntity;
 import me.justup.upme.utils.AppContext;
 
 import static me.justup.upme.db.DBHelper.BASE_ID;

@@ -13,7 +13,7 @@ import java.util.List;
 import me.justup.upme.R;
 import me.justup.upme.adapter.NewsRecyclerAdapter;
 import me.justup.upme.db.DBAdapter;
-import me.justup.upme.model.NewsModelEntity;
+import me.justup.upme.entity.NewsModelEntity;
 import me.justup.upme.utils.AppContext;
 
 import static me.justup.upme.utils.LogUtils.LOGI;

@@ -76,10 +76,11 @@
             android:layout_height="wrap_content"
             android:text="@string/news_comments_title"
             android:id="@+id/textViewCommentsTitle"
-            android:layout_gravity="left"
+            android:layout_gravity="start"
             android:textSize="@dimen/news_fragment_title_text_size"
             android:textColor="#848180"
-            android:layout_marginBottom="@dimen/news_fragment_text_margin_top" />
+            android:layout_marginBottom="@dimen/news_fragment_text_margin_top"
+            android:textAllCaps="true" />
 
         <View
             android:layout_width="match_parent"

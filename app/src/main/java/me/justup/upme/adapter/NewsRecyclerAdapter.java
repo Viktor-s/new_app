@@ -12,7 +12,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import me.justup.upme.R;
-import me.justup.upme.model.NewsModelEntity;
+import me.justup.upme.entity.NewsModelEntity;
 
 public class NewsRecyclerAdapter extends RecyclerView.Adapter<NewsRecyclerAdapter.ViewHolder> {
 
@@ -22,19 +22,12 @@ public class NewsRecyclerAdapter extends RecyclerView.Adapter<NewsRecyclerAdapte
         this.newsModelEntities = records;
     }
 
-    /**
-     * Создание новых View и ViewHolder элемента списка, которые впоследствии могут переиспользоваться.
-     */
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.news_recicleview_item, viewGroup, false);
         return new ViewHolder(v);
     }
 
-
-    /**
-     * Заполнение виджетов View данными из элемента списка с номером i
-     */
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
         NewsModelEntity newsModelEntity = newsModelEntities.get(i);
@@ -51,9 +44,6 @@ public class NewsRecyclerAdapter extends RecyclerView.Adapter<NewsRecyclerAdapte
         return newsModelEntities.size();
     }
 
-    /**
-     * Реализация класса ViewHolder, хранящего ссылки на виджеты.
-     */
     class ViewHolder extends RecyclerView.ViewHolder {
         private TextView date;
         private TextView title;
