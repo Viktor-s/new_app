@@ -1,24 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="250dp">
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="220dp"
+    android:background="#E4E4E4">
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_weight="1"
-        android:background="@android:color/white"></LinearLayout>
+        android:background="@android:color/white">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="New Text"
+            android:id="@+id/textViewNewsDate"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/news_fragment_title_margin_left_right_top"
+            android:layout_marginLeft="@dimen/news_fragment_title_margin_left_right_top"
+            android:layout_marginRight="@dimen/news_fragment_title_margin_left_right_top"
+            android:background="#C85694"
+            android:autoText="true"
+            android:textSize="15sp"
+            android:gravity="center"
+            android:padding="4dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="New Text"
+            android:id="@+id/textViewNewsTitle"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/news_fragment_text_margin_top"
+            android:layout_marginLeft="@dimen/news_fragment_title_margin_left_right_top"
+            android:layout_marginRight="@dimen/news_fragment_title_margin_left_right_top"
+            android:textSize="@dimen/news_fragment_title_text_size"
+            android:textColor="#414976"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="New Text"
+            android:id="@+id/textViewNewsText"
+            android:layout_marginTop="@dimen/news_fragment_text_margin_top"
+            android:layout_marginLeft="@dimen/news_fragment_title_margin_left_right_top"
+            android:layout_marginRight="@dimen/news_fragment_title_margin_left_right_top"
+            android:textSize="12sp"
+            android:textColor="@android:color/black" />
+    </LinearLayout>
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_weight="1"></LinearLayout>
+        android:layout_weight="1">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/imageViewNews" />
+    </LinearLayout>
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_weight="0.9"></LinearLayout>
+        android:layout_weight="0.9"
+        android:layout_marginLeft="@dimen/news_fragment_title_margin_left_right_top">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/news_comments_title"
+            android:id="@+id/textViewCommentsTitle"
+            android:layout_gravity="left"
+            android:textSize="@dimen/news_fragment_title_text_size"
+            android:textColor="#848180"
+            android:layout_marginBottom="@dimen/news_fragment_text_margin_top" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#FFFFFF" />
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:background="#AAAAAA" />
+
+        <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/listViewComments" />
+
+    </LinearLayout>
 </LinearLayout>

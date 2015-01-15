@@ -1,4 +1,7 @@
 <resources>
     <dimen name="pincode_button_margin">5dp</dimen>
     <dimen name="pincode_button_text_size">16sp</dimen>
+    <dimen name="news_fragment_title_margin_left_right_top">18dp</dimen>
+    <dimen name="news_fragment_text_margin_top">12dp</dimen>
+    <dimen name="news_fragment_title_text_size">21sp</dimen>
 </resources>

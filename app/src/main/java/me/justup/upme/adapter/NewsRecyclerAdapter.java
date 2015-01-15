@@ -6,19 +6,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.List;
 
 import me.justup.upme.R;
-import me.justup.upme.model.NewsModel;
+import me.justup.upme.model.NewsModelEntity;
 
 public class NewsRecyclerAdapter extends RecyclerView.Adapter<NewsRecyclerAdapter.ViewHolder> {
 
-    private List<NewsModel> newsModels;
+    private List<NewsModelEntity> newsModelEntities;
 
-    public NewsRecyclerAdapter(List<NewsModel> records) {
-        this.newsModels = records;
+    public NewsRecyclerAdapter(List<NewsModelEntity> records) {
+        this.newsModelEntities = records;
     }
 
     /**
@@ -36,28 +37,37 @@ public class NewsRecyclerAdapter extends RecyclerView.Adapter<NewsRecyclerAdapte
      */
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
-        NewsModel newsModel = newsModels.get(i);
-        viewHolder.name.setText(newsModel.getNewsTitle());
+        NewsModelEntity newsModelEntity = newsModelEntities.get(i);
+        viewHolder.date.setText(newsModelEntity.getNewsDate());
+        viewHolder.title.setText(newsModelEntity.getNewsTitle());
+        viewHolder.text.setText(newsModelEntity.getNewsText());
+        viewHolder.image.setImageDrawable(newsModelEntity.getNewsImage());
+        //viewHolder.listViewComments
+
     }
 
     @Override
     public int getItemCount() {
-        return records.size();
+        return newsModelEntities.size();
     }
 
     /**
      * Реализация класса ViewHolder, хранящего ссылки на виджеты.
      */
     class ViewHolder extends RecyclerView.ViewHolder {
+        private TextView date;
         private TextView title;
         private TextView text;
-
-        private ImageView icon;
+        private ImageView image;
+        private ListView listViewComments;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            name = (TextView) itemView.findViewById(R.id.recyclerViewItemName);
-            icon = (ImageView) itemView.findViewById(R.id.recyclerViewItemIcon);
+            date = (TextView) itemView.findViewById(R.id.textViewNewsDate);
+            title = (TextView) itemView.findViewById(R.id.textViewNewsTitle);
+            text = (TextView) itemView.findViewById(R.id.textViewNewsText);
+            image = (ImageView) itemView.findViewById(R.id.imageViewNews);
+            listViewComments = (ListView) itemView.findViewById(R.id.listViewComments);
         }
     }
 }

@@ -2,7 +2,7 @@ package me.justup.upme.model;
 
 import android.graphics.drawable.Drawable;
 
-public class NewsCommentModel {
+public class NewsCommentEntity {
     public String getCommentText() {
         return commentText;
     }
