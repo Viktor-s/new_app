@@ -111,4 +111,6 @@
         </TableLayout>
     </LinearLayout>
 
+    <include layout="@layout/upme_corner" />
+
 </RelativeLayout>

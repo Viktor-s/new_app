@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import me.justup.upme.utils.AppContext;
 
@@ -23,6 +24,15 @@ public class LoginActivity extends Activity {
 
         Button mLoginButton = (Button) findViewById(R.id.login_button);
         mLoginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //
+            }
+        });
+
+        // TODO for debug
+        ImageView mLoginDebug = (ImageView) findViewById(R.id.upme_corner_button);
+        mLoginDebug.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
@@ -65,12 +75,16 @@ public class LoginActivity extends Activity {
                 putDigit(0);
                 break;
             default:
-                // erase();
+                erase();
                 break;
         }
     }
 
     private void putDigit(int digit) {
+
+    }
+
+    private void erase() {
 
     }
 

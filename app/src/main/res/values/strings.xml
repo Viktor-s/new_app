@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name">UPME</string>
+    <string name="dummy_string">Dummy string</string>
     <string name="picode_button_del">del</string>
     <string name="login_button">подтвердить</string>
     <string name="enter_phone_number">Введите\nномер телефона</string>
