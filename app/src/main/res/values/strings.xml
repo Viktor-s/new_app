@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">UPME</string>
+    <string name="picode_button_del">del</string>
+    <string name="login_button">подтвердить</string>
+    <string name="enter_phone_number">Введите\nномер телефона</string>
+
+</resources>

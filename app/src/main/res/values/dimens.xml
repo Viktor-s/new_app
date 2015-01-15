@@ -1,0 +1,4 @@
+<resources>
+    <dimen name="pincode_button_margin">5dp</dimen>
+    <dimen name="pincode_button_text_size">16sp</dimen>
+</resources>
