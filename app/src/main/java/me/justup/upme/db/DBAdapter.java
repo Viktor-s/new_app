@@ -6,10 +6,17 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
-import static me.justup.upme.db.DBHelper.BASE_TABLE_NAME;
+import java.util.ArrayList;
+import java.util.List;
+
+import me.justup.upme.R;
+import me.justup.upme.entity.NewsModelEntity;
+import me.justup.upme.utils.AppContext;
+
 import static me.justup.upme.db.DBHelper.BASE_ID;
 import static me.justup.upme.db.DBHelper.BASE_PROJECT_ID;
 import static me.justup.upme.db.DBHelper.BASE_START_DATE;
+import static me.justup.upme.db.DBHelper.BASE_TABLE_NAME;
 
 /**
  * <b>Use:</b>:
@@ -75,6 +82,20 @@ public class DBAdapter {
 
     public void deleteTimer(int projId) {
         database.delete(BASE_TABLE_NAME, BASE_PROJECT_ID + " = " + projId, null);
+    }
+
+    public List<NewsModelEntity> getNewsModelsTestlist() {
+        List<NewsModelEntity> newsModelEntityList = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            NewsModelEntity newsModelEntity = new NewsModelEntity();
+            newsModelEntity.setNewsDate("01:30 03 СЕНТЯБРЯ 2014");
+            newsModelEntity.setNewsTitle("ИЗ ПОДМАСТЕРЬЕВ В МИЛЛИАРДЕРЫ");
+            newsModelEntity.setNewsText("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui.");
+            newsModelEntity.setNewsImage(AppContext.getAppContext().getResources().getDrawable(R.drawable.ic_launcher));
+
+            newsModelEntityList.add(newsModelEntity);
+        }
+        return newsModelEntityList;
     }
 
 }
