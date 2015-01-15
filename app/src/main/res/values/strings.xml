@@ -5,6 +5,7 @@
     <string name="picode_button_del">del</string>
     <string name="login_button">подтвердить</string>
     <string name="enter_phone_number">Введите\nномер телефона</string>
+    <string name="news_comments_title">КОММЕНТАРИИ - </string>
 
 
     <string name="product_title_credit">КРЕДИТОВАНИЕ</string>
