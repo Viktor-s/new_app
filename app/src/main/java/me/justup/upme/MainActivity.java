@@ -26,10 +26,10 @@ public class MainActivity extends Activity {
 
         // for convenience only
 
-        Fragment fragment = new NewsFragment();
+//        Fragment fragment = new NewsFragment();
 //        Fragment fragment = new MailFragment();
-//       Fragment fragment = new CalendarFragment();
-//        Fragment fragment = new ProductsFragment();
+//        Fragment fragment = new CalendarFragment();
+        Fragment fragment = new ProductsFragment();
 //        Fragment fragment = new BriefcaseFragment();
 
 
