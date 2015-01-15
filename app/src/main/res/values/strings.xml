@@ -6,13 +6,13 @@
     <string name="picode_button_del">del</string>
     <string name="login_button">подтвердить</string>
     <string name="enter_phone_number">Введите\nномер телефона</string>
-    <string name="news_comments_title">КОММЕНТАРИИ - </string>
+    <string name="news_comments_title">Комментарии - </string>
 
 
-    <string name="product_title_credit">КРЕДИТОВАНИЕ</string>
-    <string name="product_title_insurance">СТРАХОВАНИЕ</string>
-    <string name="product_title_tourism">ТУРИЗМ</string>
-    <string name="product_title_education">ОБРАЗОВАНИЕ</string>
+    <string name="product_title_credit">Кредитование</string>
+    <string name="product_title_insurance">Страхование</string>
+    <string name="product_title_tourism">Туризм</string>
+    <string name="product_title_education">Образование</string>
 
     <string name="product_description_credit_without_bail">Удобный кредит сроком от 14 дней до 36 месяц</string>
     <string name="product_description_credit_bail">Гарантированно быстрое решение финансовых потребностей, под залог транспортного средства, недвижимости</string>
