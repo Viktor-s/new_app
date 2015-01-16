@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    
+
     <color name="product_title">#f7142c</color>
     <color name="product_description">#adada8</color>
     <color name="base_background">#2f2d30</color>
     <color name="gray">#888888</color>
     <color name="blue_gray">#525382</color>
-    
+
 </resources>
