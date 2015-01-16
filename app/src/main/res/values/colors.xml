@@ -3,5 +3,6 @@
 
     <color name="product_title">#F7142C</color>
     <color name="product_description">#ADADA8</color>
+    <color name="base_background">#2f2d30</color>
 
 </resources>

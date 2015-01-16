@@ -4,8 +4,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import me.justup.upme.utils.AppContext;
 
@@ -15,6 +18,8 @@ import static me.justup.upme.utils.LogUtils.*;
 public class LoginActivity extends Activity {
     private static final String TAG = makeLogTag(LoginActivity.class);
 
+    private TextView mPhoneField;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,11 +27,13 @@ public class LoginActivity extends Activity {
 
         setContentView(R.layout.activity_login);
 
+        mPhoneField = (TextView) findViewById(R.id.phone_number_textView);
+
         Button mLoginButton = (Button) findViewById(R.id.login_button);
         mLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //
+                showPinError();
             }
         });
 
@@ -86,6 +93,11 @@ public class LoginActivity extends Activity {
 
     private void erase() {
 
+    }
+
+    private void showPinError() {
+        Animation shake = AnimationUtils.loadAnimation(this, R.anim.pin_code_shake);
+        mPhoneField.startAnimation(shake);
     }
 
 }

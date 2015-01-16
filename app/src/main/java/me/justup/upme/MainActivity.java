@@ -3,6 +3,7 @@ package me.justup.upme;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.view.View;
 
 import me.justup.upme.fragments.BriefcaseFragment;
@@ -10,6 +11,7 @@ import me.justup.upme.fragments.CalendarFragment;
 import me.justup.upme.fragments.MailFragment;
 import me.justup.upme.fragments.NewsFragment;
 import me.justup.upme.fragments.ProductsFragment;
+import me.justup.upme.utils.LogUtils;
 
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
@@ -20,6 +22,20 @@ public class MainActivity extends Activity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        if (LogUtils.DEVELOPER_MODE) {
+            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+                    .detectDiskReads()
+                    .detectDiskWrites()
+                    .detectNetwork()
+                    .penaltyLog()
+                    .build());
+            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+                    .detectLeakedSqlLiteObjects()
+                    .detectLeakedClosableObjects()
+                    .penaltyLog()
+                    .penaltyDeath()
+                    .build());
+        }
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
