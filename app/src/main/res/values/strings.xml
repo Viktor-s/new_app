@@ -14,11 +14,20 @@
     <string name="product_title_tourism">Туризм</string>
     <string name="product_title_education">Образование</string>
 
-    <string name="product_description_credit_without_bail">Удобный кредит сроком от 14 дней до 36 месяц</string>
-    <string name="product_description_credit_bail">Гарантированно быстрое решение финансовых потребностей, под залог транспортного средства, недвижимости</string>
-    <string name="product_description_life_insurance">Надежное страхование Вашей жизни</string>
-    <string name="product_description_credit_risk_insurance">Надежное страхование Вашего автомобиля или другого транспортного средства от частичного или полного повреждения</string>
-    <string name="product_description_airline_tickets">Мы сотрудничаем с ведущими авиокомпаниями и подбираем Вам рейс, максимально удовлетворяющий вашим требованиям</string>
-    <string name="product_description_credit_education_online">Доступное европеское образование MBA не выходя из дома. По завершению программы каждый из участников получает сертификат</string>
+    <string name="product_title_credit_without_bail">кредит наличными (без залога)</string>
+    <string name="product_title_credit_bail">кредит наличными под залог</string>
+    <string name="product_title_life_insurance">страхование жизни life</string>
+    <string name="product_title_credit_risk_insurance">рисковое страхование</string>
+    <string name="product_title_airline_tickets">авиа билеты по лучшей цене</string>
+    <string name="product_title_credit_education_online">образование онлайн</string>
+
+
+    <string name="product_description_credit_without_bail">Удобный кредит сроком от 14 дней до 36 месяцев, от 500 до 250 000 грн, на любые цели с простой схемой погашения.</string>
+    <string name="product_description_credit_bail">Гарантированно быстрое решение финансовых потребностей, под залог транспортного средства, недвижемости, золота, бытовой техники.</string>
+    <string name="product_description_life_insurance">Канадская фристайлистка Дара Хоуэлл выиграла "золото" Олимпийских игр в Сочи в слоупстайле. Победительница набрала 94,20 балла. Серебряным призером стала американка Дэвин Логан (85,40), бронзовым - еще одна спортсменка из Канады Ким Ламмэр</string>
+    <string name="product_description_credit_risk_insurance">Надежное страхование Вашего автомобиля или другого транспортного средства от частичного или полного повреждения, а также страхование ответственности <водителя></водителя></string>
+    <string name="product_description_airline_tickets">Мы сотрудничаем с ведущими авиакомпаниями и подбираем вам рейс, максимально удовлетворяющий Ваши требования.</string>
+    <string name="product_description_credit_education_online">Доступное европейское образование MBA не выходя из дома. По завершению программы каждый из участников получает сертификат от MMU Business School.</string>
+
 
 </resources>

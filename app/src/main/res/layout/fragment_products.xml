@@ -2,39 +2,51 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal">
-
+    android:orientation="horizontal"
+    android:background="@drawable/app_background" >
 
     <ScrollView
-        android:layout_width="match_parent"
+        android:layout_width="@dimen/product_column_size"
         android:layout_height="match_parent"
-        android:layout_weight="1">
+        android:layout_margin="@dimen/product_scroll_margin">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <TextView
-                style="@style/ProductTitile"
+                style="@style/ProductMainTitle"
                 android:text="@string/product_title_credit"/>
 
-            <ImageView
-                android:id="@+id/credit_without_bail_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/credit_without_bail"/>
+            <RelativeLayout
+                android:id="@+id/product_without_bail_image"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height_title_picture"
+                android:background="@color/gray">
+
+                <TextView
+                    style="@style/ProductTitle"
+                    android:text="@string/product_title_credit_without_bail"/>
+
+            </RelativeLayout>
 
             <TextView
                 android:id="@+id/credit_without_bail_text"
                 style="@style/ProductDescription"
                 android:text="@string/product_description_credit_without_bail" />
 
-            <ImageView
+            <RelativeLayout
                 android:id="@+id/credit_bail_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/airline_tickets"/>
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height_title_picture"
+                android:background="@color/gray">
+
+                <TextView
+                    style="@style/ProductTitle"
+                    android:text="@string/product_title_credit_bail"/>
+
+            </RelativeLayout>
 
             <TextView
                 android:id="@+id/credit_bail_text"
@@ -45,6 +57,127 @@
 
     </ScrollView>
 
+    <ScrollView
+        android:layout_width="@dimen/product_column_size"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/product_scroll_margin">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/ProductMainTitle"
+                android:text="@string/product_title_insurance"/>
+
+            <RelativeLayout
+                android:id="@+id/credit_life_insurance_image"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height_title_picture"
+                android:background="@color/gray">
+
+                <TextView
+                    style="@style/ProductTitle"
+                    android:text="@string/product_title_life_insurance"/>
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/credit_life_insurance_text"
+                style="@style/ProductDescription"
+                android:text="@string/product_description_life_insurance" />
+
+            <RelativeLayout
+                android:id="@+id/credit_risk_insurance_image"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height_title_picture"
+                android:background="@color/gray">
+
+                <TextView
+                    style="@style/ProductTitle"
+                    android:text="@string/product_title_credit_risk_insurance"/>
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/credit_risk_insurance_text"
+                style="@style/ProductDescription"
+                android:text="@string/product_description_credit_risk_insurance" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <ScrollView
+        android:layout_width="@dimen/product_column_size"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/product_scroll_margin">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/ProductMainTitle"
+                android:text="@string/product_title_tourism"/>
+
+            <RelativeLayout
+                android:id="@+id/credit_tickets_image"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height_title_picture"
+                android:background="@color/gray">
+
+                <TextView
+                    style="@style/ProductTitle"
+                    android:text="@string/product_title_airline_tickets"/>
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/credit_tickets_text"
+                style="@style/ProductDescription"
+                android:text="@string/product_description_airline_tickets" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <ScrollView
+        android:layout_width="@dimen/product_column_size"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/product_scroll_margin">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/ProductMainTitle"
+                android:text="@string/product_title_education"/>
+
+            <RelativeLayout
+                android:id="@+id/credit_education_image"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height_title_picture"
+                android:background="@color/gray">
+
+                <TextView
+                    style="@style/ProductTitle"
+                    android:text="@string/product_title_credit_education_online"/>
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/credit_education_text"
+                style="@style/ProductDescription"
+                android:text="@string/product_description_credit_education_online" />
+
+        </LinearLayout>
+
+    </ScrollView>
 
 
 

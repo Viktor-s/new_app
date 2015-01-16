@@ -3,5 +3,7 @@
 
     <color name="product_title">#F7142C</color>
     <color name="product_description">#ADADA8</color>
+    <color name="gray">#888888</color>
+    <color name="blue_gray">#525382</color>
 
 </resources>

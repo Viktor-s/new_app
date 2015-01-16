@@ -13,17 +13,35 @@
         <item name="android:textSize">@dimen/pincode_button_text_size</item>
     </style>
 
-    <style name="ProductTitile" parent="android:style/Widget.TextView">
+    <style name="ProductMainTitle" parent="android:style/Widget.TextView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
         <item name="android:textSize">16sp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:layout_margin">10dp</item>
         <item name="android:textColor">@color/product_title</item>
+    </style>
+
+    <style name="ProductTitle" parent="android:style/Widget.TextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:layout_margin">@dimen/product_title_text_margin</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@android:color/white</item>
+
     </style>
 
     <style name="ProductDescription" parent="android:style/Widget.TextView">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:padding">@dimen/product_title_text_margin</item>
+        <item name="android:layout_marginBottom">20dp</item>
+        <item name="android:background">@android:color/white</item>
+        <item name="android:textSize">12sp</item>
         <item name="android:textColor">@color/product_description</item>
     </style>
 
