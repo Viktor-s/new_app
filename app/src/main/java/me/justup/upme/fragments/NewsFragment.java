@@ -11,30 +11,28 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import me.justup.upme.R;
-import me.justup.upme.adapter.NewsRecyclerAdapter;
+import me.justup.upme.adapter.NewsFeedAdapter;
 import me.justup.upme.db.DBAdapter;
 import me.justup.upme.entity.NewsModelEntity;
 import me.justup.upme.utils.AppContext;
 
-import static me.justup.upme.utils.LogUtils.LOGI;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 
 public class NewsFragment extends Fragment {
     private static final String TAG = makeLogTag(NewsFragment.class);
 
-    private RecyclerView newsRecyclerView;
-    private NewsRecyclerAdapter newsRecyclerAdapter;
+    private RecyclerView mNewsFeedView;
+    private NewsFeedAdapter mNewsFeedAdapter;
     private DBAdapter mDBAdapter;
-    private List<NewsModelEntity> newsModelEntityList;
+    private List<NewsModelEntity> mNewsModelEntityList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mDBAdapter = new DBAdapter(AppContext.getAppContext());
         mDBAdapter.open();
-        newsModelEntityList = mDBAdapter.getNewsModelsTestlist();
-
+        mNewsModelEntityList = mDBAdapter.getNewsModelsTestlist();
     }
 
     @Override
@@ -46,16 +44,11 @@ public class NewsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_news, container, false);
-
-        // logging example
-        LOGI(TAG, "Fragment start");
-
-        newsRecyclerView = (RecyclerView) view.findViewById(R.id.newsRecyclerView);
-        newsRecyclerView.setLayoutManager(new LinearLayoutManager(AppContext.getAppContext()));
-        newsRecyclerAdapter = new NewsRecyclerAdapter(newsModelEntityList);
-        newsRecyclerView.setAdapter(newsRecyclerAdapter);
-
+        mNewsFeedView = (RecyclerView) view.findViewById(R.id.news_RecyclerView);
+        mNewsFeedView.setLayoutManager(new LinearLayoutManager(AppContext.getAppContext()));
+        mNewsFeedAdapter = new NewsFeedAdapter(mNewsModelEntityList);
+        mNewsFeedView.setAdapter(mNewsFeedAdapter);
         return view;
     }
-
 }
+
