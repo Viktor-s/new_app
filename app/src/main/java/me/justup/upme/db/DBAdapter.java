@@ -86,26 +86,25 @@ public class DBAdapter {
     }
 
     public List<NewsModelEntity> getNewsModelsTestlist() {
-        List<NewsModelEntity> newsModelEntityList = new ArrayList<>();
-        List<NewsCommentEntity> newsCommentEntityList = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
+        List<NewsModelEntity> mNewsModelEntityList = new ArrayList<>();
+        List<NewsCommentEntity> mNewsCommentEntityList = new ArrayList<>();
+        for (int j = 0; j < 6; j++) {
+            NewsCommentEntity newsCommentEntity = new NewsCommentEntity();
+            newsCommentEntity.setCommentTitle("MR. ANDROID 11:00 20 ЯНВАРЯ 2015");
+            newsCommentEntity.setCommentText("Lorem ipsum dolor sit amet, consectetur adipisicing elit, ut labore et");
+            newsCommentEntity.setCommentImage(AppContext.getAppContext().getResources().getDrawable(R.drawable.ic_launcher));
+            mNewsCommentEntityList.add(newsCommentEntity);
+        }
+        for (int i = 0; i < 10; i++) {
             NewsModelEntity newsModelEntity = new NewsModelEntity();
             newsModelEntity.setNewsDate("01:30 03 СЕНТЯБРЯ 2014");
             newsModelEntity.setNewsTitle("ИЗ ПОДМАСТЕРЬЕВ В МИЛЛИАРДЕРЫ");
-            newsModelEntity.setNewsText("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui.");
+            newsModelEntity.setNewsText("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore.");
             newsModelEntity.setNewsImage(AppContext.getAppContext().getResources().getDrawable(R.drawable.news_image_test));
-            for (int j = 0; j < 2 + i; j++) {
-                NewsCommentEntity newsCommentEntity = new NewsCommentEntity();
-                newsCommentEntity.setCommentTitle("MR. ANDROID 11:00 20 ЯНВАРЯ 2015");
-                newsCommentEntity.setCommentText("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et");
-                newsCommentEntity.setCommentImage(AppContext.getAppContext().getResources().getDrawable(R.drawable.ic_launcher));
-                newsCommentEntityList.add(newsCommentEntity);
-            }
-            newsModelEntity.setNewsCommentEntityList(newsCommentEntityList);
-
-            newsModelEntityList.add(newsModelEntity);
+            newsModelEntity.setNewsCommentEntityList(mNewsCommentEntityList);
+            mNewsModelEntityList.add(newsModelEntity);
         }
-        return newsModelEntityList;
+        return mNewsModelEntityList;
     }
 
 }

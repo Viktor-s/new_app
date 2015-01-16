@@ -9,7 +9,7 @@ public class NewsModelEntity {
     private String newsTitle;
     private String newsText;
     private Drawable newsImage;
-    private List<NewsCommentEntity> newsCommentEntityList;
+    private List<NewsCommentEntity> mNewsCommentEntityList;
 
     public String getNewsTitle() {
         return newsTitle;
@@ -44,10 +44,10 @@ public class NewsModelEntity {
     }
 
     public List<NewsCommentEntity> getNewsCommentEntityList() {
-        return newsCommentEntityList;
+        return mNewsCommentEntityList;
     }
 
-    public void setNewsCommentEntityList(List<NewsCommentEntity> newsCommentEntityList) {
-        this.newsCommentEntityList = newsCommentEntityList;
+    public void setNewsCommentEntityList(List<NewsCommentEntity> mNewsCommentEntityList) {
+        this.mNewsCommentEntityList = mNewsCommentEntityList;
     }
 }

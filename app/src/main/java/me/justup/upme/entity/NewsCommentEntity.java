@@ -5,7 +5,7 @@ import android.graphics.drawable.Drawable;
 public class NewsCommentEntity {
     private String commentTitle;
     private String commentText;
-    private Drawable commentImage;
+    private Drawable mCommentImage;
 
     public String getCommentText() {
         return commentText;
@@ -16,11 +16,11 @@ public class NewsCommentEntity {
     }
 
     public Drawable getCommentImage() {
-        return commentImage;
+        return mCommentImage;
     }
 
     public void setCommentImage(Drawable commentImage) {
-        this.commentImage = commentImage;
+        this.mCommentImage = commentImage;
     }
 
     public String getCommentTitle() {
