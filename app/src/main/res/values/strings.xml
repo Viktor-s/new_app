@@ -8,7 +8,6 @@
     <string name="enter_phone_number">Введите\nномер телефона</string>
     <string name="news_comments_title">Комментарии - </string>
 
-
     <string name="product_title_credit">Кредитование</string>
     <string name="product_title_insurance">Страхование</string>
     <string name="product_title_tourism">Туризм</string>
@@ -20,5 +19,11 @@
     <string name="product_description_credit_risk_insurance">Надежное страхование Вашего автомобиля или другого транспортного средства от частичного или полного повреждения</string>
     <string name="product_description_airline_tickets">Мы сотрудничаем с ведущими авиокомпаниями и подбираем Вам рейс, максимально удовлетворяющий вашим требованиям</string>
     <string name="product_description_credit_education_online">Доступное европеское образование MBA не выходя из дома. По завершению программы каждый из участников получает сертификат</string>
+
+    <string name="menu_item_title_news">Новости</string>
+    <string name="menu_item_title_mail">Почта</string>
+    <string name="menu_item_title_calendar">Календарь</string>
+    <string name="menu_item_title_products">Продукты</string>
+    <string name="menu_item_title_briefcase">Портфель</string>
 
 </resources>
