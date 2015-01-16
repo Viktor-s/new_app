@@ -2,14 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="220dp"
+    android:layout_height="wrap_content"
     android:background="#E4E4E4">
 
     <LinearLayout
         android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_weight="1"
+        android:layout_width="@dimen/news_fragment_block_size"
+        android:layout_height="@dimen/news_fragment_block_size"
         android:background="@android:color/white">
 
         <TextView
@@ -23,7 +22,7 @@
             android:layout_marginRight="@dimen/news_fragment_title_margin_left_right_top"
             android:background="#C85694"
             android:autoText="true"
-            android:textSize="15sp"
+            android:textSize="@dimen/news_fragment_date_text_size"
             android:gravity="center"
             android:padding="4dp" />
 
@@ -48,19 +47,18 @@
             android:layout_marginTop="@dimen/news_fragment_text_margin_top"
             android:layout_marginLeft="@dimen/news_fragment_title_margin_left_right_top"
             android:layout_marginRight="@dimen/news_fragment_title_margin_left_right_top"
-            android:textSize="12sp"
+            android:textSize="@dimen/news_fragment_main_text_size"
             android:textColor="@android:color/black" />
     </LinearLayout>
 
     <LinearLayout
         android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_weight="1">
+        android:layout_width="@dimen/news_fragment_block_size"
+        android:layout_height="@dimen/news_fragment_block_size">
 
         <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="230dp"
+            android:layout_height="230dp"
             android:id="@+id/imageViewNews" />
     </LinearLayout>
 
@@ -68,7 +66,7 @@
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_weight="0.9"
+        android:layout_weight="1"
         android:layout_marginLeft="@dimen/news_fragment_title_margin_left_right_top">
 
         <TextView

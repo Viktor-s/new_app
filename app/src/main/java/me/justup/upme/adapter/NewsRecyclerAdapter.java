@@ -13,6 +13,7 @@ import java.util.List;
 
 import me.justup.upme.R;
 import me.justup.upme.entity.NewsModelEntity;
+import me.justup.upme.utils.AppContext;
 
 public class NewsRecyclerAdapter extends RecyclerView.Adapter<NewsRecyclerAdapter.ViewHolder> {
 
@@ -35,7 +36,7 @@ public class NewsRecyclerAdapter extends RecyclerView.Adapter<NewsRecyclerAdapte
         viewHolder.title.setText(newsModelEntity.getNewsTitle());
         viewHolder.text.setText(newsModelEntity.getNewsText());
         viewHolder.image.setImageDrawable(newsModelEntity.getNewsImage());
-        //viewHolder.listViewComments
+        viewHolder.listViewComments.setAdapter(new NewsCommentsAdapter(AppContext.getAppContext(), newsModelEntity.getNewsCommentEntityList()));
 
     }
 

@@ -3,6 +3,10 @@ package me.justup.upme.entity;
 import android.graphics.drawable.Drawable;
 
 public class NewsCommentEntity {
+    private String commentTitle;
+    private String commentText;
+    private Drawable commentImage;
+
     public String getCommentText() {
         return commentText;
     }
@@ -27,7 +31,5 @@ public class NewsCommentEntity {
         this.commentTitle = commentTitle;
     }
 
-    private String commentTitle;
-    private String commentText;
-    private Drawable commentImage;
+
 }

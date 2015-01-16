@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.justup.upme.R;
+import me.justup.upme.entity.NewsCommentEntity;
 import me.justup.upme.entity.NewsModelEntity;
 import me.justup.upme.utils.AppContext;
 
@@ -86,12 +87,21 @@ public class DBAdapter {
 
     public List<NewsModelEntity> getNewsModelsTestlist() {
         List<NewsModelEntity> newsModelEntityList = new ArrayList<>();
+        List<NewsCommentEntity> newsCommentEntityList = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             NewsModelEntity newsModelEntity = new NewsModelEntity();
             newsModelEntity.setNewsDate("01:30 03 СЕНТЯБРЯ 2014");
             newsModelEntity.setNewsTitle("ИЗ ПОДМАСТЕРЬЕВ В МИЛЛИАРДЕРЫ");
             newsModelEntity.setNewsText("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui.");
-            newsModelEntity.setNewsImage(AppContext.getAppContext().getResources().getDrawable(R.drawable.ic_launcher));
+            newsModelEntity.setNewsImage(AppContext.getAppContext().getResources().getDrawable(R.drawable.news_image_test));
+            for (int j = 0; j < 2 + i; j++) {
+                NewsCommentEntity newsCommentEntity = new NewsCommentEntity();
+                newsCommentEntity.setCommentTitle("MR. ANDROID 11:00 20 ЯНВАРЯ 2015");
+                newsCommentEntity.setCommentText("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et");
+                newsCommentEntity.setCommentImage(AppContext.getAppContext().getResources().getDrawable(R.drawable.ic_launcher));
+                newsCommentEntityList.add(newsCommentEntity);
+            }
+            newsModelEntity.setNewsCommentEntityList(newsCommentEntityList);
 
             newsModelEntityList.add(newsModelEntity);
         }
