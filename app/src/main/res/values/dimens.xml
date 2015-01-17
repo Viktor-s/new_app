@@ -1,9 +1,6 @@
 <resources>
-    <dimen name="pincode_button_margin">5dp</dimen>
-    <dimen name="pincode_button_text_size">16sp</dimen>
     <dimen name="news_fragment_title_margin_left_right_top">18dp</dimen>
     <dimen name="news_fragment_text_margin_top">12dp</dimen>
-
     <dimen name="news_fragment_block_size">240dp</dimen>
     <dimen name="news_fragment_date_text_size">15sp</dimen>
     <dimen name="news_fragment_title_text_size">21sp</dimen>
@@ -14,12 +11,14 @@
     <dimen name="news_comment_main_text_size">13sp</dimen>
     <dimen name="news_divider_height">25dp</dimen>
 
-
-
-
     <!-- PRODUCT -->
     <dimen name="product_column_size">200dp</dimen>
     <dimen name="product_title_text_margin">15dp</dimen>
     <dimen name="product_scroll_margin">15dp</dimen>
     <dimen name="height_title_picture">100dp</dimen>
+
+    <!-- LOGIN -->
+    <dimen name="pincode_button_margin">5dp</dimen>
+    <dimen name="pincode_button_text_size">20sp</dimen>
+    <dimen name="num_button_radius">5dp</dimen>
 </resources>

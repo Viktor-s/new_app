@@ -19,6 +19,9 @@ public class LoginActivity extends Activity {
     private static final String TAG = makeLogTag(LoginActivity.class);
 
     private TextView mPhoneField;
+    private StringBuilder mNumberString = new StringBuilder("+380");
+    private static final int phoneNumberLength = 12;
+    private static final int phoneCountryNumberLength = 4;
 
 
     @Override
@@ -37,12 +40,13 @@ public class LoginActivity extends Activity {
             }
         });
 
-        // TODO for debug
+        // for debug
         ImageView mLoginDebug = (ImageView) findViewById(R.id.upme_corner_button);
         mLoginDebug.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                finish();
                 LOGD(TAG, AppContext.getAppContext().toString());
             }
         });
@@ -88,11 +92,21 @@ public class LoginActivity extends Activity {
     }
 
     private void putDigit(int digit) {
-
+        if (mNumberString.length() <= phoneNumberLength) {
+            mNumberString.append(digit);
+            updateNumberField();
+        }
     }
 
     private void erase() {
+        if (mNumberString.length() > phoneCountryNumberLength) {
+            mNumberString.setLength(mNumberString.length() - 1);
+        }
+        updateNumberField();
+    }
 
+    private void updateNumberField() {
+        mPhoneField.setText(mNumberString.toString());
     }
 
     private void showPinError() {

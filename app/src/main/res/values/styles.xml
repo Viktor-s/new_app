@@ -11,6 +11,8 @@
         <item name="android:layout_margin">@dimen/pincode_button_margin</item>
         <item name="android:onClick">onPinCodeButtonClickHandler</item>
         <item name="android:textSize">@dimen/pincode_button_text_size</item>
+        <item name="android:background">@drawable/digit_button_selector</item>
+        <item name="android:textColor">@android:color/white</item>
     </style>
 
     <style name="ProductMainTitle" parent="android:style/Widget.TextView">
