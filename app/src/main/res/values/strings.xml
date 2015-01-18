@@ -34,5 +34,6 @@
     <string name="menu_item_title_calendar">Календарь</string>
     <string name="menu_item_title_products">Продукты</string>
     <string name="menu_item_title_briefcase">Портфель</string>
+    <string name="fast_pay">Заплати\nбыстро</string>
 
 </resources>

@@ -13,18 +13,18 @@
         android:layout_toEndOf="@+id/left_main_menu"
         android:orientation="horizontal">
 
-        <LinearLayout
-            android:orientation="vertical"
+        <fragment
+            android:name="me.justup.upme.fragments.FastPayingFragment"
+            android:id="@+id/fastPayingFragment"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="2">
+            android:layout_weight="2"
+            tools:layout="@layout/fragment_fast_paying" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Main" />
-        </LinearLayout>
+        <View
+            android:background="@drawable/left_shadow"
+            android:layout_width="10dp"
+            android:layout_height="wrap_content" />
 
         <fragment
             android:name="me.justup.upme.fragments.UserFragment"
