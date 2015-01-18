@@ -5,6 +5,10 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import me.justup.upme.fragments.BriefcaseFragment;
 import me.justup.upme.fragments.CalendarFragment;
@@ -18,6 +22,11 @@ import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 public class MainActivity extends Activity {
     private static final String TAG = makeLogTag(MainActivity.class);
+
+    private FrameLayout mMainFragmentContainer;
+    private Animation mFragmentSliderOut;
+    private Animation mFragmentSliderIn;
+    private boolean isShowMainFragmentContainer;
 
 
     @Override
@@ -37,8 +46,14 @@ public class MainActivity extends Activity {
                     .build());
         }
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
+
+        mMainFragmentContainer = (FrameLayout) findViewById(R.id.main_fragment_container);
+        ImageView mCornerButton = (ImageView) findViewById(R.id.upme_corner_button);
+        mCornerButton.setOnClickListener(new OnCornerButtonListener());
+
+        mFragmentSliderOut = AnimationUtils.loadAnimation(this, R.anim.fragment_slider_out);
+        mFragmentSliderIn = AnimationUtils.loadAnimation(this, R.anim.fragment_slider_in);
     }
 
     @SuppressWarnings("UnusedDeclaration")
@@ -67,14 +82,35 @@ public class MainActivity extends Activity {
                 break;
 
             default:
-                // press on corner
                 break;
         }
 
         if (fragment != null) {
             getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, fragment).commit();
         }
+        if (!isShowMainFragmentContainer) {
+            showMainFragmentContainer();
+        }
 
+    }
+
+    private class OnCornerButtonListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            if (isShowMainFragmentContainer) {
+                mMainFragmentContainer.startAnimation(mFragmentSliderOut);
+                mMainFragmentContainer.setVisibility(View.GONE);
+                isShowMainFragmentContainer = false;
+            } else {
+                showMainFragmentContainer();
+            }
+        }
+    }
+
+    private void showMainFragmentContainer() {
+        mMainFragmentContainer.setVisibility(View.VISIBLE);
+        mMainFragmentContainer.startAnimation(mFragmentSliderIn);
+        isShowMainFragmentContainer = true;
     }
 
 }
