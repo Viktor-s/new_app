@@ -39,20 +39,16 @@
             <RelativeLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingLeft="100dp"
+                >
 
-                <ImageView
-                    android:id="@+id/imageView1"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:src="@drawable/purse" />
 
 
                 <TextView
                     android:id="@+id/textView1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/imageView1"
                     android:text="ДЕНЬГИ В КОШЕЛЕК"
                     android:textColor="@color/gray"/>
 
@@ -60,7 +56,6 @@
                     android:id="@+id/textView2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/imageView1"
                     android:layout_below="@id/textView1"
                     android:text="Сумма: до 3000 грн"
                     android:textColor="@color/gray"/>
@@ -69,7 +64,6 @@
                     android:id="@+id/textView3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/imageView1"
                     android:layout_below="@id/textView2"
                     android:text="Срок кредитования: до 30 дней"
                     android:textColor="@color/gray"/>
@@ -78,7 +72,6 @@
                     android:id="@+id/textView4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/imageView1"
                     android:layout_below="@id/textView3"
                     android:text="Условия: Без справки о доходах"
                     android:textColor="@color/gray"/>
@@ -87,7 +80,6 @@
                     android:id="@+id/textView5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/imageView1"
                     android:layout_below="@id/textView4"
                     android:text="Документы: Паспорт + ИНН"
                     android:textColor="@color/gray"/>
@@ -97,8 +89,8 @@
                     android:id="@+id/buttonIssue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/imageView1"
                     android:layout_below="@id/textView5"
+                    android:background="@drawable/"
                     android:text="ОФОРМИТ" />
 
                 <Button
@@ -112,7 +104,11 @@
             </RelativeLayout>
 
 
+
         </LinearLayout>
+
+
+
 
     </ScrollView>
 

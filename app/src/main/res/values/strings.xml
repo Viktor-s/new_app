@@ -36,4 +36,35 @@
     <string name="menu_item_title_briefcase">Портфель</string>
     <string name="fast_pay">Заплати\nбыстро</string>
 
+    <!-- FORM -->
+    <string name="form_tv_last_name">Фамилия</string>
+    <string name="form_tv_first_name">Имя</string>
+    <string name="form_tv_middle_name">Отчество</string>
+    <string name="form_tv_city">Город</string>
+    <string name="form_tv_street">Улица</string>
+    <string name="form_tv_house">Дом</string>
+    <string name="form_tv_apartment">Кв</string>
+    <string name="form_tv_email">Email</string>
+    <string name="form_tv_phone">Телефон</string>
+
+
+
+
+
+
+
+
+
+
+
+    Last Name
+         e
+         patronymic
+        
+        
+        
+        
+        
+        
+
 </resources>
