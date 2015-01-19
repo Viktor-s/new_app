@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:text="@string/internet"
-        android:textAllCaps="true"
-        android:textSize="28sp"
-        android:drawableLeft="@drawable/ic_launcher" />
+        style="@style/PayPanelTitle" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -24,28 +21,21 @@
             android:layout_weight="1">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Medium Text"
-                android:id="@+id/textView6" />
+                android:text="Провайдер"
+                style="@style/PayPanelInfoText" />
 
             <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/editText" />
+                tools:text="@string/dummy_string"
+                android:id="@+id/pay_internet_provider_editText"
+                style="@style/PayPanelField" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Medium Text"
-                android:id="@+id/textView9" />
+                android:text="Номер договора"
+                style="@style/PayPanelInfoText" />
 
             <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/editText3" />
+                android:id="@+id/pay_internet_number_editText"
+                style="@style/PayPanelField" />
         </LinearLayout>
 
         <LinearLayout
@@ -55,16 +45,18 @@
             android:layout_weight="1">
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="New Text"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:id="@+id/textView7" />
+                android:text="Сумма"
+                style="@style/PayPanelInfoText" />
 
             <EditText
-                android:layout_width="match_parent"
+                android:id="@+id/pay_internet_summ_editText"
+                style="@style/PayPanelField" />
+
+            <Button
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/editText2" />
+                android:text="Отправить"
+                android:id="@+id/button" />
         </LinearLayout>
     </LinearLayout>
 
