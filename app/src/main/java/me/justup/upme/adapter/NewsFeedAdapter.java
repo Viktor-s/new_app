@@ -7,20 +7,22 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.List;
 
 import me.justup.upme.R;
-import me.justup.upme.entity.NewsModelEntity;
+import me.justup.upme.entity.NewsFeedEntity;
 import me.justup.upme.utils.AppContext;
 
 public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHolder> {
 
-    private List<NewsModelEntity> mNewsModelEntitiesList;
+    private List<NewsFeedEntity> mNewsModelEntitiesList;
+    private OnItemClickListener mItemClickListener;
 
-    public NewsFeedAdapter(List<NewsModelEntity> newsModelEntities) {
+    public NewsFeedAdapter(List<NewsFeedEntity> newsModelEntities) {
         this.mNewsModelEntitiesList = newsModelEntities;
     }
 
@@ -32,13 +34,13 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
-        NewsModelEntity newsModelEntity = mNewsModelEntitiesList.get(i);
-        viewHolder.mDate.setText(newsModelEntity.getNewsDate());
-        viewHolder.mTitle.setText(newsModelEntity.getNewsTitle());
-        viewHolder.mText.setText(newsModelEntity.getNewsText());
-        viewHolder.mImage.setImageDrawable(newsModelEntity.getNewsImage());
-        viewHolder.mListViewComments.setAdapter(new NewsCommentsAdapter(AppContext.getAppContext(), newsModelEntity.getNewsCommentEntityList()));
-        viewHolder.mCommentsLength.setText(newsModelEntity.getNewsCommentEntityList().size() + "");
+        NewsFeedEntity newsFeedEntity = mNewsModelEntitiesList.get(i);
+        viewHolder.mDate.setText(newsFeedEntity.getNewsDate());
+        viewHolder.mTitle.setText(newsFeedEntity.getNewsTitle());
+        viewHolder.mText.setText(newsFeedEntity.getNewsText());
+        viewHolder.mImage.setImageDrawable(newsFeedEntity.getNewsImage());
+        viewHolder.mListViewComments.setAdapter(new NewsCommentsAdapter(AppContext.getAppContext(), newsFeedEntity.getNewsCommentEntityList()));
+        viewHolder.mCommentsLength.setText(newsFeedEntity.getNewsCommentEntityList().size() + "");
         viewHolder.mListViewComments.setOnTouchListener(new View.OnTouchListener() {
 
             @Override
@@ -64,13 +66,15 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
         return mNewsModelEntitiesList.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView mDate;
         private TextView mTitle;
         private TextView mText;
         private ImageView mImage;
         private ListView mListViewComments;
         private TextView mCommentsLength;
+        private LinearLayout mClickArea;
+
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -80,6 +84,25 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
             mImage = (ImageView) itemView.findViewById(R.id.news_image_imageView);
             mListViewComments = (ListView) itemView.findViewById(R.id.comments_listView);
             mCommentsLength = (TextView) itemView.findViewById(R.id.comments_length_textView);
+            mClickArea = (LinearLayout) itemView.findViewById(R.id.click_area_container_linearLayout);
+            mClickArea.setOnClickListener(this);
+
         }
+
+        @Override
+        public void onClick(View view) {
+
+            if (mItemClickListener != null) {
+                mItemClickListener.onItemClick(view, getPosition());
+            }
+        }
+    }
+
+    public interface OnItemClickListener {
+        public void onItemClick(View view, int position);
+    }
+
+    public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
+        this.mItemClickListener = mItemClickListener;
     }
 }

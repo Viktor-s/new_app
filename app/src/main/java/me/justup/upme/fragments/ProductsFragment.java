@@ -1,12 +1,15 @@
 package me.justup.upme.fragments;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ViewFlipper;
 
+import me.justup.upme.MainActivity;
+import me.justup.upme.ProductItemActivity;
 import me.justup.upme.R;
 
 import static me.justup.upme.utils.LogUtils.LOGI;
@@ -34,6 +37,8 @@ public class ProductsFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+
+        startActivity(new Intent(getActivity(), ProductItemActivity.class));
 
     }
 }

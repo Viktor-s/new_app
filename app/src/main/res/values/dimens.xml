@@ -1,4 +1,7 @@
 <resources>
+
+    <dimen name="radius">20dp</dimen>
+
     <dimen name="news_fragment_title_margin_left_right_top">18dp</dimen>
     <dimen name="news_fragment_text_margin_top">12dp</dimen>
     <dimen name="news_fragment_block_size">240dp</dimen>
@@ -10,6 +13,11 @@
     <dimen name="news_comment_title_tex_size">12sp</dimen>
     <dimen name="news_comment_main_text_size">13sp</dimen>
     <dimen name="news_divider_height">25dp</dimen>
+    <dimen name="news_item_margin_left">30dp</dimen>
+    <dimen name="news_item_margin_right">60dp</dimen>
+    <dimen name="news_item_block_margin">40dp</dimen>
+    <dimen name="news_item_add_comment_margin">20dp</dimen>
+
 
     <!-- PRODUCT -->
     <dimen name="product_column_size">200dp</dimen>
@@ -17,8 +25,20 @@
     <dimen name="product_scroll_margin">15dp</dimen>
     <dimen name="height_title_picture">100dp</dimen>
 
+    <dimen name="form_tv_width_16">50dp</dimen>
+    <dimen name="form_tv_width_26">100dp</dimen>
+    <dimen name="form_tv_width_36">150dp</dimen>
+    <dimen name="form_tv_margin">5dp</dimen>
+    <dimen name="form_tv_text_size">14sp</dimen>
+
+    <dimen name="product_item_margin_left">250dp</dimen>
+
     <!-- LOGIN -->
     <dimen name="pincode_button_margin">5dp</dimen>
     <dimen name="pincode_button_text_size">20sp</dimen>
     <dimen name="num_button_radius">5dp</dimen>
+
+    <!-- MAIL -->
+    <dimen name="mail_contacts_list_width">350dp</dimen>
+
 </resources>

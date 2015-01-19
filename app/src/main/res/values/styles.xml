@@ -47,6 +47,87 @@
         <item name="android:textColor">@color/product_description</item>
     </style>
 
+    <!-- FORM -->
+    <style name="FormTextView16" parent="android:style/Widget.TextView">
+        <item name="android:layout_width">@dimen/form_tv_width_16</item>
+        <item name="android:layout_margin">@dimen/form_tv_margin</item>
+        <item name="android:textSize">@dimen/form_tv_text_size</item>
+        <item name="android:textColor">@color/gray</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="FormTextView26" parent="android:style/Widget.TextView">
+        <item name="android:layout_columnSpan">2</item>
+        <item name="android:layout_gravity">fill</item>
+        <item name="android:layout_width">@dimen/form_tv_width_26</item>
+        <item name="android:layout_margin">@dimen/form_tv_margin</item>
+        <item name="android:textSize">@dimen/form_tv_text_size</item>
+        <item name="android:textColor">@color/gray</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="FormTextView36" parent="android:style/Widget.TextView">
+        <item name="android:layout_columnSpan">3</item>
+        <item name="android:layout_gravity">fill</item>
+        <item name="android:layout_width">@dimen/form_tv_width_36</item>
+        <item name="android:layout_margin">@dimen/form_tv_margin</item>
+        <item name="android:textSize">@dimen/form_tv_text_size</item>
+        <item name="android:textColor">@color/gray</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="FormEditText16" parent="android:style/Widget.EditText">
+        <item name="android:layout_width">@dimen/form_tv_width_16</item>
+        <item name="android:layout_margin">@dimen/form_tv_margin</item>
+        <item name="android:textSize">@dimen/form_tv_text_size</item>
+        <item name="android:background">@drawable/edittext_bg</item>
+    </style>
+
+    <style name="FormEditText26" parent="android:style/Widget.EditText">
+        <item name="android:layout_columnSpan">2</item>
+        <item name="android:layout_gravity">fill</item>
+        <item name="android:layout_width">@dimen/form_tv_width_26</item>
+        <item name="android:layout_margin">@dimen/form_tv_margin</item>
+        <item name="android:textSize">@dimen/form_tv_text_size</item>
+        <item name="android:background">@drawable/edittext_bg</item>
+    </style>
+
+    <style name="FormEditText36" parent="android:style/Widget.EditText">
+        <item name="android:layout_columnSpan">3</item>
+        <item name="android:layout_gravity">fill</item>
+        <item name="android:layout_width">@dimen/form_tv_width_36</item>
+        <item name="android:layout_margin">@dimen/form_tv_margin</item>
+        <item name="android:textSize">@dimen/form_tv_text_size</item>
+        <item name="android:background">@drawable/edittext_bg</item>
+    </style>
+
+    <style name="ButtonPink" parent="android:style/Widget.Button">
+        <item name="android:layout_width">180dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:background">@drawable/button_pink_bg</item>
+    </style>
+
+    <style name="ButtonGray" parent="android:style/Widget.Button">
+        <item name="android:layout_width">120dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:background">@drawable/button_gray_bg</item>
+    </style>
+
+
+
+
+
+
     <style name="MenuItemLayout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>

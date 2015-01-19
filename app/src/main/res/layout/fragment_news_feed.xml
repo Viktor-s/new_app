@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/app_background">
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/news_RecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        android:layout_marginBottom="@dimen/news_divider_height"
+        android:background="@android:color/transparent"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="0dp" />
+
+    <FrameLayout
+        android:id="@+id/news_item_container_frameLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_marginLeft="@dimen/news_fragment_block_size"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="@android:color/white"></FrameLayout>
+
+</RelativeLayout>

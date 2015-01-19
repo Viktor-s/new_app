@@ -7,28 +7,24 @@
     <string name="login_button">подтвердить</string>
     <string name="enter_phone_number">Введите\nномер телефона</string>
     <string name="news_comments_title">Комментарии - </string>
-
+    <string name="news_item_add_comment">Добавить комментарий: </string>
+    <string name="news_item_add_comment_button">Добавить</string>
     <string name="product_title_credit">Кредитование</string>
     <string name="product_title_insurance">Страхование</string>
     <string name="product_title_tourism">Туризм</string>
     <string name="product_title_education">Образование</string>
-
     <string name="product_title_credit_without_bail">кредит наличными (без залога)</string>
     <string name="product_title_credit_bail">кредит наличными под залог</string>
     <string name="product_title_life_insurance">страхование жизни life</string>
     <string name="product_title_credit_risk_insurance">рисковое страхование</string>
     <string name="product_title_airline_tickets">авиа билеты по лучшей цене</string>
     <string name="product_title_credit_education_online">образование онлайн</string>
-
-
     <string name="product_description_credit_without_bail">Удобный кредит сроком от 14 дней до 36 месяцев, от 500 до 250 000 грн, на любые цели с простой схемой погашения.</string>
     <string name="product_description_credit_bail">Гарантированно быстрое решение финансовых потребностей, под залог транспортного средства, недвижемости, золота, бытовой техники.</string>
     <string name="product_description_life_insurance">Канадская фристайлистка Дара Хоуэлл выиграла "золото" Олимпийских игр в Сочи в слоупстайле. Победительница набрала 94,20 балла. Серебряным призером стала американка Дэвин Логан (85,40), бронзовым - еще одна спортсменка из Канады Ким Ламмэр</string>
-    <string name="product_description_credit_risk_insurance">Надежное страхование Вашего автомобиля или другого транспортного средства от частичного или полного повреждения, а также страхование ответственности <водителя></водителя></string>
+    <string name="product_description_credit_risk_insurance">Надежное страхование Вашего автомобиля или другого транспортного средства от частичного или полного повреждения, а также страхование ответственности <водителя /></string>
     <string name="product_description_airline_tickets">Мы сотрудничаем с ведущими авиакомпаниями и подбираем вам рейс, максимально удовлетворяющий Ваши требования.</string>
     <string name="product_description_credit_education_online">Доступное европейское образование MBA не выходя из дома. По завершению программы каждый из участников получает сертификат от MMU Business School.</string>
-
-
     <string name="menu_item_title_news">Новости</string>
     <string name="menu_item_title_mail">Почта</string>
     <string name="menu_item_title_calendar">Календарь</string>
@@ -39,5 +35,37 @@
     <string name="internet">Интернет</string>
     <string name="remittances">Переводы</string>
     <string name="banking">Банкинг</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- FORM -->
+    <string name="form_tv_last_name">Фамилия</string>
+    <string name="form_tv_first_name">Имя</string>
+    <string name="form_tv_middle_name">Отчество</string>
+    <string name="form_tv_city">Город</string>
+    <string name="form_tv_street">Улица</string>
+    <string name="form_tv_house">Дом</string>
+    <string name="form_tv_apartment">Кв</string>
+    <string name="form_tv_email">Email</string>
+    <string name="form_tv_phone">Телефон</string>
+
+
+
+
+
+
+
+
+
+
+
+    Last Name
+         e
+         patronymic
+        
+        
+        
+        
+        
+        
 
 </resources>

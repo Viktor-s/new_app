@@ -39,82 +39,195 @@
             <RelativeLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/product_item_bg">
+
+
 
                 <ImageView
-                    android:id="@+id/imageView1"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:src="@drawable/purse" />
-
+                    android:layout_width="240dp"
+                    android:layout_height="160dp"
+                    android:layout_alignParentLeft="true"
+                    android:src="@drawable/purse"/>
 
                 <TextView
                     android:id="@+id/textView1"
+                    android:layout_marginLeft="@dimen/product_item_margin_left"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/imageView1"
                     android:text="ДЕНЬГИ В КОШЕЛЕК"
                     android:textColor="@color/gray"/>
 
                 <TextView
                     android:id="@+id/textView2"
+                    android:layout_marginLeft="@dimen/product_item_margin_left"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/imageView1"
                     android:layout_below="@id/textView1"
                     android:text="Сумма: до 3000 грн"
                     android:textColor="@color/gray"/>
 
                 <TextView
                     android:id="@+id/textView3"
+                    android:layout_marginLeft="@dimen/product_item_margin_left"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/imageView1"
                     android:layout_below="@id/textView2"
                     android:text="Срок кредитования: до 30 дней"
                     android:textColor="@color/gray"/>
 
                 <TextView
                     android:id="@+id/textView4"
+                    android:layout_marginLeft="@dimen/product_item_margin_left"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/imageView1"
                     android:layout_below="@id/textView3"
                     android:text="Условия: Без справки о доходах"
                     android:textColor="@color/gray"/>
 
                 <TextView
                     android:id="@+id/textView5"
+                    android:layout_marginLeft="@dimen/product_item_margin_left"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/imageView1"
                     android:layout_below="@id/textView4"
                     android:text="Документы: Паспорт + ИНН"
                     android:textColor="@color/gray"/>
 
-
                 <Button
                     android:id="@+id/buttonIssue"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/imageView1"
+                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    style="@style/ButtonPink"
                     android:layout_below="@id/textView5"
                     android:text="ОФОРМИТ" />
 
                 <Button
                     android:id="@+id/buttonDetails"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:layout_toRightOf="@id/buttonIssue"
                     android:layout_below="@id/textView5"
+                    android:layout_marginLeft="20dp"
+                    style="@style/ButtonGray"
                     android:text="ПОДРОБНЕЕ" />
 
             </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/product_item_bg">
+
+                <ImageView
+                    android:layout_width="240dp"
+                    android:layout_height="160dp"
+                    android:layout_alignParentLeft="true"
+                    android:src="@drawable/purse"/>
+
+                <TextView
+                    android:id="@+id/textView12"
+                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ДЕНЬГИ В КОШЕЛЕК"
+                    android:textColor="@color/gray"/>
+
+                <TextView
+                    android:id="@+id/textView22"
+                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/textView12"
+                    android:text="Сумма: до 3000 грн"
+                    android:textColor="@color/gray"/>
+
+                <TextView
+                    android:id="@+id/textView32"
+                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/textView22"
+                    android:text="Срок кредитования: до 30 дней"
+                    android:textColor="@color/gray"/>
+
+                <TextView
+                    android:id="@+id/textView42"
+                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/textView32"
+                    android:text="Условия: Без справки о доходах"
+                    android:textColor="@color/gray"/>
+
+                <TextView
+                    android:id="@+id/textView52"
+                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/textView42"
+                    android:text="Документы: Паспорт + ИНН"
+                    android:textColor="@color/gray"/>
+
+                <Button
+                    android:id="@+id/buttonIssue2"
+                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    style="@style/ButtonPink"
+                    android:layout_below="@id/textView52"
+                    android:text="ОФОРМИТ" />
+
+                <Button
+                    android:id="@+id/buttonDetails2"
+                    android:layout_toRightOf="@id/buttonIssue2"
+                    android:layout_below="@id/textView52"
+                    android:layout_marginLeft="20dp"
+                    style="@style/ButtonGray"
+                    android:text="ПОДРОБНЕЕ" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/form_bg">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="ШАГ 1"
+                    android:textSize="16sp"
+                    android:padding="10dp"
+                    android:gravity="center_horizontal"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="5dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/form_bg">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="ШАГ 2"
+                    android:textSize="16sp"
+                    android:padding="10dp"
+                    android:gravity="center_horizontal"/>
+
+                <include layout="@layout/form_personal" />
+            </LinearLayout>
+
+
 
 
         </LinearLayout>
 
     </ScrollView>
-
 
 </LinearLayout>
