@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
+    android:paddingLeft="20dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -9,45 +10,75 @@
         android:layout_height="wrap_content"
         android:text="@string/fast_pay"
         android:textAllCaps="true"
-        android:textSize="32sp" />
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:textSize="42sp" />
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_width="match_parent"
+        android:layout_width="530dp"
         android:layout_height="wrap_content">
 
         <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:id="@+id/pay_communication"
+            style="@style/PayButtonStyle">
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_launcher" />
+                android:src="@drawable/ic_launcher"
+                style="@style/PayButtonIconStyle" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Medium Text" />
+                android:text="@string/communication"
+                style="@style/PayButtonTextStyle" />
         </LinearLayout>
 
         <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:id="@+id/pay_internet"
+            style="@style/PayButtonStyle">
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_launcher" />
+                android:src="@drawable/ic_launcher"
+                style="@style/PayButtonIconStyle" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Medium Text" />
+                android:text="@string/internet"
+                style="@style/PayButtonTextStyle" />
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/pay_remittances"
+            style="@style/PayButtonStyle">
+
+            <ImageView
+                android:src="@drawable/ic_launcher"
+                style="@style/PayButtonIconStyle" />
+
+            <TextView
+                android:text="@string/remittances"
+                style="@style/PayButtonTextStyle" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/pay_banking"
+            style="@style/PayButtonStyle">
+
+            <ImageView
+                android:src="@drawable/ic_launcher"
+                style="@style/PayButtonIconStyle" />
+
+            <TextView
+                android:text="@string/banking"
+                style="@style/PayButtonTextStyle" />
+        </LinearLayout>
+
     </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/paying_fragment_panel"
+        android:layout_width="510dp"
+        android:layout_marginTop="20dp"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:background="@drawable/digit_button_selector" />
+
 </LinearLayout>

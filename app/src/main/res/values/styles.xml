@@ -70,4 +70,32 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
+    <style name="PayButtonStyle">
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_width">120dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:paddingTop">20dp</item>
+        <item name="android:paddingBottom">20dp</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:background">@drawable/digit_button_selector</item>
+    </style>
+
+    <style name="PayButtonIconStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:layout_marginBottom">10dp</item>
+    </style>
+
+    <style name="PayButtonTextStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+    </style>
+
 </resources>

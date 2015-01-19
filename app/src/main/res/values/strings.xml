@@ -35,5 +35,9 @@
     <string name="menu_item_title_products">Продукты</string>
     <string name="menu_item_title_briefcase">Портфель</string>
     <string name="fast_pay">Заплати\nбыстро</string>
+    <string name="communication">Связь</string>
+    <string name="internet">Интернет</string>
+    <string name="remittances">Переводы</string>
+    <string name="banking">Банкинг</string>
 
 </resources>
