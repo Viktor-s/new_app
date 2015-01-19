@@ -2,45 +2,46 @@ package me.justup.upme.entity;
 
 import android.graphics.drawable.Drawable;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class NewsModelEntity {
-    private String newsDate;
-    private String newsTitle;
-    private String newsText;
-    private Drawable newsImage;
+public class NewsFeedEntity implements Serializable {
+    private String mNewsDate;
+    private String mNewsTitle;
+    private String mNewsText;
+    private Drawable mNewsImage;
     private List<NewsCommentEntity> mNewsCommentEntityList;
 
     public String getNewsTitle() {
-        return newsTitle;
+        return mNewsTitle;
     }
 
     public String getNewsDate() {
-        return newsDate;
+        return mNewsDate;
     }
 
     public void setNewsDate(String newsDate) {
-        this.newsDate = newsDate;
+        this.mNewsDate = newsDate;
     }
 
     public void setNewsTitle(String newsTitle) {
-        this.newsTitle = newsTitle;
+        this.mNewsTitle = newsTitle;
     }
 
     public String getNewsText() {
-        return newsText;
+        return mNewsText;
     }
 
     public void setNewsText(String newsText) {
-        this.newsText = newsText;
+        this.mNewsText = newsText;
     }
 
     public Drawable getNewsImage() {
-        return newsImage;
+        return mNewsImage;
     }
 
     public void setNewsImage(Drawable newsImage) {
-        this.newsImage = newsImage;
+        this.mNewsImage = newsImage;
     }
 
     public List<NewsCommentEntity> getNewsCommentEntityList() {

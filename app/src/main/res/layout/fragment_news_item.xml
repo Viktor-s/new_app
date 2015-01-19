@@ -1,0 +1,105 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/app_background">
+
+    <ScrollView
+        android:id="@+id/ScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/news_item_margin_left"
+        android:layout_marginRight="@dimen/news_item_margin_right"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/news_item_imageView"
+                android:src="@drawable/news_image_test"
+                android:scaleType="fitXY" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New Text"
+                android:id="@+id/news_item_title_textView"
+                android:layout_gravity="center_horizontal"
+                android:textSize="@dimen/news_fragment_title_text_size"
+                android:layout_marginTop="@dimen/news_item_block_margin"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New Text"
+                android:id="@+id/news_item_main_text_textView"
+                android:layout_gravity="center_horizontal"
+                android:textSize="@dimen/news_fragment_title_text_size"
+                android:layout_marginTop="@dimen/news_item_block_margin"
+                android:textColor="@android:color/black" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="2dp"
+                android:background="#AAAAAA"
+                android:layout_marginTop="@dimen/news_item_block_margin"
+                android:layout_marginBottom="@dimen/news_item_block_margin"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/news_item_add_comment"
+                android:id="@+id/news_item_add_comment_textView"
+                android:layout_marginBottom="@dimen/news_item_add_comment_margin"
+                android:textSize="@dimen/news_fragment_title_text_size"
+                android:textColor="@android:color/black"
+                android:textAllCaps="true" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginBottom="@dimen/news_item_block_margin">
+
+                <EditText
+                    android:layout_width="300dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/editText"
+                    android:layout_marginRight="30dp"
+                    android:background="@android:color/white" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:text="@string/news_item_add_comment_button"
+                    android:id="@+id/button10"
+                    android:textAllCaps="true" />
+            </LinearLayout>
+
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:id="@+id/news_item_comments_listView" />
+        </LinearLayout>
+    </ScrollView>
+
+
+    <Button
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/news_item_close_button"
+        android:visibility="visible"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/button_close_test"
+        android:clickable="false"
+        android:layout_marginTop="@dimen/news_item_add_comment_margin" />
+
+</RelativeLayout>

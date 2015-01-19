@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import me.justup.upme.fragments.BriefcaseFragment;
 import me.justup.upme.fragments.CalendarFragment;
 import me.justup.upme.fragments.MailFragment;
-import me.justup.upme.fragments.NewsFragment;
+import me.justup.upme.fragments.NewsFeedFragment;
 import me.justup.upme.fragments.ProductsFragment;
 import me.justup.upme.utils.LogUtils;
 
@@ -62,7 +62,7 @@ public class MainActivity extends Activity {
 
         switch (view.getId()) {
             case R.id.news_menu_item:
-                fragment = new NewsFragment();
+                fragment = new NewsFeedFragment();
                 break;
 
             case R.id.mail_menu_item:
