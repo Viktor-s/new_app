@@ -17,5 +17,6 @@
 
     <color name="button_back_pink">#c85794</color>
     <color name="button_back_gray">#c3c2c2</color>
+    <color name="form_bg">#2e2c31</color>
 
 </resources>

@@ -1,6 +1,6 @@
 <resources>
 
-    <dimen name="radius">100dp</dimen>
+    <dimen name="radius">20dp</dimen>
 
     <dimen name="news_fragment_title_margin_left_right_top">18dp</dimen>
     <dimen name="news_fragment_text_margin_top">12dp</dimen>
@@ -25,6 +25,8 @@
     <dimen name="form_tv_width_36">150dp</dimen>
     <dimen name="form_tv_margin">5dp</dimen>
     <dimen name="form_tv_text_size">14sp</dimen>
+
+    <dimen name="product_item_margin_left">250dp</dimen>
 
     <!-- LOGIN -->
     <dimen name="pincode_button_margin">5dp</dimen>
