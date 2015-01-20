@@ -134,10 +134,10 @@
     </LinearLayout>
 
     <ImageView
-        android:layout_width="12dp"
-        android:layout_height="12dp"
-        android:id="@+id/imageView"
-        android:layout_marginLeft="19dp"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:id="@+id/is_news_viewed_imageView"
+        android:layout_marginLeft="14dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"

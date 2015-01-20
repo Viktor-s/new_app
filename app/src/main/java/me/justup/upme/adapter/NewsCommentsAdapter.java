@@ -22,7 +22,7 @@ public class NewsCommentsAdapter extends ArrayAdapter<NewsCommentEntity> {
     }
 
     public NewsCommentsAdapter(Context context, List<NewsCommentEntity> users) {
-        super(context, R.layout.news_comments_listview_item, users);
+        super(context, R.layout.news_comments_list_item, users);
     }
 
     @Override
@@ -32,7 +32,7 @@ public class NewsCommentsAdapter extends ArrayAdapter<NewsCommentEntity> {
         if (convertView == null) {
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
-            convertView = inflater.inflate(R.layout.news_comments_listview_item, parent, false);
+            convertView = inflater.inflate(R.layout.news_comments_list_item, parent, false);
             viewHolder.mImageView = (ImageView) convertView.findViewById(R.id.news_comment_imageView);
             viewHolder.mTitle = (TextView) convertView.findViewById(R.id.news_comment_title_textView);
             viewHolder.mMainText = (TextView) convertView.findViewById(R.id.news_comment_main_text_textView);

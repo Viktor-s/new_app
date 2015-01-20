@@ -1,6 +1,7 @@
 <resources>
 
     <dimen name="radius">20dp</dimen>
+    <dimen name="news_item_comment_bg_radius">12dp</dimen>
 
     <dimen name="news_fragment_title_margin_left_right_top">18dp</dimen>
     <dimen name="news_fragment_text_margin_top">12dp</dimen>
@@ -9,7 +10,7 @@
     <dimen name="news_fragment_title_text_size">21sp</dimen>
     <dimen name="news_fragment_main_text_size">12sp</dimen>
     <dimen name="news_comment_image_size">40dp</dimen>
-    <dimen name="news_comment_image_margin">12dp</dimen>
+    <dimen name="news_comment_image_margin">6dp</dimen>
     <dimen name="news_comment_title_tex_size">12sp</dimen>
     <dimen name="news_comment_main_text_size">13sp</dimen>
     <dimen name="news_divider_height">25dp</dimen>
@@ -41,5 +42,14 @@
 
     <!-- MAIL -->
     <dimen name="mail_contacts_list_width">350dp</dimen>
+    <dimen name="mail_search_block_height">70dp</dimen>
+    <dimen name="mail_messages_block_height">90dp</dimen>
+    <dimen name="mail_messages_staple_height">35dp</dimen>
+    <dimen name="mail_messages_staple_width">55dp</dimen>
+    <dimen name="mail_messages_staple_line_margin">12dp</dimen>
+    <dimen name="mail_messages_text_height">40dp</dimen>
+    <dimen name="mail_messages_text_width">250dp</dimen>
+    <dimen name="mail_messages_call_margin">14dp</dimen>
+    <dimen name="mail_messages_camera_button_height">55dp</dimen>
 
 </resources>

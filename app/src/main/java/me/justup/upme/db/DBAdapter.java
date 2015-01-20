@@ -87,7 +87,7 @@ public class DBAdapter {
         database.delete(BASE_TABLE_NAME, BASE_PROJECT_ID + " = " + projId, null);
     }
 
-    public List<NewsFeedEntity> getNewsModelsTestlist() {
+    public List<NewsFeedEntity> getNewsModelsTestList() {
         List<NewsFeedEntity> mNewsFeedEntityList = new ArrayList<>();
         List<NewsCommentEntity> mNewsCommentEntityList = new ArrayList<>();
         for (int j = 0; j < 10; j++) {
@@ -108,6 +108,31 @@ public class DBAdapter {
         }
         return mNewsFeedEntityList;
     }
+
+    public List<NewsFeedEntity> getNextPackOfNewsModelsTestList() {
+        List<NewsFeedEntity> mNewsFeedEntityList = new ArrayList<>();
+        List<NewsCommentEntity> mNewsCommentEntityList = new ArrayList<>();
+        for (int j = 0; j < 10; j++) {
+            NewsCommentEntity newsCommentEntity = new NewsCommentEntity();
+            newsCommentEntity.setCommentTitle("MR. ANDROID 11:00 20 ЯНВАРЯ 2015");
+            newsCommentEntity.setCommentText("Lorem ipsum dolor sit amet, consectetur adipisicing elit, ut labore et");
+            newsCommentEntity.setCommentImage(AppContext.getAppContext().getResources().getDrawable(R.drawable.ic_launcher));
+            mNewsCommentEntityList.add(newsCommentEntity);
+        }
+        for (int i = 0; i < 10; i++) {
+            NewsFeedEntity newsFeedEntity = new NewsFeedEntity();
+            newsFeedEntity.setNewsDate("01:30 03 СЕНТЯБРЯ 2014");
+            newsFeedEntity.setNewsTitle("ИЗ ПОДМАСТЕРЬЕВ В МИЛЛИАРДЕРЫ" + " " + i);
+            newsFeedEntity.setNewsText("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore.");
+            newsFeedEntity.setNewsImage(AppContext.getAppContext().getResources().getDrawable(R.drawable.news_image_test));
+            newsFeedEntity.setNewsCommentEntityList(mNewsCommentEntityList);
+            mNewsFeedEntityList.add(newsFeedEntity);
+        }
+        return mNewsFeedEntityList;
+    }
+
+
+
 
     public UserEntity getUserEntity() {
         UserEntity mUserEntity = new UserEntity();

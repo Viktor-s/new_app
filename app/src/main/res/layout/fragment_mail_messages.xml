@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/mail_messages_close_button"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/button_close_test"
+        android:layout_marginTop="@dimen/news_item_add_comment_margin" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout3"
+        android:layout_alignParentBottom="true"
+        android:layout_toStartOf="@+id/mail_messages_close_button"
+        android:layout_alignEnd="@+id/listView">
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/mail_messages_block_height"
+            android:background="@color/white">
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:background="#AAAAAA"
+                android:layout_toEndOf="@+id/news_comment_imageView" />
+
+            <Button
+                android:layout_width="60dp"
+                android:layout_height="@dimen/mail_messages_staple_height"
+                android:id="@+id/mail_messages_staple_button"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:background="@drawable/mail_messages_add_file_button_bg"
+                android:layout_marginLeft="4dp" />
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="wrap_content"
+                android:background="@color/login_enter_button_background"
+                android:layout_toEndOf="@+id/mail_messages_staple_button"
+                android:layout_alignTop="@+id/mail_messages_staple_button"
+                android:layout_alignBottom="@+id/mail_messages_staple_button"
+                android:id="@+id/button12"
+                android:layout_marginLeft="@dimen/mail_messages_staple_line_margin"
+                android:layout_marginRight="@dimen/mail_messages_staple_line_margin" />
+
+            <EditText
+                android:layout_width="@dimen/mail_messages_text_width"
+                android:layout_height="@dimen/mail_messages_text_height"
+                android:id="@+id/editText4"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/button12"
+                android:textColor="@color/black"
+                android:background="@color/white" />
+
+            <Button
+                android:layout_width="@dimen/mail_messages_text_height"
+                android:layout_height="@dimen/mail_messages_text_height"
+                android:id="@+id/mail_messages_call_button"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:background="@drawable/image_call"
+                android:layout_marginRight="@dimen/mail_messages_call_margin" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/mail_messages_text_height"
+                android:id="@+id/mail_messages_add_button"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/mail_messages_call_button"
+                android:background="@drawable/button_pink_bg"
+                android:padding="6dp"
+                android:layout_marginRight="@dimen/mail_messages_call_margin"
+                android:text="@string/mail_messages_send"
+                android:textAllCaps="true"
+                android:gravity="center" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="16dp"
+            android:background="@color/mail_add_file_bg" />
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/mail_messages_block_height"
+            android:visibility="gone"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/mail_messages_staple_button"
+            android:id="@+id/mail_messages_add_file_container"
+            android:background="@color/mail_add_file_bg" >
+
+            <Button
+                android:layout_width="@dimen/mail_messages_camera_button_height"
+                android:layout_height="@dimen/mail_messages_camera_button_height"
+                android:id="@+id/button11"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/button_sound_bg" />
+
+            <Button
+                android:layout_width="@dimen/mail_messages_camera_button_height"
+                android:layout_height="@dimen/mail_messages_camera_button_height"
+                android:id="@+id/button13"
+                android:background="@drawable/button_camera_bg"
+                android:layout_alignTop="@+id/button11"
+                android:layout_toStartOf="@+id/textView10" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mail_messages_take_audio"
+                android:id="@+id/textView8"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/button11" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mail_messages_take_photo"
+                android:id="@+id/textView10"
+                android:layout_alignTop="@+id/textView8"
+                android:layout_toStartOf="@+id/button11"
+                android:layout_marginRight="4dp" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/listView"
+        android:layout_above="@+id/linearLayout3"
+        android:layout_marginRight="@dimen/news_item_margin_right" />
+
+</RelativeLayout>

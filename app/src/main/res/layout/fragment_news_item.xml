@@ -48,8 +48,7 @@
                 android:layout_height="2dp"
                 android:background="#AAAAAA"
                 android:layout_marginTop="@dimen/news_item_block_margin"
-                android:layout_marginBottom="@dimen/news_item_block_margin"
-                android:textColor="@android:color/black" />
+                android:layout_marginBottom="@dimen/news_item_block_margin" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -68,18 +67,21 @@
                 android:layout_marginBottom="@dimen/news_item_block_margin">
 
                 <EditText
-                    android:layout_width="300dp"
+                    android:layout_width="260dp"
                     android:layout_height="match_parent"
                     android:id="@+id/editText"
-                    android:layout_marginRight="30dp"
-                    android:background="@android:color/white" />
+                    android:layout_marginRight="20dp"
+                    android:background="@drawable/news_item_comment_edittext_bg"
+                    android:textColor="@color/black" />
 
                 <Button
                     android:layout_width="wrap_content"
-                    android:layout_height="50dp"
+                    android:layout_height="match_parent"
                     android:text="@string/news_item_add_comment_button"
                     android:id="@+id/button10"
-                    android:textAllCaps="true" />
+                    android:textAllCaps="true"
+                    android:background="@drawable/news_item_comment_button_bg"
+                    android:padding="6dp" />
             </LinearLayout>
 
             <ListView

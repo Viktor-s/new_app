@@ -13,7 +13,7 @@
 
         <EditText
             android:layout_width="fill_parent"
-            android:layout_height="50dp"
+            android:layout_height="@dimen/mail_search_block_height"
             android:id="@+id/editText2"
             android:background="@color/white" />
 
@@ -27,7 +27,7 @@
     </LinearLayout>
 
     <FrameLayout
-        android:id="@+id/news_item_container_frameLayout"
+        android:id="@+id/mail_messages_container_frameLayout"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:layout_marginLeft="@dimen/mail_contacts_list_width"
