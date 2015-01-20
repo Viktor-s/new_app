@@ -76,6 +76,16 @@
         <item name="android:textAllCaps">true</item>
     </style>
 
+    <style name="FormTextView46" parent="android:style/Widget.TextView">
+        <item name="android:layout_columnSpan">4</item>
+        <item name="android:layout_gravity">fill</item>
+        <item name="android:layout_width">@dimen/form_tv_width_46</item>
+        <item name="android:layout_margin">@dimen/form_tv_margin</item>
+        <item name="android:textSize">@dimen/form_tv_text_size</item>
+        <item name="android:textColor">@color/gray</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
     <style name="FormEditText16" parent="android:style/Widget.EditText">
         <item name="android:layout_width">@dimen/form_tv_width_16</item>
         <item name="android:layout_margin">@dimen/form_tv_margin</item>
@@ -96,6 +106,15 @@
         <item name="android:layout_columnSpan">3</item>
         <item name="android:layout_gravity">fill</item>
         <item name="android:layout_width">@dimen/form_tv_width_36</item>
+        <item name="android:layout_margin">@dimen/form_tv_margin</item>
+        <item name="android:textSize">@dimen/form_tv_text_size</item>
+        <item name="android:background">@drawable/edittext_bg</item>
+    </style>
+
+    <style name="FormEditText46" parent="android:style/Widget.EditText">
+        <item name="android:layout_columnSpan">4</item>
+        <item name="android:layout_gravity">fill</item>
+        <item name="android:layout_width">@dimen/form_tv_width_46</item>
         <item name="android:layout_margin">@dimen/form_tv_margin</item>
         <item name="android:textSize">@dimen/form_tv_text_size</item>
         <item name="android:background">@drawable/edittext_bg</item>
@@ -122,6 +141,16 @@
         <item name="android:textColor">@android:color/white</item>
         <item name="android:background">@drawable/button_gray_bg</item>
     </style>
+
+    <style name="StepText" parent="android:style/Widget.TextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:textColor">@color/gray</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
 
 
     <style name="MenuItemLayout">

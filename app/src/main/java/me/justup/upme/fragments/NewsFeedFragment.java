@@ -18,24 +18,28 @@ import me.justup.upme.db.DBAdapter;
 import me.justup.upme.entity.NewsFeedEntity;
 import me.justup.upme.utils.AppContext;
 
+import static me.justup.upme.utils.LogUtils.LOGI;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 
 public class NewsFeedFragment extends Fragment {
     private static final String TAG = makeLogTag(NewsFeedFragment.class);
-
     private RecyclerView mNewsFeedView;
     private NewsFeedAdapter mNewsFeedAdapter;
     private DBAdapter mDBAdapter;
     private List<NewsFeedEntity> mNewsFeedEntityList;
     private FrameLayout mNewsItemContainer;
+    private int lastChosenPosition = -1;
+    private boolean isLoading = true;
+    int pastVisiblesItems, visibleItemCount, totalItemCount;
+    private LinearLayoutManager mLayoutManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mDBAdapter = new DBAdapter(AppContext.getAppContext());
         mDBAdapter.open();
-        mNewsFeedEntityList = mDBAdapter.getNewsModelsTestlist();
+        mNewsFeedEntityList = mDBAdapter.getNewsModelsTestList();
     }
 
     @Override
@@ -49,21 +53,43 @@ public class NewsFeedFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_news_feed, container, false);
         mNewsItemContainer = (FrameLayout) view.findViewById(R.id.news_item_container_frameLayout);
         mNewsFeedView = (RecyclerView) view.findViewById(R.id.news_RecyclerView);
-        mNewsFeedView.setLayoutManager(new LinearLayoutManager(AppContext.getAppContext()));
+
+        mLayoutManager = new LinearLayoutManager(AppContext.getAppContext());
+        mNewsFeedView.setLayoutManager(mLayoutManager);
         mNewsFeedAdapter = new NewsFeedAdapter(mNewsFeedEntityList);
         mNewsFeedView.setAdapter(mNewsFeedAdapter);
 
         mNewsFeedAdapter.setOnItemClickListener(new NewsFeedAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                final FragmentTransaction ft = getChildFragmentManager().beginTransaction();
-                ft.replace(R.id.news_item_container_frameLayout, NewsItemFragment.newInstance(mNewsFeedEntityList.get(position)));
-                ft.commit();
+                if (lastChosenPosition != position) {
+                    final FragmentTransaction ft = getChildFragmentManager().beginTransaction();
+                    ft.replace(R.id.news_item_container_frameLayout, NewsItemFragment.newInstance(mNewsFeedEntityList.get(position)));
+                    ft.commit();
+                    lastChosenPosition = position;
+                }
+            }
+        });
+        mNewsFeedView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                visibleItemCount = mLayoutManager.getChildCount();
+                totalItemCount = mLayoutManager.getItemCount();
+                pastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
+                if (isLoading) {
+                    if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+                        mNewsFeedEntityList.addAll(mDBAdapter.getNextPackOfNewsModelsTestList());
+                        mNewsFeedAdapter.notifyDataSetChanged();
+                        if (mNewsFeedEntityList.size() >= 50) {
+                            isLoading = false;
+                        }
+                        LOGI(TAG, mNewsFeedEntityList.size() + " " + pastVisiblesItems + " " + visibleItemCount + " " + totalItemCount);
+                    }
+                }
             }
         });
         return view;
     }
-
 
 }
 

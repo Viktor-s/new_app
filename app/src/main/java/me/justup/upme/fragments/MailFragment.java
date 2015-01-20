@@ -1,10 +1,12 @@
 package me.justup.upme.fragments;
 
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import me.justup.upme.R;
@@ -20,9 +22,8 @@ public class MailFragment extends Fragment {
     private static final String TAG = makeLogTag(MailFragment.class);
     private DBAdapter mDBAdapter;
     private UserEntity mUserEntity;
-
     private ListView contactsListView;
-
+    private int lastChosenPosition = -1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,12 +39,22 @@ public class MailFragment extends Fragment {
         mDBAdapter.close();
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mail, container, false);
         contactsListView = (ListView) view.findViewById(R.id.mail_contacts_ListView);
         contactsListView.setAdapter(new MailContactsAdapter(AppContext.getAppContext(), mUserEntity.getmContactEntityList()));
+        contactsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                if (lastChosenPosition != position) {
+                    final FragmentTransaction ft = getChildFragmentManager().beginTransaction();
+                    ft.replace(R.id.mail_messages_container_frameLayout, MailMessagesFragment.newInstance());
+                    ft.commit();
+                    lastChosenPosition = position;
+                }
+            }
+        });
         return view;
     }
 

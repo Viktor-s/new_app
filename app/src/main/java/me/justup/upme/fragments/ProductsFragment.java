@@ -25,9 +25,14 @@ public class ProductsFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_products, container, false);
 
         View imageWithoutBail = view.findViewById(R.id.product_without_bail_image);
-        View textWithoutBail = view.findViewById(R.id.credit_without_bail_text);
+        View textWithoutBail = view.findViewById(R.id.product_without_bail_text);
         imageWithoutBail.setOnClickListener(this);
         textWithoutBail.setOnClickListener(this);
+
+        View imageBail = view.findViewById(R.id.product_bail_image);
+        View textBail = view.findViewById(R.id.product_bail_text);
+        imageBail.setOnClickListener(this);
+        textBail.setOnClickListener(this);
 
         // logging example
         LOGI(TAG, "Fragment start");

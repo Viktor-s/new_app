@@ -21,4 +21,5 @@
     <color name="button_back_gray">#c3c2c2</color>
     <color name="form_bg">#2e2c31</color>
 
+    <color name="mail_add_file_bg">#2F2E30</color>
 </resources>

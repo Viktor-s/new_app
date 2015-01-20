@@ -26,6 +26,11 @@
             android:screenOrientation="landscape"
             android:windowSoftInputMode="stateHidden" />
 
+        <activity
+            android:name=".ProductItemActivity"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="stateHidden" />
+
     </application>
 
 </manifest>
