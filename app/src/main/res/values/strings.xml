@@ -48,4 +48,13 @@
     <string name="form_tv_email">Email</string>
     <string name="form_tv_phone">Телефон</string>
 
+    <string name="provider">Провайдер</string>
+    <string name="summa">Сумма</string>
+    <string name="send">Отправить</string>
+    <string name="contract_number">Номер договора</string>
+    <string name="from_card">С карты</string>
+    <string name="on_card">На карту</string>
+    <string name="phone_number">Номер телефона</string>
+    <string name="extract_completions">Выписка пополнений</string>
+
 </resources>

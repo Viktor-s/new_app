@@ -4,45 +4,96 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:text="@string/communication"
-        style="@style/PayPanelTitle" />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="@string/communication"
+            android:layout_width="0dp"
+            style="@style/PayPanelTitle"
+            android:layout_weight="1" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/extract_completions"
+            android:textAllCaps="true"
+            android:textSize="@dimen/pay_panel_text_size"
+            android:id="@+id/extract_completions_textView"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <View style="@style/PayPanelTitleDivider" />
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="fill_parent">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:layout_weight="40">
 
             <TextView
-                android:text="Номер телефона"
+                android:text="@string/phone_number"
                 style="@style/PayPanelInfoText" />
 
             <EditText
-                android:id="@+id/editText"
+                android:id="@+id/pay_communication_phone_number"
                 style="@style/PayPanelField" />
 
         </LinearLayout>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="10dp"
+            android:layout_weight="5" />
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:layout_weight="25">
 
             <TextView
-                android:text="Сумма"
+                android:text="@string/summa"
                 style="@style/PayPanelInfoText" />
 
             <EditText
-                android:id="@+id/editText2"
+                android:id="@+id/pay_communication_summ"
                 style="@style/PayPanelField" />
         </LinearLayout>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="10dp"
+            android:layout_weight="5" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="25">
+
+            <TextView
+                android:text="@string/summa"
+                style="@style/PayPanelInfoTextHide"
+                android:textColor="@color/base_background" />
+
+            <Button
+                android:id="@+id/pay_communication_button"
+                style="@style/PayPanelButton" />
+
+        </LinearLayout>
+
     </LinearLayout>
+
+    <Spinner
+        android:id="@+id/pay_communication_spinner"
+        style="@style/PayPanelSpinner" />
 
 </LinearLayout>

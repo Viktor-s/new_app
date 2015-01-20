@@ -124,10 +124,6 @@
     </style>
 
 
-
-
-
-
     <style name="MenuItemLayout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -183,15 +179,24 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAllCaps">true</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">@dimen/pay_panel_text_size</item>
         <item name="android:layout_marginLeft">20dp</item>
         <item name="android:layout_marginBottom">5dp</item>
+    </style>
+
+    <style name="PayPanelInfoTextHide">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">@dimen/pay_panel_text_size</item>
+        <item name="android:layout_marginLeft">20dp</item>
+        <item name="android:layout_marginBottom">2dp</item>
     </style>
 
     <style name="PayPanelField">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:padding">7dp</item>
+        <item name="android:padding">10dp</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:layout_marginBottom">20dp</item>
         <item name="android:background">@drawable/pay_panel_rounded_edittext</item>
@@ -202,9 +207,31 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:textSize">28sp</item>
-        <item name="android:layout_marginBottom">20dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
         <item name="android:drawableLeft">@drawable/ic_launcher</item>
         <item name="android:drawablePadding">10dp</item>
+    </style>
+
+    <style name="PayPanelTitleDivider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_marginBottom">25dp</item>
+        <item name="android:layout_marginLeft">1dp</item>
+        <item name="android:layout_marginRight">1dp</item>
+        <item name="android:background">@color/login_phone_number_background</item>
+    </style>
+
+    <style name="PayPanelButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:background">@drawable/pay_panel_button_selector</item>
+        <item name="android:text">@string/send</item>
+    </style>
+
+    <style name="PayPanelSpinner">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
     </style>
 
 </resources>
