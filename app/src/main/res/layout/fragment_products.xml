@@ -32,12 +32,12 @@
             </RelativeLayout>
 
             <TextView
-                android:id="@+id/credit_without_bail_text"
+                android:id="@+id/product_without_bail_text"
                 style="@style/ProductDescription"
                 android:text="@string/product_description_credit_without_bail" />
 
             <RelativeLayout
-                android:id="@+id/credit_bail_image"
+                android:id="@+id/product_bail_image"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/height_title_picture"
                 android:background="@color/gray">
@@ -49,7 +49,7 @@
             </RelativeLayout>
 
             <TextView
-                android:id="@+id/credit_bail_text"
+                android:id="@+id/product_bail_text"
                 style="@style/ProductDescription"
                 android:text="@string/product_description_credit_bail" />
 
@@ -72,7 +72,7 @@
                 android:text="@string/product_title_insurance"/>
 
             <RelativeLayout
-                android:id="@+id/credit_life_insurance_image"
+                android:id="@+id/product_life_insurance_image"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/height_title_picture"
                 android:background="@color/gray">
@@ -84,12 +84,12 @@
             </RelativeLayout>
 
             <TextView
-                android:id="@+id/credit_life_insurance_text"
+                android:id="@+id/product_life_insurance_text"
                 style="@style/ProductDescription"
                 android:text="@string/product_description_life_insurance" />
 
             <RelativeLayout
-                android:id="@+id/credit_risk_insurance_image"
+                android:id="@+id/product_risk_insurance_image"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/height_title_picture"
                 android:background="@color/gray">
@@ -101,7 +101,7 @@
             </RelativeLayout>
 
             <TextView
-                android:id="@+id/credit_risk_insurance_text"
+                android:id="@+id/product_risk_insurance_text"
                 style="@style/ProductDescription"
                 android:text="@string/product_description_credit_risk_insurance" />
 
@@ -124,7 +124,7 @@
                 android:text="@string/product_title_tourism"/>
 
             <RelativeLayout
-                android:id="@+id/credit_tickets_image"
+                android:id="@+id/product_tickets_image"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/height_title_picture"
                 android:background="@color/gray">
@@ -136,7 +136,7 @@
             </RelativeLayout>
 
             <TextView
-                android:id="@+id/credit_tickets_text"
+                android:id="@+id/product_tickets_text"
                 style="@style/ProductDescription"
                 android:text="@string/product_description_airline_tickets" />
 
@@ -159,7 +159,7 @@
                 android:text="@string/product_title_education"/>
 
             <RelativeLayout
-                android:id="@+id/credit_education_image"
+                android:id="@+id/product_education_image"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/height_title_picture"
                 android:background="@color/gray">
@@ -171,7 +171,7 @@
             </RelativeLayout>
 
             <TextView
-                android:id="@+id/credit_education_text"
+                android:id="@+id/product_education_text"
                 style="@style/ProductDescription"
                 android:text="@string/product_description_credit_education_online" />
 

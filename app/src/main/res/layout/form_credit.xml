@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:background="@color/form_bg">
+
+    <GridLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:columnCount="6"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/FormTextView26"
+            android:text="@string/form_tv_sum" />
+
+        <TextView
+            style="@style/FormTextView26"
+            android:text="@string/form_tv_period" />
+
+        <EditText
+            android:layout_column="0"
+            style="@style/FormEditText26" />
+
+        <EditText style="@style/FormEditText26" />
+
+
+        <TextView
+            android:layout_column="0"
+            android:paddingBottom="10dp"
+            style="@style/FormTextView26"
+            android:text="@string/form_tv_sum_from_to" />
+
+        <TextView
+            style="@style/FormTextView26"
+            android:text="@string/form_tv_period_to" />
+
+        <TextView
+            android:layout_column="0"
+            style="@style/FormTextView26"
+            android:text="@string/form_tv_pledge_form" />
+
+        <TextView
+            style="@style/FormTextView46"
+            android:text="@string/form_tv_pledge" />
+
+        <EditText
+            android:layout_column="0"
+            style="@style/FormEditText26" />
+
+        <EditText style="@style/FormEditText46" />
+
+    </GridLayout>
+
+</LinearLayout>

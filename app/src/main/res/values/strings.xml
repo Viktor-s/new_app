@@ -37,7 +37,7 @@
     <string name="banking">Банкинг</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <!-- FORM -->
+    <!-- FORM CONTACT -->
     <string name="form_tv_last_name">Фамилия</string>
     <string name="form_tv_first_name">Имя</string>
     <string name="form_tv_middle_name">Отчество</string>
@@ -47,5 +47,20 @@
     <string name="form_tv_apartment">Кв</string>
     <string name="form_tv_email">Email</string>
     <string name="form_tv_phone">Телефон</string>
+
+    <!-- FORM CALCULATION -->
+    <string name="form_tv_sum">сумма</string>
+    <string name="form_tv_period">на срок</string>
+    <string name="form_tv_sum_from_to">от 500 до 100</string>
+    <string name="form_tv_period_to">до 1 года</string>
+    <string name="form_tv_age">возвраст</string>
+    <string name="form_tv_placement">трудоустройство</string>
+    <string name="form_tv_certificate_income">справка о доходах</string>
+    <string name="form_tv_work_experience">рабочий стаж</string>
+
+    <!-- FORM PLEDGE -->
+    <string name="form_tv_pledge_form">форма залога</string>
+    <string name="form_tv_pledge">залог</string>
+
 
 </resources>

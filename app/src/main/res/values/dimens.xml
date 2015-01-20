@@ -28,6 +28,7 @@
     <dimen name="form_tv_width_16">50dp</dimen>
     <dimen name="form_tv_width_26">100dp</dimen>
     <dimen name="form_tv_width_36">150dp</dimen>
+    <dimen name="form_tv_width_46">200dp</dimen>
     <dimen name="form_tv_margin">5dp</dimen>
     <dimen name="form_tv_text_size">14sp</dimen>
 

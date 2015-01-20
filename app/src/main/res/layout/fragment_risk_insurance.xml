@@ -22,7 +22,7 @@
                 android:background="@color/blue_gray"
                 android:gravity="center_vertical"
                 android:padding="20dp"
-                android:text="@string/product_title_credit_bail"
+                android:text="@string/product_title_credit_risk_insurance"
                 android:textAllCaps="true"
                 android:textSize="23sp" />
 
@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
                 android:layout_marginTop="20dp"
-                android:text="@string/product_description_credit_bail"
+                android:text="@string/product_description_credit_risk_insurance"
                 android:textColor="@color/gray"
                 android:textSize="12dp" />
 
@@ -49,14 +49,14 @@
                     android:layout_width="240dp"
                     android:layout_height="160dp"
                     android:layout_alignParentLeft="true"
-                    android:src="@drawable/auto" />
+                    android:src="@drawable/osago" />
 
                 <TextView
                     android:id="@+id/textView1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/product_item_margin_left"
-                    android:text="АВТОТРАНСПОРТ"
+                    android:text="ОСАГО"
                     android:textColor="@color/gray" />
 
                 <TextView
@@ -65,7 +65,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/textView1"
                     android:layout_marginLeft="@dimen/product_item_margin_left"
-                    android:text="Документы: Паспорт + ИНН, Свидетелство о регистрации автомобиля, генеральная доверенность при отустсвии собственника. Транспортное средство."
+                    android:text="Обязательное страхование гражданско- правовой ответственности владельцев транспортных средств(Автоцивилка) - это вид страхования, обеспечивающий возмещение вреда, причиненного жизни, здоровью или имуществу третьих лиц в результате дорожно- транспортного происшествия при эксплуатации транспортного средства на территории Украины."
                     android:textColor="@color/gray" />
 
 
@@ -98,14 +98,14 @@
                     android:layout_width="240dp"
                     android:layout_height="160dp"
                     android:layout_alignParentLeft="true"
-                    android:src="@drawable/immovables" />
+                    android:src="@drawable/kasko" />
 
                 <TextView
                     android:id="@+id/textView12"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/product_item_margin_left"
-                    android:text="НЕВДИЖИМОСТЬ"
+                    android:text="КАСКО"
                     android:textColor="@color/gray" />
 
                 <TextView
@@ -114,7 +114,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/textView12"
                     android:layout_marginLeft="@dimen/product_item_margin_left"
-                    android:text="Документы: Паспорт, ИНН, правоустанавливающие документы, технический паспорт, форма №3. Предмет залога"
+                    android:text="Добровольное страхование транспортных средств от повреждения, уничтожения, потери в результате дорожно-транспортного происшествия, незаконного овладения, пожара, взрыва, стихийного бедствия, незаконных действия третьих лиц, внешнего воздействия посторонних предметов."
                     android:textColor="@color/gray" />
 
                 <Button
@@ -139,20 +139,21 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
                 android:background="@drawable/product_item_bg"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="visible">
 
                 <ImageView
                     android:layout_width="240dp"
                     android:layout_height="160dp"
                     android:layout_alignParentLeft="true"
-                    android:src="@drawable/gold" />
+                    android:src="@drawable/green_cart" />
 
                 <TextView
                     android:id="@+id/textView13"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/product_item_margin_left"
-                    android:text="ЗОЛОТО"
+                    android:text="ЗЕЛЕНАЯ КАРТА"
                     android:textColor="@color/gray" />
 
                 <TextView
@@ -161,7 +162,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/textView13"
                     android:layout_marginLeft="@dimen/product_item_margin_left"
-                    android:text="Документы: Паспорт или любой документ с фото, ИНН. Предмет залога"
+                    android:text="Международное обязательное страхование гражданско-правовой ответственности владельцев транспортных средств – материальная ответственность за ущерб, нанесенный имуществу, здоровью и жизни пострадавших на территории стран-членов системы «Зеленая карта»."
                     android:textColor="@color/gray" />
 
                 <Button
@@ -181,68 +182,91 @@
 
             </RelativeLayout>
 
-            <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:background="@drawable/product_item_bg"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="240dp"
-                    android:layout_height="160dp"
-                    android:layout_alignParentLeft="true"
-                    android:src="@drawable/tv" />
-
-                <TextView
-                    android:id="@+id/textView14"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
-                    android:text="БЫТОВАЯ ТЕХНИКА"
-                    android:textColor="@color/gray" />
-
-                <TextView
-                    android:id="@+id/textView24"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/textView14"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
-                    android:text="Документы: Паспорт или любой документ с фото, ИНН Предмет залога"
-                    android:textColor="@color/gray" />
-
-                <Button
-                    android:id="@+id/buttonIssue4"
-                    style="@style/ButtonPink"
-                    android:layout_below="@id/textView24"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
-                    android:text="ОФОРМИТ" />
-
-                <Button
-                    android:id="@+id/buttonDetails4"
-                    style="@style/ButtonGray"
-                    android:layout_below="@id/textView24"
-                    android:layout_marginLeft="20dp"
-                    android:layout_toRightOf="@id/buttonIssue4"
-                    android:text="ПОДРОБНЕЕ" />
-
-            </RelativeLayout>
-
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/form_bg"
+                android:paddingBottom="20dp"
                 android:orientation="vertical"
-                android:paddingBottom="20dp">
+                android:visibility="visible">
 
                 <TextView
                     style="@style/StepText"
-                    android:text="ЗАПОЛНИТЕ ФОРМУ ДЛЯ ПОЛУЧЕНИЯ КРЕДИТА" />
+                    android:text="ЗАПОЛНИТЕ ДАННЫЕ ДЛЯ ПРОСЧЕТА" />
 
-                <include layout="@layout/form_credit" />
+                <include layout="@layout/form_auto" />
 
             </LinearLayout>
+
+            <include layout="@layout/triangle_brown_in" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:layout_margin="30dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ОПТИМАЛЬНЫЙ РЕЗУЛЬТАТ"
+                    android:layout_marginBottom="20dp"
+                    android:textColor="@color/gray"
+                    android:textSize="16sp" />
+
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="100dp"
+                    android:layout_marginRight="100dp">
+
+                    <TableRow
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+
+                        <TextView
+
+                            android:text="ПЛАТЕЖ В ГОД"
+                            android:layout_span="2"
+                            android:textColor="@color/gray"/>
+                    </TableRow>
+
+                    <View android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@color/gray"/>
+
+                    <TableRow
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="350dp"
+                            android:text="120 000 грн."
+                            android:textColor="@color/gray"/>
+
+                        <Button
+                            style="@style/ButtonGray"
+                            android:text="Оформить" />
+
+                    </TableRow>
+
+                    <View android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@color/gray"/>
+
+                </TableLayout>
+
+
+            </LinearLayout>
+
+
+            <include layout="@layout/triangle_brown_out" />
 
 
             <LinearLayout
@@ -254,6 +278,7 @@
 
                 <include layout="@layout/form_personal" />
             </LinearLayout>
+
 
         </LinearLayout>
 

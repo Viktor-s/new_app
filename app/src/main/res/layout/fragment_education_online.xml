@@ -22,7 +22,7 @@
                 android:background="@color/blue_gray"
                 android:gravity="center_vertical"
                 android:padding="20dp"
-                android:text="@string/product_title_credit_bail"
+                android:text="@string/product_title_credit_risk_insurance"
                 android:textAllCaps="true"
                 android:textSize="23sp" />
 
@@ -31,32 +31,30 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
                 android:layout_marginTop="20dp"
-                android:text="@string/product_description_credit_bail"
+                android:text="@string/product_description_credit_risk_insurance"
                 android:textColor="@color/gray"
                 android:textSize="12dp" />
-
 
             <RelativeLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
                 android:background="@drawable/product_item_bg"
-                android:orientation="horizontal"
-                android:visibility="visible">
+                android:orientation="horizontal">
 
 
                 <ImageView
                     android:layout_width="240dp"
                     android:layout_height="160dp"
                     android:layout_alignParentLeft="true"
-                    android:src="@drawable/auto" />
+                    android:src="@drawable/mba_light" />
 
                 <TextView
                     android:id="@+id/textView1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/product_item_margin_left"
-                    android:text="АВТОТРАНСПОРТ"
+                    android:text="MINI MBA LIGHT"
                     android:textColor="@color/gray" />
 
                 <TextView
@@ -65,21 +63,47 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/textView1"
                     android:layout_marginLeft="@dimen/product_item_margin_left"
-                    android:text="Документы: Паспорт + ИНН, Свидетелство о регистрации автомобиля, генеральная доверенность при отустсвии собственника. Транспортное средство."
+                    android:text="Срок обучения: 1 месяц / 110 часов"
                     android:textColor="@color/gray" />
 
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/textView2"
+                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:text="Уровень: Новичок;"
+                    android:textColor="@color/gray" />
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/textView3"
+                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:text="Аудитория: Менеджеры низшего звена;"
+                    android:textColor="@color/gray" />
+
+                <TextView
+                    android:id="@+id/textView5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/textView4"
+                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:text="Программа: 1 учебный модуль + 1 Тест;"
+                    android:textColor="@color/gray" />
 
                 <Button
                     android:id="@+id/buttonIssue"
                     style="@style/ButtonPink"
-                    android:layout_below="@id/textView2"
+                    android:layout_below="@id/textView5"
                     android:layout_marginLeft="@dimen/product_item_margin_left"
-                    android:text="ОФОРМИТ" />
+                    android:text="970 ГРН" />
 
                 <Button
                     android:id="@+id/buttonDetails"
                     style="@style/ButtonGray"
-                    android:layout_below="@id/textView2"
+                    android:layout_below="@id/textView5"
                     android:layout_marginLeft="20dp"
                     android:layout_toRightOf="@id/buttonIssue"
                     android:text="ПОДРОБНЕЕ" />
@@ -91,21 +115,20 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
                 android:background="@drawable/product_item_bg"
-                android:orientation="horizontal"
-                android:visibility="visible">
+                android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="240dp"
                     android:layout_height="160dp"
                     android:layout_alignParentLeft="true"
-                    android:src="@drawable/immovables" />
+                    android:src="@drawable/mba_distance" />
 
                 <TextView
                     android:id="@+id/textView12"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/product_item_margin_left"
-                    android:text="НЕВДИЖИМОСТЬ"
+                    android:text="MINI MBA DISTANCE"
                     android:textColor="@color/gray" />
 
                 <TextView
@@ -114,133 +137,81 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/textView12"
                     android:layout_marginLeft="@dimen/product_item_margin_left"
-                    android:text="Документы: Паспорт, ИНН, правоустанавливающие документы, технический паспорт, форма №3. Предмет залога"
+                    android:text="Срок обучения: 3 месяца / 210 часов"
+                    android:textColor="@color/gray" />
+
+                <TextView
+                    android:id="@+id/textView32"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/textView22"
+                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:text="Уровень: Специалист;"
+                    android:textColor="@color/gray" />
+
+                <TextView
+                    android:id="@+id/textView42"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/textView32"
+                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:text="Аудитория: Менеджеры среднего звена;"
+                    android:textColor="@color/gray" />
+
+                <TextView
+                    android:id="@+id/textView52"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/textView42"
+                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:text="Программа: 5 учебных модулей + 5 тестов"
                     android:textColor="@color/gray" />
 
                 <Button
                     android:id="@+id/buttonIssue2"
                     style="@style/ButtonPink"
-                    android:layout_below="@id/textView22"
+                    android:layout_below="@id/textView52"
                     android:layout_marginLeft="@dimen/product_item_margin_left"
-                    android:text="ОФОРМИТ" />
+                    android:text="3700 ГРН" />
 
                 <Button
                     android:id="@+id/buttonDetails2"
                     style="@style/ButtonGray"
-                    android:layout_below="@id/textView22"
+                    android:layout_below="@id/textView52"
                     android:layout_marginLeft="20dp"
                     android:layout_toRightOf="@id/buttonIssue2"
                     android:text="ПОДРОБНЕЕ" />
 
             </RelativeLayout>
 
-            <RelativeLayout
-                android:layout_width="fill_parent"
+            <TextView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="ПОЛУЧАЕМЫЕ ДИПЛОМЫ"
                 android:layout_marginBottom="20dp"
-                android:background="@drawable/product_item_bg"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="240dp"
-                    android:layout_height="160dp"
-                    android:layout_alignParentLeft="true"
-                    android:src="@drawable/gold" />
-
-                <TextView
-                    android:id="@+id/textView13"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
-                    android:text="ЗОЛОТО"
-                    android:textColor="@color/gray" />
-
-                <TextView
-                    android:id="@+id/textView23"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/textView13"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
-                    android:text="Документы: Паспорт или любой документ с фото, ИНН. Предмет залога"
-                    android:textColor="@color/gray" />
-
-                <Button
-                    android:id="@+id/buttonIssue3"
-                    style="@style/ButtonPink"
-                    android:layout_below="@id/textView23"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
-                    android:text="ОФОРМИТ" />
-
-                <Button
-                    android:id="@+id/buttonDetails3"
-                    style="@style/ButtonGray"
-                    android:layout_below="@id/textView23"
-                    android:layout_marginLeft="20dp"
-                    android:layout_toRightOf="@id/buttonIssue3"
-                    android:text="ПОДРОБНЕЕ" />
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:background="@drawable/product_item_bg"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="240dp"
-                    android:layout_height="160dp"
-                    android:layout_alignParentLeft="true"
-                    android:src="@drawable/tv" />
-
-                <TextView
-                    android:id="@+id/textView14"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
-                    android:text="БЫТОВАЯ ТЕХНИКА"
-                    android:textColor="@color/gray" />
-
-                <TextView
-                    android:id="@+id/textView24"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/textView14"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
-                    android:text="Документы: Паспорт или любой документ с фото, ИНН Предмет залога"
-                    android:textColor="@color/gray" />
-
-                <Button
-                    android:id="@+id/buttonIssue4"
-                    style="@style/ButtonPink"
-                    android:layout_below="@id/textView24"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
-                    android:text="ОФОРМИТ" />
-
-                <Button
-                    android:id="@+id/buttonDetails4"
-                    style="@style/ButtonGray"
-                    android:layout_below="@id/textView24"
-                    android:layout_marginLeft="20dp"
-                    android:layout_toRightOf="@id/buttonIssue4"
-                    android:text="ПОДРОБНЕЕ" />
-
-            </RelativeLayout>
-
+                android:textColor="@color/gray"
+                android:textSize="16sp"
+                android:gravity="center_horizontal"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/form_bg"
-                android:orientation="vertical"
-                android:paddingBottom="20dp">
+                android:gravity="center_horizontal"
+                android:layout_margin="30dp"
+                android:orientation="horizontal">
 
-                <TextView
-                    style="@style/StepText"
-                    android:text="ЗАПОЛНИТЕ ФОРМУ ДЛЯ ПОЛУЧЕНИЯ КРЕДИТА" />
+                <ImageView
+                    android:layout_width="120dp"
+                    android:layout_height="80dp"
+                    android:layout_alignParentLeft="true"
+                    android:src="@drawable/diplom_1" />
 
-                <include layout="@layout/form_credit" />
+                <ImageView
+                    android:layout_width="120dp"
+                    android:layout_height="80dp"
+                    android:layout_alignParentLeft="true"
+                    android:src="@drawable/diplom_2" />
+
 
             </LinearLayout>
 
@@ -254,6 +225,7 @@
 
                 <include layout="@layout/form_personal" />
             </LinearLayout>
+
 
         </LinearLayout>
 
