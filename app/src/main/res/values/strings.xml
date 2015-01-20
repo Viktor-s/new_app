@@ -9,6 +9,9 @@
     <string name="news_comments_title">Комментарии - </string>
     <string name="news_item_add_comment">Добавить комментарий: </string>
     <string name="news_item_add_comment_button">Добавить</string>
+    <string name="mail_messages_take_photo">Снять фото</string>
+    <string name="mail_messages_take_audio">Аудио сообщение</string>
+    <string name="mail_messages_send">Отправить</string>
     <string name="product_title_credit">Кредитование</string>
     <string name="product_title_insurance">Страхование</string>
     <string name="product_title_tourism">Туризм</string>

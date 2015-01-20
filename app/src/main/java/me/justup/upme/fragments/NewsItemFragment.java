@@ -20,8 +20,6 @@ import me.justup.upme.utils.AppContext;
 public class NewsItemFragment extends Fragment {
     private static final String ARG_NEWS_FEED_ENTITY = "news_feed_entity";
     private static final int LIST_DIVIDER_HEIGHT = 24;
-
-
     private NewsFeedEntity mNewsFeedEntity;
     private TextView mNewsItemTitle;
     private TextView mNewsItemMainText;

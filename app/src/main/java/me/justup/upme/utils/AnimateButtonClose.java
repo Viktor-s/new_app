@@ -10,7 +10,7 @@ import me.justup.upme.R;
 public class AnimateButtonClose {
     public static void animateButtonClose(final View view) {
         Animation animation = AnimationUtils.loadAnimation(AppContext.getAppContext(), R.anim.fragment_slider_in);
-        animation.setStartOffset(150);
+        animation.setStartOffset(250);
         animation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationEnd(Animation animation) {

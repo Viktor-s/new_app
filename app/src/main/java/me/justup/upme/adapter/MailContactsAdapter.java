@@ -5,17 +5,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
 
 import me.justup.upme.R;
 import me.justup.upme.entity.ContactEntity;
+import me.justup.upme.utils.CircularImageView;
 
 public class MailContactsAdapter extends ArrayAdapter<ContactEntity> {
     private static class ViewHolder {
-        private ImageView mImageView;
+        private CircularImageView mImageView;
         private TextView mName;
 
     }
@@ -32,7 +32,7 @@ public class MailContactsAdapter extends ArrayAdapter<ContactEntity> {
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.mail_contacts_list_item, parent, false);
-            viewHolder.mImageView = (ImageView) convertView.findViewById(R.id.mail_contacts_item_imageView);
+            viewHolder.mImageView = (CircularImageView) convertView.findViewById(R.id.mail_contacts_item_imageView);
             viewHolder.mName = (TextView) convertView.findViewById(R.id.mail_contacts_item_textView);
 
             convertView.setTag(viewHolder);

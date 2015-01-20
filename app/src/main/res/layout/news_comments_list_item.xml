@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/transparent">
 
@@ -37,4 +38,12 @@
         android:layout_toEndOf="@+id/news_comment_imageView"
         android:textColor="@android:color/black"
         android:textSize="12sp" />
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:background="#AAAAAA"
+        android:layout_below="@+id/news_comment_main_text_textView"
+        android:layout_toEndOf="@+id/news_comment_imageView"
+        android:layout_marginTop="@dimen/news_comment_image_margin" />
 </RelativeLayout>

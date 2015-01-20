@@ -74,6 +74,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
         private ListView mListViewComments;
         private TextView mCommentsLength;
         private LinearLayout mClickArea;
+        private ImageView mIsNewsViewed;
 
 
         public ViewHolder(View itemView) {
@@ -84,6 +85,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
             mImage = (ImageView) itemView.findViewById(R.id.news_image_imageView);
             mListViewComments = (ListView) itemView.findViewById(R.id.comments_listView);
             mCommentsLength = (TextView) itemView.findViewById(R.id.comments_length_textView);
+            mIsNewsViewed = (ImageView) itemView.findViewById(R.id.is_news_viewed_imageView);
             mClickArea = (LinearLayout) itemView.findViewById(R.id.click_area_container_linearLayout);
             mClickArea.setOnClickListener(this);
 
