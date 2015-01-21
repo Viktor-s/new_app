@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -96,6 +98,26 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
 
             if (mItemClickListener != null) {
                 mItemClickListener.onItemClick(view, getPosition());
+                mItemClickListener.onItemClick(view, getPosition());
+                if (mIsNewsViewed.getVisibility() == View.VISIBLE) {
+                    Animation animation = AnimationUtils.loadAnimation(AppContext.getAppContext(), R.anim.news_is_viewed_scale);
+                    animation.setAnimationListener(new Animation.AnimationListener() {
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+                            mIsNewsViewed.setVisibility(View.INVISIBLE);
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animation animation) {
+                        }
+
+                        @Override
+                        public void onAnimationStart(Animation animation) {
+
+                        }
+                    });
+                    mIsNewsViewed.startAnimation(animation);
+                }
             }
         }
     }
