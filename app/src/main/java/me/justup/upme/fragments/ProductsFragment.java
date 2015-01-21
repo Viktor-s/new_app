@@ -34,6 +34,21 @@ public class ProductsFragment extends Fragment implements View.OnClickListener {
         imageBail.setOnClickListener(this);
         textBail.setOnClickListener(this);
 
+        View imageLifeInsurance = view.findViewById(R.id.product_bail_image);
+        View textLifeInsurance = view.findViewById(R.id.product_bail_text);
+        imageBail.setOnClickListener(this);
+        textBail.setOnClickListener(this);
+
+        View imageAirlineTickets = view.findViewById(R.id.product_bail_image);
+        View textAirlineTickets = view.findViewById(R.id.product_bail_text);
+        imageBail.setOnClickListener(this);
+        textBail.setOnClickListener(this);
+
+        View imageEducationOnline = view.findViewById(R.id.product_bail_image);
+        View textEducationOnline = view.findViewById(R.id.product_bail_text);
+        imageBail.setOnClickListener(this);
+        textBail.setOnClickListener(this);
+
         // logging example
         LOGI(TAG, "Fragment start");
 
