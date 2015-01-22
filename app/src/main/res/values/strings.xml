@@ -74,4 +74,11 @@
     <string name="phone_number">Номер телефона</string>
     <string name="extract_completions">Выписка пополнений</string>
 
+    <string name="deals">Сделки</string>
+    <string name="amount_transactions">Сумма сделок</string>
+    <string name="your_commission">Ваша коммисия</string>
+    <string name="ordering">Выписка</string>
+    <string name="in_system">В системе</string>
+    <string name="level">Уровень</string>
+
 </resources>

@@ -152,7 +152,6 @@
     </style>
 
 
-
     <style name="MenuItemLayout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -261,6 +260,23 @@
     <style name="PayPanelSpinner">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="UserFragmentBlock">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_marginTop">@dimen/user_fragment_top_margin</item>
+        <item name="android:layout_marginLeft">@dimen/user_fragment_left_margin</item>
+        <item name="android:layout_marginRight">@dimen/user_fragment_left_margin</item>
+        <item name="android:paddingTop">20dp</item>
+        <item name="android:paddingBottom">20dp</item>
+    </style>
+
+    <style name="UserFragmentInfoText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/user_fragment_info_text</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">12sp</item>
     </style>
 
 </resources>

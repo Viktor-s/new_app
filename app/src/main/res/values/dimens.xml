@@ -55,4 +55,9 @@
     <dimen name="mail_messages_call_margin">14dp</dimen>
     <dimen name="mail_messages_camera_button_height">55dp</dimen>
 
+    <dimen name="user_fragment_left_margin">30dp</dimen>
+    <dimen name="user_fragment_top_margin">40dp</dimen>
+    <dimen name="user_fragment_money_text_size">28sp</dimen>
+    <dimen name="user_fragment_insystem_text_size">20sp</dimen>
+
 </resources>
