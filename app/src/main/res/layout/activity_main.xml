@@ -21,10 +21,10 @@
             android:layout_weight="2"
             tools:layout="@layout/fragment_fast_paying" />
 
-        <View
+        <!-- <View
             android:background="@drawable/left_shadow"
             android:layout_width="10dp"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content" /> -->
 
         <fragment
             android:name="me.justup.upme.fragments.UserFragment"
