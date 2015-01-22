@@ -2,13 +2,29 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/form_bg">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TEST11111111111"
+        android:textSize="30sp"/>
+
+
+    <include layout="@layout/item_briefcase" />
 
     <GridLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:id="@+id/matrix"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:columnCount="100"
+        android:rowCount="100">
 
 
         </GridLayout>
+
+
+
 </LinearLayout>
