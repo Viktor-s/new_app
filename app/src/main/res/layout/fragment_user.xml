@@ -41,6 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/user_name_textView"
         android:layout_alignParentStart="true"
+        android:layout_marginTop="@dimen/user_fragment_top_margin"
         style="@style/UserFragmentBlock">
 
         <TextView
@@ -102,13 +103,14 @@
                 android:textAllCaps="true"
                 android:textColor="@color/white"
                 android:id="@+id/ordering_button"
+                android:background="@drawable/user_ordering_button_selector"
                 android:layout_weight="1" />
         </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@+id/deals_layout"
         style="@style/UserFragmentBlock">
 
@@ -147,6 +149,12 @@
                 android:text="3"
                 android:id="@+id/level_textView" />
         </LinearLayout>
-
     </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/ordering_fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
 </RelativeLayout>

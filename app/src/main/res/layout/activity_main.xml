@@ -122,6 +122,13 @@
                 android:text="@string/menu_item_title_briefcase" />
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/exit_menu_item"
+            style="@style/MenuItemTextView"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="30dp"
+            android:text="Выход" />
+
     </LinearLayout>
 
 </RelativeLayout>

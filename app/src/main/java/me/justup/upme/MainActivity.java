@@ -9,6 +9,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import me.justup.upme.fragments.BriefcaseFragment;
 import me.justup.upme.fragments.CalendarFragment;
@@ -54,6 +55,16 @@ public class MainActivity extends Activity {
 
         mFragmentSliderOut = AnimationUtils.loadAnimation(this, R.anim.fragment_slider_out);
         mFragmentSliderIn = AnimationUtils.loadAnimation(this, R.anim.fragment_slider_in);
+
+        // DELETE - only for exit
+        TextView exit = (TextView) findViewById(R.id.exit_menu_item);
+        exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
     }
 
     @SuppressWarnings("UnusedDeclaration")

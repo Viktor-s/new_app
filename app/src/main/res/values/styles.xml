@@ -264,11 +264,11 @@
 
     <style name="UserFragmentBlock">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_marginTop">@dimen/user_fragment_top_margin</item>
-        <item name="android:layout_marginLeft">@dimen/user_fragment_left_margin</item>
-        <item name="android:layout_marginRight">@dimen/user_fragment_left_margin</item>
-        <item name="android:paddingTop">20dp</item>
-        <item name="android:paddingBottom">20dp</item>
+        <item name="android:paddingLeft">@dimen/user_fragment_left_margin</item>
+        <item name="android:paddingRight">@dimen/user_fragment_left_margin</item>
+        <item name="android:paddingTop">@dimen/user_fragment_block_padding</item>
+        <item name="android:paddingBottom">@dimen/user_fragment_block_padding</item>
+        <item name="android:background">@drawable/user_fragment_block_gradient</item>
     </style>
 
     <style name="UserFragmentInfoText">

@@ -6,7 +6,7 @@ import me.justup.upme.BuildConfig;
 
 
 public class LogUtils {
-    public static final boolean DEVELOPER_MODE = true;
+    public static final boolean DEVELOPER_MODE = false;
     private static final String LOG_PREFIX = "upme_";
     private static final int LOG_PREFIX_LENGTH = LOG_PREFIX.length();
     private static final int MAX_LOG_TAG_LENGTH = 23;
