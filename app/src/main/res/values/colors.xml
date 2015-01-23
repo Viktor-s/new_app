@@ -22,4 +22,7 @@
     <color name="form_bg">#2e2c31</color>
 
     <color name="mail_add_file_bg">#2F2E30</color>
+
+    <color name="user_fragment_red_money_color">#c85694</color>
+    <color name="user_fragment_info_text">#58575a</color>
 </resources>

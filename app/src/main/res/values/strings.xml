@@ -12,6 +12,12 @@
     <string name="mail_messages_take_photo">Снять фото</string>
     <string name="mail_messages_take_audio">Аудио сообщение</string>
     <string name="mail_messages_send">Отправить</string>
+    <string name="settings_title">Свяжите свой аккаунт\nсоциальных сетей с\nup.me</string>
+    <string name="settings_facebook">Facebook</string>
+    <string name="settings_vk">Вконтакте</string>
+    <string name="settings_self">ввести вручную</string>
+    <string name="settings_exit">Выход</string>
+    <string name="settings_or">или</string>
     <string name="product_title_credit">Кредитование</string>
     <string name="product_title_insurance">Страхование</string>
     <string name="product_title_tourism">Туризм</string>
@@ -73,5 +79,12 @@
     <string name="on_card">На карту</string>
     <string name="phone_number">Номер телефона</string>
     <string name="extract_completions">Выписка пополнений</string>
+
+    <string name="deals">Сделки</string>
+    <string name="amount_transactions">Сумма сделок</string>
+    <string name="your_commission">Ваша коммисия</string>
+    <string name="ordering">Выписка</string>
+    <string name="in_system">В системе</string>
+    <string name="level">Уровень</string>
 
 </resources>

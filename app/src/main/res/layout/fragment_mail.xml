@@ -11,17 +11,32 @@
         android:layout_width="@dimen/mail_contacts_list_width"
         android:layout_height="fill_parent">
 
-        <EditText
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="fill_parent"
-            android:layout_height="@dimen/mail_search_block_height"
-            android:id="@+id/editText2"
-            android:background="@color/white" />
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:id="@+id/imageView"
+                android:src="@drawable/search_icon_test"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="20dp" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/mail_search_block_height"
+                android:id="@+id/editText2"
+                android:background="@color/white"
+               />
+        </LinearLayout>
 
         <ListView
             android:id="@+id/mail_contacts_ListView"
             android:layout_width="@dimen/mail_contacts_list_width"
             android:layout_height="match_parent"
-
             android:background="@android:color/transparent"
             android:layout_alignParentTop="true" />
     </LinearLayout>

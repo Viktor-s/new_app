@@ -104,7 +104,7 @@
             <Button
                 android:layout_width="@dimen/mail_messages_camera_button_height"
                 android:layout_height="@dimen/mail_messages_camera_button_height"
-                android:id="@+id/button11"
+                android:id="@+id/mail_messages_add_audio_button"
                 android:layout_centerVertical="true"
                 android:layout_centerHorizontal="true"
                 android:background="@drawable/button_sound_bg" />
@@ -112,9 +112,9 @@
             <Button
                 android:layout_width="@dimen/mail_messages_camera_button_height"
                 android:layout_height="@dimen/mail_messages_camera_button_height"
-                android:id="@+id/button13"
+                android:id="@+id/mail_messages_add_photo_button"
                 android:background="@drawable/button_camera_bg"
-                android:layout_alignTop="@+id/button11"
+                android:layout_alignTop="@+id/mail_messages_add_audio_button"
                 android:layout_toStartOf="@+id/textView10" />
 
             <TextView
@@ -123,7 +123,7 @@
                 android:text="@string/mail_messages_take_audio"
                 android:id="@+id/textView8"
                 android:layout_centerVertical="true"
-                android:layout_toEndOf="@+id/button11" />
+                android:layout_toEndOf="@+id/mail_messages_add_audio_button" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -131,7 +131,7 @@
                 android:text="@string/mail_messages_take_photo"
                 android:id="@+id/textView10"
                 android:layout_alignTop="@+id/textView8"
-                android:layout_toStartOf="@+id/button11"
+                android:layout_toStartOf="@+id/mail_messages_add_audio_button"
                 android:layout_marginRight="4dp" />
 
         </RelativeLayout>
