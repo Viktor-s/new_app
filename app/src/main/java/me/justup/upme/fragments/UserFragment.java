@@ -18,9 +18,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import me.justup.upme.R;
+import me.justup.upme.interfaces.OnCloseFragment;
 
 
-public class UserFragment extends Fragment implements OnMapReadyCallback, UserOrderingFragment.OnCloseOrderingFragment {
+public class UserFragment extends Fragment implements OnMapReadyCallback, OnCloseFragment {
     private FrameLayout mOrderingFragmentContainer;
     private Animation mFragmentSliderOut;
     private Animation mFragmentSliderIn;
@@ -70,7 +71,7 @@ public class UserFragment extends Fragment implements OnMapReadyCallback, UserOr
     }
 
     @Override
-    public void onCloseOrderingFragment() {
+    public void onCloseFragment() {
         mOrderingFragmentContainer.startAnimation(mFragmentSliderOut);
         mOrderingFragmentContainer.setVisibility(View.GONE);
 

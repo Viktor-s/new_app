@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import me.justup.upme.R;
+import me.justup.upme.interfaces.OnCloseFragment;
 
 import static me.justup.upme.utils.LogUtils.LOGE;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
@@ -17,14 +18,11 @@ import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 public class UserOrderingFragment extends Fragment {
     private static final String TAG = makeLogTag(UserOrderingFragment.class);
-    private OnCloseOrderingFragment mOnCloseOrderingFragmentCallback;
+    private OnCloseFragment mOnCloseOrderingFragmentCallback;
 
     private static final String INDEX = "index";
     private int id;
 
-    public interface OnCloseOrderingFragment {
-        public void onCloseOrderingFragment();
-    }
 
     public static UserOrderingFragment newInstance(int index) {
         UserOrderingFragment f = new UserOrderingFragment();
@@ -42,9 +40,9 @@ public class UserOrderingFragment extends Fragment {
         super.onAttach(activity);
 
         try {
-            mOnCloseOrderingFragmentCallback = (OnCloseOrderingFragment) getParentFragment();
+            mOnCloseOrderingFragmentCallback = (OnCloseFragment) getParentFragment();
         } catch (ClassCastException e) {
-            LOGE(TAG, "Must implement OnCloseOrderingFragment", e);
+            LOGE(TAG, "Must implement OnCloseFragment", e);
         }
     }
 
@@ -70,7 +68,7 @@ public class UserOrderingFragment extends Fragment {
     private class OnCloseOrderListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            mOnCloseOrderingFragmentCallback.onCloseOrderingFragment();
+            mOnCloseOrderingFragmentCallback.onCloseFragment();
             // getParentFragment().getChildFragmentManager().beginTransaction().remove(UserOrderingFragment.this).commit();
         }
     }

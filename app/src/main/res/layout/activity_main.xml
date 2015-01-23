@@ -44,10 +44,6 @@
         android:layout_toEndOf="@+id/left_main_menu"
         android:visibility="gone" />
 
-    <include
-        layout="@layout/upme_corner"
-        android:id="@+id/include_corner" />
-
     <LinearLayout
         android:id="@+id/left_main_menu"
         android:orientation="vertical"
@@ -128,7 +124,26 @@
             android:layout_marginTop="20dp"
             android:layout_marginLeft="30dp"
             android:text="Выход" />
-
     </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/settings_fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+    <include
+        layout="@layout/upme_corner"
+        android:id="@+id/include_corner" />
+
+    <Button
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/gear"
+        android:id="@+id/settings_button"
+        android:layout_above="@+id/left_main_menu"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>

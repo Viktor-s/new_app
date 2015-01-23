@@ -7,6 +7,7 @@ import android.os.StrictMode;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -16,18 +17,20 @@ import me.justup.upme.fragments.CalendarFragment;
 import me.justup.upme.fragments.MailFragment;
 import me.justup.upme.fragments.NewsFeedFragment;
 import me.justup.upme.fragments.ProductsFragment;
+import me.justup.upme.fragments.SettingsFragment;
+import me.justup.upme.interfaces.OnCloseFragment;
 import me.justup.upme.utils.LogUtils;
 
-import static me.justup.upme.utils.LogUtils.makeLogTag;
 
-
-public class MainActivity extends Activity {
-    private static final String TAG = makeLogTag(MainActivity.class);
-
+public class MainActivity extends Activity implements OnCloseFragment {
     private FrameLayout mMainFragmentContainer;
     private Animation mFragmentSliderOut;
     private Animation mFragmentSliderIn;
     private boolean isShowMainFragmentContainer;
+
+    private FrameLayout mSettingsFragmentContainer;
+    private Button mSettingButton;
+    private SettingsFragment mSettingsFragment;
 
 
     @Override
@@ -55,6 +58,10 @@ public class MainActivity extends Activity {
 
         mFragmentSliderOut = AnimationUtils.loadAnimation(this, R.anim.fragment_slider_out);
         mFragmentSliderIn = AnimationUtils.loadAnimation(this, R.anim.fragment_slider_in);
+
+        mSettingsFragmentContainer = (FrameLayout) findViewById(R.id.settings_fragment_container);
+        mSettingButton = (Button) findViewById(R.id.settings_button);
+        mSettingButton.setOnClickListener(new OnLoadSettingsListener());
 
         // DELETE - only for exit
         TextView exit = (TextView) findViewById(R.id.exit_menu_item);
@@ -122,6 +129,23 @@ public class MainActivity extends Activity {
         mMainFragmentContainer.setVisibility(View.VISIBLE);
         mMainFragmentContainer.startAnimation(mFragmentSliderIn);
         isShowMainFragmentContainer = true;
+    }
+
+    private class OnLoadSettingsListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            mSettingsFragment = new SettingsFragment();
+            mSettingsFragmentContainer.setVisibility(View.VISIBLE);
+            getFragmentManager().beginTransaction().add(R.id.settings_fragment_container, new SettingsFragment()).commit();
+            mSettingButton.setEnabled(false);
+        }
+    }
+
+    @Override
+    public void onCloseFragment() {
+        getFragmentManager().beginTransaction().remove(mSettingsFragment).commit();
+        mSettingsFragmentContainer.setVisibility(View.GONE);
+        mSettingButton.setEnabled(true);
     }
 
 }
