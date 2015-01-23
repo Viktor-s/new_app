@@ -20,6 +20,7 @@ import java.util.List;
 import me.justup.upme.R;
 import me.justup.upme.entity.PersonEntity;
 
+import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.LOGI;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
@@ -29,7 +30,7 @@ public class BriefcaseFragment extends Fragment implements View.OnClickListener 
 
     List<PersonEntity> listPerson;
 
-    GridLayout matrix;
+    LinearLayout containerLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,10 +80,20 @@ public class BriefcaseFragment extends Fragment implements View.OnClickListener 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_briefcase, container, false);
 
-        matrix = (GridLayout) view.findViewById(R.id.matrix);
+        containerLayout = (LinearLayout) view.findViewById(R.id.containerLayout);
 
-        ImageView imageView = (ImageView) view.findViewById(R.id.image1);
-        imageView.setOnClickListener(this);
+        PersonEntity personEntity = listPerson.get(0);
+        RelativeLayout photoLayout = (RelativeLayout) view.findViewById(R.id.image1);
+        TextView idObject = (TextView) photoLayout.findViewById(R.id.idObject);
+        idObject.setText("" + personEntity.getId());
+        TextView rowObject = (TextView) photoLayout.findViewById(R.id.row);
+        rowObject.setText("0");
+        TextView columnObject = (TextView) photoLayout.findViewById(R.id.column);
+        columnObject.setText("0");
+
+        TextView text = (TextView) view.findViewById(R.id.tv1);
+        text.setText(personEntity.getName());
+        photoLayout.setOnClickListener(this);
 
         return view;
     }
@@ -90,41 +101,205 @@ public class BriefcaseFragment extends Fragment implements View.OnClickListener 
     @Override
     public void onClick(View v) {
 
-//        (RelativeLayout)v.getParent()
-
         RelativeLayout layoutPhoto;
+
+        LOGD("TAG", "onClick");
+
+        int idParent = Integer.parseInt(((TextView) v.findViewById(R.id.idObject)).getText().toString());
+        int row = Integer.parseInt(((TextView) v.findViewById(R.id.row)).getText().toString());
+        int column = Integer.parseInt(((TextView) v.findViewById(R.id.column)).getText().toString());
+
+        List<PersonEntity> children = getChildrenOnParent(listPerson, 1);
+        int countChildren = children.size();
+        LOGD("TAG", "countChildren --- " + countChildren);
+
+        // definition of the first cell to fill
+        int x = (int) Math.round(countChildren / 2 - 0.1);
+        LOGD("TAG", "X --- " + x);
+        int startPosition = (x > column) ? 0 : column - x + 1;
+        LOGD("TAG", "START --- " + startPosition);
+
+        // line
+        ViewGroup.LayoutParams layoutParamsImage = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        //new GridLayout
+        GridLayout gridLayout = new GridLayout(getActivity());
+
+        for (int i = 0; i < startPosition; i++) {
+            ImageView iv00 = new ImageView(getActivity());
+            iv00.setImageResource(R.drawable.p00);
+            iv00.setLayoutParams(layoutParamsImage);
+            gridLayout.addView(iv00);
+        }
+
+
+        if (column == 0) {
+
+            if (countChildren == 1) {
+                ImageView iv13 = new ImageView(getActivity());
+                iv13.setImageResource(R.drawable.p13);
+                iv13.setLayoutParams(layoutParamsImage);
+                gridLayout.addView(iv13);
+            } else if (countChildren == 2) {
+                ImageView iv123 = new ImageView(getActivity());
+                iv123.setImageResource(R.drawable.p123);
+                iv123.setLayoutParams(layoutParamsImage);
+                gridLayout.addView(iv123);
+
+                ImageView iv34 = new ImageView(getActivity());
+                iv34.setImageResource(R.drawable.p34);
+                iv34.setLayoutParams(layoutParamsImage);
+                gridLayout.addView(iv34);
+
+            } else if (countChildren > 2) {
+                ImageView iv123 = new ImageView(getActivity());
+                iv123.setImageResource(R.drawable.p123);
+                iv123.setLayoutParams(layoutParamsImage);
+                gridLayout.addView(iv123);
+
+                for (int j = startPosition + 1; j < countChildren - 1; j++) {
+                    ImageView iv234 = new ImageView(getActivity());
+                    iv234.setImageResource(R.drawable.p234);
+                    iv234.setLayoutParams(layoutParamsImage);
+                    gridLayout.addView(iv234);
+                }
+
+                ImageView iv34 = new ImageView(getActivity());
+                iv34.setImageResource(R.drawable.p34);
+                iv34.setLayoutParams(layoutParamsImage);
+                gridLayout.addView(iv34);
+            }
+        } else {
+
+            if (countChildren == 1) {
+                ImageView iv13 = new ImageView(getActivity());
+                iv13.setImageResource(R.drawable.p13);
+                iv13.setLayoutParams(layoutParamsImage);
+                gridLayout.addView(iv13);
+            } else if (countChildren == 2) {
+                ImageView iv23 = new ImageView(getActivity());
+                iv23.setImageResource(R.drawable.p23);
+                iv23.setLayoutParams(layoutParamsImage);
+                gridLayout.addView(iv23);
+
+                ImageView iv134 = new ImageView(getActivity());
+                iv134.setImageResource(R.drawable.p134);
+                iv134.setLayoutParams(layoutParamsImage);
+                gridLayout.addView(iv134);
+            } else if (countChildren == 3) {
+                ImageView iv23 = new ImageView(getActivity());
+                iv23.setImageResource(R.drawable.p23);
+                iv23.setLayoutParams(layoutParamsImage);
+                gridLayout.addView(iv23);
+
+                ImageView iv1234 = new ImageView(getActivity());
+                iv1234.setImageResource(R.drawable.p1234);
+                iv1234.setLayoutParams(layoutParamsImage);
+                gridLayout.addView(iv1234);
+
+                ImageView iv34 = new ImageView(getActivity());
+                iv34.setImageResource(R.drawable.p34);
+                iv34.setLayoutParams(layoutParamsImage);
+                gridLayout.addView(iv34);
+
+            } else if (countChildren > 3) {
+                ImageView iv23 = new ImageView(getActivity());
+                iv23.setImageResource(R.drawable.p23);
+                iv23.setLayoutParams(layoutParamsImage);
+                gridLayout.addView(iv23);
+
+            for (int j = startPosition + 1; j < countChildren - 1; j++) {
+                if (j != column) {
+                    ImageView iv234 = new ImageView(getActivity());
+                    iv234.setImageResource(R.drawable.p234);
+                    iv234.setLayoutParams(layoutParamsImage);
+                    gridLayout.addView(iv234);
+                } else {
+                    ImageView iv1234 = new ImageView(getActivity());
+                    iv1234.setImageResource(R.drawable.p1234);
+                    iv1234.setLayoutParams(layoutParamsImage);
+                    gridLayout.addView(iv1234);
+                }
+            }
+
+                ImageView iv34 = new ImageView(getActivity());
+                iv34.setImageResource(R.drawable.p34);
+                iv34.setLayoutParams(layoutParamsImage);
+                gridLayout.addView(iv34);
+
+            }
+
+        }
 
         LayoutInflater inflater = LayoutInflater.from(v.getContext());
 
-        for (PersonEntity personEntity : getChildrenOnParent(listPerson, 1)) {
+        for (int i = 0; i < countChildren; i++) {
+
+            PersonEntity personEntity = children.get(i);
 
             layoutPhoto = (RelativeLayout) inflater.inflate(R.layout.item_briefcase, null, false);
-
-            GridLayout.LayoutParams param = new GridLayout.LayoutParams();
-            param.columnSpec = GridLayout.spec(0);
-//          param.height = LayoutParams.WRAP_CONTENT;
-//          param.width = LayoutParams.WRAP_CONTENT;
-//          param.rightMargin = 5;
-//          param.topMargin = 5;
-//          param.setGravity(Gravity.CENTER);
-//          param.columnSpec = GridLayout.spec(c);
-//          param.rowSpec = GridLayout.spec(r);
-
-//          layoutPhoto.setLayoutParams(param);
-
-            ImageView photo = (ImageView) layoutPhoto.getChildAt(0);
-            photo.setOnClickListener(new View.OnClickListener() {
+            RelativeLayout photoLayout = (RelativeLayout) layoutPhoto.findViewById(R.id.image1);
+            photoLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Toast.makeText(getActivity(), "Button Clicked", Toast.LENGTH_SHORT).show();
                 }
             });
+//            TextView idObject = (TextView) photoLayout.findViewById(R.id.idObject);
+//            idObject.setText(""+personEntity.get());
+//            TextView rowObject = (TextView) photoLayout.getChildAt(R.id.row);
+//            rowObject.setText(""+personEntity.get());
+//            TextView columnObject = (TextView) photoLayout.getChildAt(R.id.column);
+//            columnObject.setText(""+personEntity.get());
+
             TextView text = (TextView) layoutPhoto.getChildAt(2);
             text.setText(personEntity.getName());
 
-            matrix.addView(layoutPhoto);
+            if (i == 0) {
+                GridLayout.LayoutParams param = new GridLayout.LayoutParams();
+                param.columnSpec = GridLayout.spec(0);
+                param.rowSpec = GridLayout.spec(row + 1);
+                layoutPhoto.setLayoutParams(param);
+            }
+
+            gridLayout.addView(layoutPhoto);
 
         }
+
+        containerLayout.addView(gridLayout);
+
+//            GridLayout.LayoutParams param = new GridLayout.LayoutParams();
+//            param.columnSpec = GridLayout.spec(0);
+////          param.height = LayoutParams.WRAP_CONTENT;
+////          param.width = LayoutParams.WRAP_CONTENT;
+////          param.rightMargin = 5;
+////          param.topMargin = 5;
+////          param.setGravity(Gravity.CENTER);
+////          param.columnSpec = GridLayout.spec(c);
+////          param.rowSpec = GridLayout.spec(r);
+//
+////          layoutPhoto.setLayoutParams(param);
+//
+//            RelativeLayout photoLayout = (RelativeLayout) layoutPhoto.getChildAt(0);
+//            photoLayout.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    Toast.makeText(getActivity(), "Button Clicked", Toast.LENGTH_SHORT).show();
+//                }
+//            });
+//            TextView id = (TextView) photoLayout.getChildAt(1);
+//            id.setText(""+personEntity.getId());
+//            TextView row = (TextView) photoLayout.getChildAt(2);
+//            row.setText(""+personEntity.getId());
+//            TextView column = (TextView) photoLayout.getChildAt(3);
+//            column.setText(""+personEntity.getId());
+//
+//            TextView text = (TextView) layoutPhoto.getChildAt(2);
+//            text.setText(personEntity.getName());
+//
+//            matrix.addView(layoutPhoto);
+
+//        }
 
 
     }

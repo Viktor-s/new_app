@@ -34,20 +34,25 @@ public class ProductsFragment extends Fragment implements View.OnClickListener {
         imageBail.setOnClickListener(this);
         textBail.setOnClickListener(this);
 
-        View imageLifeInsurance = view.findViewById(R.id.product_bail_image);
-        View textLifeInsurance = view.findViewById(R.id.product_bail_text);
-        imageBail.setOnClickListener(this);
-        textBail.setOnClickListener(this);
+        View imageLifeInsurance = view.findViewById(R.id.product_life_insurance_image);
+        View textLifeInsurance = view.findViewById(R.id.product_life_insurance_text);
+        imageLifeInsurance.setOnClickListener(this);
+        textLifeInsurance.setOnClickListener(this);
 
-        View imageAirlineTickets = view.findViewById(R.id.product_bail_image);
-        View textAirlineTickets = view.findViewById(R.id.product_bail_text);
-        imageBail.setOnClickListener(this);
-        textBail.setOnClickListener(this);
-
-        View imageEducationOnline = view.findViewById(R.id.product_bail_image);
-        View textEducationOnline = view.findViewById(R.id.product_bail_text);
-        imageBail.setOnClickListener(this);
-        textBail.setOnClickListener(this);
+//        View imageAirlineTickets = view.findViewById(R.id.product_risk_insurance_image);
+//        View textAirlineTickets = view.findViewById(R.id.product_risk_insurance_text);
+//        imageBail.setOnClickListener(this);
+//        textBail.setOnClickListener(this);
+//
+//        View imageEducationOnline = view.findViewById(R.id.product_tickets_image);
+//        View textAirlineTickets = view.findViewById(R.id.product_tickets_text);
+//        imageBail.setOnClickListener(this);
+//        textBail.setOnClickListener(this);
+//
+//        View imageEducationOnline = view.findViewById(R.id.product_education_image);
+//        View textEducationOnline = view.findViewById(R.id.product_education_text);
+//        imageBail.setOnClickListener(this);
+//        textBail.setOnClickListener(this);
 
         // logging example
         LOGI(TAG, "Fragment start");
