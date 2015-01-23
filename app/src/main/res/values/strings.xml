@@ -12,6 +12,12 @@
     <string name="mail_messages_take_photo">Снять фото</string>
     <string name="mail_messages_take_audio">Аудио сообщение</string>
     <string name="mail_messages_send">Отправить</string>
+    <string name="settings_title">Свяжите свой аккаунт\nсоциальных сетей с\nup.me</string>
+    <string name="settings_facebook">Facebook</string>
+    <string name="settings_vk">Вконтакте</string>
+    <string name="settings_self">ввести вручную</string>
+    <string name="settings_exit">Выход</string>
+    <string name="settings_or">или</string>
     <string name="product_title_credit">Кредитование</string>
     <string name="product_title_insurance">Страхование</string>
     <string name="product_title_tourism">Туризм</string>
