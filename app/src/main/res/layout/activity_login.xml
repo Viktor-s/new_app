@@ -13,18 +13,13 @@
         android:layout_centerHorizontal="true">
 
         <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:id="@+id/login_phone_layout"
+            tools:visibility="gone"
+            style="@style/LoginEnterLayout">
 
             <TextView
                 android:text="@string/enter_phone_number"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAllCaps="true"
-                android:paddingBottom="25dp"
-                android:textColor="@color/white"
-                android:textSize="18sp" />
+                style="@style/LoginInfoText" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -35,7 +30,7 @@
                 android:id="@+id/phone_number_textView"
                 android:background="@color/login_phone_number_background"
                 android:layout_marginBottom="10dp"
-                android:padding="10dp"/>
+                android:padding="10dp" />
 
             <Button
                 android:layout_width="193dp"
@@ -44,6 +39,36 @@
                 android:textSize="19sp"
                 android:background="@drawable/enter_button_selector"
                 android:id="@+id/login_button" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/login_pin_layout"
+            android:visibility="gone"
+            tools:visibility="visible"
+            style="@style/LoginEnterLayout">
+
+            <TextView
+                android:text="@string/enter_pin_code"
+                style="@style/LoginInfoText" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                tools:text="5234"
+                android:gravity="center"
+                android:id="@+id/pin_number_textView"
+                android:background="@color/login_phone_number_background"
+                android:layout_marginBottom="10dp"
+                android:padding="10dp" />
+
+            <Button
+                android:layout_width="193dp"
+                android:layout_height="50dp"
+                android:text="@string/enter_button"
+                android:textSize="19sp"
+                android:background="@drawable/enter_button_selector"
+                android:id="@+id/login_pin_button" />
         </LinearLayout>
 
         <TableLayout

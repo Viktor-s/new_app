@@ -5,7 +5,9 @@
     <string name="dummy_string">Dummy string</string>
     <string name="picode_button_del">del</string>
     <string name="login_button">подтвердить</string>
+    <string name="enter_button">войти</string>
     <string name="enter_phone_number">Введите\nномер телефона</string>
+    <string name="enter_pin_code">Введите код\nподтверждения</string>
     <string name="news_comments_title">Комментарии - </string>
     <string name="news_item_add_comment">Добавить комментарий: </string>
     <string name="news_item_add_comment_button">Добавить</string>
