@@ -26,14 +26,12 @@
             android:layout_width="10dp"
             android:layout_height="wrap_content" /> -->
 
-        <fragment
-            android:name="me.justup.upme.fragments.UserFragment"
+        <FrameLayout
             android:id="@+id/mapAndUserFragment"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="40"
-            tools:layout="@layout/fragment_user" />
-
+            tools:background="@color/blue_gray" />
     </LinearLayout>
 
     <FrameLayout

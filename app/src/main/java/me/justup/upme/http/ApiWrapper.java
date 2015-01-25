@@ -31,7 +31,7 @@ public class ApiWrapper {
     // API methods constants
     public static final String AUTH_GET_VERIFICATION = "Auth.getVerificationPhoneCode";
     public static final String AUTH_CHECK_VERIFICATION = "Auth.checkVerificationPhoneCode";
-    public static final String AUTH_GET_USER_INFO = "Auth.getLoggedUserInfo";
+    public static final String AUTH_GET_LOGGED_USER_INFO = "Auth.getLoggedUserInfo";
     public static final String ARTICLES_GET = "Articles.get";
     public static final String ARTICLES_GET_SHORT_DESCRIPTION = "Articles.getShortDescription";
 

@@ -171,7 +171,6 @@ public class LoginActivity extends Activity {
 
             if (mPhoneNumber.length() > phoneNumberLength) {
                 LoginPhoneQueryEntity mQueryLoginEntity = new LoginPhoneQueryEntity();
-                mQueryLoginEntity.method = ApiWrapper.AUTH_GET_VERIFICATION;
                 mQueryLoginEntity.params.phone = mPhoneNumber;
 
                 ApiWrapper.query(mQueryLoginEntity, new OnLoginResponse());
@@ -188,7 +187,6 @@ public class LoginActivity extends Activity {
 
             if (mPinNumber.length() == pinNumberLength) {
                 LoginPinCodeQueryEntity mLoginPinCodeQueryEntity = new LoginPinCodeQueryEntity();
-                mLoginPinCodeQueryEntity.method = ApiWrapper.AUTH_CHECK_VERIFICATION;
                 mLoginPinCodeQueryEntity.params.phone = mPhoneNumber;
                 mLoginPinCodeQueryEntity.params.code = mPinNumber;
 

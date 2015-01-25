@@ -12,12 +12,14 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import me.justup.upme.entity.GetLoggedUserInfoQueryEntity;
 import me.justup.upme.fragments.BriefcaseFragment;
 import me.justup.upme.fragments.CalendarFragment;
 import me.justup.upme.fragments.MailFragment;
 import me.justup.upme.fragments.NewsFeedFragment;
 import me.justup.upme.fragments.ProductsFragment;
 import me.justup.upme.fragments.SettingsFragment;
+import me.justup.upme.fragments.UserFragment;
 import me.justup.upme.interfaces.OnCloseFragment;
 import me.justup.upme.utils.LogUtils;
 
@@ -62,6 +64,10 @@ public class MainActivity extends Activity implements OnCloseFragment {
         mSettingsFragmentContainer = (FrameLayout) findViewById(R.id.settings_fragment_container);
         mSettingButton = (Button) findViewById(R.id.settings_button);
         mSettingButton.setOnClickListener(new OnLoadSettingsListener());
+
+        Fragment fragment = UserFragment.newInstance(new GetLoggedUserInfoQueryEntity());
+        getFragmentManager().beginTransaction().add(R.id.mapAndUserFragment, fragment).commit();
+
 
         // DELETE - only for exit
         TextView exit = (TextView) findViewById(R.id.exit_menu_item);

@@ -1,5 +1,7 @@
 package me.justup.upme.entity;
 
+import java.io.Serializable;
+
 /**
  * <h3>Example <code>toString()</code> for correct answer:</h3>
  * <p><b>Good</b> answer:</p>
@@ -7,7 +9,9 @@ package me.justup.upme.entity;
  * <p><b>Bad</b> answer:</p>
  * <code>LoginResponseEntity{result=null} BaseHttpResponseEntity{jsonrpc='2.0', error=JsonRpcError{code=-32603, message='Internal error', data='PHONE_NOT_FOUND'}, id=123}</code>
  */
-public class BaseHttpResponseEntity {
+public class BaseHttpResponseEntity implements Serializable {
+    private static final long serialVersionUID = 0L;
+
     public String jsonrpc = "";
     public JsonRpcError error;
     public int id = 0;

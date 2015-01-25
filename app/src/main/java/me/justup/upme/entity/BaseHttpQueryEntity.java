@@ -1,6 +1,10 @@
 package me.justup.upme.entity;
 
-public abstract class BaseHttpQueryEntity {
+import java.io.Serializable;
+
+public abstract class BaseHttpQueryEntity implements Serializable {
+    private static final long serialVersionUID = 0L;
+
     public String jsonrpc = "2.0";
 
 }

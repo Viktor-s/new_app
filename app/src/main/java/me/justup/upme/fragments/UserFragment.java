@@ -18,19 +18,41 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import me.justup.upme.R;
+import me.justup.upme.entity.BaseHttpQueryEntity;
 import me.justup.upme.interfaces.OnCloseFragment;
+
+import static me.justup.upme.utils.LogUtils.LOGD;
+import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 
 public class UserFragment extends Fragment implements OnMapReadyCallback, OnCloseFragment {
+    private static final String TAG = makeLogTag(UserFragment.class);
+    private static final String ENTITY_KEY = "user_fragment_entity_key";
+
     private FrameLayout mOrderingFragmentContainer;
     private Animation mFragmentSliderOut;
     private Animation mFragmentSliderIn;
     private Fragment mUserOrderingFragment;
 
 
+    public static UserFragment newInstance(BaseHttpQueryEntity entity) {
+        UserFragment fragment = new UserFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(ENTITY_KEY, entity);
+        fragment.setArguments(bundle);
+
+        return fragment;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user, container, false);
+
+        BaseHttpQueryEntity mEntity = (BaseHttpQueryEntity) getArguments().getSerializable(ENTITY_KEY);
+        LOGD(TAG, mEntity.toString());
+        // next - start http query
+
 
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
