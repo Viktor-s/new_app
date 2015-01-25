@@ -1,7 +1,7 @@
 package me.justup.upme.entity;
 
 
-public class LoggedUserInfoResponseEntity extends BaseHttpResponseEntity {
+public class GetLoggedUserInfoResponse extends BaseHttpResponseEntity {
     public Result result;
 
     public class Result {
