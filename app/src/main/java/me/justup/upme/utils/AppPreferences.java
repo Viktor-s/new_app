@@ -10,7 +10,7 @@ public class AppPreferences {
 
     private static final String PREFS_FILE = "UPMEPrefsFile";
     private static final String TAG_TOKEN = "token";
-    private static final String TAG_ACCOUNT = "account";
+    private static final String TAG_PIN_CODE = "pin_code";
 
 
     public AppPreferences(final Context context) {
@@ -24,13 +24,17 @@ public class AppPreferences {
     }
 
     public String getToken() {
-        return mSharedPreferences.getString(TAG_TOKEN, "error");
+        return mSharedPreferences.getString(TAG_TOKEN, "token");
     }
 
-    public void setCredentials(String account, String login, String password) {
+    public void setPinCode(String pinCode) {
         mEditor = mSharedPreferences.edit();
-        mEditor.putString(TAG_ACCOUNT, account);
+        mEditor.putString(TAG_PIN_CODE, pinCode);
         mEditor.apply();
+    }
+
+    public String getPinCode() {
+        return mSharedPreferences.getString(TAG_PIN_CODE, "pin");
     }
 
     public void clearPreferences() {

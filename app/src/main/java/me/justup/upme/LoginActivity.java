@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.JsonSyntaxException;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.apache.http.Header;
@@ -20,6 +21,7 @@ import me.justup.upme.entity.LoginPinCodeQueryEntity;
 import me.justup.upme.entity.LoginResponseEntity;
 import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.utils.AppContext;
+import me.justup.upme.utils.AppPreferences;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.LOGE;
@@ -35,6 +37,8 @@ public class LoginActivity extends Activity {
     private LinearLayout mLoginPinCodePanel;
 
     private StringBuilder mNumberString = new StringBuilder("+380");
+    private AppPreferences mAppPreferences = new AppPreferences(AppContext.getAppContext());
+
     private static final int phoneNumberLength = 12;
     private static final int pinNumberLength = 4;
     private static final int phoneCountryNumberLength = 4;
@@ -68,7 +72,6 @@ public class LoginActivity extends Activity {
             public void onClick(View v) {
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 finish();
-                LOGD(TAG, AppContext.getAppContext().toString());
             }
         });
     }
@@ -186,6 +189,8 @@ public class LoginActivity extends Activity {
                 mLoginPinCodeQueryEntity.params.phone = mPhoneNumber;
                 mLoginPinCodeQueryEntity.params.code = mPinNumber;
 
+                mAppPreferences.setPinCode(mPinNumber);
+
                 ApiWrapper.query(mLoginPinCodeQueryEntity, new OnLoginResponse());
             } else {
                 showPinError();
@@ -196,17 +201,30 @@ public class LoginActivity extends Activity {
     private class OnLoginResponse extends AsyncHttpResponseHandler {
         @Override
         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-            String content = (responseBody != null) ? new String(responseBody) : "";
+            String content = ApiWrapper.responseBodyToString(responseBody);
             LOGD(TAG, "onSuccess(): " + content);
 
-            LoginResponseEntity result = ApiWrapper.gson.fromJson(content, LoginResponseEntity.class);
+            LoginResponseEntity response = null;
 
-            if (result.result != null) {
-                mLoginPhonePanel.setVisibility(View.GONE);
-                mLoginPinCodePanel.setVisibility(View.VISIBLE);
+            try {
+                response = ApiWrapper.gson.fromJson(content, LoginResponseEntity.class);
+            } catch (JsonSyntaxException e) {
+                LOGE(TAG, "gson.fromJson:\n" + content);
+            }
 
-                mNumberString.setLength(0);
-                isPhoneVerification = false;
+            if (response != null && response.result != null) {
+                if (response.result.PHONE != null) {
+                    mLoginPhonePanel.setVisibility(View.GONE);
+                    mLoginPinCodePanel.setVisibility(View.VISIBLE);
+
+                    mNumberString.setLength(0);
+                    isPhoneVerification = false;
+                } else {
+                    mAppPreferences.setToken(response.result.token);
+
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                    finish();
+                }
             } else {
                 showPinError();
             }
@@ -214,7 +232,7 @@ public class LoginActivity extends Activity {
 
         @Override
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-            String content = (responseBody != null) ? new String(responseBody) : "";
+            String content = ApiWrapper.responseBodyToString(responseBody);
             LOGE(TAG, "onFailure(): " + content);
         }
     }

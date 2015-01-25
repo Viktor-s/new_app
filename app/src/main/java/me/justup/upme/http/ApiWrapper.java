@@ -8,6 +8,8 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HTTP;
 
+import java.io.UnsupportedEncodingException;
+
 import me.justup.upme.entity.BaseHttpQueryEntity;
 import me.justup.upme.utils.AppContext;
 import me.justup.upme.utils.AppPreferences;
@@ -20,6 +22,7 @@ public class ApiWrapper {
     private static final String TAG = makeLogTag(ApiWrapper.class);
     private static final String JSON = "application/json";
     private static final String AUTHORIZATION_HEADER = "Authorization";
+    private static final String UTF_8 = "UTF-8";
 
     private static final String URL = "http://test.justup.me/uptabinterface/jsonrpc/";
     private static AsyncHttpClient client = new AsyncHttpClient();
@@ -52,6 +55,20 @@ public class ApiWrapper {
 
         mStringEntity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, JSON));
         post(mStringEntity, responseHandler);
+    }
+
+    public static String responseBodyToString(byte[] responseBody) {
+        String responseString = "";
+
+        if (responseBody != null) {
+            try {
+                responseString = new String(responseBody, UTF_8);
+            } catch (UnsupportedEncodingException e) {
+                LOGE(TAG, "responseString = new String(responseBody, UTF-8)\n", e);
+            }
+        }
+
+        return responseString;
     }
 
 }
