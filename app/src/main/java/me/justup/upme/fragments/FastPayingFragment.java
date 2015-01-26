@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.Button;
 
 import java.util.ArrayList;
 
@@ -13,28 +13,28 @@ import me.justup.upme.R;
 
 
 public class FastPayingFragment extends Fragment implements View.OnClickListener {
-    private LinearLayout mPayCommunicationButton;
-    private LinearLayout mPayInternetButton;
-    private LinearLayout mRemittancesButton;
-    private LinearLayout mBankingButton;
+    private Button mPayCommunicationButton;
+    private Button mPayInternetButton;
+    private Button mRemittancesButton;
+    private Button mBankingButton;
 
-    private ArrayList<LinearLayout> mButtonList = new ArrayList<>();
+    private ArrayList<Button> mButtonList = new ArrayList<>();
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_fast_paying, container, false);
 
-        mPayCommunicationButton = (LinearLayout) v.findViewById(R.id.pay_communication);
+        mPayCommunicationButton = (Button) v.findViewById(R.id.pay_communication);
         mPayCommunicationButton.setOnClickListener(this);
 
-        mPayInternetButton = (LinearLayout) v.findViewById(R.id.pay_internet);
+        mPayInternetButton = (Button) v.findViewById(R.id.pay_internet);
         mPayInternetButton.setOnClickListener(this);
 
-        mRemittancesButton = (LinearLayout) v.findViewById(R.id.pay_remittances);
+        mRemittancesButton = (Button) v.findViewById(R.id.pay_remittances);
         mRemittancesButton.setOnClickListener(this);
 
-        mBankingButton = (LinearLayout) v.findViewById(R.id.pay_banking);
+        mBankingButton = (Button) v.findViewById(R.id.pay_banking);
         mBankingButton.setOnClickListener(this);
 
         mButtonList.add(mPayCommunicationButton);
@@ -70,8 +70,8 @@ public class FastPayingFragment extends Fragment implements View.OnClickListener
 
     }
 
-    private void setFragment(LinearLayout activeButton, Fragment fragment) {
-        for (LinearLayout button : mButtonList) {
+    private void setFragment(Button activeButton, Fragment fragment) {
+        for (Button button : mButtonList) {
             button.setBackground(getResources().getDrawable(R.drawable.digit_button));
         }
 
@@ -82,7 +82,7 @@ public class FastPayingFragment extends Fragment implements View.OnClickListener
         changeButtonState(activeButton);
     }
 
-    private void changeButtonState(LinearLayout activeButton) {
+    private void changeButtonState(Button activeButton) {
         activeButton.setBackground(getResources().getDrawable(R.drawable.pay_button_pressed));
     }
 

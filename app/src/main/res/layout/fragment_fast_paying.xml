@@ -19,58 +19,25 @@
         android:layout_width="530dp"
         android:layout_height="wrap_content">
 
-        <LinearLayout
+        <Button
             android:id="@+id/pay_communication"
-            style="@style/PayButtonStyle">
+            android:text="@string/communication"
+            style="@style/PayFragmentButtonStyle" />
 
-            <ImageView
-                android:src="@drawable/ic_launcher"
-                style="@style/PayButtonIconStyle" />
-
-            <TextView
-                android:text="@string/communication"
-                style="@style/PayButtonTextStyle" />
-        </LinearLayout>
-
-        <LinearLayout
+        <Button
             android:id="@+id/pay_internet"
-            style="@style/PayButtonStyle">
+            android:text="@string/internet"
+            style="@style/PayFragmentButtonStyle" />
 
-            <ImageView
-                android:src="@drawable/ic_launcher"
-                style="@style/PayButtonIconStyle" />
-
-            <TextView
-                android:text="@string/internet"
-                style="@style/PayButtonTextStyle" />
-        </LinearLayout>
-
-        <LinearLayout
+        <Button
             android:id="@+id/pay_remittances"
-            style="@style/PayButtonStyle">
+            android:text="@string/remittances"
+            style="@style/PayFragmentButtonStyle" />
 
-            <ImageView
-                android:src="@drawable/ic_launcher"
-                style="@style/PayButtonIconStyle" />
-
-            <TextView
-                android:text="@string/remittances"
-                style="@style/PayButtonTextStyle" />
-        </LinearLayout>
-
-        <LinearLayout
+        <Button
             android:id="@+id/pay_banking"
-            style="@style/PayButtonStyle">
-
-            <ImageView
-                android:src="@drawable/ic_launcher"
-                style="@style/PayButtonIconStyle" />
-
-            <TextView
-                android:text="@string/banking"
-                style="@style/PayButtonTextStyle" />
-        </LinearLayout>
-
+            android:text="@string/banking"
+            style="@style/PayFragmentButtonStyle" />
     </LinearLayout>
 
     <FrameLayout

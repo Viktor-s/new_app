@@ -151,58 +151,6 @@
         <item name="android:gravity">center_horizontal</item>
     </style>
 
-
-    <style name="MenuItemLayout">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:orientation">horizontal</item>
-        <item name="android:onClick">onMainMenuClickHandler</item>
-        <item name="android:padding">5dp</item>
-        <item name="android:background">@drawable/main_menu_selector</item>
-    </style>
-
-    <style name="MenuItemImageView">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-    </style>
-
-    <style name="MenuItemTextView" parent="android:style/Widget.TextView">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textAllCaps">true</item>
-        <item name="android:layout_gravity">center_vertical</item>
-        <item name="android:textSize">20sp</item>
-        <item name="android:textColor">@color/white</item>
-    </style>
-
-    <style name="PayButtonStyle">
-        <item name="android:orientation">vertical</item>
-        <item name="android:layout_width">120dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginRight">10dp</item>
-        <item name="android:paddingTop">20dp</item>
-        <item name="android:paddingBottom">20dp</item>
-        <item name="android:paddingLeft">10dp</item>
-        <item name="android:paddingRight">10dp</item>
-        <item name="android:background">@drawable/digit_button_selector</item>
-    </style>
-
-    <style name="PayButtonIconStyle">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_gravity">center_horizontal</item>
-        <item name="android:layout_marginBottom">10dp</item>
-    </style>
-
-    <style name="PayButtonTextStyle">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">18sp</item>
-        <item name="android:textAllCaps">true</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:layout_gravity">center_horizontal</item>
-    </style>
-
     <style name="PayPanelInfoText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -292,6 +240,36 @@
         <item name="android:paddingBottom">25dp</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="MainMenuItemLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:drawablePadding">5dp</item>
+        <item name="android:drawableStart">@drawable/ic_launcher</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:onClick">onMainMenuClickHandler</item>
+        <item name="android:background">@drawable/main_menu_selector</item>
+    </style>
+
+    <style name="PayFragmentButtonStyle">
+        <item name="android:layout_width">120dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:drawableTop">@drawable/ic_launcher</item>
+        <item name="android:paddingTop">20dp</item>
+        <item name="android:paddingBottom">20dp</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:drawablePadding">10dp</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:background">@drawable/digit_button_selector</item>
     </style>
 
 </resources>

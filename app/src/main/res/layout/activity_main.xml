@@ -9,9 +9,9 @@
         android:id="@+id/main_content_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_toRightOf="@+id/left_main_menu"
         android:layout_toEndOf="@+id/left_main_menu"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:baselineAligned="false">
 
         <fragment
             android:name="me.justup.upme.fragments.FastPayingFragment"
@@ -38,7 +38,6 @@
         android:id="@+id/main_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_toRightOf="@+id/left_main_menu"
         android:layout_toEndOf="@+id/left_main_menu"
         android:visibility="gone" />
 
@@ -47,80 +46,39 @@
         android:orientation="vertical"
         android:layout_width="210dp"
         android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/include_corner">
 
-        <LinearLayout
-            style="@style/MenuItemLayout"
-            android:id="@+id/news_menu_item">
+        <Button
+            android:id="@+id/news_menu_item"
+            android:text="@string/menu_item_title_news"
+            style="@style/MainMenuItemLayout" />
 
-            <ImageView
-                style="@style/MenuItemImageView"
-                android:src="@drawable/ic_launcher" />
+        <Button
+            android:id="@+id/mail_menu_item"
+            android:text="@string/menu_item_title_mail"
+            style="@style/MainMenuItemLayout" />
 
-            <TextView
-                style="@style/MenuItemTextView"
-                android:text="@string/menu_item_title_news" />
-        </LinearLayout>
+        <Button
+            android:id="@+id/calendar_menu_item"
+            android:text="@string/menu_item_title_calendar"
+            style="@style/MainMenuItemLayout" />
 
-        <LinearLayout
-            style="@style/MenuItemLayout"
-            android:id="@+id/mail_menu_item">
+        <Button
+            android:id="@+id/products_menu_item"
+            android:text="@string/menu_item_title_products"
+            style="@style/MainMenuItemLayout" />
 
-            <ImageView
-                style="@style/MenuItemImageView"
-                android:src="@drawable/ic_launcher" />
-
-            <TextView
-                style="@style/MenuItemTextView"
-                android:text="@string/menu_item_title_mail" />
-        </LinearLayout>
-
-        <LinearLayout
-            style="@style/MenuItemLayout"
-            android:id="@+id/calendar_menu_item">
-
-            <ImageView
-                style="@style/MenuItemImageView"
-                android:src="@drawable/ic_launcher" />
-
-            <TextView
-                style="@style/MenuItemTextView"
-                android:text="@string/menu_item_title_calendar" />
-        </LinearLayout>
-
-        <LinearLayout
-            style="@style/MenuItemLayout"
-            android:id="@+id/products_menu_item">
-
-            <ImageView
-                style="@style/MenuItemImageView"
-                android:src="@drawable/ic_launcher" />
-
-            <TextView
-                style="@style/MenuItemTextView"
-                android:text="@string/menu_item_title_products" />
-        </LinearLayout>
-
-        <LinearLayout
-            style="@style/MenuItemLayout"
-            android:id="@+id/briefcase_menu_item">
-
-            <ImageView
-                style="@style/MenuItemImageView"
-                android:src="@drawable/ic_launcher" />
-
-            <TextView
-                style="@style/MenuItemTextView"
-                android:text="@string/menu_item_title_briefcase" />
-        </LinearLayout>
+        <Button
+            android:id="@+id/briefcase_menu_item"
+            android:text="@string/menu_item_title_briefcase"
+            style="@style/MainMenuItemLayout" />
 
         <TextView
             android:id="@+id/exit_menu_item"
-            style="@style/MenuItemTextView"
+            style="@style/MainMenuItemLayout"
             android:layout_marginTop="20dp"
-            android:layout_marginLeft="30dp"
+            android:layout_marginStart="30dp"
             android:text="Выход" />
     </LinearLayout>
 
@@ -137,7 +95,7 @@
     <Button
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
         android:layout_marginBottom="10dp"
         android:background="@drawable/gear"
         android:id="@+id/settings_button"
