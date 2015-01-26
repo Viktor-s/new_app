@@ -2,6 +2,7 @@ package me.justup.upme;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.view.View;
@@ -12,6 +13,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import me.justup.upme.entity.ArticlesGetShortDescriptionQuery;
+import me.justup.upme.entity.BaseHttpQueryEntity;
 import me.justup.upme.entity.GetLoggedUserInfoQuery;
 import me.justup.upme.fragments.BriefcaseFragment;
 import me.justup.upme.fragments.CalendarFragment;
@@ -20,6 +23,7 @@ import me.justup.upme.fragments.NewsFeedFragment;
 import me.justup.upme.fragments.ProductsFragment;
 import me.justup.upme.fragments.SettingsFragment;
 import me.justup.upme.fragments.UserFragment;
+import me.justup.upme.http.HttpIntentService;
 import me.justup.upme.interfaces.OnCloseFragment;
 import me.justup.upme.utils.LogUtils;
 
@@ -86,6 +90,7 @@ public class MainActivity extends Activity implements OnCloseFragment {
 
         switch (view.getId()) {
             case R.id.news_menu_item:
+                startHttpIntent(new ArticlesGetShortDescriptionQuery());
                 fragment = new NewsFeedFragment();
                 break;
 
@@ -152,6 +157,13 @@ public class MainActivity extends Activity implements OnCloseFragment {
         getFragmentManager().beginTransaction().remove(mSettingsFragment).commit();
         mSettingsFragmentContainer.setVisibility(View.GONE);
         mSettingButton.setEnabled(true);
+    }
+
+    private void startHttpIntent(BaseHttpQueryEntity entity) {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(HttpIntentService.HTTP_INTENT_SERVICE_EXTRA, entity);
+        Intent intent = new Intent(this, HttpIntentService.class);
+        startService(intent.putExtras(bundle));
     }
 
 }
