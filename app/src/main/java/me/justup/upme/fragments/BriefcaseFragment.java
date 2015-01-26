@@ -50,6 +50,24 @@ public class BriefcaseFragment extends Fragment implements View.OnClickListener 
         PersonEntity person11 = new PersonEntity(11, 3, "Паша", "");
         PersonEntity person12 = new PersonEntity(12, 7, "Богдан", "");
         PersonEntity person13 = new PersonEntity(13, 7, "Глеб", "");
+        PersonEntity person14 = new PersonEntity(14, 7, "Глеб 1", "");
+        PersonEntity person15 = new PersonEntity(15, 7, "Глеб 2", "");
+        PersonEntity person16 = new PersonEntity(16, 5, "Глеб 3", "");
+        PersonEntity person17 = new PersonEntity(17, 5, "Глеб 4", "");
+        PersonEntity person18 = new PersonEntity(18, 6, "Глеб 5", "");
+        PersonEntity person19 = new PersonEntity(19, 6, "Глеб 6", "");
+        PersonEntity person20 = new PersonEntity(20, 6, "Глеб 7", "");
+        PersonEntity person21 = new PersonEntity(21, 7, "Глеб 8", "");
+        PersonEntity person22 = new PersonEntity(22, 7, "Глеб 9", "");
+        PersonEntity person23 = new PersonEntity(23, 8, "Глеб 10", "");
+        PersonEntity person24 = new PersonEntity(34, 8, "Глеб 11", "");
+        PersonEntity person25 = new PersonEntity(25, 8, "Глеб 12", "");
+        PersonEntity person26 = new PersonEntity(26, 7, "Глеб 13", "");
+        PersonEntity person27 = new PersonEntity(27, 7, "Глеб 14", "");
+        PersonEntity person28 = new PersonEntity(28, 7, "Глеб 15", "");
+        PersonEntity person29 = new PersonEntity(29, 7, "Глеб 16", "");
+        PersonEntity person30 = new PersonEntity(30, 7, "Глеб 17", "");
+        PersonEntity person31 = new PersonEntity(31, 7, "Глеб 18", "");
         listPerson.add(person1);
         listPerson.add(person2);
         listPerson.add(person3);
@@ -63,6 +81,24 @@ public class BriefcaseFragment extends Fragment implements View.OnClickListener 
         listPerson.add(person11);
         listPerson.add(person12);
         listPerson.add(person13);
+        listPerson.add(person14);
+        listPerson.add(person15);
+        listPerson.add(person16);
+        listPerson.add(person17);
+        listPerson.add(person18);
+        listPerson.add(person19);
+        listPerson.add(person20);
+        listPerson.add(person21);
+        listPerson.add(person22);
+        listPerson.add(person23);
+        listPerson.add(person24);
+        listPerson.add(person25);
+        listPerson.add(person26);
+        listPerson.add(person27);
+        listPerson.add(person28);
+        listPerson.add(person29);
+        listPerson.add(person30);
+        listPerson.add(person31);
 
     }
 
@@ -82,182 +118,123 @@ public class BriefcaseFragment extends Fragment implements View.OnClickListener 
 
         containerLayout = (LinearLayout) view.findViewById(R.id.containerLayout);
 
-        PersonEntity personEntity = listPerson.get(0);
-        RelativeLayout photoLayout = (RelativeLayout) view.findViewById(R.id.image1);
-        TextView idObject = (TextView) photoLayout.findViewById(R.id.idObject);
-        idObject.setText("" + personEntity.getId());
-        TextView rowObject = (TextView) photoLayout.findViewById(R.id.row);
-        rowObject.setText("0");
-        TextView columnObject = (TextView) photoLayout.findViewById(R.id.column);
-        columnObject.setText("0");
-
-        TextView text = (TextView) view.findViewById(R.id.tv1);
-        text.setText(personEntity.getName());
-        photoLayout.setOnClickListener(this);
+        RelativeLayout photoLayout = (RelativeLayout) view.findViewById(R.id.photo_main);
+        containerLayout.addView(levelGenerate(photoLayout, listPerson));
+//        photoLayout.setOnClickListener(this);
 
         return view;
     }
 
     @Override
     public void onClick(View v) {
+//        containerLayout.addView(levelGenerate(v, listPerson));
+    }
 
-        RelativeLayout layoutPhoto;
+    private ImageView createDirection(int resId) {
+        ImageView resultView = new ImageView(getActivity());
+        resultView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        resultView.setImageResource(resId);
+        return resultView;
 
-        LOGD("TAG", "onClick");
+    }
 
-        int idParent = Integer.parseInt(((TextView) v.findViewById(R.id.idObject)).getText().toString());
+    private GridLayout levelGenerate(final View v, final List<PersonEntity> listPerson) {
+
+        int id = Integer.parseInt(((TextView) v.findViewById(R.id.idObject)).getText().toString());
         int row = Integer.parseInt(((TextView) v.findViewById(R.id.row)).getText().toString());
         int column = Integer.parseInt(((TextView) v.findViewById(R.id.column)).getText().toString());
 
-        List<PersonEntity> children = getChildrenOnParent(listPerson, 1);
+        List<PersonEntity> children = getChildrenOnParent(listPerson, id);
         int countChildren = children.size();
-        LOGD("TAG", "countChildren --- " + countChildren);
 
         // definition of the first cell to fill
         int x = (int) Math.round(countChildren / 2 - 0.1);
         LOGD("TAG", "X --- " + x);
         int startPosition = (x > column) ? 0 : column - x + 1;
-        LOGD("TAG", "START --- " + startPosition);
+        LOGD("TAG", "START POSITION --- " + startPosition);
 
-        // line
-        ViewGroup.LayoutParams layoutParamsImage = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-
-        //new GridLayout
         GridLayout gridLayout = new GridLayout(getActivity());
 
-        for (int i = 0; i < startPosition; i++) {
-            ImageView iv00 = new ImageView(getActivity());
-            iv00.setImageResource(R.drawable.p00);
-            iv00.setLayoutParams(layoutParamsImage);
-            gridLayout.addView(iv00);
+        for (int i = 1; i < startPosition; i++) {
+            gridLayout.addView(createDirection(R.drawable.p00));
         }
-
 
         if (column == 0) {
-
             if (countChildren == 1) {
-                ImageView iv13 = new ImageView(getActivity());
-                iv13.setImageResource(R.drawable.p13);
-                iv13.setLayoutParams(layoutParamsImage);
-                gridLayout.addView(iv13);
+                gridLayout.addView(createDirection(R.drawable.p13));
             } else if (countChildren == 2) {
-                ImageView iv123 = new ImageView(getActivity());
-                iv123.setImageResource(R.drawable.p123);
-                iv123.setLayoutParams(layoutParamsImage);
-                gridLayout.addView(iv123);
-
-                ImageView iv34 = new ImageView(getActivity());
-                iv34.setImageResource(R.drawable.p34);
-                iv34.setLayoutParams(layoutParamsImage);
-                gridLayout.addView(iv34);
-
+                gridLayout.addView(createDirection(R.drawable.p123));
+                gridLayout.addView(createDirection(R.drawable.p34));
             } else if (countChildren > 2) {
-                ImageView iv123 = new ImageView(getActivity());
-                iv123.setImageResource(R.drawable.p123);
-                iv123.setLayoutParams(layoutParamsImage);
-                gridLayout.addView(iv123);
-
-                for (int j = startPosition + 1; j < countChildren - 1; j++) {
-                    ImageView iv234 = new ImageView(getActivity());
-                    iv234.setImageResource(R.drawable.p234);
-                    iv234.setLayoutParams(layoutParamsImage);
-                    gridLayout.addView(iv234);
-                }
-
-                ImageView iv34 = new ImageView(getActivity());
-                iv34.setImageResource(R.drawable.p34);
-                iv34.setLayoutParams(layoutParamsImage);
-                gridLayout.addView(iv34);
+                gridLayout.addView(createDirection(R.drawable.p123));
+                for (int j = startPosition + 1; j < countChildren - 1; j++)
+                    gridLayout.addView(createDirection(R.drawable.p234));
+                gridLayout.addView(createDirection(R.drawable.p34));
             }
         } else {
-
             if (countChildren == 1) {
-                ImageView iv13 = new ImageView(getActivity());
-                iv13.setImageResource(R.drawable.p13);
-                iv13.setLayoutParams(layoutParamsImage);
-                gridLayout.addView(iv13);
+                gridLayout.addView(createDirection(R.drawable.p13));
             } else if (countChildren == 2) {
-                ImageView iv23 = new ImageView(getActivity());
-                iv23.setImageResource(R.drawable.p23);
-                iv23.setLayoutParams(layoutParamsImage);
-                gridLayout.addView(iv23);
-
-                ImageView iv134 = new ImageView(getActivity());
-                iv134.setImageResource(R.drawable.p134);
-                iv134.setLayoutParams(layoutParamsImage);
-                gridLayout.addView(iv134);
+                gridLayout.addView(createDirection(R.drawable.p23));
+                gridLayout.addView(createDirection(R.drawable.p134));
             } else if (countChildren == 3) {
-                ImageView iv23 = new ImageView(getActivity());
-                iv23.setImageResource(R.drawable.p23);
-                iv23.setLayoutParams(layoutParamsImage);
-                gridLayout.addView(iv23);
-
-                ImageView iv1234 = new ImageView(getActivity());
-                iv1234.setImageResource(R.drawable.p1234);
-                iv1234.setLayoutParams(layoutParamsImage);
-                gridLayout.addView(iv1234);
-
-                ImageView iv34 = new ImageView(getActivity());
-                iv34.setImageResource(R.drawable.p34);
-                iv34.setLayoutParams(layoutParamsImage);
-                gridLayout.addView(iv34);
-
+                gridLayout.addView(createDirection(R.drawable.p23));
+                gridLayout.addView(createDirection(R.drawable.p1234));
+                gridLayout.addView(createDirection(R.drawable.p34));
             } else if (countChildren > 3) {
-                ImageView iv23 = new ImageView(getActivity());
-                iv23.setImageResource(R.drawable.p23);
-                iv23.setLayoutParams(layoutParamsImage);
-                gridLayout.addView(iv23);
-
-            for (int j = startPosition + 1; j < countChildren - 1; j++) {
-                if (j != column) {
-                    ImageView iv234 = new ImageView(getActivity());
-                    iv234.setImageResource(R.drawable.p234);
-                    iv234.setLayoutParams(layoutParamsImage);
-                    gridLayout.addView(iv234);
-                } else {
-                    ImageView iv1234 = new ImageView(getActivity());
-                    iv1234.setImageResource(R.drawable.p1234);
-                    iv1234.setLayoutParams(layoutParamsImage);
-                    gridLayout.addView(iv1234);
+                gridLayout.addView(createDirection(R.drawable.p23));
+                for (int j = startPosition + 1; j < countChildren - 1; j++) {
+                    if (j != column)
+                        gridLayout.addView(createDirection(R.drawable.p234));
+                    else
+                        gridLayout.addView(createDirection(R.drawable.p1234));
                 }
+                gridLayout.addView(createDirection(R.drawable.p34));
             }
-
-                ImageView iv34 = new ImageView(getActivity());
-                iv34.setImageResource(R.drawable.p34);
-                iv34.setLayoutParams(layoutParamsImage);
-                gridLayout.addView(iv34);
-
-            }
-
         }
 
+        RelativeLayout layoutPhoto;
         LayoutInflater inflater = LayoutInflater.from(v.getContext());
 
         for (int i = 0; i < countChildren; i++) {
-
             PersonEntity personEntity = children.get(i);
-
             layoutPhoto = (RelativeLayout) inflater.inflate(R.layout.item_briefcase, null, false);
-            RelativeLayout photoLayout = (RelativeLayout) layoutPhoto.findViewById(R.id.image1);
+            RelativeLayout photoLayout = (RelativeLayout) layoutPhoto.findViewById(R.id.image_container);
             photoLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(getActivity(), "Button Clicked", Toast.LENGTH_SHORT).show();
+                    int row = Integer.parseInt(((TextView) v.findViewById(R.id.row)).getText().toString());
+                    LOGD("TAG", "With - " + (row + 1) + " to - '<' " + containerLayout.getChildCount());
+                    for (int i = containerLayout.getChildCount()-1; i > row; i--) {
+                        containerLayout.removeViewAt(i);
+                    }
+                    containerLayout.addView(levelGenerate(view, listPerson));
                 }
             });
-//            TextView idObject = (TextView) photoLayout.findViewById(R.id.idObject);
-//            idObject.setText(""+personEntity.get());
-//            TextView rowObject = (TextView) photoLayout.getChildAt(R.id.row);
-//            rowObject.setText(""+personEntity.get());
-//            TextView columnObject = (TextView) photoLayout.getChildAt(R.id.column);
-//            columnObject.setText(""+personEntity.get());
+
+            TextView idObject = (TextView) photoLayout.getChildAt(1);
+            idObject.setText(Integer.toString(personEntity.getId()));
+            TextView rowObject = (TextView) photoLayout.getChildAt(2);
+            rowObject.setText(Integer.toString(row + 1));
+            TextView columnObject = (TextView) photoLayout.getChildAt(3);
+            columnObject.setText(Integer.toString(startPosition + i));
+
+            LOGD("TAG", "id - " + personEntity.getId() + "; row - " + (row + 1) + "; column - " + (startPosition + i));
+
+            ImageView imageViewInfo = (ImageView) layoutPhoto.getChildAt(1);
+            imageViewInfo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(getActivity(), "Вылазит боковое меню", Toast.LENGTH_SHORT).show();
+                }
+            });
 
             TextView text = (TextView) layoutPhoto.getChildAt(2);
             text.setText(personEntity.getName());
 
             if (i == 0) {
                 GridLayout.LayoutParams param = new GridLayout.LayoutParams();
-                param.columnSpec = GridLayout.spec(0);
+                param.columnSpec = GridLayout.spec(startPosition == 0 ? startPosition : startPosition-1); //////
                 param.rowSpec = GridLayout.spec(row + 1);
                 layoutPhoto.setLayoutParams(param);
             }
@@ -266,41 +243,8 @@ public class BriefcaseFragment extends Fragment implements View.OnClickListener 
 
         }
 
-        containerLayout.addView(gridLayout);
-
-//            GridLayout.LayoutParams param = new GridLayout.LayoutParams();
-//            param.columnSpec = GridLayout.spec(0);
-////          param.height = LayoutParams.WRAP_CONTENT;
-////          param.width = LayoutParams.WRAP_CONTENT;
-////          param.rightMargin = 5;
-////          param.topMargin = 5;
-////          param.setGravity(Gravity.CENTER);
-////          param.columnSpec = GridLayout.spec(c);
-////          param.rowSpec = GridLayout.spec(r);
-//
-////          layoutPhoto.setLayoutParams(param);
-//
-//            RelativeLayout photoLayout = (RelativeLayout) layoutPhoto.getChildAt(0);
-//            photoLayout.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    Toast.makeText(getActivity(), "Button Clicked", Toast.LENGTH_SHORT).show();
-//                }
-//            });
-//            TextView id = (TextView) photoLayout.getChildAt(1);
-//            id.setText(""+personEntity.getId());
-//            TextView row = (TextView) photoLayout.getChildAt(2);
-//            row.setText(""+personEntity.getId());
-//            TextView column = (TextView) photoLayout.getChildAt(3);
-//            column.setText(""+personEntity.getId());
-//
-//            TextView text = (TextView) layoutPhoto.getChildAt(2);
-//            text.setText(personEntity.getName());
-//
-//            matrix.addView(layoutPhoto);
-
-//        }
-
-
+        return gridLayout;
     }
+
+
 }

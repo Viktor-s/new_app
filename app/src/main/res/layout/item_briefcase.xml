@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/r_layout"
-    android:layout_width="100dp"
-    android:layout_height="wrap_content">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingLeft="30dp">
 
     <RelativeLayout
-        android:id="@+id/image1"
+        android:id="@+id/image_container"
         android:layout_width="70dp"
         android:layout_height="70dp">
 
@@ -38,15 +39,15 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:src="@drawable/photo_info"
-        android:layout_toRightOf="@+id/image1"
-        android:layout_alignBottom="@+id/image1"/>
+        android:layout_toRightOf="@+id/image_container"
+        android:layout_alignBottom="@+id/image_container"/>
 
     <TextView
         android:id="@+id/tv1"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:text="ВИОЛКТТА ТРОФИМОВА"
         android:textColor="@android:color/black"
-        android:layout_below="@+id/image1"/>
+        android:layout_below="@+id/image_container"/>
 
 </RelativeLayout>
