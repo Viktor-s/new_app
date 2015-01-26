@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.List;
@@ -17,6 +18,8 @@ public class MailContactsAdapter extends ArrayAdapter<ContactEntity> {
     private static class ViewHolder {
         private CircularImageView mImageView;
         private TextView mName;
+        private Button mCall;
+        private Button mInfo;
 
     }
 
@@ -34,6 +37,8 @@ public class MailContactsAdapter extends ArrayAdapter<ContactEntity> {
             convertView = inflater.inflate(R.layout.mail_contacts_list_item, parent, false);
             viewHolder.mImageView = (CircularImageView) convertView.findViewById(R.id.mail_contacts_item_imageView);
             viewHolder.mName = (TextView) convertView.findViewById(R.id.mail_contacts_item_textView);
+            viewHolder.mInfo = (Button) convertView.findViewById(R.id.mail_contacts_item_info_button);
+            viewHolder.mCall = (Button) convertView.findViewById(R.id.mail_contacts_item_call_button);
 
             convertView.setTag(viewHolder);
         } else {

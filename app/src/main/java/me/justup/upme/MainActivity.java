@@ -12,7 +12,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import me.justup.upme.entity.GetLoggedUserInfoQuery;
 import me.justup.upme.fragments.BriefcaseFragment;
 import me.justup.upme.fragments.CalendarFragment;
 import me.justup.upme.fragments.MailFragment;
@@ -65,7 +64,7 @@ public class MainActivity extends Activity implements OnCloseFragment {
         mSettingButton = (Button) findViewById(R.id.settings_button);
         mSettingButton.setOnClickListener(new OnLoadSettingsListener());
 
-        Fragment fragment = UserFragment.newInstance(new GetLoggedUserInfoQuery());
+        UserFragment fragment = new UserFragment();
         getFragmentManager().beginTransaction().add(R.id.mapAndUserFragment, fragment).commit();
 
 
