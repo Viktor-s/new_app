@@ -45,6 +45,7 @@ public class LoginActivity extends Activity {
     private boolean isPhoneVerification = true;
     private String mPhoneNumber;
     private Animation mNumberPanelDown;
+    private Animation mNumberPanelFromTop;
 
 
     @Override
@@ -66,6 +67,7 @@ public class LoginActivity extends Activity {
         mPinLoginButton.setOnClickListener(new OnLoginPinCodeListener());
 
         mNumberPanelDown = AnimationUtils.loadAnimation(this, R.anim.login_number_panel_down);
+        mNumberPanelFromTop = AnimationUtils.loadAnimation(this, R.anim.login_number_panel_from_top);
 
 
         // Delete! Only for debug!
@@ -219,7 +221,7 @@ public class LoginActivity extends Activity {
                     mLoginPhonePanel.setVisibility(View.GONE);
 
                     mLoginPinCodePanel.setVisibility(View.VISIBLE);
-                    mLoginPinCodePanel.startAnimation(mNumberPanelDown);
+                    mLoginPinCodePanel.startAnimation(mNumberPanelFromTop);
 
                     mNumberString.setLength(0);
                     isPhoneVerification = false;
