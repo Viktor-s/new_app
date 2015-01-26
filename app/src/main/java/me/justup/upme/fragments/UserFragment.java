@@ -21,6 +21,7 @@ import me.justup.upme.R;
 import me.justup.upme.entity.BaseHttpQueryEntity;
 import me.justup.upme.interfaces.OnCloseFragment;
 
+import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 
@@ -48,8 +49,8 @@ public class UserFragment extends Fragment implements OnMapReadyCallback, OnClos
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user, container, false);
 
-        //BaseHttpQueryEntity mEntity = (BaseHttpQueryEntity) getArguments().getSerializable(ENTITY_KEY);
-        //LOGD(TAG, mEntity.toString());
+        BaseHttpQueryEntity mEntity = (BaseHttpQueryEntity) getArguments().getSerializable(ENTITY_KEY);
+        LOGD(TAG, mEntity.toString());
         // next - start http query
 
 
