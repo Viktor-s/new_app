@@ -23,6 +23,8 @@
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyAZYUjtjOyE0I6fsiVSgjtFhjIz1cD3cCQ" />
 
+        <service android:name=".http.HttpIntentService" />
+
         <activity
             android:name=".LoginActivity"
             android:screenOrientation="landscape">

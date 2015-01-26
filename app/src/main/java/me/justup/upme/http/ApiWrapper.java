@@ -3,6 +3,7 @@ package me.justup.upme.http;
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.SyncHttpClient;
 
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
@@ -20,12 +21,14 @@ import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 public class ApiWrapper {
     private static final String TAG = makeLogTag(ApiWrapper.class);
-    private static final String JSON = "application/json";
-    private static final String AUTHORIZATION_HEADER = "Authorization";
-    private static final String UTF_8 = "UTF-8";
 
+    private static final String JSON = "application/json";
+    private static final String AUTHORIZATION_HEADER = "X-AUTH-UPMETOKEN";
+    private static final String UTF_8 = "UTF-8";
     private static final String URL = "http://test.justup.me/uptabinterface/jsonrpc/";
+
     private static AsyncHttpClient client = new AsyncHttpClient();
+    private static SyncHttpClient syncClient = new SyncHttpClient();
     public static Gson gson = new Gson();
 
     // API methods constants
@@ -37,24 +40,63 @@ public class ApiWrapper {
 
 
     private static void post(final StringEntity se, AsyncHttpResponseHandler responseHandler) {
-        String token = new AppPreferences(AppContext.getAppContext()).getToken();
-
-        client.addHeader(AUTHORIZATION_HEADER, token);
+        client.addHeader(AUTHORIZATION_HEADER, getToken());
         client.post(null, URL, se, null, responseHandler);
     }
 
-    public static void query(BaseHttpQueryEntity obj, AsyncHttpResponseHandler responseHandler) {
+    private static void syncPost(final StringEntity se, AsyncHttpResponseHandler responseHandler) {
+        syncClient.addHeader(AUTHORIZATION_HEADER, getToken());
+        syncClient.post(null, URL, se, null, responseHandler);
+    }
+
+    private static void loginPost(final StringEntity se, AsyncHttpResponseHandler responseHandler) {
+        client.post(null, URL, se, null, responseHandler);
+    }
+
+    private static String getToken() {
+        return new AppPreferences(AppContext.getAppContext()).getToken();
+    }
+
+    private static StringEntity queryBuilder(BaseHttpQueryEntity obj) {
         StringEntity mStringEntity;
 
         try {
             mStringEntity = new StringEntity(gson.toJson(obj));
         } catch (Exception e) {
             LOGE(TAG, "mStringEntity = new StringEntity(gson.toJson(obj))\n", e);
-            return;
+            return null;
         }
 
         mStringEntity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, JSON));
-        post(mStringEntity, responseHandler);
+
+        return mStringEntity;
+    }
+
+    public static void query(BaseHttpQueryEntity obj, AsyncHttpResponseHandler responseHandler) {
+        StringEntity se = queryBuilder(obj);
+
+        if (se != null)
+            post(se, responseHandler);
+    }
+
+    /**
+     * For services
+     */
+    public static void syncQuery(BaseHttpQueryEntity obj, AsyncHttpResponseHandler responseHandler) {
+        StringEntity se = queryBuilder(obj);
+
+        if (se != null)
+            syncPost(se, responseHandler);
+    }
+
+    /**
+     * Only for login!
+     */
+    public static void loginQuery(BaseHttpQueryEntity obj, AsyncHttpResponseHandler responseHandler) {
+        StringEntity se = queryBuilder(obj);
+
+        if (se != null)
+            loginPost(se, responseHandler);
     }
 
     public static String responseBodyToString(byte[] responseBody) {

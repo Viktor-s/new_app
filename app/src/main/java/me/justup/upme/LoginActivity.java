@@ -173,7 +173,7 @@ public class LoginActivity extends Activity {
                 LoginPhoneQueryEntity mQueryLoginEntity = new LoginPhoneQueryEntity();
                 mQueryLoginEntity.params.phone = mPhoneNumber;
 
-                ApiWrapper.query(mQueryLoginEntity, new OnLoginResponse());
+                ApiWrapper.loginQuery(mQueryLoginEntity, new OnLoginResponse());
             } else {
                 showPinError();
             }
@@ -192,7 +192,7 @@ public class LoginActivity extends Activity {
 
                 mAppPreferences.setPinCode(mPinNumber);
 
-                ApiWrapper.query(mLoginPinCodeQueryEntity, new OnLoginResponse());
+                ApiWrapper.loginQuery(mLoginPinCodeQueryEntity, new OnLoginResponse());
             } else {
                 showPinError();
             }
