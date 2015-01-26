@@ -38,6 +38,8 @@
 
     <dimen name="product_item_margin_left">250dp</dimen>
 
+    <dimen name="line_100">80dp</dimen>
+
     <!-- LOGIN -->
     <dimen name="pincode_button_margin">5dp</dimen>
     <dimen name="pincode_button_text_size">20sp</dimen>

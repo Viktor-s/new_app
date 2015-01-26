@@ -1,23 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/containerLayout"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/app_background">
+    android:background="@drawable/app_background"
+    android:orientation="vertical"
+    android:paddingLeft="40dp">
 
-    <TextView
+
+    <TableLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TEST11111111111"
-        android:textColor="@android:color/black"
-        android:textSize="30sp"/>
+        android:layout_marginLeft="20dp">
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/p13" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="20dp"
+                android:orientation="horizontal">
+
+                <Button
+                    style="@style/ButtonPink"
+                    android:layout_gravity="bottom"
+                    android:text="Добавить  \n пользователя" />
+            </LinearLayout>
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
+
+            <RelativeLayout
+                android:id="@+id/photo_main"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/photo"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/photo_face"/>
+
+                <TextView
+                    android:id="@+id/idObject"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:text="1"/>
+
+                <TextView
+                    android:id="@+id/row"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:text="0"/>
+
+                <TextView
+                    android:id="@+id/column"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:text="0"/>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Виолетта Трофимова"
+                    android:textAllCaps="true"
+                    android:textColor="@color/blue_gray"
+                    android:textSize="26sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="4 people in your network"
+                    android:textAllCaps="true"
+                    android:textColor="@color/gray" />
+
+            </LinearLayout>
+
+        </TableRow>
+
+    </TableLayout>
 
 
-    <include layout="@layout/item_briefcase" />
+    <LinearLayout
+        android:id="@+id/containerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
 
-
+    </LinearLayout>
 
 
 </LinearLayout>
