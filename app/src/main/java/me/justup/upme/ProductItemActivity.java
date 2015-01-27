@@ -7,9 +7,6 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-/**
- * Created by bogdan on 19.01.15.
- */
 public class ProductItemActivity extends Activity {
 
     @Override

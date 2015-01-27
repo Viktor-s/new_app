@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/group_product"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/group_product_photo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/risk_insurance" />
+
+    <TextView
+        android:id="@+id/group_product_title"
+        style="@style/ProductTitle"
+        android:layout_alignBottom="@+id/group_product_photo"
+        android:text="@string/product_title_credit_without_bail" />
+
+    <TextView
+        android:id="@+id/group_product_description"
+        style="@style/ProductDescription"
+        android:layout_below="@+id/group_product_photo"
+        android:text="@string/product_description_credit_without_bail" />
+</RelativeLayout>
