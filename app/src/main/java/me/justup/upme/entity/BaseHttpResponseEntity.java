@@ -9,14 +9,16 @@ import java.io.Serializable;
  * <p><b>Bad</b> answer:</p>
  * <code>LoginResponseEntity{result=null} BaseHttpResponseEntity{jsonrpc='2.0', error=JsonRpcError{code=-32603, message='Internal error', data='PHONE_NOT_FOUND'}, id=123}</code>
  */
-public class BaseHttpResponseEntity implements Serializable {
+public abstract class BaseHttpResponseEntity implements Serializable {
     private static final long serialVersionUID = 0L;
 
     public String jsonrpc = "";
     public JsonRpcError error;
     public int id = 0;
 
-    public class JsonRpcError {
+    public class JsonRpcError implements Serializable {
+        private static final long serialVersionUID = 0L;
+
         public int code = 0;
         public String message = "";
         public String data = "";

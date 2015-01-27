@@ -10,6 +10,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -17,12 +18,14 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.JsonSyntaxException;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.apache.http.Header;
 
 import me.justup.upme.R;
 import me.justup.upme.entity.BaseHttpQueryEntity;
+import me.justup.upme.entity.GetLoggedUserInfoResponse;
 import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.interfaces.OnCloseFragment;
 
@@ -39,6 +42,7 @@ public class UserFragment extends Fragment implements OnMapReadyCallback, OnClos
     private Animation mFragmentSliderOut;
     private Animation mFragmentSliderIn;
     private Fragment mUserOrderingFragment;
+    private TextView mUserName;
 
 
     public static UserFragment newInstance(BaseHttpQueryEntity entity) {
@@ -68,6 +72,8 @@ public class UserFragment extends Fragment implements OnMapReadyCallback, OnClos
                 }
             }
         }, 500);
+
+        mUserName = (TextView) view.findViewById(R.id.user_name_textView);
 
         Button mGetOrder = (Button) view.findViewById(R.id.ordering_button);
         mGetOrder.setOnClickListener(new OnGetOrderListener());
@@ -117,6 +123,18 @@ public class UserFragment extends Fragment implements OnMapReadyCallback, OnClos
         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
             String content = ApiWrapper.responseBodyToString(responseBody);
             LOGD(TAG, "onSuccess(): " + content);
+
+            GetLoggedUserInfoResponse response = null;
+            try {
+                response = ApiWrapper.gson.fromJson(content, GetLoggedUserInfoResponse.class);
+            } catch (JsonSyntaxException e) {
+                LOGE(TAG, "gson.fromJson:\n" + content);
+            }
+
+            if (response != null && response.result != null) {
+                mUserName.setText(response.result.name);
+            }
+
         }
 
         @Override

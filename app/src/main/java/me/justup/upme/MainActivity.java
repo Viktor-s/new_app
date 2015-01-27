@@ -90,7 +90,7 @@ public class MainActivity extends Activity implements OnCloseFragment {
 
         switch (view.getId()) {
             case R.id.news_menu_item:
-                startHttpIntent(new ArticlesGetShortDescriptionQuery());
+                startHttpIntent(new ArticlesGetShortDescriptionQuery(), HttpIntentService.NEWS_PART);
                 fragment = new NewsFeedFragment();
                 break;
 
@@ -103,10 +103,12 @@ public class MainActivity extends Activity implements OnCloseFragment {
                 break;
 
             case R.id.products_menu_item:
+                startHttpIntent(new ArticlesGetShortDescriptionQuery(), HttpIntentService.PRODUCTS_PART);
                 fragment = new ProductsFragment();
                 break;
 
             case R.id.briefcase_menu_item:
+                startHttpIntent(new ArticlesGetShortDescriptionQuery(), HttpIntentService.BRIEFCASE_PART);
                 fragment = new BriefcaseFragment();
                 break;
 
@@ -159,9 +161,11 @@ public class MainActivity extends Activity implements OnCloseFragment {
         mSettingButton.setEnabled(true);
     }
 
-    private void startHttpIntent(BaseHttpQueryEntity entity) {
+    private void startHttpIntent(BaseHttpQueryEntity entity, int dbTable) {
         Bundle bundle = new Bundle();
-        bundle.putSerializable(HttpIntentService.HTTP_INTENT_SERVICE_EXTRA, entity);
+        bundle.putSerializable(HttpIntentService.HTTP_INTENT_QUERY_EXTRA, entity);
+        bundle.putInt(HttpIntentService.HTTP_INTENT_PART_EXTRA, dbTable);
+
         Intent intent = new Intent(this, HttpIntentService.class);
         startService(intent.putExtras(bundle));
     }

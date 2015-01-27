@@ -3,28 +3,32 @@ package me.justup.upme.http;
 import android.app.IntentService;
 import android.content.Intent;
 
+import com.google.gson.JsonSyntaxException;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.apache.http.Header;
 
+import me.justup.upme.entity.ArticlesGetShortDescriptionResponse;
 import me.justup.upme.entity.BaseHttpQueryEntity;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.LOGE;
+import static me.justup.upme.utils.LogUtils.LOGI;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
-/**
- * <h3>Example (for fragment):</h3>
- * <code>
- * Bundle mBundle = new Bundle();<br>
- * mBundle.putSerializable(HttpIntentService.HTTP_INTENT_SERVICE_EXTRA, myEntity);<br>
- * Intent intent = new Intent(getActivity(), HttpIntentService.class);<br>
- * getActivity().startService(intent.putExtras(mBundle));<br>
- * </code>
- */
+
 public class HttpIntentService extends IntentService {
     private static final String TAG = makeLogTag(HttpIntentService.class);
-    public static final String HTTP_INTENT_SERVICE_EXTRA = "http_intent_service_extra";
+
+    public static final String HTTP_INTENT_QUERY_EXTRA = "http_intent_query_extra";
+    public static final String HTTP_INTENT_PART_EXTRA = "http_intent_part_extra";
+
+    public static final int NEWS_PART = 1;
+    public static final int PRODUCTS_PART = 2;
+    public static final int BRIEFCASE_PART = 3;
+
+    private int partNumber;
+
 
     public HttpIntentService() {
         super(TAG);
@@ -32,7 +36,9 @@ public class HttpIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        BaseHttpQueryEntity mQueryEntity = (BaseHttpQueryEntity) intent.getSerializableExtra(HTTP_INTENT_SERVICE_EXTRA);
+        BaseHttpQueryEntity mQueryEntity = (BaseHttpQueryEntity) intent.getSerializableExtra(HTTP_INTENT_QUERY_EXTRA);
+        partNumber = intent.getIntExtra(HTTP_INTENT_PART_EXTRA, 0);
+
         ApiWrapper.syncQuery(mQueryEntity, new OnQueryResponse());
     }
 
@@ -42,7 +48,22 @@ public class HttpIntentService extends IntentService {
             String content = ApiWrapper.responseBodyToString(responseBody);
             LOGD(TAG, "onSuccess(): " + content);
 
-            // write to db, maybe send broadcast
+            switch (partNumber) {
+                case NEWS_PART:
+                    fillNewsDB(content);
+                    break;
+
+                case PRODUCTS_PART:
+                    fillProductsDB(content);
+                    break;
+
+                case BRIEFCASE_PART:
+                    fillBriefcaseDB(content);
+                    break;
+
+                default:
+                    break;
+            }
         }
 
         @Override
@@ -50,6 +71,29 @@ public class HttpIntentService extends IntentService {
             String content = ApiWrapper.responseBodyToString(responseBody);
             LOGE(TAG, "onFailure(): " + content);
         }
+    }
+
+    private void fillNewsDB(String content) {
+        LOGI(TAG, "fillNewsDB");
+
+        ArticlesGetShortDescriptionResponse response = null;
+        try {
+            response = ApiWrapper.gson.fromJson(content, ArticlesGetShortDescriptionResponse.class);
+        } catch (JsonSyntaxException e) {
+            LOGE(TAG, "gson.fromJson:\n" + content);
+        }
+
+        if (response != null && response.result != null) {
+            // fill DB
+        }
+    }
+
+    private void fillProductsDB(String content) {
+        LOGI(TAG, "fillProductsDB");
+    }
+
+    private void fillBriefcaseDB(String content) {
+        LOGI(TAG, "fillBriefcaseDB");
     }
 
 }
