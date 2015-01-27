@@ -2,6 +2,7 @@ package me.justup.upme.fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +17,17 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+
+import org.apache.http.Header;
 
 import me.justup.upme.R;
 import me.justup.upme.entity.BaseHttpQueryEntity;
+import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.interfaces.OnCloseFragment;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
+import static me.justup.upme.utils.LogUtils.LOGE;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 
@@ -50,12 +56,18 @@ public class UserFragment extends Fragment implements OnMapReadyCallback, OnClos
         View view = inflater.inflate(R.layout.fragment_user, container, false);
 
         BaseHttpQueryEntity mEntity = (BaseHttpQueryEntity) getArguments().getSerializable(ENTITY_KEY);
-        LOGD(TAG, mEntity.toString());
-        // next - start http query
+        ApiWrapper.query(mEntity, new OnGetUserInfoResponse());
 
-
-        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (isAdded()) {
+                    MapFragment mMapFragment = MapFragment.newInstance();
+                    getChildFragmentManager().beginTransaction().replace(R.id.map, mMapFragment).commit();
+                    mMapFragment.getMapAsync(UserFragment.this);
+                }
+            }
+        }, 500);
 
         Button mGetOrder = (Button) view.findViewById(R.id.ordering_button);
         mGetOrder.setOnClickListener(new OnGetOrderListener());
@@ -98,6 +110,20 @@ public class UserFragment extends Fragment implements OnMapReadyCallback, OnClos
         mOrderingFragmentContainer.setVisibility(View.GONE);
 
         getChildFragmentManager().beginTransaction().remove(mUserOrderingFragment).commit();
+    }
+
+    private class OnGetUserInfoResponse extends AsyncHttpResponseHandler {
+        @Override
+        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+            String content = ApiWrapper.responseBodyToString(responseBody);
+            LOGD(TAG, "onSuccess(): " + content);
+        }
+
+        @Override
+        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            String content = ApiWrapper.responseBodyToString(responseBody);
+            LOGE(TAG, "onFailure(): " + content);
+        }
     }
 
 }
