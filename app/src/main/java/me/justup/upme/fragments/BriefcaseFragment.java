@@ -1,12 +1,16 @@
 package me.justup.upme.fragments;
 
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.media.Image;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -18,7 +22,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.justup.upme.R;
+import me.justup.upme.adapter.NewsFeedAdapter;
+import me.justup.upme.entity.GetLoggedUserInfoQuery;
 import me.justup.upme.entity.PersonEntity;
+import me.justup.upme.utils.AppContext;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.LOGI;
@@ -31,6 +38,8 @@ public class BriefcaseFragment extends Fragment implements View.OnClickListener 
     List<PersonEntity> listPerson;
 
     LinearLayout containerLayout;
+
+    private FrameLayout mNewsItemContainer;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,24 +54,24 @@ public class BriefcaseFragment extends Fragment implements View.OnClickListener 
         PersonEntity person6 = new PersonEntity(6, 2, "Роман", "");
         PersonEntity person7 = new PersonEntity(7, 2, "Леха", "");
         PersonEntity person8 = new PersonEntity(8, 2, "Саша", "");
-        PersonEntity person9 = new PersonEntity(9, 3, "Андрей", "");
+        PersonEntity person9 = new PersonEntity(9, 2, "Андрей", "");
         PersonEntity person10 = new PersonEntity(10, 3, "Женя", "");
         PersonEntity person11 = new PersonEntity(11, 3, "Паша", "");
-        PersonEntity person12 = new PersonEntity(12, 7, "Богдан", "");
-        PersonEntity person13 = new PersonEntity(13, 7, "Глеб", "");
+        PersonEntity person12 = new PersonEntity(12, 3, "Богдан", "");
+        PersonEntity person13 = new PersonEntity(13, 3, "Глеб", "");
         PersonEntity person14 = new PersonEntity(14, 7, "Глеб 1", "");
         PersonEntity person15 = new PersonEntity(15, 7, "Глеб 2", "");
         PersonEntity person16 = new PersonEntity(16, 5, "Глеб 3", "");
-        PersonEntity person17 = new PersonEntity(17, 5, "Глеб 4", "");
-        PersonEntity person18 = new PersonEntity(18, 6, "Глеб 5", "");
-        PersonEntity person19 = new PersonEntity(19, 6, "Глеб 6", "");
-        PersonEntity person20 = new PersonEntity(20, 6, "Глеб 7", "");
-        PersonEntity person21 = new PersonEntity(21, 7, "Глеб 8", "");
-        PersonEntity person22 = new PersonEntity(22, 7, "Глеб 9", "");
-        PersonEntity person23 = new PersonEntity(23, 8, "Глеб 10", "");
+        PersonEntity person17 = new PersonEntity(17, 4, "Глеб 4", "");
+        PersonEntity person18 = new PersonEntity(18, 4, "Глеб 5", "");
+        PersonEntity person19 = new PersonEntity(19, 4, "Глеб 6", "");
+        PersonEntity person20 = new PersonEntity(20, 4, "Глеб 7", "");
+        PersonEntity person21 = new PersonEntity(21, 4, "Глеб 8", "");
+        PersonEntity person22 = new PersonEntity(22, 4, "Глеб 9", "");
+        PersonEntity person23 = new PersonEntity(23, 4, "Глеб 10", "");
         PersonEntity person24 = new PersonEntity(34, 8, "Глеб 11", "");
         PersonEntity person25 = new PersonEntity(25, 8, "Глеб 12", "");
-        PersonEntity person26 = new PersonEntity(26, 7, "Глеб 13", "");
+        PersonEntity person26 = new PersonEntity(26, 8, "Глеб 13", "");
         PersonEntity person27 = new PersonEntity(27, 7, "Глеб 14", "");
         PersonEntity person28 = new PersonEntity(28, 7, "Глеб 15", "");
         PersonEntity person29 = new PersonEntity(29, 7, "Глеб 16", "");
@@ -120,7 +129,20 @@ public class BriefcaseFragment extends Fragment implements View.OnClickListener 
 
         RelativeLayout photoLayout = (RelativeLayout) view.findViewById(R.id.photo_main);
         containerLayout.addView(levelGenerate(photoLayout, listPerson));
-//        photoLayout.setOnClickListener(this);
+
+        mNewsItemContainer = (FrameLayout) view.findViewById(R.id.briefcase_item_container_frameLayout);
+        Button addUser = (Button) view.findViewById(R.id.add_new_user_button);
+        addUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Animation mFragmentSliderFadeIn = AnimationUtils.loadAnimation(AppContext.getAppContext(), R.anim.fragment_item_slide_fade_in);
+                final FragmentTransaction ft = getChildFragmentManager().beginTransaction();
+                // Fragment fragment = UserFragment.newInstance(new GetLoggedUserInfoQuery());
+                ft.replace(R.id.briefcase_item_container_frameLayout, new Fragment());
+                ft.commit();
+                mNewsItemContainer.startAnimation(mFragmentSliderFadeIn);
+            }
+        });
 
         return view;
     }
@@ -128,6 +150,8 @@ public class BriefcaseFragment extends Fragment implements View.OnClickListener 
     @Override
     public void onClick(View v) {
 //        containerLayout.addView(levelGenerate(v, listPerson));
+
+
     }
 
     private ImageView createDirection(int resId) {
@@ -146,16 +170,17 @@ public class BriefcaseFragment extends Fragment implements View.OnClickListener 
 
         List<PersonEntity> children = getChildrenOnParent(listPerson, id);
         int countChildren = children.size();
+        LOGD("TAG", "countChildren --- " + countChildren);
 
         // definition of the first cell to fill
         int x = (int) Math.round(countChildren / 2 - 0.1);
         LOGD("TAG", "X --- " + x);
-        int startPosition = (x > column) ? 0 : column - x + 1;
+        int startPosition = (x >= column) ? 0 : column - x;
         LOGD("TAG", "START POSITION --- " + startPosition);
 
         GridLayout gridLayout = new GridLayout(getActivity());
 
-        for (int i = 1; i < startPosition; i++) {
+        for (int i = 0; i < startPosition; i++) {
             gridLayout.addView(createDirection(R.drawable.p00));
         }
 
@@ -183,8 +208,8 @@ public class BriefcaseFragment extends Fragment implements View.OnClickListener 
                 gridLayout.addView(createDirection(R.drawable.p34));
             } else if (countChildren > 3) {
                 gridLayout.addView(createDirection(R.drawable.p23));
-                for (int j = startPosition + 1; j < countChildren - 1; j++) {
-                    if (j != column)
+                for (int j = 2; j < countChildren; j++) {
+                    if (startPosition + j - 1 != column)
                         gridLayout.addView(createDirection(R.drawable.p234));
                     else
                         gridLayout.addView(createDirection(R.drawable.p1234));
@@ -234,7 +259,7 @@ public class BriefcaseFragment extends Fragment implements View.OnClickListener 
 
             if (i == 0) {
                 GridLayout.LayoutParams param = new GridLayout.LayoutParams();
-                param.columnSpec = GridLayout.spec(startPosition == 0 ? startPosition : startPosition-1); //////
+                param.columnSpec = GridLayout.spec(startPosition);
                 param.rowSpec = GridLayout.spec(row + 1);
                 layoutPhoto.setLayoutParams(param);
             }

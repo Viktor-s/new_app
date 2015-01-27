@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/app_background"
@@ -8,6 +8,7 @@
 
 
     <TableLayout
+        android:id="@+id/user_briefcase_tableLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp">
@@ -28,6 +29,7 @@
                 android:orientation="horizontal">
 
                 <Button
+                    android:id="@+id/add_new_user_button"
                     style="@style/ButtonPink"
                     android:layout_gravity="bottom"
                     android:text="Добавить  \n пользователя" />
@@ -101,12 +103,19 @@
 
     <LinearLayout
         android:id="@+id/containerLayout"
+        android:layout_below="@+id/user_briefcase_tableLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical" />
+
+    <FrameLayout
+        android:id="@+id/briefcase_item_container_frameLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_marginLeft="@dimen/news_fragment_block_size"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="@android:color/white" />
 
 
-    </LinearLayout>
-
-
-</LinearLayout>
+</RelativeLayout>
