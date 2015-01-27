@@ -13,6 +13,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import me.justup.upme.entity.ArticlesGetShortDescriptionQuery;
 import me.justup.upme.entity.BaseHttpQueryEntity;
 import me.justup.upme.entity.GetLoggedUserInfoQuery;
@@ -28,7 +30,7 @@ import me.justup.upme.interfaces.OnCloseFragment;
 import me.justup.upme.utils.LogUtils;
 
 
-public class MainActivity extends Activity implements OnCloseFragment {
+public class MainActivity extends Activity implements OnCloseFragment, View.OnClickListener {
     private FrameLayout mMainFragmentContainer;
     private Animation mFragmentSliderOut;
     private Animation mFragmentSliderIn;
@@ -37,6 +39,9 @@ public class MainActivity extends Activity implements OnCloseFragment {
     private FrameLayout mSettingsFragmentContainer;
     private Button mSettingButton;
     private SettingsFragment mSettingsFragment;
+
+    private ArrayList<Button> mButtonList = new ArrayList<>();
+    private Button mNewsButton, mMailButton, mCalendarButton, mProductsButton, mBriefcaseButton;
 
 
     @Override
@@ -69,6 +74,8 @@ public class MainActivity extends Activity implements OnCloseFragment {
         mSettingButton = (Button) findViewById(R.id.settings_button);
         mSettingButton.setOnClickListener(new OnLoadSettingsListener());
 
+        makeButtonSelector();
+
         Fragment fragment = UserFragment.newInstance(new GetLoggedUserInfoQuery());
         getFragmentManager().beginTransaction().add(R.id.mapAndUserFragment, fragment).commit();
 
@@ -84,31 +91,36 @@ public class MainActivity extends Activity implements OnCloseFragment {
 
     }
 
-    @SuppressWarnings("UnusedDeclaration")
-    public void onMainMenuClickHandler(View view) {
+    @Override
+    public void onClick(View view) {
         Fragment fragment = null;
 
         switch (view.getId()) {
             case R.id.news_menu_item:
                 startHttpIntent(new ArticlesGetShortDescriptionQuery(), HttpIntentService.NEWS_PART);
+                changeButtonState(mNewsButton);
                 fragment = new NewsFeedFragment();
                 break;
 
             case R.id.mail_menu_item:
+                changeButtonState(mMailButton);
                 fragment = new MailFragment();
                 break;
 
             case R.id.calendar_menu_item:
+                changeButtonState(mCalendarButton);
                 fragment = new CalendarFragment();
                 break;
 
             case R.id.products_menu_item:
                 startHttpIntent(new ArticlesGetShortDescriptionQuery(), HttpIntentService.PRODUCTS_PART);
+                changeButtonState(mProductsButton);
                 fragment = new ProductsFragment();
                 break;
 
             case R.id.briefcase_menu_item:
                 startHttpIntent(new ArticlesGetShortDescriptionQuery(), HttpIntentService.BRIEFCASE_PART);
+                changeButtonState(mBriefcaseButton);
                 fragment = new BriefcaseFragment();
                 break;
 
@@ -122,7 +134,34 @@ public class MainActivity extends Activity implements OnCloseFragment {
         if (!isShowMainFragmentContainer) {
             showMainFragmentContainer();
         }
+    }
 
+    private void makeButtonSelector() {
+        mNewsButton = (Button) findViewById(R.id.news_menu_item);
+        mMailButton = (Button) findViewById(R.id.mail_menu_item);
+        mCalendarButton = (Button) findViewById(R.id.calendar_menu_item);
+        mProductsButton = (Button) findViewById(R.id.products_menu_item);
+        mBriefcaseButton = (Button) findViewById(R.id.briefcase_menu_item);
+
+        mNewsButton.setOnClickListener(this);
+        mMailButton.setOnClickListener(this);
+        mCalendarButton.setOnClickListener(this);
+        mProductsButton.setOnClickListener(this);
+        mBriefcaseButton.setOnClickListener(this);
+
+        mButtonList.add(mNewsButton);
+        mButtonList.add(mMailButton);
+        mButtonList.add(mCalendarButton);
+        mButtonList.add(mProductsButton);
+        mButtonList.add(mBriefcaseButton);
+    }
+
+    private void changeButtonState(Button activeButton) {
+        for (Button button : mButtonList) {
+            button.setBackground(getResources().getDrawable(R.drawable.main_menu_selector));
+        }
+
+        activeButton.setBackground(getResources().getDrawable(R.drawable.pay_button_pressed));
     }
 
     private class OnCornerButtonListener implements View.OnClickListener {
