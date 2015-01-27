@@ -48,6 +48,13 @@
     <string name="banking">Банкинг</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <!--Crash report-->
+    <string name="crash_toast_text">Ooooops! Приложение упало, но доклад может быть направлен разработчику, чтобы помочь решить проблему!</string>
+    <string name="crash_dialog_title">Crash report</string>
+    <string name="crash_dialog_text">Произошла непредвиденная ошибка! Пожалуйста, помогите нам исправить ее, отправив нам данные об ошибке. Все, что вам нужно сделать, это нажать OK.</string>
+    <string name="crash_dialog_comment_prompt">Вы можете добавить свои комментарии (к примеру какие действия привели к падению приложения) ниже:</string>
+    <string name="crash_dialog_ok_toast">Спасибо!</string>
+
     <!-- FORM CONTACT -->
     <string name="form_tv_last_name">Фамилия</string>
     <string name="form_tv_first_name">Имя</string>
