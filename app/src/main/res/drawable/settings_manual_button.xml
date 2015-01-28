@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <corners android:radius="@dimen/pay_panel_item_radius" />
+    <solid android:color="@color/settings_manual_button" />
+
+</shape>

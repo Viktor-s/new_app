@@ -1,47 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/settings_background"
     android:clickable="true">
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="@string/settings_vk"
-        android:id="@+id/button"
+        android:id="@+id/vk_button"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:textAllCaps="true" />
+        android:background="@drawable/settings_vk_button_selector"
+        style="@style/SettingsButton" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/settings_or"
-        android:id="@+id/textView"
-        android:layout_above="@+id/button"
+        android:id="@+id/settings_or_textView"
+        android:layout_above="@+id/vk_button"
         android:layout_centerHorizontal="true"
         android:textAllCaps="true"
         android:layout_marginTop="20dp" />
-
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="@string/settings_facebook"
-        android:id="@+id/button11"
-        android:layout_above="@+id/textView"
-        android:layout_centerHorizontal="true"
-        android:textAllCaps="true"
-        android:layout_marginTop="20dp" />
+        android:id="@+id/fb_button"
+        android:layout_above="@+id/settings_or_textView"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/settings_fb_button_selector"
+        style="@style/SettingsButton" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/settings_title"
-        android:id="@+id/textView6"
-        android:layout_above="@+id/button11"
+        android:layout_above="@+id/fb_button"
         android:layout_centerHorizontal="true"
         android:textSize="28sp"
         android:gravity="center"
@@ -51,30 +45,27 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/settings_or"
-        android:id="@+id/textView7"
-        android:layout_below="@+id/button"
+        android:id="@+id/settings_nextor_textView"
+        android:layout_below="@+id/vk_button"
         android:layout_centerHorizontal="true"
         android:textAllCaps="true"
         android:layout_marginTop="20dp" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="@string/settings_self"
-        android:id="@+id/button13"
-        android:layout_below="@+id/textView7"
-        android:layout_centerHorizontal="true"
-        android:textAllCaps="true" />
+        android:id="@+id/settings_manual_button"
+        android:layout_below="@+id/settings_nextor_textView"
+        android:background="@drawable/settings_manual_button_selector"
+        style="@style/SettingsButton" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="@string/settings_exit"
-        android:id="@+id/button14"
-        android:layout_below="@+id/button13"
+        android:id="@+id/settings_exit_button"
+        android:layout_below="@+id/settings_manual_button"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
-        android:textAllCaps="true" />
+        android:background="@drawable/pay_panel_button_selector"
+        style="@style/SettingsButton" />
 
     <Button
         android:layout_width="50dp"

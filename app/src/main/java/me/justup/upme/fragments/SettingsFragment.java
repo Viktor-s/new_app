@@ -2,12 +2,14 @@ package me.justup.upme.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import me.justup.upme.LoginActivity;
 import me.justup.upme.R;
 import me.justup.upme.interfaces.OnCloseFragment;
 
@@ -38,6 +40,9 @@ public class SettingsFragment extends Fragment {
         Button mCloseFragment = (Button) view.findViewById(R.id.settings_close_button);
         mCloseFragment.setOnClickListener(new OnCloseListener());
 
+        Button mExitButton = (Button) view.findViewById(R.id.settings_exit_button);
+        mExitButton.setOnClickListener(new OnExitListener());
+
         return view;
     }
 
@@ -45,6 +50,14 @@ public class SettingsFragment extends Fragment {
         @Override
         public void onClick(View v) {
             mOnCloseSettingsFragmentCallback.onCloseFragment();
+        }
+    }
+
+    private class OnExitListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            startActivity(new Intent(getActivity(), LoginActivity.class));
+            getActivity().finish();
         }
     }
 
