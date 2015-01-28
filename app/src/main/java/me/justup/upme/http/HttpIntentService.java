@@ -8,8 +8,10 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.apache.http.Header;
 
+import me.justup.upme.db.DBAdapter;
 import me.justup.upme.entity.ArticlesGetShortDescriptionResponse;
 import me.justup.upme.entity.BaseHttpQueryEntity;
+import me.justup.upme.utils.AppContext;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.LOGE;
@@ -27,6 +29,7 @@ public class HttpIntentService extends IntentService {
     public static final int PRODUCTS_PART = 2;
     public static final int BRIEFCASE_PART = 3;
 
+    private DBAdapter mDBAdapter;
     private int partNumber;
 
 
@@ -35,11 +38,26 @@ public class HttpIntentService extends IntentService {
     }
 
     @Override
+    public void onCreate() {
+        super.onCreate();
+
+        mDBAdapter = new DBAdapter(AppContext.getAppContext());
+        mDBAdapter.open();
+    }
+
+    @Override
     protected void onHandleIntent(Intent intent) {
         BaseHttpQueryEntity mQueryEntity = (BaseHttpQueryEntity) intent.getSerializableExtra(HTTP_INTENT_QUERY_EXTRA);
         partNumber = intent.getIntExtra(HTTP_INTENT_PART_EXTRA, 0);
 
         ApiWrapper.syncQuery(mQueryEntity, new OnQueryResponse());
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        mDBAdapter.close();
     }
 
     private class OnQueryResponse extends AsyncHttpResponseHandler {
@@ -74,8 +92,6 @@ public class HttpIntentService extends IntentService {
     }
 
     private void fillNewsDB(String content) {
-        LOGI(TAG, "fillNewsDB");
-
         ArticlesGetShortDescriptionResponse response = null;
         try {
             response = ApiWrapper.gson.fromJson(content, ArticlesGetShortDescriptionResponse.class);
@@ -84,7 +100,7 @@ public class HttpIntentService extends IntentService {
         }
 
         if (response != null && response.result != null) {
-            // fill DB
+            mDBAdapter.saveShortNews(response);
         }
     }
 

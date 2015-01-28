@@ -3,23 +3,20 @@ package me.justup.upme.db;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import me.justup.upme.R;
+import me.justup.upme.entity.ArticlesGetShortDescriptionResponse;
 import me.justup.upme.entity.ContactEntity;
 import me.justup.upme.entity.NewsCommentEntity;
 import me.justup.upme.entity.NewsFeedEntity;
 import me.justup.upme.entity.UserEntity;
 import me.justup.upme.utils.AppContext;
 
-import static me.justup.upme.db.DBHelper.BASE_ID;
-import static me.justup.upme.db.DBHelper.BASE_PROJECT_ID;
-import static me.justup.upme.db.DBHelper.BASE_START_DATE;
-import static me.justup.upme.db.DBHelper.BASE_TABLE_NAME;
+import static me.justup.upme.db.DBHelper.*;
 
 /**
  * <b>Use:</b>:
@@ -38,14 +35,16 @@ import static me.justup.upme.db.DBHelper.BASE_TABLE_NAME;
 public class DBAdapter {
     private SQLiteDatabase database;
     private DBHelper dbHelper;
-    private String[] allColumns = {BASE_ID, BASE_PROJECT_ID, BASE_START_DATE};
+
+    private String[] BASE_TABLE_COLUMNS = {BASE_ID, BASE_PROJECT_ID, BASE_START_DATE};
+    private String[] SHORT_NEWS_TABLE_COLUMNS = {SHORT_NEWS_ID, SHORT_NEWS_SERVER_ID, SHORT_NEWS_TITLE, SHORT_NEWS_SHORT_DESCR, SHORT_NEWS_THUMBNAIL, SHORT_NEWS_POSTED_AT};
 
 
     public DBAdapter(Context context) {
         dbHelper = new DBHelper(context);
     }
 
-    public void open() throws SQLException {
+    public void open() {
         database = dbHelper.getWritableDatabase();
     }
 
@@ -53,26 +52,34 @@ public class DBAdapter {
         dbHelper.close();
     }
 
-    public String getExampleObject() {
-        String mObject = "Object";
+    public void saveShortNews(ArticlesGetShortDescriptionResponse entity) {
 
-        return mObject;
-    }
+        // maybe needed foreach
 
-    public long saveTimer(int projId, long startDate) {
         ContentValues values = new ContentValues();
-        values.put(BASE_PROJECT_ID, projId);
-        values.put(BASE_START_DATE, startDate);
+        values.put(SHORT_NEWS_SERVER_ID, entity.result.testId);
+        values.put(SHORT_NEWS_TITLE, entity.result.test);
+        values.put(SHORT_NEWS_SHORT_DESCR, entity.result.test);
+        values.put(SHORT_NEWS_THUMBNAIL, entity.result.test);
+        values.put(SHORT_NEWS_POSTED_AT, entity.result.test);
 
-        long insertId = database.insert(BASE_TABLE_NAME, null, values);
-
-        return insertId;
+        database.insert(SHORT_NEWS_TABLE_NAME, null, values);
     }
 
+    // load example
+    /*
+        or:
+        String selectQuery = "SELECT * FROM " + BASE_TABLE_NAME;
+        Cursor cursor = database.rawQuery(selectQuery, null);
+
+        td.setId(c.getInt((c.getColumnIndex(KEY_ID))));
+        td.setNote((c.getString(c.getColumnIndex(KEY_TODO))));
+        td.setCreatedAt(c.getString(c.getColumnIndex(KEY_CREATED_AT)));
+     */
     public long openTimer(int projId) {
         long saveDate = 0;
 
-        Cursor cursor = database.query(BASE_TABLE_NAME, allColumns, BASE_PROJECT_ID + " = " + projId, null, null, null, null);
+        Cursor cursor = database.query(BASE_TABLE_NAME, BASE_TABLE_COLUMNS, BASE_PROJECT_ID + " = " + projId, null, null, null, null);
 
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
@@ -83,6 +90,7 @@ public class DBAdapter {
         return saveDate;
     }
 
+    // delete example
     public void deleteTimer(int projId) {
         database.delete(BASE_TABLE_NAME, BASE_PROJECT_ID + " = " + projId, null);
     }
@@ -130,8 +138,6 @@ public class DBAdapter {
         }
         return mNewsFeedEntityList;
     }
-
-
 
 
     public UserEntity getUserEntity() {
