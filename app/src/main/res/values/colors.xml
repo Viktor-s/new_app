@@ -26,6 +26,7 @@
     <color name="user_fragment_red_money_color">#c85694</color>
     <color name="user_fragment_info_text">#58575a</color>
     <color name="user_fragment_block_border">#2b2528</color>
+    <color name="ordering_fragment_title_background">#596188</color>
     <color name="settings_background">#d7000000</color>
 
     <color name="settings_fb_button">#3b5998</color>
