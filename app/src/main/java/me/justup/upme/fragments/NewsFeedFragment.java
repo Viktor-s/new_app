@@ -33,7 +33,7 @@ public class NewsFeedFragment extends Fragment {
     private FrameLayout mNewsItemContainer;
     private int lastChosenPosition = -1;
     private boolean isLoading = true;
-    int pastVisiblesItems, visibleItemCount, totalItemCount;
+    int pastVisibleItems, visibleItemCount, totalItemCount;
     private LinearLayoutManager mLayoutManager;
 
     @Override
@@ -65,8 +65,6 @@ public class NewsFeedFragment extends Fragment {
             @Override
             public void onItemClick(View view, int position) {
                 if (lastChosenPosition != position) {
-
-
                     Animation mFragmentSliderFadeIn = AnimationUtils.loadAnimation(AppContext.getAppContext(), R.anim.fragment_item_slide_fade_in);
                     final FragmentTransaction ft = getChildFragmentManager().beginTransaction();
                     ft.replace(R.id.news_item_container_frameLayout, NewsItemFragment.newInstance(mNewsFeedEntityList.get(position)));
@@ -81,15 +79,15 @@ public class NewsFeedFragment extends Fragment {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 visibleItemCount = mLayoutManager.getChildCount();
                 totalItemCount = mLayoutManager.getItemCount();
-                pastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
+                pastVisibleItems = mLayoutManager.findFirstVisibleItemPosition();
                 if (isLoading) {
-                    if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+                    if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
                         mNewsFeedEntityList.addAll(mDBAdapter.getNextPackOfNewsModelsTestList());
                         mNewsFeedAdapter.notifyDataSetChanged();
                         if (mNewsFeedEntityList.size() >= 50) {
                             isLoading = false;
                         }
-                        LOGI(TAG, mNewsFeedEntityList.size() + " " + pastVisiblesItems + " " + visibleItemCount + " " + totalItemCount);
+                        LOGI(TAG, mNewsFeedEntityList.size() + " " + pastVisibleItems + " " + visibleItemCount + " " + totalItemCount);
                     }
                 }
             }
