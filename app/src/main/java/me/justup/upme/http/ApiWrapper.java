@@ -50,6 +50,7 @@ public class ApiWrapper {
     }
 
     private static void loginPost(final StringEntity se, AsyncHttpResponseHandler responseHandler) {
+        client.removeAllHeaders();
         client.post(null, URL, se, null, responseHandler);
     }
 
