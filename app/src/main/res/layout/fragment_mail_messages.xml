@@ -4,13 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:id="@+id/mail_messages_image_attach_imageView"
-        android:layout_alignBottom="@+id/listView"
-        android:layout_alignParentStart="true" />
-
     <Button
         android:id="@+id/mail_messages_close_button"
         android:layout_alignParentTop="true"
@@ -141,6 +134,14 @@
                 android:layout_toStartOf="@+id/mail_messages_add_audio_button"
                 android:layout_marginRight="4dp" />
 
+            <Button
+                android:layout_width="@dimen/mail_messages_camera_button_height"
+                android:layout_height="@dimen/mail_messages_camera_button_height"
+                android:id="@+id/mail_messages_add_document_button"
+                android:layout_alignBottom="@+id/mail_messages_add_audio_button"
+                android:layout_toEndOf="@+id/textView8"
+                android:background="@android:drawable/ic_input_get" />
+
         </RelativeLayout>
 
     </LinearLayout>
@@ -152,5 +153,13 @@
         android:layout_above="@+id/linearLayout3"
         android:layout_marginRight="@dimen/news_item_margin_right"
         android:src="@android:drawable/dark_header" />
+
+    <ImageButton
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        android:id="@+id/mail_messages_image_attach_imageView"
+        android:layout_alignBottom="@+id/listView"
+        android:layout_alignParentStart="true"
+        android:clickable="true"/>
 
 </RelativeLayout>
