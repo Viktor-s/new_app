@@ -16,21 +16,21 @@ import me.justup.upme.R;
 import me.justup.upme.entity.MailContactEntity;
 import me.justup.upme.utils.CircularImageView;
 
+
 public class MailContactsAdapter extends ArrayAdapter<MailContactEntity> {
-    private Picasso mPicasso;
+    private Context context;
+
 
     private static class ViewHolder {
         private CircularImageView mImageView;
         private TextView mName;
         private Button mCall;
         private Button mInfo;
-
-
     }
 
     public MailContactsAdapter(Context context, List<MailContactEntity> contactEntityList) {
         super(context, R.layout.mail_contacts_list_item, contactEntityList);
-        this.mPicasso = Picasso.with(context);
+        this.context = context;
     }
 
     @Override
@@ -50,9 +50,11 @@ public class MailContactsAdapter extends ArrayAdapter<MailContactEntity> {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        mPicasso.load(contactEntity.getImg()).into(viewHolder.mImageView);
+
+        Picasso.with(context).load(contactEntity.getImg()).into(viewHolder.mImageView);
 
         viewHolder.mName.setText(contactEntity.getName());
         return convertView;
     }
+
 }

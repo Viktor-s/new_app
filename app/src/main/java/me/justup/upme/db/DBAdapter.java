@@ -18,24 +18,7 @@ import me.justup.upme.entity.NewsFeedEntity;
 import me.justup.upme.entity.UserEntity;
 import me.justup.upme.utils.AppContext;
 
-import static me.justup.upme.db.DBHelper.BASE_ID;
-import static me.justup.upme.db.DBHelper.BASE_PROJECT_ID;
-import static me.justup.upme.db.DBHelper.BASE_START_DATE;
-import static me.justup.upme.db.DBHelper.BASE_TABLE_NAME;
-import static me.justup.upme.db.DBHelper.MAIL_CONTACT_DATE_ADD;
-import static me.justup.upme.db.DBHelper.MAIL_CONTACT_ID;
-import static me.justup.upme.db.DBHelper.MAIL_CONTACT_IMG;
-import static me.justup.upme.db.DBHelper.MAIL_CONTACT_LOGIN;
-import static me.justup.upme.db.DBHelper.MAIL_CONTACT_NAME;
-import static me.justup.upme.db.DBHelper.MAIL_CONTACT_PHONE;
-import static me.justup.upme.db.DBHelper.MAIL_CONTACT_TABLE_NAME;
-import static me.justup.upme.db.DBHelper.SHORT_NEWS_ID;
-import static me.justup.upme.db.DBHelper.SHORT_NEWS_POSTED_AT;
-import static me.justup.upme.db.DBHelper.SHORT_NEWS_SERVER_ID;
-import static me.justup.upme.db.DBHelper.SHORT_NEWS_SHORT_DESCR;
-import static me.justup.upme.db.DBHelper.SHORT_NEWS_TABLE_NAME;
-import static me.justup.upme.db.DBHelper.SHORT_NEWS_THUMBNAIL;
-import static me.justup.upme.db.DBHelper.SHORT_NEWS_TITLE;
+import static me.justup.upme.db.DBHelper.*;
 
 /**
  * <b>Use:</b>:
@@ -90,7 +73,7 @@ public class DBAdapter {
 
         for (int i = 0; i < entity.result.size(); i++) {
             ContentValues values = new ContentValues();
-            values.put(MAIL_CONTACT_ID, entity.result.get(i).id);
+            values.put(MAIL_CONTACT_SERVER_ID, entity.result.get(i).id);
             values.put(MAIL_CONTACT_NAME, entity.result.get(i).name);
             values.put(MAIL_CONTACT_LOGIN, entity.result.get(i).login);
             values.put(MAIL_CONTACT_DATE_ADD, entity.result.get(i).dateAdd);
@@ -150,6 +133,7 @@ public class DBAdapter {
         cursor.close();
         return mailContactEntities;
     }
+
     public List<NewsFeedEntity> getNewsModelsTestList() {
         List<NewsFeedEntity> mNewsFeedEntityList = new ArrayList<>();
         List<NewsCommentEntity> mNewsCommentEntityList = new ArrayList<>();

@@ -8,7 +8,7 @@ import android.provider.BaseColumns;
 
 class DBHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "upme.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     public static final String BASE_TABLE_NAME = "base_table";
     public static final String BASE_ID = BaseColumns._ID;
@@ -22,16 +22,19 @@ class DBHelper extends SQLiteOpenHelper {
     public static final String SHORT_NEWS_SHORT_DESCR = "short_descr";
     public static final String SHORT_NEWS_THUMBNAIL = "thumbnail";
     public static final String SHORT_NEWS_POSTED_AT = "posted_at";
+    public static final String SHORT_NEWS_RESERVE_1 = "reserve_1";
+    public static final String SHORT_NEWS_RESERVE_2 = "reserve_2";
 
     public static final String MAIL_CONTACT_TABLE_NAME = "mail_contact_table";
     public static final String MAIL_CONTACT_ID = BaseColumns._ID;
-    public static final String MAIL_CONTACT_NAME = "mail_contact_name";
-    public static final String MAIL_CONTACT_LOGIN = "mail_contact_login";
-    public static final String MAIL_CONTACT_DATE_ADD = "mail_contact_date_add";
-    public static final String MAIL_CONTACT_PHONE = "mail_contact_phone";
-    public static final String MAIL_CONTACT_IMG = "mail_contact_img";
-    public static final String MAIL_CONTACT_RESERVE_1 = "mail_contact_reserve_1";
-    public static final String MAIL_CONTACT_RESERVE_2 = "mail_contact_reserve_2";
+    public static final String MAIL_CONTACT_SERVER_ID = "server_id";
+    public static final String MAIL_CONTACT_NAME = "name";
+    public static final String MAIL_CONTACT_LOGIN = "login";
+    public static final String MAIL_CONTACT_DATE_ADD = "date_add";
+    public static final String MAIL_CONTACT_PHONE = "phone";
+    public static final String MAIL_CONTACT_IMG = "img";
+    public static final String MAIL_CONTACT_RESERVE_1 = "reserve_1";
+    public static final String MAIL_CONTACT_RESERVE_2 = "reserve_2";
 
 
     private static final String CREATE_TABLE_BASE = "CREATE TABLE "
@@ -47,11 +50,14 @@ class DBHelper extends SQLiteOpenHelper {
             + SHORT_NEWS_TITLE + " TEXT, "
             + SHORT_NEWS_SHORT_DESCR + " TEXT, "
             + SHORT_NEWS_THUMBNAIL + " TEXT, "
-            + SHORT_NEWS_POSTED_AT + " TEXT" + ")";
+            + SHORT_NEWS_POSTED_AT + " TEXT, "
+            + SHORT_NEWS_RESERVE_1 + " TEXT, "
+            + SHORT_NEWS_RESERVE_2 + " TEXT" + ")";
 
     private static final String CREATE_TABLE_MAIL_CONTACT = "CREATE TABLE "
             + MAIL_CONTACT_TABLE_NAME + "("
             + MAIL_CONTACT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + MAIL_CONTACT_SERVER_ID + " INTEGER, "
             + MAIL_CONTACT_NAME + " TEXT, "
             + MAIL_CONTACT_LOGIN + " TEXT, "
             + MAIL_CONTACT_DATE_ADD + " INTEGER, "
