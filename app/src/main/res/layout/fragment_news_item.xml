@@ -93,8 +93,8 @@
 
 
     <Button
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="@dimen/close_button_size"
+        android:layout_height="@dimen/close_button_size"
         android:id="@+id/news_item_close_button"
         android:visibility="visible"
         android:layout_alignParentTop="true"

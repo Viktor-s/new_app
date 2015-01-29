@@ -289,4 +289,26 @@
         <item name="android:layout_weight">1</item>
     </style>
 
+    <!-- BRIEFCASE -->
+    <style name="NewUserTextView" parent="android:style/Widget.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">@dimen/form_tv_margin</item>
+        <item name="android:textSize">@dimen/form_tv_text_size</item>
+        <item name="android:textColor">@color/gray</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="NewUserEditText" parent="android:style/Widget.EditText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">40dp</item>
+        <item name="android:layout_marginRight">40dp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:textSize">@dimen/form_tv_text_size</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:background">@drawable/edittext_bg</item>
+    </style>
+
 </resources>

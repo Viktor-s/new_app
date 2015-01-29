@@ -32,7 +32,7 @@ import static me.justup.upme.utils.LogUtils.LOGI;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 
-public class BriefcaseFragment extends Fragment implements View.OnClickListener {
+public class BriefcaseFragment extends Fragment {
     private static final String TAG = makeLogTag(BriefcaseFragment.class);
 
     List<PersonEntity> listPerson;
@@ -40,6 +40,9 @@ public class BriefcaseFragment extends Fragment implements View.OnClickListener 
     LinearLayout containerLayout;
 
     private FrameLayout mNewsItemContainer;
+    LinearLayout addUserContainer;
+
+    private RelativeLayout photoLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -127,32 +130,63 @@ public class BriefcaseFragment extends Fragment implements View.OnClickListener 
 
         containerLayout = (LinearLayout) view.findViewById(R.id.containerLayout);
 
-        RelativeLayout photoLayout = (RelativeLayout) view.findViewById(R.id.photo_main);
+        photoLayout = (RelativeLayout) view.findViewById(R.id.photo_main);
         containerLayout.addView(levelGenerate(photoLayout, listPerson));
 
         mNewsItemContainer = (FrameLayout) view.findViewById(R.id.briefcase_item_container_frameLayout);
-        Button addUser = (Button) view.findViewById(R.id.add_new_user_button);
-        addUser.setOnClickListener(new View.OnClickListener() {
+
+//        Button addUser = (Button) view.findViewById(R.id.add_new_user_button);
+//        addUser.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Animation mFragmentSliderFadeIn = AnimationUtils.loadAnimation(AppContext.getAppContext(), R.anim.fragment_item_slide_fade_in);
+//                final FragmentTransaction ft = getChildFragmentManager().beginTransaction();
+//                // Fragment fragment = UserFragment.newInstance(new GetLoggedUserInfoQuery());
+//                ft.replace(R.id.briefcase_item_container_frameLayout, new Fragment());
+//                ft.commit();
+//                mNewsItemContainer.startAnimation(mFragmentSliderFadeIn);
+//            }
+//        });
+
+        final LinearLayout addUserContainer = (LinearLayout) view.findViewById(R.id.add_user_container);
+        addUserContainer.setVisibility(View.GONE);
+
+        final TextView nameField = (TextView) view.findViewById(R.id.new_user_name);
+        final TextView surnameField = (TextView) view.findViewById(R.id.new_user_surname);
+        final TextView phoneField = (TextView) view.findViewById(R.id.new_user_phone);
+
+        Button addNewUserButton = (Button) view.findViewById(R.id.add_new_user_button);
+        addNewUserButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Animation mFragmentSliderFadeIn = AnimationUtils.loadAnimation(AppContext.getAppContext(), R.anim.fragment_item_slide_fade_in);
-                final FragmentTransaction ft = getChildFragmentManager().beginTransaction();
-                // Fragment fragment = UserFragment.newInstance(new GetLoggedUserInfoQuery());
-                ft.replace(R.id.briefcase_item_container_frameLayout, new Fragment());
-                ft.commit();
-                mNewsItemContainer.startAnimation(mFragmentSliderFadeIn);
+            public void onClick(View view) {
+                if (addUserContainer.getVisibility() == View.GONE) {
+                    addUserContainer.setVisibility(View.VISIBLE);
+                    nameField.setText("");
+                    surnameField.setText("");
+                    phoneField.setText("");
+
+                } else
+                    addUserContainer.setVisibility(View.GONE);
+
+            }
+        });
+
+        Button sendCreateUserButton = (Button) view.findViewById(R.id.new_user_send_button);
+        sendCreateUserButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addUserContainer.setVisibility(View.GONE);
+                PersonEntity newPerson = new PersonEntity(100, 1, nameField.getText().toString(), "");  // 100 - generate Id
+                listPerson.add(newPerson);
+
+                containerLayout.removeAllViews();
+                containerLayout.addView(levelGenerate(photoLayout, listPerson));
             }
         });
 
         return view;
     }
 
-    @Override
-    public void onClick(View v) {
-//        containerLayout.addView(levelGenerate(v, listPerson));
-
-
-    }
 
     private ImageView createDirection(int resId) {
         ImageView resultView = new ImageView(getActivity());
@@ -230,7 +264,7 @@ public class BriefcaseFragment extends Fragment implements View.OnClickListener 
                 public void onClick(View view) {
                     int row = Integer.parseInt(((TextView) v.findViewById(R.id.row)).getText().toString());
                     LOGD("TAG", "With - " + (row + 1) + " to - '<' " + containerLayout.getChildCount());
-                    for (int i = containerLayout.getChildCount()-1; i > row; i--) {
+                    for (int i = containerLayout.getChildCount() - 1; i > row; i--) {
                         containerLayout.removeViewAt(i);
                     }
                     containerLayout.addView(levelGenerate(view, listPerson));

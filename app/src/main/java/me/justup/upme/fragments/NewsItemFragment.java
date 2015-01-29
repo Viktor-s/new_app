@@ -58,10 +58,8 @@ public class NewsItemFragment extends Fragment {
                 getParentFragment().getChildFragmentManager().beginTransaction().remove(NewsItemFragment.this).commit();
             }
         });
-
         fillViewsWithData();
         AnimateButtonClose.animateButtonClose(mNewsItemCloseButton);
-
         return view;
     }
 
@@ -87,5 +85,4 @@ public class NewsItemFragment extends Fragment {
         listView.setLayoutParams(params);
         listView.requestLayout();
     }
-
 }
