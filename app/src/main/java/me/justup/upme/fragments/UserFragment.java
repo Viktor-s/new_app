@@ -44,6 +44,11 @@ public class UserFragment extends Fragment implements OnMapReadyCallback, OnClos
     private Fragment mUserOrderingFragment;
     private TextView mUserName;
 
+    private double userLatitude;
+    private double userLongitude;
+    private String mUserMapTitle;
+    private String mUserMapSnippet;
+
 
     public static UserFragment newInstance(BaseHttpQueryEntity entity) {
         UserFragment fragment = new UserFragment();
@@ -62,17 +67,6 @@ public class UserFragment extends Fragment implements OnMapReadyCallback, OnClos
         BaseHttpQueryEntity mEntity = (BaseHttpQueryEntity) getArguments().getSerializable(ENTITY_KEY);
         ApiWrapper.query(mEntity, new OnGetUserInfoResponse());
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (isAdded()) {
-                    MapFragment mMapFragment = MapFragment.newInstance();
-                    getChildFragmentManager().beginTransaction().replace(R.id.map, mMapFragment).commit();
-                    mMapFragment.getMapAsync(UserFragment.this);
-                }
-            }
-        }, 500);
-
         mUserName = (TextView) view.findViewById(R.id.user_name_textView);
 
         Button mGetOrder = (Button) view.findViewById(R.id.ordering_button);
@@ -87,16 +81,29 @@ public class UserFragment extends Fragment implements OnMapReadyCallback, OnClos
         return view;
     }
 
+    private void loadMap() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (isAdded()) {
+                    MapFragment mMapFragment = MapFragment.newInstance();
+                    getChildFragmentManager().beginTransaction().replace(R.id.map, mMapFragment).commit();
+                    mMapFragment.getMapAsync(UserFragment.this);
+                }
+            }
+        }, 500);
+    }
+
     @Override
     public void onMapReady(GoogleMap map) {
-        LatLng city = new LatLng(49.99356, 36.239519);
+        LatLng city = new LatLng(userLatitude, userLongitude);
 
         map.setMyLocationEnabled(true);
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(city, 15));
 
         map.addMarker(new MarkerOptions()
-                .title("Kharkov")
-                .snippet("AppDragon")
+                .title(mUserMapTitle)
+                .snippet(mUserMapSnippet)
                 .position(city));
     }
 
@@ -132,7 +139,15 @@ public class UserFragment extends Fragment implements OnMapReadyCallback, OnClos
             }
 
             if (response != null && response.result != null) {
-                mUserName.setText(response.result.name);
+                mUserMapTitle = (response.result.name != null) ? response.result.name : "";
+                mUserMapSnippet = (response.result.login != null) ? response.result.login : "";
+
+                userLatitude = 50.4501000;
+                userLongitude = 30.523400;
+
+                mUserName.setText(mUserMapTitle);
+
+                loadMap();
             }
 
         }

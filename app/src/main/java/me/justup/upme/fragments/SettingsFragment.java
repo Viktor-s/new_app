@@ -12,6 +12,8 @@ import android.widget.Button;
 import me.justup.upme.LoginActivity;
 import me.justup.upme.R;
 import me.justup.upme.interfaces.OnCloseFragment;
+import me.justup.upme.utils.AppContext;
+import me.justup.upme.utils.AppPreferences;
 
 import static me.justup.upme.utils.LogUtils.LOGE;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
@@ -56,6 +58,7 @@ public class SettingsFragment extends Fragment {
     private class OnExitListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
+            new AppPreferences(AppContext.getAppContext()).clearPreferences();
             startActivity(new Intent(getActivity(), LoginActivity.class));
             getActivity().finish();
         }
