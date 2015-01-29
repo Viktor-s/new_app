@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import me.justup.upme.entity.ArticlesGetShortDescriptionQuery;
 import me.justup.upme.entity.BaseHttpQueryEntity;
 import me.justup.upme.entity.GetLoggedUserInfoQuery;
+import me.justup.upme.entity.GetMailContactQuery;
 import me.justup.upme.fragments.BriefcaseFragment;
 import me.justup.upme.fragments.CalendarFragment;
 import me.justup.upme.fragments.MailFragment;
@@ -103,6 +104,7 @@ public class MainActivity extends Activity implements OnCloseFragment, View.OnCl
                 break;
 
             case R.id.mail_menu_item:
+                startHttpIntent(new GetMailContactQuery(), HttpIntentService.MAIL_CONTACT_PART);
                 changeButtonState(mMailButton);
                 fragment = new MailFragment();
                 break;

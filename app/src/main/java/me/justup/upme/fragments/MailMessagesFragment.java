@@ -47,13 +47,13 @@ public class MailMessagesFragment extends Fragment {
     private static final int REQUEST_TAKE_PHOTO = 0;
     private static final int REQUEST_TAKE_IMAGE_FILE = 1;
     private static final int REQUEST_TAKE_FILE = 2;
+    private static final int AUDIO_RECORD_MAX_DURATION = 10000;
+    private static final String TAKE_PHOTO = "Сделать фото";
+    private static final String CHOOSE_FROM_GALLERY = "Выбрать из галереи";
+    private static final String DIALOG_CANCEL = "Отмена";
 
-    private Button mMailMessageCloseButton;
-    private Button mStaplebutton;
+
     private RelativeLayout mAddFileContainer;
-    private Button mAddPhotoButton;
-    private Button mAddAudioButton;
-    private Button mAddDocumentButton;
     private String mCurrentPhotoPath;
     private ImageButton mImageAttachedImageView;
     private TextView mAudioPreviewCurrentPosTextView;
@@ -63,7 +63,6 @@ public class MailMessagesFragment extends Fragment {
     private MediaPlayer mPlayer;
     private String audioOutputFile = null;
     private ToggleButton mAudioRecordButton;
-
     private AttachFileType mAttachFileType;
     private Bitmap mAttachImageBitmap;
 
@@ -80,9 +79,9 @@ public class MailMessagesFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Bundle bundle = this.getArguments();
         mAttachFileType = AttachFileType.NOTHING;
-        if (bundle != null) {
-
-        }
+//        if (bundle != null) {
+//
+//        }
     }
 
     @Override
@@ -90,7 +89,7 @@ public class MailMessagesFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mail_messages, container, false);
         mAddFileContainer = (RelativeLayout) view.findViewById(R.id.mail_messages_add_file_container);
-        mMailMessageCloseButton = (Button) view.findViewById(R.id.mail_messages_close_button);
+        Button mMailMessageCloseButton = (Button) view.findViewById(R.id.mail_messages_close_button);
         mMailMessageCloseButton.setVisibility(View.INVISIBLE);
         mMailMessageCloseButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,8 +97,8 @@ public class MailMessagesFragment extends Fragment {
                 getParentFragment().getChildFragmentManager().beginTransaction().remove(MailMessagesFragment.this).commit();
             }
         });
-        mStaplebutton = (Button) view.findViewById(R.id.mail_messages_staple_button);
-        mStaplebutton.setOnClickListener(new View.OnClickListener() {
+        Button mStapleButton = (Button) view.findViewById(R.id.mail_messages_staple_button);
+        mStapleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mAddFileContainer.getVisibility() == View.GONE) {
@@ -110,9 +109,9 @@ public class MailMessagesFragment extends Fragment {
             }
         });
         AnimateButtonClose.animateButtonClose(mMailMessageCloseButton);
-        mAddPhotoButton = (Button) view.findViewById(R.id.mail_messages_add_photo_button);
-        mAddAudioButton = (Button) view.findViewById(R.id.mail_messages_add_audio_button);
-        mAddDocumentButton = (Button) view.findViewById(R.id.mail_messages_add_document_button);
+        Button mAddPhotoButton = (Button) view.findViewById(R.id.mail_messages_add_photo_button);
+        Button mAddAudioButton = (Button) view.findViewById(R.id.mail_messages_add_audio_button);
+        Button mAddDocumentButton = (Button) view.findViewById(R.id.mail_messages_add_document_button);
         mAddPhotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -142,7 +141,6 @@ public class MailMessagesFragment extends Fragment {
                         showImagePreviewDialog();
                         break;
                     case AUDIO:
-                        //startPlaying();
                         showAudioPreviewDialog();
                         break;
                     case DOC:
@@ -159,21 +157,20 @@ public class MailMessagesFragment extends Fragment {
     }
 
     private void createTakePictureDialog() {
-        final CharSequence[] items = {"Take Photo", "Choose from Library",
-                "Cancel"};
+        final CharSequence[] items = {TAKE_PHOTO, CHOOSE_FROM_GALLERY,
+                DIALOG_CANCEL};
         AlertDialog.Builder builder = new AlertDialog.Builder(MailMessagesFragment.this.getActivity());
         builder.setTitle("Add Photo!");
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
-                if (items[item].equals("Take Photo")) {
+                if (items[item].equals(TAKE_PHOTO)) {
                     Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     if (takePictureIntent.resolveActivity(AppContext.getAppContext().getPackageManager()) != null) {
                         File photoFile = null;
                         try {
                             photoFile = createImageFile();
-                        } catch (IOException ex) {
-                            //Creating file error
+                        } catch (IOException ignored) {
                         }
                         if (photoFile != null) {
                             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
@@ -181,7 +178,7 @@ public class MailMessagesFragment extends Fragment {
                             startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
                         }
                     }
-                } else if (items[item].equals("Choose from Library")) {
+                } else if (items[item].equals(CHOOSE_FROM_GALLERY)) {
                     Intent intent = new Intent();
                     intent.setType("image/*");
                     intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -197,28 +194,32 @@ public class MailMessagesFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == REQUEST_TAKE_PHOTO) {
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-                mAttachImageBitmap = BitmapFactory.decodeFile(mCurrentPhotoPath);
-                mImageAttachedImageView.setImageBitmap(mAttachImageBitmap);
-                mAttachFileType = AttachFileType.IMAGE;
-                mImageAttachedImageView.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_menu_camera));
-            } else if (requestCode == REQUEST_TAKE_IMAGE_FILE) {
-                Uri selectedImageUri = data.getData();
-                try {
-                    mAttachImageBitmap = decodeUri(selectedImageUri);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-                mAttachFileType = AttachFileType.IMAGE;
-                mImageAttachedImageView.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_menu_camera));
-            } else if (requestCode == REQUEST_TAKE_FILE) {
-                Uri uriFile = data.getData();
-                String path = getPath(uriFile, MailMessagesFragment.this.getActivity());
-                // File file = new File(path);
-                mAttachFileType = AttachFileType.DOC;
-                mImageAttachedImageView.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_input_get));
+            switch (requestCode) {
+                case REQUEST_TAKE_PHOTO:
+                    BitmapFactory.Options options = new BitmapFactory.Options();
+                    options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+                    mAttachImageBitmap = BitmapFactory.decodeFile(mCurrentPhotoPath);
+                    mImageAttachedImageView.setImageBitmap(mAttachImageBitmap);
+                    mAttachFileType = AttachFileType.IMAGE;
+                    mImageAttachedImageView.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_menu_camera));
+                    break;
+                case REQUEST_TAKE_IMAGE_FILE:
+                    Uri selectedImageUri = data.getData();
+                    try {
+                        mAttachImageBitmap = decodeUri(selectedImageUri);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    mAttachFileType = AttachFileType.IMAGE;
+                    mImageAttachedImageView.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_menu_camera));
+                    break;
+                case REQUEST_TAKE_FILE:
+                    Uri uriFile = data.getData();
+                    String path = getPath(uriFile, MailMessagesFragment.this.getActivity());
+                    // File file = new File(path);
+                    mAttachFileType = AttachFileType.DOC;
+                    mImageAttachedImageView.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_input_get));
+                    break;
             }
             mImageAttachedImageView.setVisibility(View.VISIBLE);
         }
@@ -262,11 +263,10 @@ public class MailMessagesFragment extends Fragment {
 
     private File createImageFile() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
-                imageFileName,  /* prefix */
+                timeStamp,  /* prefix */
                 ".jpg",         /* suffix */
                 storageDir      /* directory */
         );
@@ -310,7 +310,7 @@ public class MailMessagesFragment extends Fragment {
         mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
         mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
         mRecorder.setOutputFile(audioOutputFile);
-        mRecorder.setMaxDuration(10000);
+        mRecorder.setMaxDuration(AUDIO_RECORD_MAX_DURATION);
         try {
             mRecorder.prepare();
             mRecorder.start();
@@ -396,9 +396,9 @@ public class MailMessagesFragment extends Fragment {
 
     private Runnable mUpdateTimeTask = new Runnable() {
         public void run() {
-            int currentDuration = mPlayer.getCurrentPosition() / 1000;
-            mAudioPreviewCurrentPosTextView.setText("" + currentDuration);
-            mAudioPreviewSeekBar.setProgress(currentDuration);
+            int currentPosition = mPlayer.getCurrentPosition() / 1000;
+            mAudioPreviewCurrentPosTextView.setText("" + currentPosition);
+            mAudioPreviewSeekBar.setProgress(currentPosition);
             mAudioPreviewHandler.postDelayed(this, 500);
         }
     };

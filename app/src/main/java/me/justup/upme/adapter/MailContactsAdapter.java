@@ -8,28 +8,34 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import me.justup.upme.R;
-import me.justup.upme.entity.ContactEntity;
+import me.justup.upme.entity.MailContactEntity;
 import me.justup.upme.utils.CircularImageView;
 
-public class MailContactsAdapter extends ArrayAdapter<ContactEntity> {
+public class MailContactsAdapter extends ArrayAdapter<MailContactEntity> {
+    private Picasso mPicasso;
+
     private static class ViewHolder {
         private CircularImageView mImageView;
         private TextView mName;
         private Button mCall;
         private Button mInfo;
 
+
     }
 
-    public MailContactsAdapter(Context context, List<ContactEntity> contactEntityList) {
+    public MailContactsAdapter(Context context, List<MailContactEntity> contactEntityList) {
         super(context, R.layout.mail_contacts_list_item, contactEntityList);
+        this.mPicasso = Picasso.with(context);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ContactEntity contactEntity = getItem(position);
+        MailContactEntity contactEntity = getItem(position);
         ViewHolder viewHolder;
         if (convertView == null) {
             viewHolder = new ViewHolder();
@@ -44,8 +50,9 @@ public class MailContactsAdapter extends ArrayAdapter<ContactEntity> {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        viewHolder.mImageView.setImageDrawable(contactEntity.getmContactImage());
-        viewHolder.mName.setText(contactEntity.getmContactName());
+        mPicasso.load(contactEntity.getImg()).into(viewHolder.mImageView);
+
+        viewHolder.mName.setText(contactEntity.getName());
         return convertView;
     }
 }

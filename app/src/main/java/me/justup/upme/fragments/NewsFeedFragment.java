@@ -33,8 +33,9 @@ public class NewsFeedFragment extends Fragment {
     private FrameLayout mNewsItemContainer;
     private int lastChosenPosition = -1;
     private boolean isLoading = true;
-    int pastVisibleItems, visibleItemCount, totalItemCount;
+    private int pastVisibleItems, visibleItemCount, totalItemCount;
     private LinearLayoutManager mLayoutManager;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,7 +56,6 @@ public class NewsFeedFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_news_feed, container, false);
         mNewsItemContainer = (FrameLayout) view.findViewById(R.id.news_item_container_frameLayout);
         mNewsFeedView = (RecyclerView) view.findViewById(R.id.news_RecyclerView);
-
         mLayoutManager = new LinearLayoutManager(AppContext.getAppContext());
         mNewsFeedView.setLayoutManager(mLayoutManager);
         mNewsFeedAdapter = new NewsFeedAdapter(mNewsFeedEntityList);
@@ -82,8 +82,8 @@ public class NewsFeedFragment extends Fragment {
                 pastVisibleItems = mLayoutManager.findFirstVisibleItemPosition();
                 if (isLoading) {
                     if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
-                        mNewsFeedEntityList.addAll(mDBAdapter.getNextPackOfNewsModelsTestList());
-                        mNewsFeedAdapter.notifyDataSetChanged();
+                       // mNewsFeedEntityList.addAll(mDBAdapter.getNextPackOfNewsModelsTestList());
+                      //  mNewsFeedAdapter.notifyDataSetChanged();
                         if (mNewsFeedEntityList.size() >= 50) {
                             isLoading = false;
                         }
