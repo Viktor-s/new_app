@@ -3,119 +3,200 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/app_background"
-    android:orientation="vertical"
     android:paddingLeft="40dp">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <TableLayout
-        android:id="@+id/user_briefcase_tableLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp">
-
-        <TableRow
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:src="@drawable/p13" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="20dp"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/add_new_user_button"
-                    style="@style/ButtonPink"
-                    android:layout_gravity="bottom"
-                    android:text="Добавить  \n пользователя" />
-            </LinearLayout>
-
-        </TableRow>
-
-        <TableRow
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical">
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
             <RelativeLayout
-                android:id="@+id/photo_main"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-                <ImageView
-                    android:id="@+id/photo"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:src="@drawable/photo_face"/>
+                <TableLayout
+                    android:id="@+id/user_briefcase_tableLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:visibility="visible">
 
-                <TextView
-                    android:id="@+id/idObject"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:text="1"/>
+                    <TableRow
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/row"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:text="0"/>
+                        <ImageView
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:src="@drawable/p13" />
 
-                <TextView
-                    android:id="@+id/column"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:text="0"/>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="20dp"
+                            android:orientation="horizontal">
+
+                            <Button
+                                android:id="@+id/add_new_user_button"
+                                style="@style/ButtonPink"
+                                android:layout_gravity="bottom"
+                                android:text="Добавить  \n пользователя" />
+                        </LinearLayout>
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical">
+
+                        <RelativeLayout
+                            android:id="@+id/photo_main"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <ImageView
+                                android:id="@+id/photo"
+                                android:layout_width="100dp"
+                                android:layout_height="100dp"
+                                android:src="@drawable/photo_face" />
+
+                            <TextView
+                                android:id="@+id/idObject"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:text="1" />
+
+                            <TextView
+                                android:id="@+id/row"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:text="0" />
+
+                            <TextView
+                                android:id="@+id/column"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:text="0" />
+
+                        </RelativeLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="20dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Виолетта Трофимова"
+                                android:textAllCaps="true"
+                                android:textColor="@color/blue_gray"
+                                android:textSize="26sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="4 people in your network"
+                                android:textAllCaps="true"
+                                android:textColor="@color/gray" />
+
+                        </LinearLayout>
+
+                    </TableRow>
+
+                </TableLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/containerLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/user_briefcase_tableLayout"
+                    android:orientation="vertical" />
+
+                <LinearLayout
+                    android:id="@+id/add_user_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="100dp"
+                    android:layout_marginTop="120dp"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <include layout="@layout/triangle_brown_in_top" />
+
+                    <LinearLayout
+                        android:layout_width="250dp"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/add_new_user_bg"
+                        android:gravity="center"
+                        android:orientation="vertical"
+
+                        android:padding="20dp">
+
+
+                        <TextView
+                            android:id="@+id/textView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:text="Введите\nданные\nпользователя"
+                            android:textAllCaps="true"
+                            android:textColor="@android:color/white"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            style="@style/NewUserTextView"
+                            android:text="Имя" />
+
+                        <EditText
+                            android:id="@+id/new_user_name"
+                            style="@style/NewUserEditText" />
+
+                        <TextView
+                            style="@style/NewUserTextView"
+                            android:text="Фамилия" />
+
+                        <EditText
+                            android:id="@+id/new_user_surname"
+                            style="@style/NewUserEditText" />
+
+                        <TextView
+                            style="@style/NewUserTextView"
+                            android:text="Телефон" />
+
+                        <EditText
+                            android:id="@+id/new_user_phone"
+                            style="@style/NewUserEditText" />
+
+                        <Button
+                            android:id="@+id/new_user_send_button"
+                            style="@style/ButtonPink"
+                            android:layout_margin="10dp"
+                            android:text="Отправить" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <FrameLayout
+                    android:id="@+id/briefcase_item_container_frameLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="@dimen/news_fragment_block_size"
+                    android:background="@android:color/white" />
+
 
             </RelativeLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Виолетта Трофимова"
-                    android:textAllCaps="true"
-                    android:textColor="@color/blue_gray"
-                    android:textSize="26sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="4 people in your network"
-                    android:textAllCaps="true"
-                    android:textColor="@color/gray" />
-
-            </LinearLayout>
-
-        </TableRow>
-
-    </TableLayout>
-
-
-    <LinearLayout
-        android:id="@+id/containerLayout"
-        android:layout_below="@+id/user_briefcase_tableLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical" />
-
-    <FrameLayout
-        android:id="@+id/briefcase_item_container_frameLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
-        android:layout_marginLeft="@dimen/news_fragment_block_size"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:background="@android:color/white" />
+        </HorizontalScrollView>
+    </ScrollView>
 
 
 </RelativeLayout>
