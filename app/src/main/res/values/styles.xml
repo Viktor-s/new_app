@@ -278,4 +278,15 @@
         <item name="android:textAllCaps">true</item>
     </style>
 
+    <style name="UserOrderingFragmentBlock">
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingStart">@dimen/ordering_fragment_text_left_padding</item>
+        <item name="android:paddingEnd">@dimen/ordering_fragment_text_right_padding</item>
+        <item name="android:paddingTop">@dimen/ordering_fragment_block_border</item>
+        <item name="android:paddingBottom">@dimen/ordering_fragment_block_border</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+
 </resources>

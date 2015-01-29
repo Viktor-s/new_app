@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/user_fragment_block_gradient">
+
+    <LinearLayout style="@style/UserOrderingFragmentBlock">
+
+        <TextView
+            android:id="@+id/ordering_item_date_textView"
+            android:text="08:35"
+            android:layout_marginBottom="@dimen/ordering_fragment_text_margin_bottom"
+            style="@style/UserFragmentInfoText" />
+
+        <TextView
+            android:id="@+id/ordering_item_title_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="26sp"
+            android:textColor="@color/white"
+            tools:text="Кредит наличными (без залога)" />
+    </LinearLayout>
+
+    <LinearLayout style="@style/UserOrderingFragmentBlock">
+
+        <TextView
+            android:text="@string/summa"
+            android:layout_marginBottom="@dimen/ordering_fragment_text_margin_bottom"
+            style="@style/UserFragmentInfoText" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="26sp"
+            android:text="$ 2 500"
+            android:id="@+id/ordering_item_amount" />
+
+        <TextView
+            android:text="@string/commission"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="@dimen/ordering_fragment_text_margin_bottom"
+            style="@style/UserFragmentInfoText" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="22sp"
+            android:text="$ 2 500"
+            android:id="@+id/ordering_item_commission" />
+    </LinearLayout>
+
+</LinearLayout>

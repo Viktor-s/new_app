@@ -82,6 +82,8 @@
 
     <string name="provider">Провайдер</string>
     <string name="summa">Сумма</string>
+    <string name="total">Суммарно</string>
+    <string name="commission">Коммисия</string>
     <string name="send">Отправить</string>
     <string name="contract_number">Номер договора</string>
     <string name="from_card">С карты</string>
