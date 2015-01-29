@@ -9,10 +9,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import java.util.List;
+
 import me.justup.upme.R;
 import me.justup.upme.adapter.MailContactsAdapter;
 import me.justup.upme.db.DBAdapter;
-import me.justup.upme.entity.UserEntity;
+import me.justup.upme.entity.MailContactEntity;
 import me.justup.upme.utils.AppContext;
 
 import static me.justup.upme.utils.LogUtils.makeLogTag;
@@ -21,7 +23,7 @@ import static me.justup.upme.utils.LogUtils.makeLogTag;
 public class MailFragment extends Fragment {
     private static final String TAG = makeLogTag(MailFragment.class);
     private DBAdapter mDBAdapter;
-    private UserEntity mUserEntity;
+    private List<MailContactEntity> mMailContactEntities;
     private ListView contactsListView;
     private int lastChosenPosition = -1;
 
@@ -30,7 +32,7 @@ public class MailFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mDBAdapter = new DBAdapter(AppContext.getAppContext());
         mDBAdapter.open();
-        mUserEntity = mDBAdapter.getUserEntity();
+        mMailContactEntities = mDBAdapter.getMailContactEntityList();
     }
 
     @Override
@@ -43,7 +45,7 @@ public class MailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mail, container, false);
         contactsListView = (ListView) view.findViewById(R.id.mail_contacts_ListView);
-        contactsListView.setAdapter(new MailContactsAdapter(AppContext.getAppContext(), mUserEntity.getmContactEntityList()));
+        contactsListView.setAdapter(new MailContactsAdapter(AppContext.getAppContext(), mMailContactEntities));
         contactsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {

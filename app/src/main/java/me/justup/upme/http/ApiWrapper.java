@@ -37,6 +37,7 @@ public class ApiWrapper {
     public static final String AUTH_GET_LOGGED_USER_INFO = "Auth.getLoggedUserInfo";
     public static final String ARTICLES_GET = "Articles.get";
     public static final String ARTICLES_GET_SHORT_DESCRIPTION = "Articles.getShortDescription";
+    public static final String ACCOUNT_GET_PEOPLE_NETWORK = "Account.getPeopleNetwork";
 
 
     private static void post(final StringEntity se, AsyncHttpResponseHandler responseHandler) {

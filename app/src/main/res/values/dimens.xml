@@ -1,5 +1,5 @@
 <resources>
-
+    <dimen name="close_button_size">50dp</dimen>
     <dimen name="radius">20dp</dimen>
     <dimen name="news_item_comment_bg_radius">12dp</dimen>
 
@@ -50,12 +50,15 @@
     <dimen name="mail_search_block_height">70dp</dimen>
     <dimen name="mail_messages_block_height">90dp</dimen>
     <dimen name="mail_messages_staple_height">35dp</dimen>
-    <dimen name="mail_messages_staple_width">55dp</dimen>
+    <dimen name="mail_messages_staple_width">60dp</dimen>
     <dimen name="mail_messages_staple_line_margin">12dp</dimen>
     <dimen name="mail_messages_text_height">40dp</dimen>
     <dimen name="mail_messages_text_width">250dp</dimen>
     <dimen name="mail_messages_call_margin">14dp</dimen>
     <dimen name="mail_messages_camera_button_height">55dp</dimen>
+    <dimen name="mail_messages_dialog_height">250dp</dimen>
+    <dimen name="mail_messages_dialog_width">340dp</dimen>
+    <dimen name="mail_messages_attach_image_size">52dp</dimen>
 
     <dimen name="user_fragment_left_margin">30dp</dimen>
     <dimen name="user_fragment_top_margin">40dp</dimen>
