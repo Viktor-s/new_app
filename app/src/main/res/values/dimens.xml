@@ -66,4 +66,9 @@
     <dimen name="user_fragment_insystem_text_size">20sp</dimen>
     <dimen name="user_fragment_block_padding">35dp</dimen>
 
+    <dimen name="ordering_fragment_text_left_padding">40dp</dimen>
+    <dimen name="ordering_fragment_text_right_padding">10dp</dimen>
+    <dimen name="ordering_fragment_text_margin_bottom">5dp</dimen>
+    <dimen name="ordering_fragment_block_border">30dp</dimen>
+
 </resources>

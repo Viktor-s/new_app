@@ -133,7 +133,7 @@ public class HttpIntentService extends IntentService {
                 "            \"login\": \"mrctd\",\n" +
                 "            \"dateAdd\": \"45554\",\n" +
                 "            \"phone\": \"+380934262276\",\n" +
-                "            \"img\": \"http://life-in-taxi.ru/2012/07/telefone.jpg\"\n" +
+                "            \"img\": \"http://initrod.com/game/img/write.png\"\n" +
                 "        },\n" +
                 "        {\n" +
                 "            \"id\": 9,\n" +
@@ -141,7 +141,7 @@ public class HttpIntentService extends IntentService {
                 "            \"login\": \"mr_ctd\",\n" +
                 "            \"dateAdd\": \"5543543\",\n" +
                 "            \"phone\": \"+380111111111\",\n" +
-                "            \"img\": \"http://life-in-taxi.ru/2012/07/telefone.jpg\"\n" +
+                "            \"img\": \"http://initrod.com/game/img/java.png\"\n" +
                 "        },\n" +
                 "        {\n" +
                 "            \"id\": \"10\",\n" +
