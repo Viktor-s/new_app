@@ -2,8 +2,10 @@ package me.justup.upme.db;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.v4.content.LocalBroadcastManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +20,26 @@ import me.justup.upme.entity.NewsFeedEntity;
 import me.justup.upme.entity.UserEntity;
 import me.justup.upme.utils.AppContext;
 
-import static me.justup.upme.db.DBHelper.*;
+import static me.justup.upme.db.DBHelper.BASE_ID;
+import static me.justup.upme.db.DBHelper.BASE_PROJECT_ID;
+import static me.justup.upme.db.DBHelper.BASE_START_DATE;
+import static me.justup.upme.db.DBHelper.BASE_TABLE_NAME;
+import static me.justup.upme.db.DBHelper.CREATE_TABLE_MAIL_CONTACT;
+import static me.justup.upme.db.DBHelper.MAIL_CONTACT_DATE_ADD;
+import static me.justup.upme.db.DBHelper.MAIL_CONTACT_ID;
+import static me.justup.upme.db.DBHelper.MAIL_CONTACT_IMG;
+import static me.justup.upme.db.DBHelper.MAIL_CONTACT_LOGIN;
+import static me.justup.upme.db.DBHelper.MAIL_CONTACT_NAME;
+import static me.justup.upme.db.DBHelper.MAIL_CONTACT_PHONE;
+import static me.justup.upme.db.DBHelper.MAIL_CONTACT_SERVER_ID;
+import static me.justup.upme.db.DBHelper.MAIL_CONTACT_TABLE_NAME;
+import static me.justup.upme.db.DBHelper.SHORT_NEWS_POSTED_AT;
+import static me.justup.upme.db.DBHelper.SHORT_NEWS_SERVER_ID;
+import static me.justup.upme.db.DBHelper.SHORT_NEWS_SHORT_DESCR;
+import static me.justup.upme.db.DBHelper.SHORT_NEWS_TABLE_NAME;
+import static me.justup.upme.db.DBHelper.SHORT_NEWS_THUMBNAIL;
+import static me.justup.upme.db.DBHelper.SHORT_NEWS_TITLE;
+import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 /**
  * <b>Use:</b>:
@@ -35,6 +56,8 @@ import static me.justup.upme.db.DBHelper.*;
  * mDBAdapter.close();
  */
 public class DBAdapter {
+    private static final String TAG = makeLogTag(DBAdapter.class);
+    public static final String SQL_BROADCAST_INTENT = "sql_broadcast_intent";
     private SQLiteDatabase database;
     private DBHelper dbHelper;
 
@@ -85,7 +108,7 @@ public class DBAdapter {
             values.put(MAIL_CONTACT_IMG, entity.result.get(i).img);
             database.insert(MAIL_CONTACT_TABLE_NAME, null, values);
         }
-
+        sendBroadcast();
     }
 
 
@@ -175,5 +198,8 @@ public class DBAdapter {
         return mUserEntity;
     }
 
-
+    private void sendBroadcast() {
+        Intent intent = new Intent(SQL_BROADCAST_INTENT);
+        LocalBroadcastManager.getInstance(AppContext.getAppContext()).sendBroadcast(intent);
+    }
 }
