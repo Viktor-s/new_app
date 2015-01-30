@@ -15,28 +15,24 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import java.util.List;
-
 import me.justup.upme.R;
 import me.justup.upme.adapter.MailContactsAdapter;
 import me.justup.upme.db.DBAdapter;
 import me.justup.upme.db.DBHelper;
-import me.justup.upme.entity.MailContactEntity;
 import me.justup.upme.utils.AppContext;
 
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_TABLE_NAME;
-import static me.justup.upme.utils.LogUtils.LOGI;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 
 public class MailFragment extends Fragment {
     private static final String TAG = makeLogTag(MailFragment.class);
     private DBAdapter mDBAdapter;
-    private List<MailContactEntity> mMailContactEntities;
     private ListView contactsListView;
     private int lastChosenPosition = -1;
     private DBHelper mDBHelper;
     private MailContactsAdapter mMailContactsAdapter;
+    private String selectQuery;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,12 +40,9 @@ public class MailFragment extends Fragment {
         mDBHelper = new DBHelper(AppContext.getAppContext());
         mDBAdapter = new DBAdapter(AppContext.getAppContext());
         mDBAdapter.open();
-        //mMailContactEntities = mDBAdapter.getMailContactEntityList();
-        String selectQuery = "SELECT * FROM " + MAIL_CONTACT_TABLE_NAME;
+        selectQuery = "SELECT * FROM " + MAIL_CONTACT_TABLE_NAME;
         Cursor cursor = mDBHelper.getWritableDatabase().rawQuery(selectQuery, null);
         mMailContactsAdapter = new MailContactsAdapter(AppContext.getAppContext(), cursor, 0);
-
-
     }
 
     @Override
@@ -74,15 +67,12 @@ public class MailFragment extends Fragment {
                 }
             }
         });
-
         BroadcastReceiver receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                String selectQuery = "SELECT * FROM " + MAIL_CONTACT_TABLE_NAME;
                 Cursor cursor = mDBHelper.getWritableDatabase().rawQuery(selectQuery, null);
                 mMailContactsAdapter.changeCursor(cursor);
                 mMailContactsAdapter.notifyDataSetChanged();
-                LOGI(TAG, "onReceive broadcast");
             }
         };
         LocalBroadcastManager.getInstance(MailFragment.this.getActivity())
