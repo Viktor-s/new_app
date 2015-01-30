@@ -52,26 +52,31 @@
         <Button
             android:id="@+id/news_menu_item"
             android:text="@string/menu_item_title_news"
+            android:drawableStart="@drawable/ic_main_news"
             style="@style/MainMenuItemLayout" />
 
         <Button
             android:id="@+id/mail_menu_item"
             android:text="@string/menu_item_title_mail"
+            android:drawableStart="@drawable/ic_main_mail"
             style="@style/MainMenuItemLayout" />
 
         <Button
             android:id="@+id/calendar_menu_item"
             android:text="@string/menu_item_title_calendar"
+            android:drawableStart="@drawable/ic_main_cal"
             style="@style/MainMenuItemLayout" />
 
         <Button
             android:id="@+id/products_menu_item"
             android:text="@string/menu_item_title_products"
+            android:drawableStart="@drawable/ic_main_prod"
             style="@style/MainMenuItemLayout" />
 
         <Button
             android:id="@+id/briefcase_menu_item"
             android:text="@string/menu_item_title_briefcase"
+            android:drawableStart="@drawable/ic_main_brief"
             style="@style/MainMenuItemLayout" />
 
         <TextView
