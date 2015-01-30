@@ -12,12 +12,9 @@ import java.util.List;
 
 import me.justup.upme.R;
 import me.justup.upme.entity.ArticlesGetShortDescriptionResponse;
-import me.justup.upme.entity.ContactEntity;
 import me.justup.upme.entity.GetMailContactResponse;
-import me.justup.upme.entity.MailContactEntity;
 import me.justup.upme.entity.NewsCommentEntity;
 import me.justup.upme.entity.NewsFeedEntity;
-import me.justup.upme.entity.UserEntity;
 import me.justup.upme.utils.AppContext;
 
 import static me.justup.upme.db.DBHelper.BASE_ID;
@@ -26,7 +23,6 @@ import static me.justup.upme.db.DBHelper.BASE_START_DATE;
 import static me.justup.upme.db.DBHelper.BASE_TABLE_NAME;
 import static me.justup.upme.db.DBHelper.CREATE_TABLE_MAIL_CONTACT;
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_DATE_ADD;
-import static me.justup.upme.db.DBHelper.MAIL_CONTACT_ID;
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_IMG;
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_LOGIN;
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_NAME;
@@ -140,27 +136,6 @@ public class DBAdapter {
         database.delete(BASE_TABLE_NAME, BASE_PROJECT_ID + " = " + projId, null);
     }
 
-    public List<MailContactEntity> getMailContactEntityList() {
-        String selectQuery = "SELECT * FROM " + MAIL_CONTACT_TABLE_NAME;
-        Cursor cursor = database.rawQuery(selectQuery, null);
-        List<MailContactEntity> mailContactEntities = new ArrayList<>();
-        if (cursor.moveToFirst()) {
-            do {
-                MailContactEntity mailContactEntity = new MailContactEntity();
-                mailContactEntity.setId(cursor.getInt((cursor.getColumnIndex(MAIL_CONTACT_ID))));
-                mailContactEntity.setName(cursor.getString((cursor.getColumnIndex(MAIL_CONTACT_NAME))));
-                mailContactEntity.setLogin(cursor.getString((cursor.getColumnIndex(MAIL_CONTACT_LOGIN))));
-                mailContactEntity.setDateAdd(cursor.getInt((cursor.getColumnIndex(MAIL_CONTACT_DATE_ADD))));
-                mailContactEntity.setPhone(cursor.getString((cursor.getColumnIndex(MAIL_CONTACT_PHONE))));
-                mailContactEntity.setImg(cursor.getString((cursor.getColumnIndex(MAIL_CONTACT_IMG))));
-                mailContactEntities.add(mailContactEntity);
-
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        return mailContactEntities;
-    }
-
     public List<NewsFeedEntity> getNewsModelsTestList() {
         List<NewsFeedEntity> mNewsFeedEntityList = new ArrayList<>();
         List<NewsCommentEntity> mNewsCommentEntityList = new ArrayList<>();
@@ -181,21 +156,6 @@ public class DBAdapter {
             mNewsFeedEntityList.add(newsFeedEntity);
         }
         return mNewsFeedEntityList;
-    }
-
-
-    public UserEntity getUserEntity() {
-        UserEntity mUserEntity = new UserEntity();
-        List<ContactEntity> mContactEntitiesList = new ArrayList<>();
-
-        for (int i = 0; i < 8; i++) {
-            ContactEntity mContactEntity = new ContactEntity();
-            mContactEntity.setmContactName("MR. ANDROID " + i);
-            mContactEntity.setmContactImage(AppContext.getAppContext().getResources().getDrawable(R.drawable.ic_launcher));
-            mContactEntitiesList.add(mContactEntity);
-        }
-        mUserEntity.setmContactEntityList(mContactEntitiesList);
-        return mUserEntity;
     }
 
     private void sendBroadcast() {
