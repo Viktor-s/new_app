@@ -15,26 +15,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:layout_marginTop="40dp"
-                android:background="@color/blue_gray"
-                android:gravity="center_vertical"
-                android:padding="20dp"
-                android:text="@string/product_title_credit_without_bail"
-                android:textAllCaps="true"
-                android:textSize="23sp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:layout_marginTop="20dp"
-                android:text="@string/product_description_credit_without_bail"
-                android:textColor="@color/gray"
-                android:textSize="12dp" />
-
 
             <RelativeLayout
                 android:layout_width="fill_parent"
