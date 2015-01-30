@@ -182,9 +182,10 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:textSize">28sp</item>
+        <item name="android:paddingStart">20dp</item>
+        <item name="android:paddingTop">5dp</item>
         <item name="android:layout_marginBottom">10dp</item>
-        <item name="android:drawableLeft">@drawable/ic_launcher</item>
-        <item name="android:drawablePadding">10dp</item>
+        <item name="android:drawablePadding">15dp</item>
     </style>
 
     <style name="PayPanelTitleDivider">
@@ -256,7 +257,6 @@
     <style name="PayFragmentButtonStyle">
         <item name="android:layout_width">120dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:drawableTop">@drawable/ic_launcher</item>
         <item name="android:paddingTop">20dp</item>
         <item name="android:paddingBottom">20dp</item>
         <item name="android:paddingLeft">10dp</item>

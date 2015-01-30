@@ -6,6 +6,6 @@
     android:layout_height="wrap_content"
     android:padding="15dp"
     android:textSize="@dimen/pay_spinner_text_size"
-    android:drawableStart="@drawable/ic_pay_creditcard"
+    android:drawableStart="@drawable/ic_fastpay_number_cards"
     android:drawablePadding="10dp"
     android:textAllCaps="true" />

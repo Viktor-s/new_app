@@ -7,7 +7,8 @@
 
     <TextView
         android:text="@string/internet"
-        style="@style/PayPanelTitle" />
+        style="@style/PayPanelTitle"
+        android:drawableStart="@drawable/ic_fastpay_internet_small"/>
 
     <View style="@style/PayPanelTitleDivider" />
 

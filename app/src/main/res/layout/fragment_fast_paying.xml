@@ -11,8 +11,14 @@
         android:text="@string/fast_pay"
         android:textAllCaps="true"
         android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="15dp"
         android:textSize="42sp" />
+
+    <ImageView
+        android:layout_width="160dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="35dp"
+        android:src="@drawable/ic_fastpay_cards" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -22,21 +28,25 @@
         <Button
             android:id="@+id/pay_communication"
             android:text="@string/communication"
+            android:drawableTop="@drawable/ic_fastpay_communic"
             style="@style/PayFragmentButtonStyle" />
 
         <Button
             android:id="@+id/pay_internet"
             android:text="@string/internet"
+            android:drawableTop="@drawable/ic_fastpay_internet"
             style="@style/PayFragmentButtonStyle" />
 
         <Button
             android:id="@+id/pay_remittances"
             android:text="@string/remittances"
+            android:drawableTop="@drawable/ic_fastpay_remmit"
             style="@style/PayFragmentButtonStyle" />
 
         <Button
             android:id="@+id/pay_banking"
             android:text="@string/banking"
+            android:drawableTop="@drawable/ic_fastpay_bank"
             style="@style/PayFragmentButtonStyle" />
     </LinearLayout>
 

@@ -13,7 +13,8 @@
             android:text="@string/communication"
             android:layout_width="0dp"
             style="@style/PayPanelTitle"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:drawableStart="@drawable/ic_fastpay_communic_small" />
 
         <TextView
             android:layout_width="0dp"

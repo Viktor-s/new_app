@@ -6,7 +6,8 @@
 
     <TextView
         android:text="@string/remittances"
-        style="@style/PayPanelTitle" />
+        style="@style/PayPanelTitle"
+        android:drawableStart="@drawable/ic_fastpay_remmit_small" />
 
     <View style="@style/PayPanelTitleDivider" />
 
