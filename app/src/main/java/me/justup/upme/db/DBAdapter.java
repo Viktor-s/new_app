@@ -39,8 +39,6 @@ public class DBAdapter {
     private DBHelper dbHelper;
 
     private String[] BASE_TABLE_COLUMNS = {BASE_ID, BASE_PROJECT_ID, BASE_START_DATE};
-    private String[] SHORT_NEWS_TABLE_COLUMNS = {SHORT_NEWS_ID, SHORT_NEWS_SERVER_ID, SHORT_NEWS_TITLE, SHORT_NEWS_SHORT_DESCR, SHORT_NEWS_THUMBNAIL, SHORT_NEWS_POSTED_AT};
-    private String[] MAIL_CONTACT_TABLE_COLUMNS = {MAIL_CONTACT_ID, MAIL_CONTACT_NAME, MAIL_CONTACT_LOGIN, MAIL_CONTACT_DATE_ADD, MAIL_CONTACT_PHONE, MAIL_CONTACT_IMG};
 
 
     public DBAdapter(Context context) {
@@ -53,6 +51,11 @@ public class DBAdapter {
 
     public void close() {
         dbHelper.close();
+    }
+
+    private void dropAndCreateTable(String tableName, String createTableString) {
+        database.execSQL("DROP TABLE IF EXISTS " + tableName);
+        database.execSQL(createTableString);
     }
 
     public void saveShortNews(ArticlesGetShortDescriptionResponse entity) {
@@ -70,6 +73,7 @@ public class DBAdapter {
     }
 
     public void saveMailContacts(GetMailContactResponse entity) {
+        dropAndCreateTable(MAIL_CONTACT_TABLE_NAME, CREATE_TABLE_MAIL_CONTACT);
 
         for (int i = 0; i < entity.result.size(); i++) {
             ContentValues values = new ContentValues();

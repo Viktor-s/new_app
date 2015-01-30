@@ -22,8 +22,6 @@ class DBHelper extends SQLiteOpenHelper {
     public static final String SHORT_NEWS_SHORT_DESCR = "short_descr";
     public static final String SHORT_NEWS_THUMBNAIL = "thumbnail";
     public static final String SHORT_NEWS_POSTED_AT = "posted_at";
-    public static final String SHORT_NEWS_RESERVE_1 = "reserve_1";
-    public static final String SHORT_NEWS_RESERVE_2 = "reserve_2";
 
     public static final String MAIL_CONTACT_TABLE_NAME = "mail_contact_table";
     public static final String MAIL_CONTACT_ID = BaseColumns._ID;
@@ -33,8 +31,6 @@ class DBHelper extends SQLiteOpenHelper {
     public static final String MAIL_CONTACT_DATE_ADD = "date_add";
     public static final String MAIL_CONTACT_PHONE = "phone";
     public static final String MAIL_CONTACT_IMG = "img";
-    public static final String MAIL_CONTACT_RESERVE_1 = "reserve_1";
-    public static final String MAIL_CONTACT_RESERVE_2 = "reserve_2";
 
 
     private static final String CREATE_TABLE_BASE = "CREATE TABLE "
@@ -50,11 +46,9 @@ class DBHelper extends SQLiteOpenHelper {
             + SHORT_NEWS_TITLE + " TEXT, "
             + SHORT_NEWS_SHORT_DESCR + " TEXT, "
             + SHORT_NEWS_THUMBNAIL + " TEXT, "
-            + SHORT_NEWS_POSTED_AT + " TEXT, "
-            + SHORT_NEWS_RESERVE_1 + " TEXT, "
-            + SHORT_NEWS_RESERVE_2 + " TEXT" + ")";
+            + SHORT_NEWS_POSTED_AT + " TEXT" + ")";
 
-    private static final String CREATE_TABLE_MAIL_CONTACT = "CREATE TABLE "
+    protected static final String CREATE_TABLE_MAIL_CONTACT = "CREATE TABLE "
             + MAIL_CONTACT_TABLE_NAME + "("
             + MAIL_CONTACT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
             + MAIL_CONTACT_SERVER_ID + " INTEGER, "
@@ -62,9 +56,7 @@ class DBHelper extends SQLiteOpenHelper {
             + MAIL_CONTACT_LOGIN + " TEXT, "
             + MAIL_CONTACT_DATE_ADD + " INTEGER, "
             + MAIL_CONTACT_PHONE + " TEXT, "
-            + MAIL_CONTACT_IMG + " TEXT, "
-            + MAIL_CONTACT_RESERVE_1 + " TEXT, "
-            + MAIL_CONTACT_RESERVE_2 + " TEXT" + ")";
+            + MAIL_CONTACT_IMG + " TEXT" + ")";
 
 
     public DBHelper(Context context) {
