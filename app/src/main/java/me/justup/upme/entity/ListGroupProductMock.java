@@ -109,4 +109,11 @@ public class ListGroupProductMock {
                 resultList.add(groupProductEntity);
         return resultList;
     }
+
+    public GroupProductEntity getGroupProductById(int idGroupProduct) {
+        for (GroupProductEntity groupProductEntity : listGroupProduct)
+            if (groupProductEntity.getId() == idGroupProduct)
+                return groupProductEntity;
+        return null;
+    }
 }

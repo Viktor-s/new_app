@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#77000000">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:visibility="visible">
+
+
+        <LinearLayout
+            android:layout_width="200dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/previous_product_group"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:background="@color/gray"
+                android:gravity="center"
+                android:text="previous"
+                android:textAllCaps="true"
+                android:textSize="24dp"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/container_group_product_item"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="100dp"
+            android:layout_marginRight="100dp"
+            android:layout_weight="1">
+
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="200dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <CheckBox
+                    android:id="@+id/check_lock"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="40dp"
+                    android:layout_marginTop="60dp"
+                    android:background="@android:color/transparent"
+                    android:button="@drawable/checkbox_selector"
+                    android:checked="false" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/next_product_group"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:background="@color/gray"
+                android:gravity="center"
+                android:text="next"
+                android:textAllCaps="true"
+                android:textSize="24dp"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/lock_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/base_background"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <Button
+            android:id="@+id/button1"
+            android:onClick="onClick"
+            style="@style/PinCodeButton"
+            android:layout_width="50dp"
+            android:text="1" />
+
+        <Button
+            android:id="@+id/button2"
+            android:onClick="onClick"
+            style="@style/PinCodeButton"
+            android:layout_width="50dp"
+            android:text="2" />
+
+        <Button
+            android:id="@+id/button3"
+            android:onClick="onClick"
+            style="@style/PinCodeButton"
+            android:layout_width="50dp"
+            android:text="3" />
+
+        <Button
+            android:id="@+id/button4"
+            android:onClick="onClick"
+            style="@style/PinCodeButton"
+            android:layout_width="50dp"
+            android:text="4" />
+
+        <Button
+            android:id="@+id/button5"
+            android:onClick="onClick"
+            style="@style/PinCodeButton"
+            android:layout_width="50dp"
+            android:text="5" />
+
+        <Button
+            android:id="@+id/button6"
+            android:onClick="onClick"
+            style="@style/PinCodeButton"
+            android:layout_width="50dp"
+            android:text="6" />
+
+        <Button
+            android:id="@+id/button7"
+            android:onClick="onClick"
+            style="@style/PinCodeButton"
+            android:layout_width="50dp"
+            android:text="7" />
+
+        <Button
+            android:id="@+id/button8"
+            android:onClick="onClick"
+            style="@style/PinCodeButton"
+            android:layout_width="50dp"
+            android:text="8" />
+
+        <Button
+            android:id="@+id/button9"
+            android:onClick="onClick"
+            style="@style/PinCodeButton"
+            android:layout_width="50dp"
+            android:text="9" />
+
+        <Button
+            android:id="@+id/button_clear"
+            android:onClick="onClick"
+            style="@style/PinCodeButton"
+            android:layout_width="50dp"
+            android:text="@string/picode_button_del" />
+
+        <TextView
+            android:id="@+id/number_textView"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/pincode_button_margin"
+            android:background="@color/login_phone_number_background"
+            android:gravity="center"
+            android:text=""
+            android:textSize="@dimen/pincode_button_text_size"
+            tools:text="2530" />
+
+        <Button
+            android:id="@+id/button_unlock1"
+            android:onClick="onClick"
+            style="@style/PinCodeButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:drawableTop="@drawable/unlock" />
+    </LinearLayout>
+</RelativeLayout>
