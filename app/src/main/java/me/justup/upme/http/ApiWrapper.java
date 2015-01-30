@@ -128,7 +128,7 @@ public class ApiWrapper {
         if (errorResponse != null && errorResponse.Error != null) {
             return errorResponse.Error;
         } else {
-            return "Server error!";
+            return content.substring(0, 65) + "...";
         }
     }
 

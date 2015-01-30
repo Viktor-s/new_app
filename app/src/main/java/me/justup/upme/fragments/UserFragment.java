@@ -164,7 +164,7 @@ public class UserFragment extends Fragment implements OnMapReadyCallback, OnClos
 
     private void showWarningDialog(String message) {
         WarningDialog dialog = WarningDialog.newInstance(getString(R.string.network_error), message);
-        dialog.show(getFragmentManager(), WarningDialog.WARNING_DIALOG);
+        dialog.show(getChildFragmentManager(), WarningDialog.WARNING_DIALOG);
     }
 
 }

@@ -16,6 +16,7 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.apache.http.Header;
 
+import me.justup.upme.dialogs.WarningDialog;
 import me.justup.upme.entity.LoginPhoneQueryEntity;
 import me.justup.upme.entity.LoginPinCodeQueryEntity;
 import me.justup.upme.entity.LoginResponseEntity;
@@ -240,7 +241,14 @@ public class LoginActivity extends Activity {
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
             String content = ApiWrapper.responseBodyToString(responseBody);
             LOGE(TAG, "onFailure(): " + content);
+
+            showWarningDialog(ApiWrapper.getResponseError(content));
         }
+    }
+
+    private void showWarningDialog(String message) {
+        WarningDialog dialog = WarningDialog.newInstance(getString(R.string.network_error), message);
+        dialog.show(getFragmentManager(), WarningDialog.WARNING_DIALOG);
     }
 
 }
