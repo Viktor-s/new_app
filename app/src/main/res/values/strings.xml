@@ -2,6 +2,11 @@
 <resources>
 
     <string name="app_name">UPME</string>
+
+    <string name="maps_api_key">AIzaSyAZYUjtjOyE0I6fsiVSgjtFhjIz1cD3cCQ</string>
+    <string name="vk_app_id">4542602</string>
+    <string name="fb_app_id">1096125440</string>
+
     <string name="dummy_string">Dummy string</string>
     <string name="picode_button_del">del</string>
     <string name="login_button">подтвердить</string>
