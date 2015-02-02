@@ -12,6 +12,7 @@ import org.apache.http.protocol.HTTP;
 import java.io.UnsupportedEncodingException;
 
 import me.justup.upme.entity.BaseHttpQueryEntity;
+import me.justup.upme.entity.OnHttpFailureResponse;
 import me.justup.upme.utils.AppContext;
 import me.justup.upme.utils.AppPreferences;
 
@@ -113,6 +114,22 @@ public class ApiWrapper {
         }
 
         return responseString;
+    }
+
+    public static String getResponseError(String content) {
+        OnHttpFailureResponse errorResponse = null;
+
+        try {
+            errorResponse = gson.fromJson(content, OnHttpFailureResponse.class);
+        } catch (Exception e) {
+            LOGE(TAG, "gson.fromJson:\n" + content);
+        }
+
+        if (errorResponse != null && errorResponse.Error != null) {
+            return errorResponse.Error;
+        } else {
+            return content.substring(0, 65) + "...";
+        }
     }
 
 }

@@ -160,7 +160,7 @@ public class MainActivity extends Activity implements OnCloseFragment, View.OnCl
 
     private void changeButtonState(Button activeButton) {
         for (Button button : mButtonList) {
-            button.setBackground(getResources().getDrawable(R.drawable.main_menu_selector));
+            button.setBackground(getResources().getDrawable(R.drawable.user_fragment_block_gradient));
         }
 
         activeButton.setBackground(getResources().getDrawable(R.drawable.pay_button_pressed));

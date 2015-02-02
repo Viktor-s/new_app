@@ -10,6 +10,9 @@
         android:text="@string/banking"
         android:textAllCaps="true"
         android:textSize="28sp"
-        android:drawableLeft="@drawable/ic_launcher" />
+        android:paddingStart="20dp"
+        android:paddingTop="5dp"
+        android:drawablePadding="15dp"
+        android:drawableStart="@drawable/ic_fastpay_bank_small" />
 
 </LinearLayout>
