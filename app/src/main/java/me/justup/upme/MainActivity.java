@@ -32,6 +32,7 @@ import me.justup.upme.utils.LogUtils;
 
 
 public class MainActivity extends Activity implements OnCloseFragment, View.OnClickListener {
+    public static final String SOCIAL_NETWORK_TAG = "SocialIntegrationMain.SOCIAL_NETWORK_TAG";
     private FrameLayout mMainFragmentContainer;
     private Animation mFragmentSliderOut;
     private Animation mFragmentSliderIn;
@@ -192,6 +193,16 @@ public class MainActivity extends Activity implements OnCloseFragment, View.OnCl
             mSettingsFragmentContainer.setVisibility(View.VISIBLE);
             getFragmentManager().beginTransaction().add(R.id.settings_fragment_container, new SettingsFragment()).commit();
             mSettingButton.setEnabled(false);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        Fragment fragment = getFragmentManager().findFragmentByTag(SOCIAL_NETWORK_TAG);
+        if (fragment != null) {
+            fragment.onActivityResult(requestCode, resultCode, data);
         }
     }
 
