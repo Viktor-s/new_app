@@ -28,7 +28,6 @@ import me.justup.upme.social.VkSocialNetwork;
 import me.justup.upme.utils.AppContext;
 import me.justup.upme.utils.AppPreferences;
 
-import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.LOGE;
 import static me.justup.upme.utils.LogUtils.LOGI;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
@@ -76,23 +75,29 @@ public class SettingsFragment extends Fragment implements SocialNetworkManager.O
                 VKScope.STATUS,
         };
 
+        //Chose permissions
         ArrayList<String> fbScope = new ArrayList<>();
         fbScope.addAll(Arrays.asList("public_profile, email, user_friends"));
 
+        //Use manager to manage SocialNetworks
         mSocialNetworkManager = (SocialNetworkManager) getFragmentManager().findFragmentByTag(MainActivity.SOCIAL_NETWORK_TAG);
 
+        //Check if manager exist
         if (mSocialNetworkManager == null) {
             mSocialNetworkManager = new SocialNetworkManager();
 
             VkSocialNetwork vkNetwork = new VkSocialNetwork(this, VK_KEY, vkScope);
             mSocialNetworkManager.addSocialNetwork(vkNetwork);
 
+            //Init and add to manager FacebookSocialNetwork
             FacebookSocialNetwork fbNetwork = new FacebookSocialNetwork(this, fbScope);
             mSocialNetworkManager.addSocialNetwork(fbNetwork);
 
+            //Initiate every network from mSocialNetworkManager
             getFragmentManager().beginTransaction().add(mSocialNetworkManager, MainActivity.SOCIAL_NETWORK_TAG).commit();
             mSocialNetworkManager.setOnInitializationCompleteListener(this);
         } else {
+            //if manager exist - get and setup login only for initialized SocialNetworks
             if (!mSocialNetworkManager.getInitializedSocialNetworks().isEmpty()) {
                 List<SocialNetwork> socialNetworks = mSocialNetworkManager.getInitializedSocialNetworks();
                 for (SocialNetwork socialNetwork : socialNetworks) {
@@ -107,8 +112,6 @@ public class SettingsFragment extends Fragment implements SocialNetworkManager.O
 
     @Override
     public void onSocialNetworkManagerInitialized() {
-        LOGI(TAG, "onSocialNetworkManagerInitialized()");
-
         //when init SocialNetworks - get and setup login only for initialized SocialNetworks
         for (SocialNetwork socialNetwork : mSocialNetworkManager.getInitializedSocialNetworks()) {
             socialNetwork.setOnLoginCompleteListener(this);
@@ -121,16 +124,14 @@ public class SettingsFragment extends Fragment implements SocialNetworkManager.O
 
         if (socialNetwork.isConnected()) {
             switch (socialNetwork.getID()) {
+                case FacebookSocialNetwork.ID:
+                    //facebook.setText("Show Facebook profile");
+                    LOGI(TAG, "FacebookSocialNetwork");
+                    break;
+
                 case VkSocialNetwork.ID:
                     // vk.setText("Show VK profile");
                     LOGI(TAG, "VkSocialNetwork");
-                    break;
-                case FacebookSocialNetwork.ID:
-                    // facebook.setText("Show Facebook profile");
-                    LOGI(TAG, "FacebookSocialNetwork");
-                    break;
-                default:
-                    LOGE(TAG, "SocialNetwork init unknown");
                     break;
             }
         }
