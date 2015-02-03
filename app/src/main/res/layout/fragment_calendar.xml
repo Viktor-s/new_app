@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#fff"
     android:orientation="vertical"
-    tools:context=".MyActivity"
-    android:background="#fff">
+    tools:context=".MyActivity">
 
     <RelativeLayout
         android:id="@+id/top_panel"
@@ -18,29 +18,30 @@
             android:id="@+id/today_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="Сегодня"
             android:textAllCaps="true"
-            android:textSize="20dp"
-            android:textStyle="bold"
             android:textColor="@color/gray"
-            android:text="Сегодня"/>
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
         <TextView
             android:id="@+id/current_date_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/today_textView"
             android:text="февраль 2, 2014"
-            android:textSize="12sp"
-            android:textColor="@color/gray"/>
+            android:textColor="@color/gray"
+            android:textSize="12sp" />
 
         <Button
             android:id="@+id/add_button"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_alignParentRight="true"
+            android:background="@color/button_back_pink"
             android:gravity="center"
             android:text="+"
-            android:textStyle="bold"
-            android:background="@color/button_back_pink"/>
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/next_week_button"
@@ -48,10 +49,10 @@
             android:layout_height="40dp"
             android:layout_marginRight="10dp"
             android:layout_toLeftOf="@+id/add_button"
+            android:background="@color/blue_gray"
             android:gravity="center"
             android:text="ne"
-            android:textStyle="bold"
-            android:background="@color/blue_gray"/>
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/previous_week_button"
@@ -59,10 +60,10 @@
             android:layout_height="40dp"
             android:layout_marginRight="10dp"
             android:layout_toLeftOf="@+id/next_week_button"
+            android:background="@color/blue_gray"
             android:gravity="center"
             android:text="pr"
-            android:textStyle="bold"
-            android:background="@color/blue_gray"/>
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/select_month_textView"
@@ -70,65 +71,139 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
             android:layout_toLeftOf="@+id/previous_week_button"
+            android:text="август 2014"
             android:textAllCaps="true"
-            android:textSize="20dp"
-            android:textStyle="bold"
             android:textColor="@color/gray"
-            android:text="август 2014"/>
+            android:textSize="20dp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/select_week_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
             android:layout_below="@+id/select_month_textView"
+            android:layout_marginRight="10dp"
             android:layout_toLeftOf="@+id/previous_week_button"
             android:text="1 неделя"
-            android:textSize="12sp"
-            android:textColor="@color/gray"/>
+            android:textColor="@color/gray"
+            android:textSize="12sp" />
 
     </RelativeLayout>
 
-    <com.alamkanak.weekview.WeekView
+
+    <me.justup.upme.weekview.WeekView
         android:id="@+id/weekView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/top_panel"
+        app:columnGap="8dp"
+        app:dayBackgroundColor="#05000000"
         app:eventTextColor="@android:color/white"
-        app:textSize="12sp"
-        app:hourHeight="60dp"
+        app:headerColumnBackground="#ffffffff"
         app:headerColumnPadding="8dp"
         app:headerColumnTextColor="#8f000000"
-        app:headerRowPadding="12dp"
-        app:columnGap="8dp"
-        app:noOfVisibleDays="7"
         app:headerRowBackgroundColor="#ffefefef"
-        app:dayBackgroundColor="#05000000"
-        app:todayBackgroundColor="#1848adff"
-        app:headerColumnBackground="#ffffffff"/>
+        app:headerRowPadding="12dp"
+        app:hourHeight="60dp"
+        app:noOfVisibleDays="7"
+        app:textSize="12sp"
+        app:todayBackgroundColor="#1848adff" />
 
-    <LinearLayout
-        android:layout_width="150dp"
+
+    <RelativeLayout
+        android:id="@+id/panel_add_event"
+        android:layout_width="300dp"
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
         android:background="@color/user_fragment_block_border"
-        android:visibility="visible"
-        android:gravity="center_horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Добавление\nсобытия"/>
+        android:visibility="gone">
 
 
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="20dp"
+                android:text="Добавление\nсобытия"
+                android:textAllCaps="true"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <View style="@style/SeparationLine" />
+
+            <TextView
+                style="@style/NewUserTextView"
+                android:text="Начало" />
+
+            <TextView
+                android:id="@+id/start_time_event"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="18:00"
+                android:textSize="30sp" />
+
+            <TextView
+                style="@style/NewUserTextView"
+                android:text="Длительность" />
+
+            <TextView
+                android:id="@+id/duration_event"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1:30"
+                android:textSize="20sp" />
+
+            <View style="@style/SeparationLine" />
+
+            <TextView
+                style="@style/NewUserTextView"
+                android:text="Название" />
+
+            <EditText
+                android:id="@+id/new_event_name"
+                style="@style/NewUserEditText"
+                android:layout_marginBottom="10dp" />
 
 
+            <TextView
+                style="@style/NewUserTextView"
+                android:text="Локация" />
+
+            <EditText
+                android:id="@+id/new_event_location"
+                style="@style/NewUserEditText" />
 
 
+            <View style="@style/SeparationLine" />
+
+            <Button
+                android:id="@+id/add_new_event_button"
+                style="@style/ButtonPink"
+                android:layout_margin="10dp"
+                android:text="Добавить" />
 
 
+        </LinearLayout>
 
-    </LinearLayout>
+        <Button
+            android:layout_width="@dimen/close_button_size"
+            android:layout_height="@dimen/close_button_size"
+            android:id="@+id/calendar_item_close_button"
+            android:visibility="visible"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/button_close_test"
+            android:clickable="false"
+            android:layout_marginTop="@dimen/news_item_add_comment_margin" />
 
+    </RelativeLayout>
 </RelativeLayout>
 
