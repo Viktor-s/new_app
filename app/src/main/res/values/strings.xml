@@ -5,7 +5,7 @@
 
     <string name="maps_api_key">AIzaSyAZYUjtjOyE0I6fsiVSgjtFhjIz1cD3cCQ</string>
     <string name="vk_app_id">4542602</string>
-    <string name="fb_app_id">1096125440</string>
+    <string name="fb_app_id">1007594712602767</string>
 
     <string name="dummy_string">Dummy string</string>
     <string name="picode_button_del">del</string>
@@ -103,5 +103,15 @@
     <string name="ordering">Выписка</string>
     <string name="in_system">В системе</string>
     <string name="level">Уровень</string>
+
+    <!-- Settings -->
+    <string name="prefs_category_one">Header 1</string>
+    <string name="prefs_summ_category_one">Summary of Header 1</string>
+    <string name="prefs_category_two">Header 2</string>
+    <string name="prefs_summ_category_two">Summary of Header 2</string>
+    <string name="checkbox1_title">CheckBox 1</string>
+    <string name="checkbox1_summary">Summary of CheckBox 1</string>
+    <string name="list1_title">List 1</string>
+    <string name="list1_summary">Summary of List 1</string>
 
 </resources>

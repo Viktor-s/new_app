@@ -70,6 +70,8 @@ public class LoginActivity extends Activity {
         mNumberPanelDown = AnimationUtils.loadAnimation(this, R.anim.login_number_panel_down);
         mNumberPanelFromTop = AnimationUtils.loadAnimation(this, R.anim.login_number_panel_from_top);
 
+        Button mAppSettings = (Button) findViewById(R.id.login_settings_button);
+        mAppSettings.setOnClickListener(new OnLoadSettings());
 
         // Delete! Only for debug!
         ImageView mLoginDebug = (ImageView) findViewById(R.id.upme_corner_button);
@@ -249,6 +251,13 @@ public class LoginActivity extends Activity {
     private void showWarningDialog(String message) {
         WarningDialog dialog = WarningDialog.newInstance(getString(R.string.network_error), message);
         dialog.show(getFragmentManager(), WarningDialog.WARNING_DIALOG);
+    }
+
+    private class OnLoadSettings implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            startActivity(new Intent(LoginActivity.this, SettingsActivity.class));
+        }
     }
 
 }

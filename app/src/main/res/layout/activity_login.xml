@@ -148,6 +148,14 @@
         </TableLayout>
     </LinearLayout>
 
-    <include layout="@layout/upme_corner" />
+    <include
+        layout="@layout/upme_corner"
+        android:id="@+id/include" />
+
+    <Button
+        android:id="@+id/login_settings_button"
+        style="@style/CornerSettingsButton"
+        android:layout_alignBottom="@+id/include"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>

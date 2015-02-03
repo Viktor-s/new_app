@@ -58,6 +58,11 @@
             android:excludeFromRecents="true"
             android:finishOnTaskLaunch="true" />
 
+        <activity
+            android:name=".SettingsActivity"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="stateHidden" />
+
     </application>
 
 </manifest>
