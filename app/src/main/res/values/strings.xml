@@ -114,4 +114,7 @@
     <string name="list1_title">List 1</string>
     <string name="list1_summary">Summary of List 1</string>
 
+    <!-- Calendar -->
+    <string name="week">&#160;неделя</string>
+
 </resources>

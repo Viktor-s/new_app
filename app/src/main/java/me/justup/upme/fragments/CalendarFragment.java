@@ -35,6 +35,7 @@ import me.justup.upme.R;
 import me.justup.upme.weekview.WeekView;
 import me.justup.upme.weekview.WeekViewEvent;
 
+import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 
@@ -46,15 +47,25 @@ public class CalendarFragment extends Fragment implements WeekView.MonthChangeLi
     private Dialog dialogSteTimeCalendar;
     List<WeekViewEvent> events;
 
-    RelativeLayout panelAddEvent;
+    private RelativeLayout panelAddEvent;
+    private TextView startTimeEvent;
+    private TextView durationEvent;
+
+    private TextView selectWeekTextView;
+    private Calendar startDateEvent;
+
+    private final DateTime currentDate = new DateTime();
+    private int currentWeek;
+    private DateTime firstDayCurrentWeek;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-
+        currentWeek = currentDate.getWeekOfWeekyear();
+        firstDayCurrentWeek = currentDate.withDayOfWeek(1);
+        LOGD("TAG22", "onCreate: " + firstDayCurrentWeek.toString());
 
         events = new ArrayList<>();
 
@@ -73,15 +84,51 @@ public class CalendarFragment extends Fragment implements WeekView.MonthChangeLi
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_calendar, container, false);
 
-        DateTime jodaDateTimeObject = new DateTime();
+        mWeekView = (WeekView) v.findViewById(R.id.weekView);
+
         TextView currentDateTextView = (TextView) v.findViewById(R.id.current_date_textView);
-        currentDateTextView.setText(jodaDateTimeObject.toString("MMMM d, yyyy", new Locale("ru")));
+        currentDateTextView.setText(currentDate.toString("MMMM d, yyyy", new Locale("ru")));
         TextView selectMonthTextView = (TextView) v.findViewById(R.id.select_month_textView);
-        selectMonthTextView.setText(jodaDateTimeObject.toString("MMMM yyyy", new Locale("ru")));
+        selectMonthTextView.setText(currentDate.toString("MMMM yyyy", new Locale("ru")));
+        selectWeekTextView = (TextView) v.findViewById(R.id.select_week_textView);
+        selectWeekTextView.setText(Integer.toString(currentWeek) + getResources().getString(R.string.week));
+
 //        DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss");
 //        DateTime dt = formatter.parseDateTime(string);
 
+        TextView todayTextView = (TextView) v.findViewById(R.id.today_textView);
+        todayTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // mWeekView.goToToday();
+            }
+        });
 
+        Button previousWeekButton = (Button) v.findViewById(R.id.previous_week_button);
+        previousWeekButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LOGD("TAG22", "previousWeekButton: " + firstDayCurrentWeek.toString());
+                firstDayCurrentWeek = firstDayCurrentWeek.minusDays(Calendar.DAY_OF_WEEK);
+                mWeekView.goToDate(firstDayCurrentWeek.toGregorianCalendar());
+                selectWeekTextView.setText(Integer.toString(--currentWeek) + getResources().getString(R.string.week));
+                LOGD("TAG22", "previousWeekButton: MINUS 7 - " + firstDayCurrentWeek.toString());
+            }
+        });
+
+        Button nextWeekButton = (Button) v.findViewById(R.id.next_week_button);
+        nextWeekButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LOGD("TAG22", "nextWeekButton: " + firstDayCurrentWeek.toString());
+                firstDayCurrentWeek = firstDayCurrentWeek.plusDays(Calendar.DAY_OF_WEEK);
+                mWeekView.goToDate(firstDayCurrentWeek.toGregorianCalendar());
+                selectWeekTextView.setText(Integer.toString(++currentWeek) + getResources().getString(R.string.week));
+                LOGD("TAG22", "nextWeekButton: PLUS 7 - " + firstDayCurrentWeek.toString());
+            }
+        });
+
+        /////////////////////////////////////// RIGHT PANEL ///////////////////////////////////////////////////
 
         panelAddEvent = (RelativeLayout) v.findViewById(R.id.panel_add_event);
         Button calendarItemCloseButton = (Button) v.findViewById(R.id.calendar_item_close_button);
@@ -92,8 +139,10 @@ public class CalendarFragment extends Fragment implements WeekView.MonthChangeLi
             }
         });
 
-        TextView startTimeEvent = (TextView) v.findViewById(R.id.start_time_event);
+        startTimeEvent = (TextView) v.findViewById(R.id.start_time_event);
+        durationEvent = (TextView) v.findViewById(R.id.duration_event);
 
+        TextView startTimeEvent = (TextView) v.findViewById(R.id.start_time_event);
         startTimeEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -102,7 +151,6 @@ public class CalendarFragment extends Fragment implements WeekView.MonthChangeLi
         });
 
         TextView durationEvent = (TextView) v.findViewById(R.id.duration_event);
-
         durationEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -110,32 +158,23 @@ public class CalendarFragment extends Fragment implements WeekView.MonthChangeLi
             }
         });
 
-        // Get a reference for the week view in the layout.
-        mWeekView = (WeekView) v.findViewById(R.id.weekView);
-        mWeekView.setNumberOfVisibleDays(7);
-        // Lets change some dimensions to best fit the view.
+
+        // mWeekView.setNumberOfVisibleDays(7);
+
         mWeekView.setColumnGap((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, getResources().getDisplayMetrics()));
         mWeekView.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 10, getResources().getDisplayMetrics()));
         mWeekView.setEventTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 10, getResources().getDisplayMetrics()));
 
-        // Show a toast message about the touched event.
         mWeekView.setOnEventClickListener(this);
-
-        // The week view has infinite scrolling horizontally. We have to provide the events of a
-        // month every time the month changes on the week view.
         mWeekView.setMonthChangeListener(this);
-
-
-        // Set long press listener for events.
-        //mWeekView.setEventLongPressListener(this);
-
         mWeekView.setEmptyViewClickListener(this);
+
+//        Calendar startTime = Calendar.getInstance();
+//        startTime.set(Calendar.DAY_OF_MONTH, 2);
+//        mWeekView.goToDate(startTime);
 
         return v;
     }
-
-
-
 
     //////////////// DIALOG ////////////////
     public void showNumberPickerAllVideoDialog(final boolean isInTextView) {
@@ -267,7 +306,10 @@ public class CalendarFragment extends Fragment implements WeekView.MonthChangeLi
     @Override
     public void onEmptyViewClicked(Calendar time) {
 
+        startDateEvent = time;
         panelAddEvent.setVisibility(View.VISIBLE);
+        String stTime = String.format("%02d:%02d", time.get(Calendar.HOUR_OF_DAY), time.get(Calendar.MINUTE));
+        startTimeEvent.setText(stTime);
 
 
         //Toast.makeText(getActivity(), "onEmptyViewClicked: time - " + time, Toast.LENGTH_SHORT).show();

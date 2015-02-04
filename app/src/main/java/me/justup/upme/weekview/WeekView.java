@@ -121,8 +121,8 @@ public class WeekView extends View {
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
             if (mCurrentScrollDirection == Direction.NONE) {
                 if (Math.abs(distanceX) > Math.abs(distanceY)) {
-                    mCurrentScrollDirection = Direction.HORIZONTAL;
-                    mCurrentFlingDirection = Direction.HORIZONTAL;
+//                    mCurrentScrollDirection = Direction.HORIZONTAL;
+//                    mCurrentFlingDirection = Direction.HORIZONTAL;
                 } else {
                     mCurrentFlingDirection = Direction.VERTICAL;
                     mCurrentScrollDirection = Direction.VERTICAL;
@@ -378,10 +378,18 @@ public class WeekView extends View {
         mWidthPerDay = mWidthPerDay / mNumberOfVisibleDays;
 
         // If the week view is being drawn for the first time, then consider the first day of week.
-        if (mIsFirstDraw && mNumberOfVisibleDays >= 7) {
-            if (mToday.get(Calendar.DAY_OF_WEEK) != mFirstDayOfWeek) {
-                int difference = 7 + (mToday.get(Calendar.DAY_OF_WEEK) - mFirstDayOfWeek);
-                mCurrentOrigin.x += (mWidthPerDay + mColumnGap) * difference;
+//        if (mIsFirstDraw && mNumberOfVisibleDays >= 7) {
+//            if (mToday.get(Calendar.DAY_OF_WEEK) != mFirstDayOfWeek) {
+//                int difference = 7 + (mToday.get(Calendar.DAY_OF_WEEK) - mFirstDayOfWeek);
+//                mCurrentOrigin.x += (mWidthPerDay + mColumnGap) * difference;
+//            }
+//            mIsFirstDraw = false;
+//        }
+
+        if (mIsFirstDraw) {
+            int dayOfWeek = mToday.get(Calendar.DAY_OF_WEEK);
+            if (dayOfWeek != mFirstDayOfWeek) {
+                mCurrentOrigin.x += (mWidthPerDay + mColumnGap) * (dayOfWeek - 2); //TODO mark1
             }
             mIsFirstDraw = false;
         }
