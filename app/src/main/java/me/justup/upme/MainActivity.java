@@ -28,6 +28,7 @@ import me.justup.upme.fragments.SettingsFragment;
 import me.justup.upme.fragments.UserFragment;
 import me.justup.upme.http.HttpIntentService;
 import me.justup.upme.interfaces.OnCloseFragment;
+import me.justup.upme.services.GPSTracker;
 import me.justup.upme.utils.LogUtils;
 
 
@@ -45,6 +46,13 @@ public class MainActivity extends Activity implements OnCloseFragment, View.OnCl
     private ArrayList<Button> mButtonList = new ArrayList<>();
     private Button mNewsButton, mMailButton, mCalendarButton, mProductsButton, mBriefcaseButton;
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        startService(new Intent(this, GPSTracker.class));
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -220,6 +228,13 @@ public class MainActivity extends Activity implements OnCloseFragment, View.OnCl
 
         Intent intent = new Intent(this, HttpIntentService.class);
         startService(intent.putExtras(bundle));
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        stopService(new Intent(this, GPSTracker.class));
     }
 
 }
