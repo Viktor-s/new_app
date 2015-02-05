@@ -33,8 +33,8 @@ public class ApiWrapper {
     private static final String URL = "http://test.justup.me/uptabinterface/jsonrpc/";
 
     private static AsyncHttpClient client = new AsyncHttpClient();
-    private static SyncHttpClient syncClient = new SyncHttpClient();
-    public static Gson gson = new Gson();
+    private static AsyncHttpClient syncClient = new SyncHttpClient();
+    public static final Gson gson = new Gson();
 
     // API methods constants
     public static final String AUTH_GET_VERIFICATION = "Auth.getVerificationPhoneCode";
@@ -139,10 +139,8 @@ public class ApiWrapper {
     public static boolean isOnline() {
         ConnectivityManager cm = (ConnectivityManager) AppContext.getAppContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
-            return true;
-        }
-        return false;
+
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
 }

@@ -9,13 +9,19 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
 
+import com.loopj.android.http.AsyncHttpResponseHandler;
+
+import org.apache.http.Header;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
+import me.justup.upme.entity.SendGPSQuery;
 import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.utils.AppContext;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
+import static me.justup.upme.utils.LogUtils.LOGE;
 import static me.justup.upme.utils.LogUtils.LOGI;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
@@ -54,7 +60,7 @@ public class GPSTracker extends Service implements LocationListener {
 
         if (mTimer == null) {
             mTimer = new Timer();
-            mTimer.schedule(new sendGPS(), 0, TIMER_INTERVAL);
+            mTimer.schedule(new SendGPS(), 0, TIMER_INTERVAL);
         }
     }
 
@@ -149,12 +155,34 @@ public class GPSTracker extends Service implements LocationListener {
         return this.canGetLocation;
     }
 
-    private class sendGPS extends TimerTask {
+    private class SendGPS extends TimerTask {
         @Override
         public void run() {
-            // http query + add user id from prefs
             if (ApiWrapper.isOnline()) {
-                LOGD(TAG, "Send to server - latitude: " + getLatitude() + " longitude: " + getLongitude());
+                double latitude = getLatitude();
+                double longitude = getLongitude();
+
+                LOGD(TAG, "Send to server - latitude: " + latitude + " longitude: " + longitude);
+
+                SendGPSQuery query = new SendGPSQuery();
+                query.params.latitude = latitude;
+                query.params.longitude = longitude;
+
+                ApiWrapper.syncQuery(query, new OnSendGPSResponse());
+            }
+        }
+
+        private class OnSendGPSResponse extends AsyncHttpResponseHandler {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                String content = ApiWrapper.responseBodyToString(responseBody);
+                LOGD(TAG, "onSuccess(): " + content);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                String content = ApiWrapper.responseBodyToString(responseBody);
+                LOGE(TAG, "onSuccess(): " + content);
             }
         }
     }
