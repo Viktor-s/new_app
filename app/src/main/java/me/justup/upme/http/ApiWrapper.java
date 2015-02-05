@@ -43,6 +43,7 @@ public class ApiWrapper {
     public static final String ARTICLES_GET = "Articles.get";
     public static final String ARTICLES_GET_SHORT_DESCRIPTION = "Articles.getShortDescription";
     public static final String ACCOUNT_GET_PEOPLE_NETWORK = "Account.getPeopleNetwork";
+    public static final String CALENDAR_ADD_EVENT = "Calendar.addEvent";
 
 
     private static void post(final StringEntity se, AsyncHttpResponseHandler responseHandler) {

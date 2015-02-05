@@ -2,36 +2,33 @@ package me.justup.upme.fragments;
 
 import android.app.Dialog;
 import android.app.Fragment;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.RectF;
 import android.os.Bundle;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 
-import java.lang.reflect.Field;
+import org.apache.http.Header;
+import org.joda.time.DateTime;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
 import me.justup.upme.R;
+import me.justup.upme.entity.CalendarAddEventQuery;
+import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.weekview.WeekView;
 import me.justup.upme.weekview.WeekViewEvent;
 
@@ -39,20 +36,28 @@ import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 
-public class CalendarFragment extends Fragment implements WeekView.MonthChangeListener,
+public class CalendarFragment extends Fragment implements View.OnClickListener, WeekView.MonthChangeListener,
         WeekView.EventClickListener, WeekView.EmptyViewClickListener {
     private static final String TAG = makeLogTag(CalendarFragment.class);
 
+    private static final int START_TIME_EVENT = 1;
+    private static final int DURATION_EVENT = 2;
+
     private WeekView mWeekView;
     private Dialog dialogSteTimeCalendar;
+    private Dialog dialogInfoEvent;
     List<WeekViewEvent> events;
 
     private RelativeLayout panelAddEvent;
-    private TextView startTimeEvent;
-    private TextView durationEvent;
+    private TextView tvStartTimeEvent;
+    private TextView tvDurationEvent;
+    private EditText etNewEventName;
+    private EditText etNewEventLocation;
+
+    private Calendar startTimeEvent;
+    private int durationEventMin;
 
     private TextView selectWeekTextView;
-    private Calendar startDateEvent;
 
     private final DateTime currentDate = new DateTime();
     private int currentWeek;
@@ -62,22 +67,10 @@ public class CalendarFragment extends Fragment implements WeekView.MonthChangeLi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         currentWeek = currentDate.getWeekOfWeekyear();
         firstDayCurrentWeek = currentDate.withDayOfWeek(1);
-        LOGD("TAG22", "onCreate: " + firstDayCurrentWeek.toString());
 
         events = new ArrayList<>();
-
-        Calendar startTime = Calendar.getInstance();
-        startTime.set(Calendar.HOUR_OF_DAY, 3);
-        startTime.set(Calendar.MINUTE, 0);
-        Calendar endTime = (Calendar) startTime.clone();
-        endTime.add(Calendar.HOUR, 1);
-        WeekViewEvent event = new WeekViewEvent(1, getEventTitle(startTime), startTime, endTime);
-        event.setColor(getResources().getColor(R.color.event_color_01));
-        events.add(event);
-
     }
 
     @Override
@@ -93,91 +86,38 @@ public class CalendarFragment extends Fragment implements WeekView.MonthChangeLi
         selectWeekTextView = (TextView) v.findViewById(R.id.select_week_textView);
         selectWeekTextView.setText(Integer.toString(currentWeek) + getResources().getString(R.string.week));
 
-//        DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss");
-//        DateTime dt = formatter.parseDateTime(string);
-
-        TextView todayTextView = (TextView) v.findViewById(R.id.today_textView);
-        todayTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // mWeekView.goToToday();
-            }
-        });
-
         Button previousWeekButton = (Button) v.findViewById(R.id.previous_week_button);
-        previousWeekButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                LOGD("TAG22", "previousWeekButton: " + firstDayCurrentWeek.toString());
-                firstDayCurrentWeek = firstDayCurrentWeek.minusDays(Calendar.DAY_OF_WEEK);
-                mWeekView.goToDate(firstDayCurrentWeek.toGregorianCalendar());
-                selectWeekTextView.setText(Integer.toString(--currentWeek) + getResources().getString(R.string.week));
-                LOGD("TAG22", "previousWeekButton: MINUS 7 - " + firstDayCurrentWeek.toString());
-            }
-        });
-
+        previousWeekButton.setOnClickListener(this);
         Button nextWeekButton = (Button) v.findViewById(R.id.next_week_button);
-        nextWeekButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                LOGD("TAG22", "nextWeekButton: " + firstDayCurrentWeek.toString());
-                firstDayCurrentWeek = firstDayCurrentWeek.plusDays(Calendar.DAY_OF_WEEK);
-                mWeekView.goToDate(firstDayCurrentWeek.toGregorianCalendar());
-                selectWeekTextView.setText(Integer.toString(++currentWeek) + getResources().getString(R.string.week));
-                LOGD("TAG22", "nextWeekButton: PLUS 7 - " + firstDayCurrentWeek.toString());
-            }
-        });
+        nextWeekButton.setOnClickListener(this);
 
-        /////////////////////////////////////// RIGHT PANEL ///////////////////////////////////////////////////
+        /////////////////////////////// RIGHT PANEL ///////////////////////////////
 
         panelAddEvent = (RelativeLayout) v.findViewById(R.id.panel_add_event);
+
         Button calendarItemCloseButton = (Button) v.findViewById(R.id.calendar_item_close_button);
-        calendarItemCloseButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                panelAddEvent.setVisibility(View.GONE);
-            }
-        });
+        calendarItemCloseButton.setOnClickListener(this);
+        tvStartTimeEvent = (TextView) v.findViewById(R.id.start_time_event);
+        tvStartTimeEvent.setOnClickListener(this);
+        tvDurationEvent = (TextView) v.findViewById(R.id.duration_event);
+        tvDurationEvent.setOnClickListener(this);
+        etNewEventName = (EditText) v.findViewById(R.id.new_event_name);
+        etNewEventLocation = (EditText) v.findViewById(R.id.new_event_location);
+        Button addNewEventButton = (Button) v.findViewById(R.id.add_new_event_button);
+        addNewEventButton.setOnClickListener(this);
 
-        startTimeEvent = (TextView) v.findViewById(R.id.start_time_event);
-        durationEvent = (TextView) v.findViewById(R.id.duration_event);
-
-        TextView startTimeEvent = (TextView) v.findViewById(R.id.start_time_event);
-        startTimeEvent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showNumberPickerAllVideoDialog(true);
-            }
-        });
-
-        TextView durationEvent = (TextView) v.findViewById(R.id.duration_event);
-        durationEvent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showNumberPickerAllVideoDialog(true);
-            }
-        });
-
-
-        // mWeekView.setNumberOfVisibleDays(7);
-
-        mWeekView.setColumnGap((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, getResources().getDisplayMetrics()));
-        mWeekView.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 10, getResources().getDisplayMetrics()));
-        mWeekView.setEventTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 10, getResources().getDisplayMetrics()));
+        /////////////////////////////// CALENDAR ///////////////////////////////
 
         mWeekView.setOnEventClickListener(this);
         mWeekView.setMonthChangeListener(this);
         mWeekView.setEmptyViewClickListener(this);
 
-//        Calendar startTime = Calendar.getInstance();
-//        startTime.set(Calendar.DAY_OF_MONTH, 2);
-//        mWeekView.goToDate(startTime);
-
         return v;
     }
 
-    //////////////// DIALOG ////////////////
-    public void showNumberPickerAllVideoDialog(final boolean isInTextView) {
+    /////////////////////////////// DIALOG ///////////////////////////////
+
+    public void TimePickerDialog(final int typeDialog) {
         dialogSteTimeCalendar = new Dialog(getActivity());
         dialogSteTimeCalendar.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialogSteTimeCalendar.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
@@ -187,8 +127,6 @@ public class CalendarFragment extends Fragment implements WeekView.MonthChangeLi
         final NumberPicker numberPickerMinutes = (NumberPicker) dialogSteTimeCalendar.findViewById(R.id.numberPickerMinutes);
         numberPickerHours.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
         numberPickerMinutes.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
-        setNumberPickerTextColor(numberPickerHours, Color.WHITE);
-        setNumberPickerTextColor(numberPickerMinutes, Color.WHITE);
         numberPickerHours.setFormatter(new NumberPicker.Formatter() {
             @Override
             public String format(int i) {
@@ -201,59 +139,29 @@ public class CalendarFragment extends Fragment implements WeekView.MonthChangeLi
                 return String.format("%02d", i);
             }
         });
-
         numberPickerHours.setMaxValue(23);
         numberPickerMinutes.setMaxValue(59);
-
-        numberPickerHours.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
-            @Override
-            public void onValueChange(NumberPicker numberPicker, int oldValue, int newValue) {
-//                if (newValue == videoDurationHours && numberPickerMinutes.getValue() == videoDurationMinutes) {
-//                    numberPickerSeconds.setMaxValue(videoDurationSecondsDuration);
-//                } else {
-//                    numberPickerSeconds.setMaxValue(videoDurationSeconds);
-//                }
-            }
-        });
-
-        numberPickerMinutes.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
-            @Override
-            public void onValueChange(NumberPicker numberPicker, int oldValue, int newValue) {
-//                if (newValue == videoDurationMinutes && numberPickerHours.getValue() == videoDurationHours) {
-//                    numberPickerSeconds.setMaxValue(videoDurationSecondsDuration);
-//                } else {
-//                    numberPickerSeconds.setMaxValue(videoDurationSeconds);
-//                }
-            }
-        });
-
-//        if (isInTextView && textViewMiniFragCalendarInValue.length() > 1) {
-//            int position = (int) Utils.convertBookmarkOffsetToLong(textViewMiniFragCalendarInValue.getText().toString());
-//            int hours = (position / (1000 * 60 * 60));
-//            int minutes = ((position % (1000 * 60 * 60)) / (1000 * 60));
-//            int seconds = (((position % (1000 * 60 * 60)) % (1000 * 60)) / 1000);
-//            numberPickerHours.setValue(hours);
-//            numberPickerMinutes.setValue(minutes);
-//        }
-//
-//        if (!isInTextView && textViewMiniFragCalendarOutValue.length() > 1) {
-//            int position = (int) Utils.convertBookmarkOffsetToLong(textViewMiniFragCalendarOutValue.getText().toString());
-//            int hours = (position / (1000 * 60 * 60));
-//            int minutes = ((position % (1000 * 60 * 60)) / (1000 * 60));
-//            int seconds = (((position % (1000 * 60 * 60)) % (1000 * 60)) / 1000);
-//            numberPickerHours.setValue(hours);
-//            numberPickerMinutes.setValue(minutes);
-//        }
-
+        if (typeDialog == START_TIME_EVENT) {
+            numberPickerHours.setValue(startTimeEvent.get(Calendar.HOUR));
+            numberPickerMinutes.setValue(startTimeEvent.get(Calendar.MINUTE));
+        } else if (typeDialog == DURATION_EVENT) {
+            int minute = durationEventMin % 60;
+            int hour = (durationEventMin - minute) / 60;
+            numberPickerHours.setValue(hour);
+            numberPickerMinutes.setValue(minute);
+        }
         buttonOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                String convertedTime = convertTimeToString(numberPickerHours.getValue(), numberPickerMinutes.getValue(), numberPickerSeconds.getValue());
-                if (isInTextView) {
-
+                String convertedTime = convertTimeToString(numberPickerHours.getValue(), numberPickerMinutes.getValue());
+                if (typeDialog == START_TIME_EVENT) {
+                    startTimeEvent.set(Calendar.HOUR, numberPickerHours.getValue());
+                    startTimeEvent.set(Calendar.MINUTE, numberPickerMinutes.getValue());
+                    tvStartTimeEvent.setText(convertedTime);
                     dialogSteTimeCalendar.dismiss();
-                } else {
-
+                } else if (typeDialog == DURATION_EVENT) {
+                    durationEventMin = numberPickerHours.getValue() * 60 + numberPickerMinutes.getValue();
+                    tvDurationEvent.setText(convertedTime);
                     dialogSteTimeCalendar.dismiss();
                 }
             }
@@ -261,38 +169,34 @@ public class CalendarFragment extends Fragment implements WeekView.MonthChangeLi
         dialogSteTimeCalendar.show();
     }
 
-    public static String convertTimeToString(int hours, int minutes, int seconds) {
+    public void InfoDialog(final String Object) {
+        dialogInfoEvent = new Dialog(getActivity());
+        dialogInfoEvent.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialogInfoEvent.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialogInfoEvent.setContentView(R.layout.dialog_info_event);
+        final TextView userNameTextView = (TextView) dialogInfoEvent.findViewById(R.id.user_name_textView);
+        userNameTextView.setText(Object);
+        final Button cancelButton = (Button) dialogInfoEvent.findViewById(R.id.cancel_button);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogInfoEvent.dismiss();
+            }
+        });
+        dialogInfoEvent.show();
+    }
+
+
+    public static String convertTimeToString(int hours, int minutes) {
         StringBuffer buf = new StringBuffer();
         buf.append(String.format("%02d", hours))
                 .append(":")
-                .append(String.format("%02d", minutes))
-                .append(":")
-                .append(String.format("%02d", seconds));
+                .append(String.format("%02d", minutes));
         return buf.toString();
     }
 
-    public static boolean setNumberPickerTextColor(NumberPicker numberPicker, int color) {
-        final int count = numberPicker.getChildCount();
-        for (int i = 0; i < count; i++) {
-            View child = numberPicker.getChildAt(i);
-            if (child instanceof EditText) {
-                try {
-                    Field selectorWheelPaintField = numberPicker.getClass().getDeclaredField("mSelectorWheelPaint");
-                    selectorWheelPaintField.setAccessible(true);
-                    ((Paint) selectorWheelPaintField.get(numberPicker)).setColor(color);
-                    ((EditText) child).setTextColor(color);
-                    numberPicker.invalidate();
-                    return true;
-                } catch (NoSuchFieldException | IllegalAccessException | IllegalArgumentException e) {
-                    Log.w("setNumberPickerTextColor", e);
-                }
-            }
-        }
-        return false;
-    }
-    ///////////////////////////////////////
 
-
+    //////////////////////////////////////////////////////////////////
 
     private String getEventTitle(Calendar time) {
         return String.format("Event of %02d:%02d %s/%d", time.get(Calendar.HOUR_OF_DAY), time.get(Calendar.MINUTE), time.get(Calendar.MONTH) + 1, time.get(Calendar.DAY_OF_MONTH));
@@ -300,46 +204,87 @@ public class CalendarFragment extends Fragment implements WeekView.MonthChangeLi
 
     @Override
     public void onEventClick(WeekViewEvent event, RectF eventRect) {
-        Toast.makeText(getActivity(), "onEventClick: event.getName() - " + event.getName(), Toast.LENGTH_SHORT).show();
+        InfoDialog(event.getName());
     }
 
     @Override
     public void onEmptyViewClicked(Calendar time) {
-
-        startDateEvent = time;
+        startTimeEvent = time;
         panelAddEvent.setVisibility(View.VISIBLE);
         String stTime = String.format("%02d:%02d", time.get(Calendar.HOUR_OF_DAY), time.get(Calendar.MINUTE));
-        startTimeEvent.setText(stTime);
-
-
-        //Toast.makeText(getActivity(), "onEmptyViewClicked: time - " + time, Toast.LENGTH_SHORT).show();
-//        Toast.makeText(getActivity(), getEventTitle(time), Toast.LENGTH_SHORT).show();
-//        Calendar startTime = Calendar.getInstance();
-//        startTime.set(Calendar.DAY_OF_MONTH, time.get(Calendar.DAY_OF_MONTH));
-//        startTime.set(Calendar.HOUR_OF_DAY, time.get(Calendar.HOUR_OF_DAY));
-//        startTime.set(Calendar.MINUTE, time.get(Calendar.MINUTE));
-//        startTime.set(Calendar.MONTH, time.get(Calendar.MONTH));
-//        startTime.set(Calendar.YEAR, time.get(Calendar.YEAR));
-//        Calendar endTime = (Calendar) startTime.clone();
-//        endTime.add(Calendar.HOUR_OF_DAY, 1);
-//        //endTime.set(Calendar.MONTH, time.get(Calendar.MONTH));
-//        // endTime.set(Calendar.MINUTE, 0);
-//        WeekViewEvent event = new WeekViewEvent(0, getEventTitle(startTime), startTime, endTime);
-//        event.setColor(getResources().getColor(R.color.event_color_03));
-//        events.add(event);
-//        mWeekView.notifyDatasetChanged();
-
-
+        tvStartTimeEvent.setText(stTime);
+        tvDurationEvent.setText("00:00");
+        etNewEventName.setText("");
+        etNewEventLocation.setText("");
     }
 
     @Override
     public List<WeekViewEvent> onMonthChange(int newYear, int newMonth) {
-
         return events;
     }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.previous_week_button:
+                firstDayCurrentWeek = firstDayCurrentWeek.minusDays(Calendar.DAY_OF_WEEK);
+                mWeekView.goToDate(firstDayCurrentWeek.toGregorianCalendar());
+                selectWeekTextView.setText(Integer.toString(--currentWeek) + getResources().getString(R.string.week));
+                break;
+            case R.id.next_week_button:
+                firstDayCurrentWeek = firstDayCurrentWeek.plusDays(Calendar.DAY_OF_WEEK);
+                mWeekView.goToDate(firstDayCurrentWeek.toGregorianCalendar());
+                selectWeekTextView.setText(Integer.toString(++currentWeek) + getResources().getString(R.string.week));
+                break;
+            case R.id.calendar_item_close_button:
+                panelAddEvent.setVisibility(View.GONE);
+                break;
+            case R.id.start_time_event:
+                TimePickerDialog(START_TIME_EVENT);
+                break;
+            case R.id.duration_event:
+                TimePickerDialog(DURATION_EVENT);
+                break;
+            case R.id.add_new_event_button:
+                Calendar endTimeEvent = (Calendar) startTimeEvent.clone();
+                int minute = durationEventMin % 60;
+                int hour = (durationEventMin - minute) / 60;
+                endTimeEvent.add(Calendar.HOUR, hour);
+                endTimeEvent.add(Calendar.MINUTE, minute);
+                String eventName = etNewEventName.getText().toString();
+                String eventLocation = etNewEventLocation.getText().toString();
+                WeekViewEvent event = new WeekViewEvent(1, eventName, startTimeEvent, endTimeEvent);
+                event.setColor(getResources().getColor(R.color.event_color_01));
+                events.add(event);
+                mWeekView.notifyDatasetChanged();
+                panelAddEvent.setVisibility(View.GONE);
+
+                CalendarAddEventQuery calendarAddEventQuery = new CalendarAddEventQuery();
+                calendarAddEventQuery.params.name = eventName;
+                calendarAddEventQuery.params.description = "description";
+                calendarAddEventQuery.params.type = "reminder";
+                calendarAddEventQuery.params.location = eventLocation;
+                calendarAddEventQuery.params.start_date_time = 1;
+                calendarAddEventQuery.params.end_date_time = 1;
+
+                //ApiWrapper.query(calendarAddEventQuery, new OnAddEventResponce());
+                break;
+        }
+
+    }
+
+    private class OnAddEventResponce extends AsyncHttpResponseHandler {
+        @Override
+        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+            String content = ApiWrapper.responseBodyToString(responseBody);
+            LOGD(TAG, "onSuccess(): " + content);
+        }
+
+        @Override
+        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+        }
+    }
 }
-
-
 
 //        String URL = "http://justup.me/";
 //        WebView mWebView = (WebView) v.findViewById(R.id.root_webview);
