@@ -1,5 +1,9 @@
 package me.justup.upme.http;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -131,6 +135,15 @@ public class ApiWrapper {
         } else {
             return content.substring(0, 65) + "...";
         }
+    }
+
+    public static boolean isOnline() {
+        ConnectivityManager cm = (ConnectivityManager) AppContext.getAppContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+            return true;
+        }
+        return false;
     }
 
 }
