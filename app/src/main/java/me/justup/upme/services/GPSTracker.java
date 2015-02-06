@@ -13,9 +13,11 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.apache.http.Header;
 
+import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import me.justup.upme.entity.GPSEntity;
 import me.justup.upme.entity.SendGPSQuery;
 import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.utils.AppContext;
@@ -38,13 +40,15 @@ public class GPSTracker extends Service implements LocationListener {
     private Location location;
     private double latitude;
     private double longitude;
-    private static final long TIMER_INTERVAL = 1000 * 60 * 15; // 15 min
+    private LinkedList<GPSEntity> mGPSEntityArray = new LinkedList<>();
+
+    private static final long TIMER_INTERVAL = 1000 * 60 * 20; // 20 min
 
     // The minimum distance to change Updates in meters
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 100; // 100 meters
 
     // The minimum time between updates in milliseconds
-    private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 10; // 10 min
+    private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 5; // 5 min
 
     // Declaring a Location Manager
     protected LocationManager locationManager;
@@ -158,18 +162,19 @@ public class GPSTracker extends Service implements LocationListener {
     private class SendGPS extends TimerTask {
         @Override
         public void run() {
-            if (ApiWrapper.isOnline()) {
-                double latitude = getLatitude();
-                double longitude = getLongitude();
+            mGPSEntityArray.add(new GPSEntity((System.currentTimeMillis() / 1000), getLatitude(), getLongitude()));
 
-                LOGD(TAG, "Send to server - latitude: " + latitude + " longitude: " + longitude);
+            if (mGPSEntityArray.size() >= 3)
+                if (ApiWrapper.isOnline()) {
+                    LOGD(TAG, "Send to server: " + mGPSEntityArray.toString());
 
-                SendGPSQuery query = new SendGPSQuery();
-                query.params.latitude = latitude;
-                query.params.longitude = longitude;
+                    SendGPSQuery query = new SendGPSQuery();
+                    query.params = mGPSEntityArray;
 
-                ApiWrapper.syncQuery(query, new OnSendGPSResponse());
-            }
+                    ApiWrapper.syncQuery(query, new OnSendGPSResponse());
+
+                    mGPSEntityArray.clear();
+                }
         }
 
         private class OnSendGPSResponse extends AsyncHttpResponseHandler {
