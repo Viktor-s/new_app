@@ -133,7 +133,7 @@ public class ApiWrapper {
         if (errorResponse != null && errorResponse.Error != null) {
             return errorResponse.Error;
         } else {
-            return content.substring(0, 65) + "...";
+            return content.substring(0, 280) + "...";
         }
     }
 

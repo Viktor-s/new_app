@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="50dp"
+    android:background="@color/settings_activity_background">
+
+    <LinearLayout
+        android:id="@+id/settings_left_menu"
+        android:orientation="vertical"
+        android:layout_width="270dp"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:text="@string/settings_wifi"
+            android:background="@color/base_background"
+            android:drawableStart="@android:drawable/ic_dialog_dialer"
+            android:id="@+id/settings_wifi_menu_textView"
+            style="@style/SettingsMenuItem" />
+
+        <TextView
+            android:text="@string/settings_lang"
+            android:drawableStart="@android:drawable/ic_menu_edit"
+            android:id="@+id/settings_lang_menu_textView"
+            style="@style/SettingsMenuItem" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:background="@color/base_background"
+        android:id="@+id/settings_fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toEndOf="@+id/settings_left_menu">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/close_settings_activity_imageView"
+            android:src="@drawable/button_close_test"
+            android:layout_gravity="end|top"
+            android:contentDescription="@string/app_name" />
+    </FrameLayout>
+
+</RelativeLayout>
