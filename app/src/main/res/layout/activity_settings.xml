@@ -13,7 +13,7 @@
 
         <TextView
             android:text="@string/settings_wifi"
-            android:background="@color/base_background"
+            android:background="@drawable/settings_back_left"
             android:drawableStart="@android:drawable/ic_dialog_dialer"
             android:id="@+id/settings_wifi_menu_textView"
             style="@style/SettingsMenuItem" />
@@ -26,7 +26,7 @@
     </LinearLayout>
 
     <FrameLayout
-        android:background="@color/base_background"
+        android:background="@drawable/settings_back_right"
         android:id="@+id/settings_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -35,6 +35,8 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
             android:id="@+id/close_settings_activity_imageView"
             android:src="@drawable/button_close_test"
             android:layout_gravity="end|top"

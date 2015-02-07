@@ -27,7 +27,7 @@ import java.util.List;
 import me.justup.upme.R;
 
 
-public class AppSettingsWifiFragment extends Fragment {
+public class SettingsWifiFragment extends Fragment {
     private LinearLayout mWiFiPanel;
     private WifiManager mWifiManager;
     private WifiScanReceiver mWifiScanReceiver;
@@ -36,7 +36,7 @@ public class AppSettingsWifiFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_wifi_settings, container, false);
+        View v = inflater.inflate(R.layout.fragment_settings_wifi, container, false);
 
         mWifiManager = (WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE);
         mWifiScanReceiver = new WifiScanReceiver();

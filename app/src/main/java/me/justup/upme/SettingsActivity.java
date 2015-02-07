@@ -9,8 +9,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import me.justup.upme.fragments.AppSettingsWifiFragment;
-import me.justup.upme.fragments.PayBankingFragment;
+import me.justup.upme.fragments.SettingsLangFragment;
+import me.justup.upme.fragments.SettingsWifiFragment;
 
 
 public class SettingsActivity extends Activity implements View.OnClickListener {
@@ -34,7 +34,7 @@ public class SettingsActivity extends Activity implements View.OnClickListener {
         mButtonList.add(mWiFiMenu);
         mButtonList.add(mLangMenu);
 
-        getFragmentManager().beginTransaction().add(R.id.settings_fragment_container, new AppSettingsWifiFragment()).commit();
+        getFragmentManager().beginTransaction().add(R.id.settings_fragment_container, new SettingsWifiFragment()).commit();
     }
 
     @Override
@@ -44,12 +44,12 @@ public class SettingsActivity extends Activity implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.settings_wifi_menu_textView:
                 changeButtonState(mWiFiMenu);
-                fragment = new AppSettingsWifiFragment();
+                fragment = new SettingsWifiFragment();
                 break;
 
             case R.id.settings_lang_menu_textView:
                 changeButtonState(mLangMenu);
-                fragment = new PayBankingFragment();
+                fragment = new SettingsLangFragment();
                 break;
 
             default:
@@ -67,7 +67,7 @@ public class SettingsActivity extends Activity implements View.OnClickListener {
             button.setBackground(null);
         }
 
-        activeButton.setBackgroundResource(R.color.base_background);
+        activeButton.setBackgroundResource(R.drawable.settings_back_left);
     }
 
 }
