@@ -21,14 +21,19 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
 import me.justup.upme.R;
+import me.justup.upme.dialogs.SetWiFiDialog;
+
+import static me.justup.upme.utils.LogUtils.LOGD;
+import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 
 public class SettingsWifiFragment extends Fragment {
+    private static final String TAG = makeLogTag(SettingsWifiFragment.class);
+
     private static final String WPA = "WPA";
     private static final String WEP = "WEP";
 
@@ -88,7 +93,7 @@ public class SettingsWifiFragment extends Fragment {
         ImageView mCurrentWiFi = (ImageView) item.findViewById(R.id.connected);
         ImageView mWiFiProtected = (ImageView) item.findViewById(R.id.network_protected);
         ImageView mWiFiLevel = (ImageView) item.findViewById(R.id.wifi_strength);
-        item.setOnClickListener(new OnWiFiItemClickListener(accessPoint.SSID));
+        item.setOnClickListener(new OnWiFiItemClickListener(accessPoint.SSID, accessPoint.capabilities != null ? accessPoint.capabilities : ""));
 
         mWiFiName.setText(accessPoint.SSID);
         if (accessPoint.capabilities.contains(WEP) || accessPoint.capabilities.contains(WPA)) {
@@ -129,37 +134,39 @@ public class SettingsWifiFragment extends Fragment {
     }
 
     private class OnWiFiItemClickListener implements View.OnClickListener {
-        private String wifiName;
+        private String networkSSID;
+        private String securityType;
 
-        public OnWiFiItemClickListener(String wifiName) {
-            this.wifiName = wifiName;
+        public OnWiFiItemClickListener(String networkSSID, String securityType) {
+            this.networkSSID = networkSSID;
+            this.securityType = securityType;
         }
 
         @Override
         public void onClick(View v) {
-            Toast.makeText(getActivity(), wifiName, Toast.LENGTH_SHORT).show();
+            SetWiFiDialog dialog = SetWiFiDialog.newInstance(networkSSID, securityType);
+            dialog.setTargetFragment(SettingsWifiFragment.this, 0);
+            dialog.show(getFragmentManager(), SetWiFiDialog.SET_WIFI_DIALOG);
         }
     }
 
-    private void connect(String networkSSID, String networkPass, String securityType) {
+    public void connect(String networkSSID, String networkPass, String securityType) {
+        LOGD(TAG, "networkSSID:" + networkSSID + " networkPass:" + networkPass + " securityType:" + securityType);
+
         WifiConfiguration conf = new WifiConfiguration();
         conf.SSID = "\"" + networkSSID + "\"";
 
-        switch (securityType) {
-            case WPA:
-                conf.preSharedKey = "\"" + networkPass + "\"";
-                break;
+        if (securityType.contains(WPA)) {
+            conf.preSharedKey = "\"" + networkPass + "\"";
 
-            case WEP:
-                conf.wepKeys[0] = "\"" + networkPass + "\"";
-                conf.wepTxKeyIndex = 0;
-                conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
-                conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
-                break;
+        } else if (securityType.contains(WEP)) {
+            conf.wepKeys[0] = "\"" + networkPass + "\"";
+            conf.wepTxKeyIndex = 0;
+            conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+            conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
 
-            default:
-                conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
-                break;
+        } else {
+            conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
         }
 
         mWifiManager.addNetwork(conf);
