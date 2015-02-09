@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
+import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -28,6 +29,9 @@ import me.justup.upme.R;
 
 
 public class SettingsWifiFragment extends Fragment {
+    private static final String WPA = "WPA";
+    private static final String WEP = "WEP";
+
     private LinearLayout mWiFiPanel;
     private WifiManager mWifiManager;
     private WifiScanReceiver mWifiScanReceiver;
@@ -87,7 +91,7 @@ public class SettingsWifiFragment extends Fragment {
         item.setOnClickListener(new OnWiFiItemClickListener(accessPoint.SSID));
 
         mWiFiName.setText(accessPoint.SSID);
-        if (accessPoint.capabilities.contains("WEP") || accessPoint.capabilities.contains("WPA")) {
+        if (accessPoint.capabilities.contains(WEP) || accessPoint.capabilities.contains(WPA)) {
             mWiFiProtected.setBackground(getResources().getDrawable(R.drawable.wifi_lock));
         }
 
@@ -111,13 +115,12 @@ public class SettingsWifiFragment extends Fragment {
         mWiFiPanel.addView(item);
     }
 
-    private static String getCurrentSSID(Context context) {
+    private String getCurrentSSID(Context context) {
         String ssid = null;
         ConnectivityManager connManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
         if (networkInfo.isConnected()) {
-            final WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-            final WifiInfo connectionInfo = wifiManager.getConnectionInfo();
+            final WifiInfo connectionInfo = mWifiManager.getConnectionInfo();
             if (connectionInfo != null && !connectionInfo.getSSID().isEmpty()) {
                 ssid = connectionInfo.getBSSID();
             }
@@ -135,6 +138,41 @@ public class SettingsWifiFragment extends Fragment {
         @Override
         public void onClick(View v) {
             Toast.makeText(getActivity(), wifiName, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void connect(String networkSSID, String networkPass, String securityType) {
+        WifiConfiguration conf = new WifiConfiguration();
+        conf.SSID = "\"" + networkSSID + "\"";
+
+        switch (securityType) {
+            case WPA:
+                conf.preSharedKey = "\"" + networkPass + "\"";
+                break;
+
+            case WEP:
+                conf.wepKeys[0] = "\"" + networkPass + "\"";
+                conf.wepTxKeyIndex = 0;
+                conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+                conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
+                break;
+
+            default:
+                conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+                break;
+        }
+
+        mWifiManager.addNetwork(conf);
+
+        List<WifiConfiguration> list = mWifiManager.getConfiguredNetworks();
+        for (WifiConfiguration i : list) {
+            if (i.SSID != null && i.SSID.equals("\"" + networkSSID + "\"")) {
+                mWifiManager.disconnect();
+                mWifiManager.enableNetwork(i.networkId, true);
+                mWifiManager.reconnect();
+
+                break;
+            }
         }
     }
 
