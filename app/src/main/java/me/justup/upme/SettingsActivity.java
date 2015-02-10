@@ -10,11 +10,13 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import me.justup.upme.fragments.SettingsLangFragment;
+import me.justup.upme.fragments.SettingsScreenFragment;
 import me.justup.upme.fragments.SettingsWifiFragment;
 
 
 public class SettingsActivity extends Activity implements View.OnClickListener {
     private TextView mWiFiMenu;
+    private TextView mScreenSoundMenu;
     private TextView mLangMenu;
     private ArrayList<TextView> mButtonList = new ArrayList<>();
 
@@ -24,14 +26,17 @@ public class SettingsActivity extends Activity implements View.OnClickListener {
         setContentView(R.layout.activity_settings);
 
         mWiFiMenu = (TextView) findViewById(R.id.settings_wifi_menu_textView);
+        mScreenSoundMenu = (TextView) findViewById(R.id.settings_screen_menu_textView);
         mLangMenu = (TextView) findViewById(R.id.settings_lang_menu_textView);
         ImageView mCloseSettings = (ImageView) findViewById(R.id.close_settings_activity_imageView);
 
         mWiFiMenu.setOnClickListener(this);
+        mScreenSoundMenu.setOnClickListener(this);
         mLangMenu.setOnClickListener(this);
         mCloseSettings.setOnClickListener(this);
 
         mButtonList.add(mWiFiMenu);
+        mButtonList.add(mScreenSoundMenu);
         mButtonList.add(mLangMenu);
 
         getFragmentManager().beginTransaction().add(R.id.settings_fragment_container, new SettingsWifiFragment()).commit();
@@ -45,6 +50,11 @@ public class SettingsActivity extends Activity implements View.OnClickListener {
             case R.id.settings_wifi_menu_textView:
                 changeButtonState(mWiFiMenu);
                 fragment = new SettingsWifiFragment();
+                break;
+
+            case R.id.settings_screen_menu_textView:
+                changeButtonState(mScreenSoundMenu);
+                fragment = new SettingsScreenFragment();
                 break;
 
             case R.id.settings_lang_menu_textView:

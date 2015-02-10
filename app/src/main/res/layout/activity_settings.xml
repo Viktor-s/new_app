@@ -14,8 +14,14 @@
         <TextView
             android:text="@string/settings_wifi"
             android:background="@drawable/settings_back_left"
-            android:drawableStart="@android:drawable/ic_dialog_dialer"
+            android:drawableStart="@android:drawable/ic_menu_mylocation"
             android:id="@+id/settings_wifi_menu_textView"
+            style="@style/SettingsMenuItem" />
+
+        <TextView
+            android:text="@string/settings_screen_sound"
+            android:drawableStart="@android:drawable/ic_menu_manage"
+            android:id="@+id/settings_screen_menu_textView"
             style="@style/SettingsMenuItem" />
 
         <TextView
