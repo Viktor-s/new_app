@@ -47,6 +47,8 @@
     <string name="menu_item_title_calendar">Календарь</string>
     <string name="menu_item_title_products">Продукты</string>
     <string name="menu_item_title_briefcase">Портфель</string>
+    <string name="menu_item_title_docs">Документы</string>
+    <string name="menu_item_title_browser">Браузер</string>
     <string name="fast_pay">Заплати\nбыстро</string>
     <string name="communication">Связь</string>
     <string name="internet">Интернет</string>
@@ -116,5 +118,10 @@
 
     <!-- Calendar -->
     <string name="week">&#160;неделя</string>
+
+    <string name="browser_back">Назад</string>
+    <string name="browser_home">Домой</string>
+    <string name="browser_forward">Вперед</string>
+    <string name="browser_go">Go</string>
 
 </resources>

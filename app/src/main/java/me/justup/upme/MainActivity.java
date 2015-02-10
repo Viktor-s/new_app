@@ -20,7 +20,9 @@ import me.justup.upme.entity.BaseHttpQueryEntity;
 import me.justup.upme.entity.GetLoggedUserInfoQuery;
 import me.justup.upme.entity.GetMailContactQuery;
 import me.justup.upme.fragments.BriefcaseFragment;
+import me.justup.upme.fragments.BrowserFragment;
 import me.justup.upme.fragments.CalendarFragment;
+import me.justup.upme.fragments.DocumentsFragment;
 import me.justup.upme.fragments.MailFragment;
 import me.justup.upme.fragments.NewsFeedFragment;
 import me.justup.upme.fragments.ProductsFragment;
@@ -44,7 +46,7 @@ public class MainActivity extends Activity implements OnCloseFragment, View.OnCl
     private SettingsFragment mSettingsFragment;
 
     private ArrayList<Button> mButtonList = new ArrayList<>();
-    private Button mNewsButton, mMailButton, mCalendarButton, mProductsButton, mBriefcaseButton;
+    private Button mNewsButton, mMailButton, mCalendarButton, mProductsButton, mBriefcaseButton, mDocsButton, mBrowserButton;
 
 
     @Override
@@ -135,6 +137,16 @@ public class MainActivity extends Activity implements OnCloseFragment, View.OnCl
                 fragment = new BriefcaseFragment();
                 break;
 
+            case R.id.docs_menu_item:
+                changeButtonState(mDocsButton);
+                fragment = new DocumentsFragment();
+                break;
+
+            case R.id.browser_menu_item:
+                changeButtonState(mBrowserButton);
+                fragment = new BrowserFragment();
+                break;
+
             default:
                 break;
         }
@@ -153,18 +165,24 @@ public class MainActivity extends Activity implements OnCloseFragment, View.OnCl
         mCalendarButton = (Button) findViewById(R.id.calendar_menu_item);
         mProductsButton = (Button) findViewById(R.id.products_menu_item);
         mBriefcaseButton = (Button) findViewById(R.id.briefcase_menu_item);
+        mDocsButton = (Button) findViewById(R.id.docs_menu_item);
+        mBrowserButton = (Button) findViewById(R.id.browser_menu_item);
 
         mNewsButton.setOnClickListener(this);
         mMailButton.setOnClickListener(this);
         mCalendarButton.setOnClickListener(this);
         mProductsButton.setOnClickListener(this);
         mBriefcaseButton.setOnClickListener(this);
+        mDocsButton.setOnClickListener(this);
+        mBrowserButton.setOnClickListener(this);
 
         mButtonList.add(mNewsButton);
         mButtonList.add(mMailButton);
         mButtonList.add(mCalendarButton);
         mButtonList.add(mProductsButton);
         mButtonList.add(mBriefcaseButton);
+        mButtonList.add(mDocsButton);
+        mButtonList.add(mBrowserButton);
     }
 
     private void changeButtonState(Button activeButton) {

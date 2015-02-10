@@ -79,6 +79,18 @@
             android:drawableStart="@drawable/ic_main_brief"
             style="@style/MainMenuItemLayout" />
 
+        <Button
+            android:id="@+id/docs_menu_item"
+            android:text="@string/menu_item_title_docs"
+            android:drawableStart="@drawable/ic_main_news"
+            style="@style/MainMenuItemLayout" />
+
+        <Button
+            android:id="@+id/browser_menu_item"
+            android:text="@string/menu_item_title_browser"
+            android:drawableStart="@drawable/ic_main_mail"
+            style="@style/MainMenuItemLayout" />
+
         <TextView
             android:id="@+id/exit_menu_item"
             style="@style/MainMenuItemLayout"
