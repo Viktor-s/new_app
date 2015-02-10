@@ -15,6 +15,7 @@ import org.apache.http.protocol.HTTP;
 
 import java.io.UnsupportedEncodingException;
 
+import me.justup.upme.R;
 import me.justup.upme.entity.BaseHttpQueryEntity;
 import me.justup.upme.entity.OnHttpFailureResponse;
 import me.justup.upme.utils.AppContext;
@@ -123,6 +124,7 @@ public class ApiWrapper {
 
     public static String getResponseError(String content) {
         OnHttpFailureResponse errorResponse = null;
+        String error = AppContext.getAppContext().getString(R.string.network_error);
 
         try {
             errorResponse = gson.fromJson(content, OnHttpFailureResponse.class);
@@ -131,10 +133,14 @@ public class ApiWrapper {
         }
 
         if (errorResponse != null && errorResponse.Error != null) {
-            return errorResponse.Error;
+            error = errorResponse.Error;
         } else {
-            return content.substring(0, 280) + "...";
+            if (content.length() > 280) {
+                error = content.substring(0, 280) + "...";
+            }
         }
+
+        return error;
     }
 
     public static boolean isOnline() {
