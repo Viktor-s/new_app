@@ -124,5 +124,10 @@
     <string name="browser_home">Домой</string>
     <string name="browser_forward">Вперед</string>
     <string name="browser_go">Go</string>
+    <string name="adjust_media_player_volume">Регулировка громкости плеера</string>
+    <string name="adjust_ringer_volume"> Регулировка громкости звонка</string>
+    <string name="adjust_alarm_volume">Регулировка громкости предупреждения</string>
+    <string name="adjust_notification_volume">Регулировка громкости уведомления</string>
+    <string name="change_the_brightness">Уровень яркости</string>
 
 </resources>

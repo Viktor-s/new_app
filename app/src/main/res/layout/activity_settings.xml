@@ -25,6 +25,7 @@
             style="@style/SettingsMenuItem" />
 
         <TextView
+            android:visibility="gone"
             android:text="@string/settings_lang"
             android:drawableStart="@android:drawable/ic_menu_edit"
             android:id="@+id/settings_lang_menu_textView"
