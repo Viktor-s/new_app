@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="50dp"
-    android:background="@color/settings_activity_background">
+    android:background="@color/settings_background">
 
     <LinearLayout
         android:id="@+id/settings_left_menu"
@@ -22,6 +22,12 @@
             android:text="@string/settings_screen_sound"
             android:drawableStart="@android:drawable/ic_menu_manage"
             android:id="@+id/settings_screen_menu_textView"
+            style="@style/SettingsMenuItem" />
+
+        <TextView
+            android:text="@string/settings_social"
+            android:drawableStart="@android:drawable/ic_menu_my_calendar"
+            android:id="@+id/settings_social_menu_textView"
             style="@style/SettingsMenuItem" />
 
         <TextView

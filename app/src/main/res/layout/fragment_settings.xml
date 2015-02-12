@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/settings_background"
-    android:clickable="true">
+    android:layout_height="match_parent">
 
     <Button
         android:text="@string/settings_vk"
@@ -57,26 +55,5 @@
         android:layout_below="@+id/settings_nextor_textView"
         android:background="@drawable/settings_manual_button_selector"
         style="@style/SettingsButton" />
-
-    <Button
-        android:text="@string/settings_exit"
-        android:id="@+id/settings_exit_button"
-        android:layout_below="@+id/settings_manual_button"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
-        android:background="@drawable/pay_panel_button_selector"
-        style="@style/SettingsButton" />
-
-    <Button
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:id="@+id/settings_close_button"
-        android:visibility="visible"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:background="@drawable/button_close_test"
-        android:clickable="false"
-        android:layout_marginTop="@dimen/news_item_add_comment_margin" />
 
 </RelativeLayout>

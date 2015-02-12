@@ -109,6 +109,7 @@
     <!-- Settings -->
     <string name="settings_wifi">Настройки Wi-Fi</string>
     <string name="settings_screen_sound">Экран и Звук</string>
+    <string name="settings_social">Соц. сети</string>
     <string name="settings_lang">Выбор языка</string>
     <string name="settings_wifi_title">Доступные Wi-Fi сети</string>
     <string name="settings_lang_title">Смена языка</string>
