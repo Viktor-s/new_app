@@ -20,7 +20,7 @@
         android:id="@+id/linearLayout3"
         android:layout_alignParentBottom="true"
         android:layout_toStartOf="@+id/mail_messages_close_button"
-        android:layout_alignEnd="@+id/listView">
+        android:layout_alignEnd="@+id/jabber_listMessages">
 
         <RelativeLayout
             android:layout_width="fill_parent"
@@ -56,7 +56,7 @@
             <EditText
                 android:layout_width="@dimen/mail_messages_text_width"
                 android:layout_height="@dimen/mail_messages_text_height"
-                android:id="@+id/editText4"
+                android:id="@+id/chatET"
                 android:layout_centerVertical="true"
                 android:layout_toEndOf="@+id/button12"
                 android:textColor="@color/black"
@@ -77,7 +77,7 @@
                 android:id="@+id/mail_messages_add_button"
                 android:layout_centerVertical="true"
                 android:layout_toStartOf="@+id/mail_messages_call_button"
-                android:background="@drawable/button_pink_bg"
+                android:background="@drawable/pay_panel_button_selector"
                 android:padding="6dp"
                 android:layout_marginRight="@dimen/mail_messages_call_margin"
                 android:text="@string/mail_messages_send"
@@ -141,24 +141,24 @@
                 android:layout_alignBottom="@+id/mail_messages_add_audio_button"
                 android:layout_toEndOf="@+id/textView8"
                 android:background="@android:drawable/ic_input_get" />
-
         </RelativeLayout>
-
     </LinearLayout>
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/listView"
+        android:id="@+id/jabber_listMessages"
+        android:stackFromBottom="true"
+        android:transcriptMode="alwaysScroll"
         android:layout_above="@+id/linearLayout3"
-        android:layout_marginRight="@dimen/news_item_margin_right"
+        android:layout_marginEnd="@dimen/news_item_margin_right"
         android:src="@android:drawable/dark_header" />
 
     <ImageButton
         android:layout_width="@dimen/mail_messages_attach_image_size"
         android:layout_height="@dimen/mail_messages_attach_image_size"
         android:id="@+id/mail_messages_image_attach_imageView"
-        android:layout_alignBottom="@+id/listView"
+        android:layout_alignBottom="@+id/jabber_listMessages"
         android:layout_alignParentStart="true"
         android:clickable="true" />
 

@@ -129,26 +129,18 @@ public class HttpIntentService extends IntentService {
                 "    \"result\": [\n" +
                 "        {\n" +
                 "            \"id\": \"7\",\n" +
-                "            \"name\": \"alexkissel\",\n" +
-                "            \"login\": \"mrctd\",\n" +
+                "            \"name\": \"test-user-01\",\n" +
+                "            \"login\": \"Mr.Android\",\n" +
                 "            \"dateAdd\": \"45554\",\n" +
                 "            \"phone\": \"+380934262276\",\n" +
                 "            \"img\": \"http://initrod.com/game/img/write.png\"\n" +
                 "        },\n" +
                 "        {\n" +
                 "            \"id\": 9,\n" +
-                "            \"name\": \"Mr.Ctd\",\n" +
+                "            \"name\": \"jab-admin\",\n" +
                 "            \"login\": \"mr_ctd\",\n" +
                 "            \"dateAdd\": \"5543543\",\n" +
                 "            \"phone\": \"+380111111111\",\n" +
-                "            \"img\": \"http://initrod.com/game/img/java.png\"\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"id\": \"10\",\n" +
-                "            \"name\": \"Mr.Android\",\n" +
-                "            \"login\": \"test_log\",\n" +
-                "            \"dateAdd\": \"55435543\",\n" +
-                "            \"phone\": \"+380111122222\",\n" +
                 "            \"img\": \"http://life-in-taxi.ru/2012/07/telefone.jpg\"\n" +
                 "        }\n" +
                 "    ],\n" +

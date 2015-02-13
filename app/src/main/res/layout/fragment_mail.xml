@@ -29,16 +29,51 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/mail_search_block_height"
                 android:id="@+id/editText2"
-                android:background="@color/white"
-               />
+                android:background="@color/white" />
         </LinearLayout>
 
         <ListView
             android:id="@+id/mail_contacts_ListView"
             android:layout_width="@dimen/mail_contacts_list_width"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:layout_alignParentTop="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="20dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="!!! СНАЧАЛА ВЫ:"
+            android:textColor="@color/black"
+            android:id="@+id/textView6" />
+
+        <RadioGroup
+            android:id="@+id/radioGroup1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="5dp"
+            android:orientation="vertical">
+
+            <RadioButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:textColor="@color/black"
+                android:text="test-user-01"
+                android:id="@+id/user_radioButton" />
+
+            <RadioButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="jab-admin"
+                android:textColor="@color/black"
+                android:padding="10dp"
+                android:id="@+id/admin_radioButton" />
+        </RadioGroup>
+
     </LinearLayout>
 
     <FrameLayout
@@ -48,6 +83,6 @@
         android:layout_marginLeft="@dimen/mail_contacts_list_width"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:background="@android:color/white"></FrameLayout>
+        android:background="@android:color/white" />
 
 </RelativeLayout>

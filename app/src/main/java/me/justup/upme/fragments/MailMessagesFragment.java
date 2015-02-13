@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -20,29 +21,53 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.PacketListener;
+import org.jivesoftware.smack.Roster;
+import org.jivesoftware.smack.RosterEntry;
+import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.filter.MessageTypeFilter;
+import org.jivesoftware.smack.filter.PacketFilter;
+import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.packet.Packet;
+import org.jivesoftware.smack.packet.Presence;
+import org.jivesoftware.smack.util.StringUtils;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
 import me.justup.upme.R;
 import me.justup.upme.utils.AnimateButtonClose;
 import me.justup.upme.utils.AppContext;
 
+import static me.justup.upme.utils.LogUtils.LOGD;
+import static me.justup.upme.utils.LogUtils.LOGE;
+import static me.justup.upme.utils.LogUtils.LOGI;
+import static me.justup.upme.utils.LogUtils.makeLogTag;
+
 
 public class MailMessagesFragment extends Fragment {
-
-    private static final String ARG_MAIL_MESSAGES = "mail_messages";
+    private static final String TAG = makeLogTag(MailMessagesFragment.class);
+    private static final String USER_NAME = "mail_messages_user_name";
+    private static final String YOUR_NAME = "mail_messages_your_name";
 
     private static final int REQUEST_TAKE_PHOTO = 0;
     private static final int REQUEST_TAKE_IMAGE_FILE = 1;
@@ -51,7 +76,6 @@ public class MailMessagesFragment extends Fragment {
     private static final String TAKE_PHOTO = "Сделать фото";
     private static final String CHOOSE_FROM_GALLERY = "Выбрать из галереи";
     private static final String DIALOG_CANCEL = "Отмена";
-
 
     private RelativeLayout mAddFileContainer;
     private String mCurrentPhotoPath;
@@ -66,22 +90,41 @@ public class MailMessagesFragment extends Fragment {
     private AttachFileType mAttachFileType;
     private Bitmap mAttachImageBitmap;
 
-    public static MailMessagesFragment newInstance() {
+    // Jabber
+    private static final String HOST = "95.213.170.164";
+    private static final int PORT = 3222;
+    private static final String AT = "@";
+    private static final String SERVICE = "upme-spb-pbx-dlj01";
+    private static final String PASSWORD = "TempuS123#";
+
+    private XMPPConnection mXMPPConnection;
+    private ArrayList<String> mMessages = new ArrayList<>();
+    private Handler mHandler = new Handler();
+
+    private EditText mTextMessage;
+    private ListView mListView;
+    private String mUserName;
+    private String mYourName;
+
+
+    public static MailMessagesFragment newInstance(String yourName, String userName) {
         MailMessagesFragment fragment = new MailMessagesFragment();
+
         Bundle args = new Bundle();
-        //args.put(ARG_MAIL_MESSAGES,);
+        args.putString(USER_NAME, userName);
+        args.putString(YOUR_NAME, yourName);
         fragment.setArguments(args);
+
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle bundle = this.getArguments();
         mAttachFileType = AttachFileType.NOTHING;
-//        if (bundle != null) {
-//
-//        }
+
+        mYourName = getArguments().getString(YOUR_NAME, "");
+        mUserName = getArguments().getString(USER_NAME, "") + AT + SERVICE;
     }
 
     @Override
@@ -149,7 +192,144 @@ public class MailMessagesFragment extends Fragment {
             }
         });
         mImageAttachedImageView.setVisibility(View.INVISIBLE);
+
+
+        // Jabber
+        mTextMessage = (EditText) view.findViewById(R.id.chatET);
+        mListView = (ListView) view.findViewById(R.id.jabber_listMessages);
+        setListAdapter();
+
+        Button send = (Button) view.findViewById(R.id.mail_messages_add_button);
+        send.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                String to = mUserName;
+                String text = mTextMessage.getText().toString();
+                mTextMessage.setText("");
+
+                LOGI(TAG, "Sending text " + text + " to " + to);
+                Message msg = new Message(to, Message.Type.chat);
+                msg.setBody(text);
+                if (mXMPPConnection != null) {
+                    mXMPPConnection.sendPacket(msg);
+                    mMessages.add(splitName(mXMPPConnection.getUser()) + ":");
+                    mMessages.add(text);
+                    setListAdapter();
+                }
+            }
+        });
+
+        connect();
+
         return view;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        try {
+            if (mXMPPConnection != null)
+                mXMPPConnection.disconnect();
+        } catch (Exception e) {
+            LOGE(TAG, "onDestroy()", e);
+        }
+    }
+
+    private void setListAdapter() {
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.list_jabber_chat_item, mMessages);
+        mListView.setAdapter(adapter);
+    }
+
+    public void connect() {
+        final ProgressDialog dialog = ProgressDialog.show(getActivity(),
+                getString(R.string.jabber_chat_connecting),
+                getString(R.string.jabber_chat_wait), false);
+
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ConnectionConfiguration connConfig = new ConnectionConfiguration(HOST, PORT, SERVICE);
+                // connConfig.setTruststoreType("AndroidCAStore");
+                // connConfig.setTruststorePassword(null);
+                // connConfig.setTruststorePath(null);
+                XMPPConnection connection = new XMPPConnection(connConfig);
+
+                try {
+                    connection.connect();
+                    LOGI(TAG, "Connected to " + connection.getHost());
+                } catch (XMPPException ex) {
+                    LOGE(TAG, "Failed to connect to " + connection.getHost());
+                    LOGE(TAG, ex.toString());
+                    setConnection(null);
+                }
+                try {
+                    // SASLAuthentication.supportSASLMechanism("PLAIN", 0);
+                    connection.login(mYourName, PASSWORD);
+                    LOGI(TAG, "Logged in as " + connection.getUser());
+
+                    Presence presence = new Presence(Presence.Type.available);
+                    connection.sendPacket(presence);
+                    setConnection(connection);
+
+                    Roster roster = connection.getRoster();
+                    Collection<RosterEntry> entries = roster.getEntries();
+                    for (RosterEntry entry : entries) {
+                        LOGD(TAG, "--------------------------------------");
+                        LOGD(TAG, "RosterEntry " + entry);
+                        LOGD(TAG, "User: " + entry.getUser());
+                        LOGD(TAG, "Name: " + entry.getName());
+                        LOGD(TAG, "Status: " + entry.getStatus());
+                        LOGD(TAG, "Type: " + entry.getType());
+                        Presence entryPresence = roster.getPresence(entry.getUser());
+
+                        LOGD(TAG, "Presence Status: " + entryPresence.getStatus());
+                        LOGD(TAG, "Presence Type: " + entryPresence.getType());
+                        Presence.Type type = entryPresence.getType();
+                        if (type == Presence.Type.available)
+                            LOGD(TAG, "Presence AVAILABLE");
+                        LOGD(TAG, "Presence : " + entryPresence);
+
+                    }
+                } catch (XMPPException ex) {
+                    LOGE(TAG, "Failed to log in as " + mYourName);
+                    LOGE(TAG, ex.toString());
+                    setConnection(null);
+                }
+
+                dialog.dismiss();
+            }
+        });
+        t.start();
+        dialog.show();
+    }
+
+    public void setConnection(XMPPConnection connection) {
+        mXMPPConnection = connection;
+        if (connection != null) {
+            PacketFilter filter = new MessageTypeFilter(Message.Type.chat);
+            connection.addPacketListener(new PacketListener() {
+                @Override
+                public void processPacket(Packet packet) {
+                    Message message = (Message) packet;
+                    if (message.getBody() != null) {
+                        String fromName = StringUtils.parseBareAddress(message.getFrom());
+                        LOGI(TAG, "Text Received " + message.getBody() + " from " + fromName);
+                        mMessages.add(splitName(fromName) + ":");
+                        mMessages.add(message.getBody());
+                        mHandler.post(new Runnable() {
+                            public void run() {
+                                setListAdapter();
+                            }
+                        });
+                    }
+                }
+            }, filter);
+        }
+    }
+
+    private String splitName(String fullName) {
+        String[] parts = fullName.split("@");
+        return parts[0];
     }
 
     private void selectImage() {
@@ -315,6 +495,7 @@ public class MailMessagesFragment extends Fragment {
             mRecorder.prepare();
             mRecorder.start();
         } catch (IOException e) {
+            LOGE(TAG, "startRecording()", e);
         }
 
         mRecorder.setOnInfoListener(new MediaRecorder.OnInfoListener() {
@@ -412,10 +593,12 @@ public class MailMessagesFragment extends Fragment {
                     Intent.createChooser(intent, "Select a File"),
                     REQUEST_TAKE_FILE);
         } catch (android.content.ActivityNotFoundException ex) {
+            LOGE(TAG, "showFileChooserDialog()", ex);
         }
     }
 
     private enum AttachFileType {
         NOTHING, IMAGE, AUDIO, DOC
     }
+
 }

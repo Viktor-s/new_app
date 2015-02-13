@@ -131,4 +131,7 @@
     <string name="adjust_notification_volume">Регулировка громкости уведомления</string>
     <string name="change_the_brightness">Уровень яркости</string>
 
+    <string name="jabber_chat_connecting">Соединение…</string>
+    <string name="jabber_chat_wait">Пожалуйста ожидайте…</string>
+
 </resources>
