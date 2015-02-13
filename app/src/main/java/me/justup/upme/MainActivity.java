@@ -101,7 +101,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         switch (view.getId()) {
             case R.id.news_menu_item:
-                startHttpIntent(new ArticlesGetShortDescriptionQuery(), HttpIntentService.NEWS_PART);
+                startHttpIntent(getShortDescriptionQuery(500,0), HttpIntentService.NEWS_PART_SHORT);
                 changeButtonState(mNewsButton);
                 fragment = new NewsFeedFragment();
                 break;
@@ -124,7 +124,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 break;
 
             case R.id.briefcase_menu_item:
-                startHttpIntent(new ArticlesGetShortDescriptionQuery(), HttpIntentService.BRIEFCASE_PART);
+                //startHttpIntent(new ArticlesGetShortDescriptionQuery(), HttpIntentService.BRIEFCASE_PART);
                 changeButtonState(mBriefcaseButton);
                 fragment = new BriefcaseFragment();
                 break;
@@ -211,7 +211,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         }
     }
 
-    private void startHttpIntent(BaseHttpQueryEntity entity, int dbTable) {
+    public void startHttpIntent(BaseHttpQueryEntity entity, int dbTable) {
         Bundle bundle = new Bundle();
         bundle.putSerializable(HttpIntentService.HTTP_INTENT_QUERY_EXTRA, entity);
         bundle.putInt(HttpIntentService.HTTP_INTENT_PART_EXTRA, dbTable);
@@ -225,6 +225,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
         super.onStop();
 
         stopService(new Intent(this, GPSTracker.class));
+    }
+
+    public static ArticlesGetShortDescriptionQuery getShortDescriptionQuery(int limit, int offset) {
+        ArticlesGetShortDescriptionQuery query = new ArticlesGetShortDescriptionQuery();
+        query.params.limit = limit;
+        query.params.offset = offset;
+        query.params.order = "DESC";
+        return query;
     }
 
 }

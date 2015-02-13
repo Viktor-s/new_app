@@ -103,7 +103,7 @@ public class MailFragment extends Fragment {
             }
         };
         LocalBroadcastManager.getInstance(MailFragment.this.getActivity())
-                .registerReceiver(receiver, new IntentFilter(DBAdapter.SQL_BROADCAST_INTENT));
+                .registerReceiver(receiver, new IntentFilter(DBAdapter.MAIL_SQL_BROADCAST_INTENT));
         return view;
     }
 

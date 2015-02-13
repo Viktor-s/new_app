@@ -5,43 +5,23 @@
 
     <ScrollView
         android:id="@+id/ScrollView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:layout_marginLeft="@dimen/news_item_margin_left"
         android:layout_marginRight="@dimen/news_item_margin_right"
         android:scrollbars="none">
 
         <LinearLayout
             android:orientation="vertical"
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content">
 
-            <ImageView
-                android:layout_width="match_parent"
+            <WebView
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/news_item_imageView"
-                android:src="@drawable/news_image_test"
-                android:scaleType="fitXY" />
+                android:id="@+id/news_item_webView"
+                android:visibility="visible" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="New Text"
-                android:id="@+id/news_item_title_textView"
-                android:layout_gravity="center_horizontal"
-                android:textSize="@dimen/news_fragment_title_text_size"
-                android:layout_marginTop="@dimen/news_item_block_margin"
-                android:textColor="@android:color/black" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="New Text"
-                android:id="@+id/news_item_main_text_textView"
-                android:layout_gravity="center_horizontal"
-                android:textSize="@dimen/news_fragment_title_text_size"
-                android:layout_marginTop="@dimen/news_item_block_margin"
-                android:textColor="@android:color/black" />
 
             <View
                 android:layout_width="wrap_content"
@@ -69,7 +49,7 @@
                 <EditText
                     android:layout_width="260dp"
                     android:layout_height="match_parent"
-                    android:id="@+id/editText"
+                    android:id="@+id/news_item_comment_editText"
                     android:layout_marginRight="20dp"
                     android:background="@drawable/news_item_comment_edittext_bg"
                     android:textColor="@color/black" />
@@ -78,7 +58,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text="@string/news_item_add_comment_button"
-                    android:id="@+id/button10"
+                    android:id="@+id/news_item_button_add_comment"
                     android:textAllCaps="true"
                     android:background="@drawable/news_item_comment_button_bg"
                     android:padding="6dp" />

@@ -43,6 +43,9 @@ public class ApiWrapper {
     public static final String AUTH_GET_LOGGED_USER_INFO = "Auth.getLoggedUserInfo";
     public static final String ARTICLES_GET = "Articles.get";
     public static final String ARTICLES_GET_SHORT_DESCRIPTION = "Articles.getShortDescription";
+    public static final String ARTICLE_GET_FULL_DESCRIPTION = "Articles.find";
+    public static final String ARTICLE_FULL_GET_COMMENTS = "ArticleComments.getByArticleId";
+    public static final String ARTICLE_ADD_COMMENT = "ArticleComments.add";
     public static final String ACCOUNT_GET_PEOPLE_NETWORK = "Account.getPeopleNetwork";
     public static final String CALENDAR_ADD_EVENT = "Calendar.addEvent";
 

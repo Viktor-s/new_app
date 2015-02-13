@@ -1,6 +1,7 @@
 package me.justup.upme.adapter;
 
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -13,19 +14,23 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import me.justup.upme.R;
-import me.justup.upme.entity.NewsFeedEntity;
+import me.justup.upme.entity.ArticleShortEntity;
 import me.justup.upme.utils.AppContext;
 
 public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHolder> {
 
-    private List<NewsFeedEntity> mNewsModelEntitiesList;
+    private List<ArticleShortEntity> mNewsModelEntitiesList;
     private OnItemClickListener mItemClickListener;
+    private Context context;
 
-    public NewsFeedAdapter(List<NewsFeedEntity> newsModelEntities) {
+    public NewsFeedAdapter(List<ArticleShortEntity> newsModelEntities, Context context) {
         this.mNewsModelEntitiesList = newsModelEntities;
+        this.context = context;
     }
 
     @Override
@@ -36,13 +41,17 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
-        NewsFeedEntity newsFeedEntity = mNewsModelEntitiesList.get(i);
-        viewHolder.mDate.setText(newsFeedEntity.getNewsDate());
-        viewHolder.mTitle.setText(newsFeedEntity.getNewsTitle());
-        viewHolder.mText.setText(newsFeedEntity.getNewsText());
-        viewHolder.mImage.setImageDrawable(newsFeedEntity.getNewsImage());
-        viewHolder.mListViewComments.setAdapter(new NewsCommentsAdapter(AppContext.getAppContext(), newsFeedEntity.getNewsCommentEntityList()));
-        viewHolder.mCommentsLength.setText(newsFeedEntity.getNewsCommentEntityList().size() + "");
+        ArticleShortEntity newsFeedEntity = mNewsModelEntitiesList.get(i);
+        viewHolder.mDate.setText(newsFeedEntity.getPosted_at());
+        viewHolder.mTitle.setText(newsFeedEntity.getTitle());
+        viewHolder.mText.setText(newsFeedEntity.getShort_descr());
+        Picasso.with(context).load(newsFeedEntity.getThumbnail()).into(viewHolder.mImage);
+        //viewHolder.mImage.setImageDrawable(newsFeedEntity.result.get(i).thumbnail);
+        if (newsFeedEntity.getComments() != null) {
+            viewHolder.mListViewComments.setAdapter(new NewsCommentsAdapter(AppContext.getAppContext(), newsFeedEntity.getComments()));
+            viewHolder.mCommentsLength.setText(newsFeedEntity.getComments().size() + "");
+        }
+
         viewHolder.mListViewComments.setOnTouchListener(new View.OnTouchListener() {
 
             @Override
