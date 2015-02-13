@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:padding="30dp"
     android:layout_width="match_parent"
@@ -7,7 +8,55 @@
 
     <TextView
         android:text="@string/settings_screen_sound"
-        style="@style/SettingsTitle"
-        android:layout_weight="1" />
+        style="@style/SettingsTitle" />
+
+    <TextView
+        android:text="@string/change_the_brightness"
+        style="@style/SettingsItemTitle" />
+
+    <SeekBar
+        android:id="@+id/settings_bright_bar"
+        style="@style/SettingsSeekBar"
+        android:layout_marginBottom="5dp" />
+
+    <TextView
+        android:id="@+id/settings_bright_bar_percentage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        tools:text="12%"
+        android:layout_marginBottom="40dp" />
+
+    <TextView
+        android:text="@string/adjust_media_player_volume"
+        style="@style/SettingsItemTitle" />
+
+    <SeekBar
+        android:id="@+id/settings_player_seekBar"
+        style="@style/SettingsSeekBar" />
+
+    <TextView
+        android:text="@string/adjust_ringer_volume"
+        style="@style/SettingsItemTitle" />
+
+    <SeekBar
+        android:id="@+id/settings_ringer_seekBar"
+        style="@style/SettingsSeekBar" />
+
+    <TextView
+        android:text="@string/adjust_alarm_volume"
+        style="@style/SettingsItemTitle" />
+
+    <SeekBar
+        android:id="@+id/settings_alarm_seekBar"
+        style="@style/SettingsSeekBar" />
+
+    <TextView
+        android:text="@string/adjust_notification_volume"
+        style="@style/SettingsItemTitle" />
+
+    <SeekBar
+        android:id="@+id/settings_notification_seekBar"
+        style="@style/SettingsSeekBar" />
 
 </LinearLayout>

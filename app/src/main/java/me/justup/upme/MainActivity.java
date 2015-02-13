@@ -26,24 +26,17 @@ import me.justup.upme.fragments.DocumentsFragment;
 import me.justup.upme.fragments.MailFragment;
 import me.justup.upme.fragments.NewsFeedFragment;
 import me.justup.upme.fragments.ProductsFragment;
-import me.justup.upme.fragments.SettingsFragment;
 import me.justup.upme.fragments.UserFragment;
 import me.justup.upme.http.HttpIntentService;
-import me.justup.upme.interfaces.OnCloseFragment;
 import me.justup.upme.services.GPSTracker;
 import me.justup.upme.utils.LogUtils;
 
 
-public class MainActivity extends Activity implements OnCloseFragment, View.OnClickListener  {
-    public static final String SOCIAL_NETWORK_TAG = "SocialIntegrationMain.SOCIAL_NETWORK_TAG";
+public class MainActivity extends Activity implements View.OnClickListener {
     private FrameLayout mMainFragmentContainer;
     private Animation mFragmentSliderOut;
     private Animation mFragmentSliderIn;
     private boolean isShowMainFragmentContainer;
-
-    private FrameLayout mSettingsFragmentContainer;
-    private Button mSettingButton;
-    private SettingsFragment mSettingsFragment;
 
     private ArrayList<Button> mButtonList = new ArrayList<>();
     private Button mNewsButton, mMailButton, mCalendarButton, mProductsButton, mBriefcaseButton, mDocsButton, mBrowserButton;
@@ -82,8 +75,7 @@ public class MainActivity extends Activity implements OnCloseFragment, View.OnCl
         mFragmentSliderOut = AnimationUtils.loadAnimation(this, R.anim.fragment_slider_out);
         mFragmentSliderIn = AnimationUtils.loadAnimation(this, R.anim.fragment_slider_in);
 
-        mSettingsFragmentContainer = (FrameLayout) findViewById(R.id.settings_fragment_container);
-        mSettingButton = (Button) findViewById(R.id.settings_button);
+        Button mSettingButton = (Button) findViewById(R.id.settings_button);
         mSettingButton.setOnClickListener(new OnLoadSettingsListener());
 
         makeButtonSelector();
@@ -215,28 +207,8 @@ public class MainActivity extends Activity implements OnCloseFragment, View.OnCl
     private class OnLoadSettingsListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            mSettingsFragment = new SettingsFragment();
-            mSettingsFragmentContainer.setVisibility(View.VISIBLE);
-            getFragmentManager().beginTransaction().add(R.id.settings_fragment_container, new SettingsFragment()).commit();
-            mSettingButton.setEnabled(false);
+            startActivity(new Intent(MainActivity.this, SettingsActivity.class));
         }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        Fragment fragment = getFragmentManager().findFragmentByTag(SOCIAL_NETWORK_TAG);
-        if (fragment != null) {
-            fragment.onActivityResult(requestCode, resultCode, data);
-        }
-    }
-
-    @Override
-    public void onCloseFragment() {
-        getFragmentManager().beginTransaction().remove(mSettingsFragment).commit();
-        mSettingsFragmentContainer.setVisibility(View.GONE);
-        mSettingButton.setEnabled(true);
     }
 
     public void startHttpIntent(BaseHttpQueryEntity entity, int dbTable) {

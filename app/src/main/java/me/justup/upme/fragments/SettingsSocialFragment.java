@@ -1,8 +1,6 @@
 package me.justup.upme.fragments;
 
-import android.app.Activity;
 import android.app.Fragment;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,54 +15,30 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import me.justup.upme.LoginActivity;
-import me.justup.upme.MainActivity;
 import me.justup.upme.R;
-import me.justup.upme.interfaces.OnCloseFragment;
+import me.justup.upme.SettingsActivity;
 import me.justup.upme.social.FacebookSocialNetwork;
 import me.justup.upme.social.SocialNetwork;
 import me.justup.upme.social.SocialNetworkManager;
 import me.justup.upme.social.VkSocialNetwork;
-import me.justup.upme.utils.AppContext;
-import me.justup.upme.utils.AppPreferences;
 
-import static me.justup.upme.utils.LogUtils.LOGE;
 import static me.justup.upme.utils.LogUtils.LOGI;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 
-public class SettingsFragment extends Fragment implements SocialNetworkManager.OnInitializationCompleteListener, OnLoginCompleteListener {
-    private static final String TAG = makeLogTag(SettingsFragment.class);
+public class SettingsSocialFragment extends Fragment implements SocialNetworkManager.OnInitializationCompleteListener, OnLoginCompleteListener {
+    private static final String TAG = makeLogTag(SettingsSocialFragment.class);
     public static SocialNetworkManager mSocialNetworkManager;
 
-    private OnCloseFragment mOnCloseSettingsFragmentCallback;
-
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
-        try {
-            mOnCloseSettingsFragmentCallback = (OnCloseFragment) activity;
-        } catch (ClassCastException e) {
-            LOGE(TAG, "Must implement OnCloseFragment", e);
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
-        Button mCloseFragment = (Button) view.findViewById(R.id.settings_close_button);
-        mCloseFragment.setOnClickListener(new OnCloseListener());
-
-        Button mExitButton = (Button) view.findViewById(R.id.settings_exit_button);
-        mExitButton.setOnClickListener(new OnExitListener());
-
         Button FB = (Button) view.findViewById(R.id.fb_button);
         FB.setOnClickListener(loginClick);
         Button VK = (Button) view.findViewById(R.id.vk_button);
-        VK.setOnClickListener(loginClick);
+        // VK.setOnClickListener(loginClick);
 
         String VK_KEY = getActivity().getString(R.string.vk_app_id);
         String[] vkScope = new String[]{
@@ -80,7 +54,7 @@ public class SettingsFragment extends Fragment implements SocialNetworkManager.O
         fbScope.addAll(Arrays.asList("public_profile, email, user_friends"));
 
         //Use manager to manage SocialNetworks
-        mSocialNetworkManager = (SocialNetworkManager) getFragmentManager().findFragmentByTag(MainActivity.SOCIAL_NETWORK_TAG);
+        mSocialNetworkManager = (SocialNetworkManager) getFragmentManager().findFragmentByTag(SettingsActivity.SOCIAL_NETWORK_TAG);
 
         //Check if manager exist
         if (mSocialNetworkManager == null) {
@@ -94,7 +68,7 @@ public class SettingsFragment extends Fragment implements SocialNetworkManager.O
             mSocialNetworkManager.addSocialNetwork(fbNetwork);
 
             //Initiate every network from mSocialNetworkManager
-            getFragmentManager().beginTransaction().add(mSocialNetworkManager, MainActivity.SOCIAL_NETWORK_TAG).commit();
+            getFragmentManager().beginTransaction().add(mSocialNetworkManager, SettingsActivity.SOCIAL_NETWORK_TAG).commit();
             mSocialNetworkManager.setOnInitializationCompleteListener(this);
         } else {
             //if manager exist - get and setup login only for initialized SocialNetworks
@@ -174,22 +148,6 @@ public class SettingsFragment extends Fragment implements SocialNetworkManager.O
     public void onError(int networkId, String requestID, String errorMessage, Object data) {
         // MainActivity.hideProgress();
         Toast.makeText(getActivity(), "ERROR: " + errorMessage, Toast.LENGTH_LONG).show();
-    }
-
-    private class OnCloseListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            mOnCloseSettingsFragmentCallback.onCloseFragment();
-        }
-    }
-
-    private class OnExitListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            new AppPreferences(AppContext.getAppContext()).clearPreferences();
-            startActivity(new Intent(getActivity(), LoginActivity.class));
-            getActivity().finish();
-        }
     }
 
 }
