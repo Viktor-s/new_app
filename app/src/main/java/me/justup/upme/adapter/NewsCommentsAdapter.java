@@ -9,25 +9,30 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import me.justup.upme.R;
-import me.justup.upme.entity.NewsCommentEntity;
+import me.justup.upme.entity.ArticleShortCommentEntity;
 
-public class NewsCommentsAdapter extends ArrayAdapter<NewsCommentEntity> {
+public class NewsCommentsAdapter extends ArrayAdapter<ArticleShortCommentEntity> {
+    private final Context context;
+
     private static class ViewHolder {
         private ImageView mImageView;
         private TextView mTitle;
         private TextView mMainText;
     }
 
-    public NewsCommentsAdapter(Context context, List<NewsCommentEntity> users) {
+    public NewsCommentsAdapter(Context context, List<ArticleShortCommentEntity> users) {
         super(context, R.layout.news_comments_list_item, users);
+        this.context = context;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        NewsCommentEntity newsCommentEntity = getItem(position);
+        ArticleShortCommentEntity newsCommentEntity = getItem(position);
         ViewHolder viewHolder;
         if (convertView == null) {
             viewHolder = new ViewHolder();
@@ -40,9 +45,10 @@ public class NewsCommentsAdapter extends ArrayAdapter<NewsCommentEntity> {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        viewHolder.mImageView.setImageDrawable(newsCommentEntity.getCommentImage());
-        viewHolder.mTitle.setText(newsCommentEntity.getCommentTitle());
-        viewHolder.mMainText.setText(newsCommentEntity.getCommentText());
+        String imagePath = (newsCommentEntity.getAuthor_img() != null && newsCommentEntity.getAuthor_img().length() > 1) ? newsCommentEntity.getAuthor_img() : "fake";
+        Picasso.with(context).load(imagePath).placeholder(R.drawable.ic_launcher).into(viewHolder.mImageView);
+        viewHolder.mTitle.setText(newsCommentEntity.getAuthor_name() + " " + newsCommentEntity.getPosted_at());
+        viewHolder.mMainText.setText(newsCommentEntity.getContent());
         return convertView;
     }
 }

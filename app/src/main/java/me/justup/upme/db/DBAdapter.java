@@ -7,14 +7,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.content.LocalBroadcastManager;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import me.justup.upme.R;
+import me.justup.upme.entity.ArticleFullResponse;
 import me.justup.upme.entity.ArticlesGetShortDescriptionResponse;
+import me.justup.upme.entity.CommentsArticleFullResponse;
 import me.justup.upme.entity.GetMailContactResponse;
-import me.justup.upme.entity.NewsCommentEntity;
-import me.justup.upme.entity.NewsFeedEntity;
 import me.justup.upme.utils.AppContext;
 
 import static me.justup.upme.db.DBHelper.BASE_ID;
@@ -22,6 +18,9 @@ import static me.justup.upme.db.DBHelper.BASE_PROJECT_ID;
 import static me.justup.upme.db.DBHelper.BASE_START_DATE;
 import static me.justup.upme.db.DBHelper.BASE_TABLE_NAME;
 import static me.justup.upme.db.DBHelper.CREATE_TABLE_MAIL_CONTACT;
+import static me.justup.upme.db.DBHelper.FULL_NEWS_FULL_DESCR;
+import static me.justup.upme.db.DBHelper.FULL_NEWS_SERVER_ID;
+import static me.justup.upme.db.DBHelper.FULL_NEWS_TABLE_NAME;
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_DATE_ADD;
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_IMG;
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_LOGIN;
@@ -29,6 +28,13 @@ import static me.justup.upme.db.DBHelper.MAIL_CONTACT_NAME;
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_PHONE;
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_SERVER_ID;
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_TABLE_NAME;
+import static me.justup.upme.db.DBHelper.SHORT_NEWS_COMMENTS_ARTICLE_ID;
+import static me.justup.upme.db.DBHelper.SHORT_NEWS_COMMENTS_AUTHOR_ID;
+import static me.justup.upme.db.DBHelper.SHORT_NEWS_COMMENTS_AUTHOR_IMAGE;
+import static me.justup.upme.db.DBHelper.SHORT_NEWS_COMMENTS_AUTHOR_NAME;
+import static me.justup.upme.db.DBHelper.SHORT_NEWS_COMMENTS_CONTENT;
+import static me.justup.upme.db.DBHelper.SHORT_NEWS_COMMENTS_SERVER_ID;
+import static me.justup.upme.db.DBHelper.SHORT_NEWS_COMMENTS_TABLE_NAME;
 import static me.justup.upme.db.DBHelper.SHORT_NEWS_POSTED_AT;
 import static me.justup.upme.db.DBHelper.SHORT_NEWS_SERVER_ID;
 import static me.justup.upme.db.DBHelper.SHORT_NEWS_SHORT_DESCR;
@@ -53,12 +59,12 @@ import static me.justup.upme.utils.LogUtils.makeLogTag;
  */
 public class DBAdapter {
     private static final String TAG = makeLogTag(DBAdapter.class);
-    public static final String SQL_BROADCAST_INTENT = "sql_broadcast_intent";
+    public static final String NEWS_FEED_SQL_BROADCAST_INTENT = "sql_news_feed_broadcast_intent";
+    public static final String NEWS_ITEM_SQL_BROADCAST_INTENT = "sql_news_item_broadcast_intent";
+    public static final String MAIL_SQL_BROADCAST_INTENT = "mail_sql_broadcast_intent";
     private SQLiteDatabase database;
     private DBHelper dbHelper;
-
     private String[] BASE_TABLE_COLUMNS = {BASE_ID, BASE_PROJECT_ID, BASE_START_DATE};
-
 
     public DBAdapter(Context context) {
         dbHelper = new DBHelper(context);
@@ -78,18 +84,65 @@ public class DBAdapter {
     }
 
     public void saveShortNews(ArticlesGetShortDescriptionResponse entity) {
+        for (int i = 0; i < entity.result.result.size(); i++) {
+            ContentValues values = new ContentValues();
+            values.put(SHORT_NEWS_SERVER_ID, entity.result.result.get(i).id);
+            values.put(SHORT_NEWS_TITLE, entity.result.result.get(i).title);
+            values.put(SHORT_NEWS_SHORT_DESCR, entity.result.result.get(i).short_descr);
+            values.put(SHORT_NEWS_THUMBNAIL, entity.result.result.get(i).thumbnail);
+            values.put(SHORT_NEWS_POSTED_AT, entity.result.result.get(i).posted_at);
+            for (int j = 0; j < entity.result.result.get(i).comments.size(); j++) {
+                ContentValues valuesComments = new ContentValues();
+                valuesComments.put(SHORT_NEWS_COMMENTS_SERVER_ID, entity.result.result.get(i).comments.get(j).id);
+                valuesComments.put(SHORT_NEWS_COMMENTS_ARTICLE_ID, entity.result.result.get(i).id);
+                valuesComments.put(SHORT_NEWS_COMMENTS_CONTENT, entity.result.result.get(i).comments.get(j).content);
+                valuesComments.put(SHORT_NEWS_COMMENTS_AUTHOR_ID, entity.result.result.get(i).comments.get(j).author_id);
+                valuesComments.put(SHORT_NEWS_COMMENTS_AUTHOR_NAME, entity.result.result.get(i).comments.get(j).author.name);
+                valuesComments.put(SHORT_NEWS_COMMENTS_AUTHOR_IMAGE, entity.result.result.get(i).comments.get(j).author.img);
+                database.insertWithOnConflict(SHORT_NEWS_COMMENTS_TABLE_NAME, null, valuesComments, SQLiteDatabase.CONFLICT_REPLACE);
+            }
+            database.insertWithOnConflict(SHORT_NEWS_TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+        }
+        sendBroadcast(NEWS_FEED_SQL_BROADCAST_INTENT);
+    }
 
-        // maybe needed foreach
+    public void saveFullNews(ArticleFullResponse entity) {
 
         ContentValues values = new ContentValues();
-        values.put(SHORT_NEWS_SERVER_ID, entity.result.testId);
-        values.put(SHORT_NEWS_TITLE, entity.result.test);
-        values.put(SHORT_NEWS_SHORT_DESCR, entity.result.test);
-        values.put(SHORT_NEWS_THUMBNAIL, entity.result.test);
-        values.put(SHORT_NEWS_POSTED_AT, entity.result.test);
+        values.put(FULL_NEWS_SERVER_ID, entity.result.result.id);
+        values.put(FULL_NEWS_FULL_DESCR, entity.result.result.full_descr);
+        for (int j = 0; j < entity.result.result.comments.size(); j++) {
+            ContentValues valuesComments = new ContentValues();
+            valuesComments.put(SHORT_NEWS_COMMENTS_SERVER_ID, entity.result.result.comments.get(j).id);
+            valuesComments.put(SHORT_NEWS_COMMENTS_ARTICLE_ID, entity.result.result.id);
+            valuesComments.put(SHORT_NEWS_COMMENTS_CONTENT, entity.result.result.comments.get(j).content);
+            valuesComments.put(SHORT_NEWS_COMMENTS_AUTHOR_ID, entity.result.result.comments.get(j).author_id);
+            valuesComments.put(SHORT_NEWS_COMMENTS_AUTHOR_NAME, entity.result.result.comments.get(j).author.name);
+            valuesComments.put(SHORT_NEWS_COMMENTS_AUTHOR_IMAGE, entity.result.result.comments.get(j).author.img);
+            database.insertWithOnConflict(SHORT_NEWS_COMMENTS_TABLE_NAME, null, valuesComments, SQLiteDatabase.CONFLICT_REPLACE);
+        }
+        database.insertWithOnConflict(FULL_NEWS_TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
 
-        database.insert(SHORT_NEWS_TABLE_NAME, null, values);
+        sendBroadcast(NEWS_ITEM_SQL_BROADCAST_INTENT);
     }
+
+
+    public void saveArticleFullComments(CommentsArticleFullResponse entity, int article_id) {
+
+        for (int j = 0; j < entity.result.size(); j++) {
+            ContentValues valuesComments = new ContentValues();
+            valuesComments.put(SHORT_NEWS_COMMENTS_SERVER_ID, entity.result.get(j).id);
+            valuesComments.put(SHORT_NEWS_COMMENTS_ARTICLE_ID, article_id);
+            valuesComments.put(SHORT_NEWS_COMMENTS_CONTENT, entity.result.get(j).content);
+            valuesComments.put(SHORT_NEWS_COMMENTS_AUTHOR_ID, entity.result.get(j).author_id);
+            valuesComments.put(SHORT_NEWS_COMMENTS_AUTHOR_NAME, entity.result.get(j).author.name);
+            valuesComments.put(SHORT_NEWS_COMMENTS_AUTHOR_IMAGE, entity.result.get(j).author.img);
+            database.insertWithOnConflict(SHORT_NEWS_COMMENTS_TABLE_NAME, null, valuesComments, SQLiteDatabase.CONFLICT_REPLACE);
+        }
+
+        sendBroadcast(NEWS_ITEM_SQL_BROADCAST_INTENT);
+    }
+
 
     public void saveMailContacts(GetMailContactResponse entity) {
         dropAndCreateTable(MAIL_CONTACT_TABLE_NAME, CREATE_TABLE_MAIL_CONTACT);
@@ -104,7 +157,7 @@ public class DBAdapter {
             values.put(MAIL_CONTACT_IMG, entity.result.get(i).img);
             database.insert(MAIL_CONTACT_TABLE_NAME, null, values);
         }
-        sendBroadcast();
+        sendBroadcast(MAIL_SQL_BROADCAST_INTENT);
     }
 
 
@@ -136,30 +189,8 @@ public class DBAdapter {
         database.delete(BASE_TABLE_NAME, BASE_PROJECT_ID + " = " + projId, null);
     }
 
-    public List<NewsFeedEntity> getNewsModelsTestList() {
-        List<NewsFeedEntity> mNewsFeedEntityList = new ArrayList<>();
-        List<NewsCommentEntity> mNewsCommentEntityList = new ArrayList<>();
-        for (int j = 0; j < 10; j++) {
-            NewsCommentEntity newsCommentEntity = new NewsCommentEntity();
-            newsCommentEntity.setCommentTitle("MR. ANDROID 11:00 20 ЯНВАРЯ 2015");
-            newsCommentEntity.setCommentText("Lorem ipsum dolor sit amet, consectetur adipisicing elit, ut labore et");
-            newsCommentEntity.setCommentImage(AppContext.getAppContext().getResources().getDrawable(R.drawable.ic_launcher));
-            mNewsCommentEntityList.add(newsCommentEntity);
-        }
-        for (int i = 0; i < 10; i++) {
-            NewsFeedEntity newsFeedEntity = new NewsFeedEntity();
-            newsFeedEntity.setNewsDate("01:30 03 СЕНТЯБРЯ 2014");
-            newsFeedEntity.setNewsTitle("ИЗ ПОДМАСТЕРЬЕВ В МИЛЛИАРДЕРЫ" + " " + i);
-            newsFeedEntity.setNewsText("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore.");
-            newsFeedEntity.setNewsImage(AppContext.getAppContext().getResources().getDrawable(R.drawable.news_image_test));
-            newsFeedEntity.setNewsCommentEntityList(mNewsCommentEntityList);
-            mNewsFeedEntityList.add(newsFeedEntity);
-        }
-        return mNewsFeedEntityList;
-    }
-
-    private void sendBroadcast() {
-        Intent intent = new Intent(SQL_BROADCAST_INTENT);
+    public void sendBroadcast(String type) {
+        Intent intent = new Intent(type);
         LocalBroadcastManager.getInstance(AppContext.getAppContext()).sendBroadcast(intent);
     }
 }

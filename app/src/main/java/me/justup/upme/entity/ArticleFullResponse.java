@@ -1,22 +1,18 @@
 package me.justup.upme.entity;
 
-
 import java.io.Serializable;
 import java.util.List;
 
-public class ArticlesGetShortDescriptionResponse extends BaseHttpResponseEntity {
+public class ArticleFullResponse {
     public Result result;
 
     public class Result implements Serializable {
-        public List<ResultList> result;
+        public ResultFull result;
     }
 
-    public class ResultList implements Serializable {
+    public class ResultFull implements Serializable {
         public int id;
-        public String title;
-        public String short_descr;
-        public String thumbnail;
-        public String posted_at;
+        public String full_descr;
         public List<Comment> comments;
     }
 

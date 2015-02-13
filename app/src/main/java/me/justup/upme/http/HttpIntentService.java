@@ -9,9 +9,12 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import org.apache.http.Header;
 
 import me.justup.upme.db.DBAdapter;
+import me.justup.upme.entity.ArticleFullResponse;
 import me.justup.upme.entity.ArticlesGetShortDescriptionResponse;
 import me.justup.upme.entity.BaseHttpQueryEntity;
+import me.justup.upme.entity.CommentsArticleFullResponse;
 import me.justup.upme.entity.GetMailContactResponse;
+import me.justup.upme.fragments.NewsItemFragment;
 import me.justup.upme.utils.AppContext;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
@@ -26,10 +29,14 @@ public class HttpIntentService extends IntentService {
     public static final String HTTP_INTENT_QUERY_EXTRA = "http_intent_query_extra";
     public static final String HTTP_INTENT_PART_EXTRA = "http_intent_part_extra";
 
-    public static final int NEWS_PART = 1;
-    public static final int PRODUCTS_PART = 2;
-    public static final int BRIEFCASE_PART = 3;
-    public static final int MAIL_CONTACT_PART = 4;
+    public static final int NEWS_PART_SHORT = 1;
+    public static final int NEWS_PART_FULL = 2;
+    public static final int PRODUCTS_PART = 3;
+    public static final int BRIEFCASE_PART = 4;
+    public static final int MAIL_CONTACT_PART = 5;
+    public static final int ADD_COMMENT = 6;
+    public static final int GET_COMMENTS_FULL_ARTICLE = 7;
+
 
     private DBAdapter mDBAdapter;
     private int partNumber;
@@ -69,10 +76,12 @@ public class HttpIntentService extends IntentService {
             LOGD(TAG, "onSuccess(): " + content);
 
             switch (partNumber) {
-                case NEWS_PART:
-                    fillNewsDB(content);
+                case NEWS_PART_SHORT:
+                    fillNewsShortDB(content);
                     break;
-
+                case NEWS_PART_FULL:
+                    fillNewsFullDB(content);
+                    break;
                 case PRODUCTS_PART:
                     fillProductsDB(content);
                     break;
@@ -83,6 +92,14 @@ public class HttpIntentService extends IntentService {
 
                 case MAIL_CONTACT_PART:
                     fillMailContactDB(content);
+                    break;
+
+                case ADD_COMMENT:
+                    mDBAdapter.sendBroadcast(DBAdapter.NEWS_ITEM_SQL_BROADCAST_INTENT);
+                    break;
+
+                case GET_COMMENTS_FULL_ARTICLE:
+                    fillCommentsFullDB(content, NewsItemFragment.mNewsFeedEntity.getId());
                     break;
 
                 default:
@@ -97,7 +114,7 @@ public class HttpIntentService extends IntentService {
         }
     }
 
-    private void fillNewsDB(String content) {
+    private void fillNewsShortDB(String content) {
         ArticlesGetShortDescriptionResponse response = null;
         try {
             response = ApiWrapper.gson.fromJson(content, ArticlesGetShortDescriptionResponse.class);
@@ -107,6 +124,32 @@ public class HttpIntentService extends IntentService {
 
         if (response != null && response.result != null) {
             mDBAdapter.saveShortNews(response);
+        }
+    }
+
+    private void fillNewsFullDB(String content) {
+        ArticleFullResponse response = null;
+        try {
+            response = ApiWrapper.gson.fromJson(content, ArticleFullResponse.class);
+        } catch (JsonSyntaxException e) {
+            LOGE(TAG, "gson.fromJson:\n" + content);
+        }
+
+        if (response != null && response.result != null) {
+            mDBAdapter.saveFullNews(response);
+        }
+    }
+
+    private void fillCommentsFullDB(String content, int article_id) {
+        CommentsArticleFullResponse response = null;
+        try {
+            response = ApiWrapper.gson.fromJson(content, CommentsArticleFullResponse.class);
+        } catch (JsonSyntaxException e) {
+            LOGE(TAG, "gson.fromJson:\n" + content);
+        }
+
+        if (response != null && response.result != null) {
+            mDBAdapter.saveArticleFullComments(response, article_id);
         }
     }
 
