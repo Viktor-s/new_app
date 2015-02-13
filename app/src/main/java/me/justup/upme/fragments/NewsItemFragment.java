@@ -1,6 +1,6 @@
 package me.justup.upme.fragments;
 
-
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -18,6 +18,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
+
+import org.brickred.socialauth.android.DialogListener;
+import org.brickred.socialauth.android.SocialAuthAdapter;
+import org.brickred.socialauth.android.SocialAuthAdapter.Provider;
+import org.brickred.socialauth.android.SocialAuthError;
+import org.brickred.socialauth.android.SocialAuthListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,8 +50,14 @@ import static me.justup.upme.db.DBHelper.SHORT_NEWS_COMMENTS_AUTHOR_IMAGE;
 import static me.justup.upme.db.DBHelper.SHORT_NEWS_COMMENTS_AUTHOR_NAME;
 import static me.justup.upme.db.DBHelper.SHORT_NEWS_COMMENTS_CONTENT;
 import static me.justup.upme.db.DBHelper.SHORT_NEWS_COMMENTS_SERVER_ID;
+import static me.justup.upme.utils.LogUtils.LOGD;
+import static me.justup.upme.utils.LogUtils.LOGE;
+import static me.justup.upme.utils.LogUtils.makeLogTag;
+
 
 public class NewsItemFragment extends Fragment {
+    private static final String TAG = makeLogTag(NewsItemFragment.class);
+
     private static final String ARG_NEWS_FEED_ENTITY = "news_feed_entity";
     private static final String QUERY_COMMENTS_PATH = "SELECT * FROM short_news_comments_table WHERE article_id=";
     private static final String QUERY_FULL_ARTICLE_PATH = "SELECT * FROM full_news_table WHERE server_id=";
@@ -64,6 +77,9 @@ public class NewsItemFragment extends Fragment {
     private boolean isBroadcastUpdateFullArticle = true;
     private boolean isBroadcastAddComment = false;
     private boolean isBroadcastUpdateComments = false;
+
+    private SocialAuthAdapter adapter;
+    private Button mShareButton;
 
 
     public static NewsItemFragment newInstance(ArticleShortEntity articleShortEntity) {
@@ -93,9 +109,9 @@ public class NewsItemFragment extends Fragment {
         mDBAdapter.close();
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_news_item, container, false);
         mNewsItemWebView = (WebView) view.findViewById(R.id.news_item_webView);
         mNewsItemWebView.getSettings().setJavaScriptEnabled(true);
@@ -171,6 +187,13 @@ public class NewsItemFragment extends Fragment {
         };
         LocalBroadcastManager.getInstance(NewsItemFragment.this.getActivity()).registerReceiver(receiver, new IntentFilter(DBAdapter.NEWS_ITEM_SQL_BROADCAST_INTENT)
         );
+
+
+        // FB
+        adapter = new SocialAuthAdapter(new ResponseListener());
+        mShareButton = (Button) view.findViewById(R.id.fb_share_Button);
+        mShareButton.setOnClickListener(new OnShareFBListener());
+
         return view;
     }
 
@@ -268,4 +291,53 @@ public class NewsItemFragment extends Fragment {
     private String convertToHtml(String fullDescr) {
         return "<html><body><h3>Articles title</h3><p>" + fullDescr + "</p></body></html>";
     }
+
+    private class OnShareFBListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            adapter.authorize(getActivity(), Provider.FACEBOOK);
+            mShareButton.setEnabled(false);
+            mShareButton.setBackgroundResource(R.drawable.fb_share_ok);
+        }
+    }
+
+    private final class ResponseListener implements DialogListener {
+        @Override
+        public void onComplete(Bundle values) {
+            adapter.updateStatus(mArticleFullEntity.getFull_descr(), new MessageListener(), false);
+        }
+
+        @Override
+        public void onError(SocialAuthError error) {
+            LOGE(TAG, "Authentication Error: " + error.getMessage());
+        }
+
+        @Override
+        public void onCancel() {
+            LOGD(TAG, "Authentication Cancelled");
+        }
+
+        @Override
+        public void onBack() {
+            LOGD(TAG, "Dialog Closed by pressing Back Key");
+        }
+    }
+
+    // To get status of message after authentication
+    private final class MessageListener implements SocialAuthListener<Integer> {
+        @Override
+        public void onExecute(String provider, Integer t) {
+            Integer status = t;
+            if (status.intValue() == 200 || status.intValue() == 201 || status.intValue() == 204)
+                Toast.makeText(getActivity(), "Message posted on " + provider, Toast.LENGTH_LONG).show();
+            else
+                Toast.makeText(getActivity(), "Message not posted on " + provider, Toast.LENGTH_LONG).show();
+        }
+
+        @Override
+        public void onError(SocialAuthError e) {
+            LOGE(TAG, "SocialAuthError", e);
+        }
+    }
+
 }

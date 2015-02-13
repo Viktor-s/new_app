@@ -25,6 +25,7 @@
             style="@style/SettingsMenuItem" />
 
         <TextView
+            android:visibility="gone"
             android:text="@string/settings_social"
             android:drawableStart="@android:drawable/ic_menu_my_calendar"
             android:id="@+id/settings_social_menu_textView"
