@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:background="@drawable/app_background">
 
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/news_RecyclerView"
         android:layout_width="match_parent"
@@ -21,8 +20,10 @@
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:layout_marginLeft="@dimen/news_fragment_block_size"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:background="@android:color/white"></FrameLayout>
+        android:background="@android:color/white" />
+
+    <include layout="@layout/base_progress_bar" />
 
 </RelativeLayout>

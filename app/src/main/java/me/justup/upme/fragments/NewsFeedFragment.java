@@ -49,6 +49,7 @@ import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 public class NewsFeedFragment extends Fragment {
     private static final String TAG = makeLogTag(NewsFeedFragment.class);
+
     private RecyclerView mNewsFeedView;
     private NewsFeedAdapter mNewsFeedAdapter;
     private DBAdapter mDBAdapter;
@@ -64,9 +65,13 @@ public class NewsFeedFragment extends Fragment {
     private int from = 0;
     private int to = 10;
 
+    private FrameLayout mProgressBar;
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         mDBHelper = new DBHelper(AppContext.getAppContext());
         mDBAdapter = new DBAdapter(AppContext.getAppContext());
         mDBAdapter.open();
@@ -80,19 +85,24 @@ public class NewsFeedFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+
         mDBAdapter.close();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_news_feed, container, false);
+
         mNewsItemContainer = (FrameLayout) view.findViewById(R.id.news_item_container_frameLayout);
         mNewsFeedView = (RecyclerView) view.findViewById(R.id.news_RecyclerView);
+        mProgressBar = (FrameLayout) view.findViewById(R.id.base_progressBar);
         mLayoutManager = new LinearLayoutManager(AppContext.getAppContext());
         mNewsFeedView.setLayoutManager(mLayoutManager);
+
         if (mNewsFeedEntityPartOfList.size() > 0) {
             updateAdapter();
         }
+
         mNewsFeedView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -111,6 +121,7 @@ public class NewsFeedFragment extends Fragment {
                 }
             }
         });
+
         BroadcastReceiver receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -120,10 +131,14 @@ public class NewsFeedFragment extends Fragment {
                     mNewsFeedEntityPartOfList.addAll(getNextArticlesPack());
                 }
                 updateAdapter();
+
+                mProgressBar.setVisibility(View.GONE);
             }
         };
+
         LocalBroadcastManager.getInstance(NewsFeedFragment.this.getActivity())
                 .registerReceiver(receiver, new IntentFilter(DBAdapter.NEWS_FEED_SQL_BROADCAST_INTENT));
+
         return view;
     }
 
@@ -140,7 +155,7 @@ public class NewsFeedFragment extends Fragment {
             articlesResponse.setPosted_at(cursorNews.getString(cursorNews.getColumnIndex(SHORT_NEWS_POSTED_AT)));
             int news_id = cursorNews.getInt(cursorNews.getColumnIndex(SHORT_NEWS_SERVER_ID));
             String selectQueryShortNewsComments = "SELECT * FROM short_news_comments_table WHERE article_id=" + news_id;
-                      Cursor cursorComments = mDBHelper.getWritableDatabase().rawQuery(selectQueryShortNewsComments, null);
+            Cursor cursorComments = mDBHelper.getWritableDatabase().rawQuery(selectQueryShortNewsComments, null);
             ArrayList<ArticleShortCommentEntity> commentsList = new ArrayList<>();
             if (cursorComments != null) {
                 for (cursorComments.moveToFirst(); !cursorComments.isAfterLast(); cursorComments.moveToNext()) {
@@ -173,7 +188,7 @@ public class NewsFeedFragment extends Fragment {
                     mNewsItemContainer.startAnimation(mFragmentSliderFadeIn);
                     lastChosenPosition = position;
                     ((MainActivity) NewsFeedFragment.this.getActivity()).startHttpIntent(getFullDescriptionQuery(mNewsFeedEntityList.get(position).getId()), HttpIntentService.NEWS_PART_FULL);
-                                   }
+                }
             }
         });
     }
@@ -196,7 +211,7 @@ public class NewsFeedFragment extends Fragment {
             from = from + 10;
             to = to + 10;
         }
-           return shortEntityList;
+        return shortEntityList;
     }
-}
 
+}
