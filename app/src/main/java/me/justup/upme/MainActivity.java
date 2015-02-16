@@ -80,7 +80,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         makeButtonSelector();
 
-        Fragment fragment = UserFragment.newInstance(new GetLoggedUserInfoQuery());
+        Fragment fragment = UserFragment.newInstance(new GetLoggedUserInfoQuery(), true);
         getFragmentManager().beginTransaction().add(R.id.mapAndUserFragment, fragment).commit();
 
 
@@ -101,7 +101,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         switch (view.getId()) {
             case R.id.news_menu_item:
-                startHttpIntent(getShortDescriptionQuery(500,0), HttpIntentService.NEWS_PART_SHORT);
+                startHttpIntent(getShortDescriptionQuery(500, 0), HttpIntentService.NEWS_PART_SHORT);
                 changeButtonState(mNewsButton);
                 fragment = new NewsFeedFragment();
                 break;

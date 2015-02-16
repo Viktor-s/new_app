@@ -11,6 +11,7 @@ public class AppPreferences {
     private static final String PREFS_FILE = "UPMEPrefsFile";
     private static final String TAG_TOKEN = "token";
     private static final String TAG_PIN_CODE = "pin_code";
+    private static final String TAG_USER_NAME = "user_name";
 
 
     public AppPreferences(final Context context) {
@@ -35,6 +36,16 @@ public class AppPreferences {
 
     public String getPinCode() {
         return mSharedPreferences.getString(TAG_PIN_CODE, "pin");
+    }
+
+    public void setUserName(String userName) {
+        mEditor = mSharedPreferences.edit();
+        mEditor.putString(TAG_USER_NAME, userName);
+        mEditor.apply();
+    }
+
+    public String getUserName() {
+        return mSharedPreferences.getString(TAG_USER_NAME, "vault boy");
     }
 
     public void clearPreferences() {

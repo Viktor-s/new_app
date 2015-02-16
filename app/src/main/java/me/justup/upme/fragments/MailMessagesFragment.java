@@ -66,7 +66,7 @@ import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 public class MailMessagesFragment extends Fragment {
     private static final String TAG = makeLogTag(MailMessagesFragment.class);
-    private static final String USER_NAME = "mail_messages_user_name";
+    private static final String FRIEND_NAME = "mail_messages_friend_name";
     private static final String YOUR_NAME = "mail_messages_your_name";
 
     private static final int REQUEST_TAKE_PHOTO = 0;
@@ -94,6 +94,7 @@ public class MailMessagesFragment extends Fragment {
     private static final String HOST = "95.213.170.164";
     private static final int PORT = 3222;
     private static final String AT = "@";
+    private static final String DOTS = ": ";
     private static final String SERVICE = "upme-spb-pbx-dlj01";
     private static final String PASSWORD = "TempuS123#";
 
@@ -103,7 +104,7 @@ public class MailMessagesFragment extends Fragment {
 
     private EditText mTextMessage;
     private ListView mListView;
-    private String mUserName;
+    private String mFriendName;
     private String mYourName;
 
 
@@ -111,7 +112,7 @@ public class MailMessagesFragment extends Fragment {
         MailMessagesFragment fragment = new MailMessagesFragment();
 
         Bundle args = new Bundle();
-        args.putString(USER_NAME, userName);
+        args.putString(FRIEND_NAME, userName);
         args.putString(YOUR_NAME, yourName);
         fragment.setArguments(args);
 
@@ -124,7 +125,7 @@ public class MailMessagesFragment extends Fragment {
         mAttachFileType = AttachFileType.NOTHING;
 
         mYourName = getArguments().getString(YOUR_NAME, "");
-        mUserName = getArguments().getString(USER_NAME, "") + AT + SERVICE;
+        mFriendName = getArguments().getString(FRIEND_NAME, "") + AT + SERVICE;
     }
 
     @Override
@@ -202,7 +203,7 @@ public class MailMessagesFragment extends Fragment {
         Button send = (Button) view.findViewById(R.id.mail_messages_add_button);
         send.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                String to = mUserName;
+                String to = mFriendName;
                 String text = mTextMessage.getText().toString();
                 mTextMessage.setText("");
 
@@ -211,8 +212,7 @@ public class MailMessagesFragment extends Fragment {
                 msg.setBody(text);
                 if (mXMPPConnection != null) {
                     mXMPPConnection.sendPacket(msg);
-                    mMessages.add(splitName(mXMPPConnection.getUser()) + ":");
-                    mMessages.add(text);
+                    mMessages.add(splitName(mXMPPConnection.getUser()) + DOTS + text);
                     setListAdapter();
                 }
             }
@@ -288,8 +288,8 @@ public class MailMessagesFragment extends Fragment {
                         if (type == Presence.Type.available)
                             LOGD(TAG, "Presence AVAILABLE");
                         LOGD(TAG, "Presence : " + entryPresence);
-
                     }
+
                 } catch (XMPPException ex) {
                     LOGE(TAG, "Failed to log in as " + mYourName);
                     LOGE(TAG, ex.toString());
@@ -314,8 +314,7 @@ public class MailMessagesFragment extends Fragment {
                     if (message.getBody() != null) {
                         String fromName = StringUtils.parseBareAddress(message.getFrom());
                         LOGI(TAG, "Text Received " + message.getBody() + " from " + fromName);
-                        mMessages.add(splitName(fromName) + ":");
-                        mMessages.add(message.getBody());
+                        mMessages.add(splitName(fromName) + DOTS + message.getBody());
                         mHandler.post(new Runnable() {
                             public void run() {
                                 setListAdapter();
@@ -328,7 +327,7 @@ public class MailMessagesFragment extends Fragment {
     }
 
     private String splitName(String fullName) {
-        String[] parts = fullName.split("@");
+        String[] parts = fullName.split(AT);
         return parts[0];
     }
 

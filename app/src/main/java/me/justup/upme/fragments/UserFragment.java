@@ -29,6 +29,8 @@ import me.justup.upme.entity.BaseHttpQueryEntity;
 import me.justup.upme.entity.GetLoggedUserInfoResponse;
 import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.interfaces.OnCloseFragment;
+import me.justup.upme.utils.AppContext;
+import me.justup.upme.utils.AppPreferences;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.LOGE;
@@ -38,6 +40,7 @@ import static me.justup.upme.utils.LogUtils.makeLogTag;
 public class UserFragment extends Fragment implements OnMapReadyCallback, OnCloseFragment {
     private static final String TAG = makeLogTag(UserFragment.class);
     private static final String ENTITY_KEY = "user_fragment_entity_key";
+    private static final String OWNER_KEY = "user_fragment_is_owner_key";
 
     private FrameLayout mOrderingFragmentContainer;
     private Animation mFragmentSliderOut;
@@ -49,13 +52,15 @@ public class UserFragment extends Fragment implements OnMapReadyCallback, OnClos
     private double userLongitude;
     private String mUserMapTitle;
     private String mUserMapSnippet;
+    private boolean isOwner = false;
 
 
-    public static UserFragment newInstance(BaseHttpQueryEntity entity) {
+    public static UserFragment newInstance(BaseHttpQueryEntity entity, boolean isOwner) {
         UserFragment fragment = new UserFragment();
 
         Bundle bundle = new Bundle();
         bundle.putSerializable(ENTITY_KEY, entity);
+        bundle.putBoolean(OWNER_KEY, isOwner);
         fragment.setArguments(bundle);
 
         return fragment;
@@ -66,6 +71,7 @@ public class UserFragment extends Fragment implements OnMapReadyCallback, OnClos
         View view = inflater.inflate(R.layout.fragment_user, container, false);
 
         BaseHttpQueryEntity mEntity = (BaseHttpQueryEntity) getArguments().getSerializable(ENTITY_KEY);
+        isOwner = getArguments().getBoolean(OWNER_KEY);
         ApiWrapper.query(mEntity, new OnGetUserInfoResponse());
 
         mUserName = (TextView) view.findViewById(R.id.user_name_textView);
@@ -149,6 +155,10 @@ public class UserFragment extends Fragment implements OnMapReadyCallback, OnClos
                 mUserName.setText(mUserMapTitle);
 
                 loadMap();
+
+                if (isOwner) {
+                    new AppPreferences(AppContext.getAppContext()).setUserName(mUserMapTitle);
+                }
             }
 
         }
