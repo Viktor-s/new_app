@@ -9,5 +9,4 @@
     android:textSize="18sp"
     android:background="@color/white"
     android:textColor="@color/black"
-    tools:text="hello"
-    android:textStyle="bold" />
+    tools:text="hello" />

@@ -17,6 +17,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -93,14 +95,19 @@ public class MailMessagesFragment extends Fragment {
     // Jabber
     private static final String HOST = "95.213.170.164";
     private static final int PORT = 3222;
-    private static final String AT = "@";
-    private static final String DOTS = ": ";
     private static final String SERVICE = "upme-spb-pbx-dlj01";
     private static final String PASSWORD = "TempuS123#";
 
+    private static final String AT = "@";
+    private static final String DOTS = ": ";
+    private static final String START_HTML_COMPANION = "<b><font color=magenta>";
+    private static final String START_HTML_OWNER = "<b><font color=gray>";
+    private static final String END_HTML = "</font></b>";
+
     private XMPPConnection mXMPPConnection;
-    private ArrayList<String> mMessages = new ArrayList<>();
+    private ArrayList<Spanned> mMessages = new ArrayList<>();
     private Handler mHandler = new Handler();
+    private StringBuilder mChatLineBuilder = new StringBuilder();
 
     private EditText mTextMessage;
     private ListView mListView;
@@ -129,9 +136,9 @@ public class MailMessagesFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mail_messages, container, false);
+
         mAddFileContainer = (RelativeLayout) view.findViewById(R.id.mail_messages_add_file_container);
         Button mMailMessageCloseButton = (Button) view.findViewById(R.id.mail_messages_close_button);
         mMailMessageCloseButton.setVisibility(View.INVISIBLE);
@@ -141,6 +148,7 @@ public class MailMessagesFragment extends Fragment {
                 getParentFragment().getChildFragmentManager().beginTransaction().remove(MailMessagesFragment.this).commit();
             }
         });
+
         Button mStapleButton = (Button) view.findViewById(R.id.mail_messages_staple_button);
         mStapleButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,6 +160,7 @@ public class MailMessagesFragment extends Fragment {
                 }
             }
         });
+
         AnimateButtonClose.animateButtonClose(mMailMessageCloseButton);
         Button mAddPhotoButton = (Button) view.findViewById(R.id.mail_messages_add_photo_button);
         Button mAddAudioButton = (Button) view.findViewById(R.id.mail_messages_add_audio_button);
@@ -162,18 +171,21 @@ public class MailMessagesFragment extends Fragment {
                 selectImage();
             }
         });
+
         mAddAudioButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showRecordAudioDialog();
             }
         });
+
         mAddDocumentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showFileChooserDialog();
             }
         });
+
         mImageAttachedImageView = (ImageButton) view.findViewById(R.id.mail_messages_image_attach_imageView);
         mImageAttachedImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -192,6 +204,7 @@ public class MailMessagesFragment extends Fragment {
                 }
             }
         });
+
         mImageAttachedImageView.setVisibility(View.INVISIBLE);
 
 
@@ -212,7 +225,7 @@ public class MailMessagesFragment extends Fragment {
                 msg.setBody(text);
                 if (mXMPPConnection != null) {
                     mXMPPConnection.sendPacket(msg);
-                    mMessages.add(splitName(mXMPPConnection.getUser()) + DOTS + text);
+                    mMessages.add(splitName(mXMPPConnection.getUser(), text));
                     setListAdapter();
                 }
             }
@@ -236,7 +249,7 @@ public class MailMessagesFragment extends Fragment {
     }
 
     private void setListAdapter() {
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.list_jabber_chat_item, mMessages);
+        ArrayAdapter<Spanned> adapter = new ArrayAdapter<>(getActivity(), R.layout.list_jabber_chat_item, mMessages);
         mListView.setAdapter(adapter);
     }
 
@@ -314,7 +327,7 @@ public class MailMessagesFragment extends Fragment {
                     if (message.getBody() != null) {
                         String fromName = StringUtils.parseBareAddress(message.getFrom());
                         LOGI(TAG, "Text Received " + message.getBody() + " from " + fromName);
-                        mMessages.add(splitName(fromName) + DOTS + message.getBody());
+                        mMessages.add(splitName(fromName, message.getBody()));
                         mHandler.post(new Runnable() {
                             public void run() {
                                 setListAdapter();
@@ -326,9 +339,21 @@ public class MailMessagesFragment extends Fragment {
         }
     }
 
-    private String splitName(String fullName) {
+    private Spanned splitName(String fullName, String text) {
         String[] parts = fullName.split(AT);
-        return parts[0];
+
+        mChatLineBuilder.setLength(0);
+        String user = parts[0];
+
+        if (user.equals(mYourName)) {
+            mChatLineBuilder.append(START_HTML_OWNER);
+        } else {
+            mChatLineBuilder.append(START_HTML_COMPANION);
+        }
+
+        mChatLineBuilder.append(user).append(DOTS).append(END_HTML).append(text);
+
+        return Html.fromHtml(mChatLineBuilder.toString());
     }
 
     private void selectImage() {
@@ -336,8 +361,7 @@ public class MailMessagesFragment extends Fragment {
     }
 
     private void createTakePictureDialog() {
-        final CharSequence[] items = {TAKE_PHOTO, CHOOSE_FROM_GALLERY,
-                DIALOG_CANCEL};
+        final CharSequence[] items = {TAKE_PHOTO, CHOOSE_FROM_GALLERY, DIALOG_CANCEL};
         AlertDialog.Builder builder = new AlertDialog.Builder(MailMessagesFragment.this.getActivity());
         builder.setTitle("Add Photo!");
         builder.setItems(items, new DialogInterface.OnClickListener() {
@@ -382,6 +406,7 @@ public class MailMessagesFragment extends Fragment {
                     mAttachFileType = AttachFileType.IMAGE;
                     mImageAttachedImageView.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_menu_camera));
                     break;
+
                 case REQUEST_TAKE_IMAGE_FILE:
                     Uri selectedImageUri = data.getData();
                     try {
@@ -392,12 +417,16 @@ public class MailMessagesFragment extends Fragment {
                     mAttachFileType = AttachFileType.IMAGE;
                     mImageAttachedImageView.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_menu_camera));
                     break;
+
                 case REQUEST_TAKE_FILE:
                     Uri uriFile = data.getData();
                     String path = getPath(uriFile, MailMessagesFragment.this.getActivity());
                     // File file = new File(path);
                     mAttachFileType = AttachFileType.DOC;
                     mImageAttachedImageView.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_input_get));
+                    break;
+
+                default:
                     break;
             }
             mImageAttachedImageView.setVisibility(View.VISIBLE);
