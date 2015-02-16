@@ -108,9 +108,9 @@ public class MailMessagesFragment extends Fragment {
     private ArrayList<Spanned> mMessages = new ArrayList<>();
     private Handler mHandler = new Handler();
     private StringBuilder mChatLineBuilder = new StringBuilder();
+    private ArrayAdapter<Spanned> mChatAdapter;
 
     private EditText mTextMessage;
-    private ListView mListView;
     private String mFriendName;
     private String mYourName;
 
@@ -210,8 +210,10 @@ public class MailMessagesFragment extends Fragment {
 
         // Jabber
         mTextMessage = (EditText) view.findViewById(R.id.chatET);
-        mListView = (ListView) view.findViewById(R.id.jabber_listMessages);
-        setListAdapter();
+        ListView mJabberListView = (ListView) view.findViewById(R.id.jabber_listMessages);
+
+        mChatAdapter = new ArrayAdapter<>(getActivity(), R.layout.list_jabber_chat_item, mMessages);
+        mJabberListView.setAdapter(mChatAdapter);
 
         Button send = (Button) view.findViewById(R.id.mail_messages_add_button);
         send.setOnClickListener(new View.OnClickListener() {
@@ -226,7 +228,7 @@ public class MailMessagesFragment extends Fragment {
                 if (mXMPPConnection != null) {
                     mXMPPConnection.sendPacket(msg);
                     mMessages.add(splitName(mXMPPConnection.getUser(), text));
-                    setListAdapter();
+                    notifyListAdapter();
                 }
             }
         });
@@ -248,9 +250,8 @@ public class MailMessagesFragment extends Fragment {
         }
     }
 
-    private void setListAdapter() {
-        ArrayAdapter<Spanned> adapter = new ArrayAdapter<>(getActivity(), R.layout.list_jabber_chat_item, mMessages);
-        mListView.setAdapter(adapter);
+    private void notifyListAdapter() {
+        mChatAdapter.notifyDataSetChanged();
     }
 
     public void connect() {
@@ -284,6 +285,7 @@ public class MailMessagesFragment extends Fragment {
                     connection.sendPacket(presence);
                     setConnection(connection);
 
+                    /*
                     Roster roster = connection.getRoster();
                     Collection<RosterEntry> entries = roster.getEntries();
                     for (RosterEntry entry : entries) {
@@ -302,6 +304,7 @@ public class MailMessagesFragment extends Fragment {
                             LOGD(TAG, "Presence AVAILABLE");
                         LOGD(TAG, "Presence : " + entryPresence);
                     }
+                    */
 
                 } catch (XMPPException ex) {
                     LOGE(TAG, "Failed to log in as " + mYourName);
@@ -330,7 +333,7 @@ public class MailMessagesFragment extends Fragment {
                         mMessages.add(splitName(fromName, message.getBody()));
                         mHandler.post(new Runnable() {
                             public void run() {
-                                setListAdapter();
+                                notifyListAdapter();
                             }
                         });
                     }
