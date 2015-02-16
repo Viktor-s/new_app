@@ -16,8 +16,8 @@ import me.justup.upme.fragments.SettingsWifiFragment;
 
 public class SetWiFiDialog extends DialogFragment {
     public static final String SET_WIFI_DIALOG = "set_wifi_dialog";
-    public static final String NETWORK_SSID = "wifi_dialog_network_ssid";
-    public static final String SECURITY_TYPE = "wifi_dialog_security_type";
+    private static final String NETWORK_SSID = "wifi_dialog_network_ssid";
+    private static final String SECURITY_TYPE = "wifi_dialog_security_type";
 
 
     public static SetWiFiDialog newInstance(String networkSSID, String securityType) {

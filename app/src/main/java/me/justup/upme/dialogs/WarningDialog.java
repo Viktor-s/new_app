@@ -8,8 +8,8 @@ import android.os.Bundle;
 
 public class WarningDialog extends DialogFragment {
     public static final String WARNING_DIALOG = "warning_dialog";
-    public static final String TITLE = "warning_dialog_title";
-    public static final String MESSAGE = "warning_dialog_message";
+    private static final String TITLE = "warning_dialog_title";
+    private static final String MESSAGE = "warning_dialog_message";
 
 
     public static WarningDialog newInstance(String title, String message) {
