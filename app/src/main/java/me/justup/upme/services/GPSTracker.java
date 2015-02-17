@@ -51,7 +51,7 @@ public class GPSTracker extends Service implements LocationListener {
     private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 5; // 5 min
 
     // Declaring a Location Manager
-    protected LocationManager locationManager;
+    private LocationManager locationManager;
 
 
     @Override
@@ -68,7 +68,7 @@ public class GPSTracker extends Service implements LocationListener {
         }
     }
 
-    public Location getLocation() {
+    private Location getLocation() {
         try {
             locationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
 
@@ -122,7 +122,7 @@ public class GPSTracker extends Service implements LocationListener {
      * Stop using GPS listener Calling this function will stop using GPS in your
      * app
      */
-    public void stopUsingGPS() {
+    private void stopUsingGPS() {
         if (locationManager != null) {
             locationManager.removeUpdates(GPSTracker.this);
         }
@@ -131,7 +131,7 @@ public class GPSTracker extends Service implements LocationListener {
     /**
      * Function to get latitude
      */
-    public double getLatitude() {
+    private double getLatitude() {
         if (location != null) {
             latitude = location.getLatitude();
         }
@@ -142,7 +142,7 @@ public class GPSTracker extends Service implements LocationListener {
     /**
      * Function to get longitude
      */
-    public double getLongitude() {
+    private double getLongitude() {
         if (location != null) {
             longitude = location.getLongitude();
         }

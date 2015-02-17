@@ -2,7 +2,6 @@ package me.justup.upme;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -17,8 +16,6 @@ import me.justup.upme.fragments.SettingsWifiFragment;
 
 
 public class SettingsActivity extends Activity implements View.OnClickListener {
-    public static final String SOCIAL_NETWORK_TAG = "SocialIntegrationMain.SOCIAL_NETWORK_TAG";
-
     private TextView mWiFiMenu;
     private TextView mScreenSoundMenu;
     private TextView mSocialMenu;
@@ -91,16 +88,6 @@ public class SettingsActivity extends Activity implements View.OnClickListener {
         }
 
         activeButton.setBackgroundResource(R.drawable.settings_back_left);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        Fragment fragment = getFragmentManager().findFragmentByTag(SOCIAL_NETWORK_TAG);
-        if (fragment != null) {
-            fragment.onActivityResult(requestCode, resultCode, data);
-        }
     }
 
 }

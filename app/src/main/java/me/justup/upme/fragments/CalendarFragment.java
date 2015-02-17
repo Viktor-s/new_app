@@ -188,11 +188,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
 
 
     public static String convertTimeToString(int hours, int minutes) {
-        StringBuffer buf = new StringBuffer();
-        buf.append(String.format("%02d", hours))
-                .append(":")
-                .append(String.format("%02d", minutes));
-        return buf.toString();
+        return String.format("%02d", hours) + ":" + String.format("%02d", minutes);
     }
 
 
