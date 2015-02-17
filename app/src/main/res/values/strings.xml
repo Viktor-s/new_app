@@ -3,6 +3,9 @@
 
     <string name="app_name">UPME</string>
 
+    <string name="host_webrtc">95.213.170.164</string>
+    <string name="port_webrtc">3003</string>
+
     <string name="maps_api_key">AIzaSyAZYUjtjOyE0I6fsiVSgjtFhjIz1cD3cCQ</string>
     <string name="vk_app_id">4542602</string>
     <string name="fb_app_id">1007594712602767</string>

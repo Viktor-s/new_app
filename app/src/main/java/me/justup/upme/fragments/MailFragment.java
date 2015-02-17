@@ -41,7 +41,7 @@ public class MailFragment extends Fragment {
         mDBAdapter.open();
         selectQuery = "SELECT * FROM " + MAIL_CONTACT_TABLE_NAME;
         Cursor cursor = mDBHelper.getWritableDatabase().rawQuery(selectQuery, null);
-        mMailContactsAdapter = new MailContactsAdapter(AppContext.getAppContext(), cursor, 0);
+        mMailContactsAdapter = new MailContactsAdapter(this, AppContext.getAppContext(), cursor, 0);
     }
 
     @Override
