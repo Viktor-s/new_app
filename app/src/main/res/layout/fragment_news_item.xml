@@ -66,7 +66,7 @@
                     android:text="@string/news_item_add_comment_button"
                     android:id="@+id/news_item_button_add_comment"
                     android:textAllCaps="true"
-                    android:background="@drawable/news_item_comment_button_bg"
+                    android:background="@drawable/pay_panel_button_selector"
                     android:padding="6dp" />
             </LinearLayout>
 

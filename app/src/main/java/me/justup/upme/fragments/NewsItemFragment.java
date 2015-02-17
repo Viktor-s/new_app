@@ -12,6 +12,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
@@ -34,6 +35,7 @@ import me.justup.upme.R;
 import me.justup.upme.adapter.NewsCommentsAdapter;
 import me.justup.upme.db.DBAdapter;
 import me.justup.upme.db.DBHelper;
+import me.justup.upme.dialogs.WarningDialog;
 import me.justup.upme.entity.ArticleFullEntity;
 import me.justup.upme.entity.ArticleShortCommentEntity;
 import me.justup.upme.entity.ArticleShortEntity;
@@ -128,11 +130,19 @@ public class NewsItemFragment extends Fragment {
         mNewsItemAddCommentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mNewsItemCommentEditText.length() > 1) {
+                hideKeyboard();
+
+                String comment = mNewsItemCommentEditText.getText().toString();
+
+                if (comment != null && comment.length() > 1) {
                     isBroadcastAddComment = true;
                     isBroadcastUpdateFullArticle = false;
                     isBroadcastUpdateComments = false;
-                    addComment(mNewsItemCommentEditText.getText().toString());
+
+                    mNewsItemAddCommentButton.setEnabled(false);
+                    addComment(comment);
+                } else {
+                    showWarningDialog(getString(R.string.warning_short_comment));
                 }
             }
         });
@@ -166,11 +176,13 @@ public class NewsItemFragment extends Fragment {
                     mArticleFullEntity = fillFullNewsFromCursor(cursorNews);
                     fillViewsWithData();
                     //LOGD("broadcast", "isBroadcastUpdateFullArticle");
+
                 } else if (isBroadcastAddComment) {
                     isBroadcastUpdateFullArticle = false;
                     isBroadcastAddComment = false;
                     isBroadcastUpdateComments = true;
                     ((MainActivity) NewsItemFragment.this.getActivity()).startHttpIntent(getCommentsFullArticleQuery(mArticleFullEntity.getId(), 100, 0), HttpIntentService.GET_COMMENTS_FULL_ARTICLE);
+
                 } else if (isBroadcastUpdateComments) {
                     isBroadcastUpdateFullArticle = true;
                     isBroadcastAddComment = false;
@@ -180,6 +192,8 @@ public class NewsItemFragment extends Fragment {
                     mNewsItemCommentsListView.setAdapter(newsCommentsAdapter);
                     newsCommentsAdapter.notifyDataSetChanged();
                     setListViewHeightBasedOnChildren(mNewsItemCommentsListView);
+
+                    mNewsItemAddCommentButton.setEnabled(true);
                     mNewsItemCommentEditText.setText("");
                 }
 
@@ -337,6 +351,19 @@ public class NewsItemFragment extends Fragment {
         @Override
         public void onError(SocialAuthError e) {
             LOGE(TAG, "SocialAuthError", e);
+        }
+    }
+
+    private void showWarningDialog(String message) {
+        WarningDialog dialog = WarningDialog.newInstance(getString(R.string.warning), message);
+        dialog.show(getChildFragmentManager(), WarningDialog.WARNING_DIALOG);
+    }
+
+    private void hideKeyboard() {
+        View view = getActivity().getCurrentFocus();
+        if (view != null) {
+            InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
     }
 
