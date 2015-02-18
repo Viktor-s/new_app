@@ -7,7 +7,11 @@ import android.content.res.Configuration;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.Window;
+import android.widget.ImageButton;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -27,11 +31,25 @@ public class RTCActivity extends Activity implements WebRtcClient.RTCListener {
     private String mSocketAddress;
     private String callerId;
 
+    private TextView roomId;
+    private RelativeLayout containerLayout;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        setContentView(R.layout.activity_rtc_camera);
+        containerLayout = (RelativeLayout) findViewById(R.id.container);
+        ImageButton btnEndCall = (ImageButton) findViewById(R.id.end_call_button);
+        btnEndCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        roomId = (TextView) findViewById(R.id.id_new_room_text_view);
+
         mSocketAddress = "http://" + getResources().getString(R.string.host_webrtc);
         mSocketAddress += (":" + getResources().getString(R.string.port_webrtc) + "/");
 
@@ -45,13 +63,9 @@ public class RTCActivity extends Activity implements WebRtcClient.RTCListener {
 
         client = new WebRtcClient(this, mSocketAddress);
 
-        final Intent intent = getIntent();
-        final String action = intent.getAction();
-
-        if (Intent.ACTION_VIEW.equals(action)) {
-            final List<String> segments = intent.getData().getPathSegments();
-            callerId = segments.get(0);
-        }
+        String strRoomId = getIntent().getStringExtra("room_id");
+        if (strRoomId != null && strRoomId.replaceAll("\\s","") != "")
+            callerId = strRoomId;
     }
 
     public void onConfigurationChanged(Configuration newConfig) {
@@ -80,7 +94,8 @@ public class RTCActivity extends Activity implements WebRtcClient.RTCListener {
                 e.printStackTrace();
             }
         } else {
-            call(callId);
+            roomId.setText(callId);
+            startCam();
         }
     }
 
@@ -89,24 +104,8 @@ public class RTCActivity extends Activity implements WebRtcClient.RTCListener {
         startCam();
     }
 
-    // dialog
-    public void call(String callId) {
-        Intent msg = new Intent(Intent.ACTION_SEND);
-        msg.putExtra(Intent.EXTRA_TEXT, mSocketAddress + callId);
-        msg.setType("text/plain");
-        startActivityForResult(Intent.createChooser(msg, "Call someone :"), VIDEO_CALL_SENT);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d(TAG, "onActivityResult ----------");
-        if (requestCode == VIDEO_CALL_SENT) {
-            startCam();
-        }
-    }
-
     public void startCam() {
-        setContentView(vsv);
+        containerLayout.addView(vsv);
         // Camera settings
         client.setCamera("front", "640", "480");
         client.start("android_test", true);
