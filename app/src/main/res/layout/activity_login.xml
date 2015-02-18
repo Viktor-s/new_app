@@ -148,6 +148,16 @@
         </TableLayout>
     </LinearLayout>
 
+    <fragment
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:name="me.justup.upme.fragments.StatusBarFragment"
+        android:id="@+id/status_bar_fragment"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        tools:layout="@layout/fragment_status_bar" />
+
     <include
         layout="@layout/upme_corner"
         android:id="@+id/include" />
@@ -157,5 +167,4 @@
         style="@style/CornerSettingsButton"
         android:layout_alignBottom="@+id/include"
         android:layout_alignParentStart="true" />
-
 </RelativeLayout>
