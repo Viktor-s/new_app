@@ -52,4 +52,11 @@ public class StatusBarFragment extends Fragment {
         return v;
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        getActivity().unregisterReceiver(this.mStatusBarInfoReceiver);
+    }
+
 }

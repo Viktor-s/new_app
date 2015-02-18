@@ -2,9 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="me.justup.upme">
 
-    <uses-feature android:name="android.hardware.camera" />
-    <uses-feature android:name="android.hardware.camera.autofocus" />
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -19,6 +16,13 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+
+    <permission
+        android:name="me.justup.upme.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+    <uses-permission android:name="me.justup.upme.permission.C2D_MESSAGE" />
 
     <application
         android:name=".utils.AppContext"
@@ -37,6 +41,16 @@
 
         <service android:name=".http.HttpIntentService" />
         <service android:name=".services.GPSTracker" />
+        <service android:name=".gcm.GcmIntentService" />
+
+        <receiver
+            android:name=".gcm.GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="me.justup.upme" />
+            </intent-filter>
+        </receiver>
 
         <activity
             android:name=".LoginActivity"
