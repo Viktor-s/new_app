@@ -43,7 +43,7 @@ public class UserFragment extends Fragment implements OnMapReadyCallback, OnClos
     private static final String OWNER_KEY = "user_fragment_is_owner_key";
 
     private FrameLayout mOrderingFragmentContainer;
-    private Animation mFragmentSliderOut;
+    // private Animation mFragmentSliderOut;
     private Animation mFragmentSliderIn;
     private Fragment mUserOrderingFragment;
     private TextView mUserName;
@@ -54,7 +54,9 @@ public class UserFragment extends Fragment implements OnMapReadyCallback, OnClos
     private String mUserMapSnippet;
     private boolean isOwner = false;
 
-
+    /**
+     * @param isOwner set <b>false</b> for most users (<i>set <b>true</b> only for get and save owner name</i>)
+     */
     public static UserFragment newInstance(BaseHttpQueryEntity entity, boolean isOwner) {
         UserFragment fragment = new UserFragment();
 
@@ -80,7 +82,7 @@ public class UserFragment extends Fragment implements OnMapReadyCallback, OnClos
         mGetOrder.setOnClickListener(new OnGetOrderListener());
 
         mOrderingFragmentContainer = (FrameLayout) view.findViewById(R.id.ordering_fragment_container);
-        mFragmentSliderOut = AnimationUtils.loadAnimation(getActivity(), R.anim.order_slider_out);
+        // mFragmentSliderOut = AnimationUtils.loadAnimation(getActivity(), R.anim.order_slider_out);
         mFragmentSliderIn = AnimationUtils.loadAnimation(getActivity(), R.anim.order_slider_in);
 
         mUserOrderingFragment = UserOrderingFragment.newInstance(42);
@@ -126,7 +128,7 @@ public class UserFragment extends Fragment implements OnMapReadyCallback, OnClos
 
     @Override
     public void onCloseFragment() {
-        mOrderingFragmentContainer.startAnimation(mFragmentSliderOut);
+        // mOrderingFragmentContainer.startAnimation(mFragmentSliderOut);
         mOrderingFragmentContainer.setVisibility(View.GONE);
 
         getChildFragmentManager().beginTransaction().remove(mUserOrderingFragment).commit();

@@ -1,5 +1,6 @@
 package me.justup.upme.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
@@ -78,6 +79,7 @@ public class UserOrderingFragment extends Fragment {
         return v;
     }
 
+    @SuppressLint("InflateParams")
     private void addDateToList(final String date, String amount, String[] itemsTitle) {
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View dateItem = inflater.inflate(R.layout.item_ordering_date, null);
@@ -97,6 +99,7 @@ public class UserOrderingFragment extends Fragment {
         mDaysPart.addView(dateItem);
     }
 
+    @SuppressLint("InflateParams")
     private void addOrderItemsToList(final String itemTitle, LinearLayout layout) {
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View dateItem = inflater.inflate(R.layout.item_ordering_orders, null);
