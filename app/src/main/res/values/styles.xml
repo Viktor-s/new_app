@@ -4,6 +4,21 @@
         <item name="android:windowFullscreen">true</item>
     </style>
 
+    <style name="StatusBarDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowAnimationStyle">@style/StatusBarDialogAnimation</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <style name="StatusBarDialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/status_bar_from_top</item>
+        <item name="android:windowExitAnimation">@anim/status_bar_to_top</item>
+    </style>
+
     <style name="PinCodeButton" parent="android:style/Widget.Button">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">match_parent</item>

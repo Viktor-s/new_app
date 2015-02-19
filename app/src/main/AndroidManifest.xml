@@ -71,7 +71,7 @@
             android:name=".ProductItemActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="stateHidden"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
 
         <activity
             android:name="org.acra.CrashReportDialog"
@@ -84,12 +84,12 @@
             android:name=".SettingsActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="stateHidden"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
 
         <activity
             android:name="me.justup.upme.webrtc.RTCActivity"
             android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
 
     </application>
 

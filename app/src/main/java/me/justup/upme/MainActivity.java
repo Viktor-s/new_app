@@ -26,6 +26,7 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import me.justup.upme.dialogs.StatusBarSliderDialog;
 import me.justup.upme.entity.ArticlesGetShortDescriptionQuery;
 import me.justup.upme.entity.BaseHttpQueryEntity;
 import me.justup.upme.entity.GetLoggedUserInfoQuery;
@@ -120,6 +121,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
         } else {
             LOGE(TAG, "No valid Google Play Services APK found.");
         }
+
+        View mOpenStatusBar = findViewById(R.id.status_bar_fragment);
+        mOpenStatusBar.setOnClickListener(new OnOpenStatusBarListener());
+
 
         // DELETE - only for exit
         TextView exit = (TextView) findViewById(R.id.exit_menu_item);
@@ -245,6 +250,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
         @Override
         public void onClick(View v) {
             startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+        }
+    }
+
+    private class OnOpenStatusBarListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            StatusBarSliderDialog dialog = StatusBarSliderDialog.newInstance("test Status Bar");
+            dialog.show(getFragmentManager(), StatusBarSliderDialog.STATUS_BAR_DIALOG);
         }
     }
 

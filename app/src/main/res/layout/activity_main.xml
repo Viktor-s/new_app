@@ -108,4 +108,12 @@
         android:layout_above="@+id/left_main_menu"
         style="@style/CornerSettingsButton" />
 
+    <fragment
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:name="me.justup.upme.fragments.StatusBarFragment"
+        android:id="@+id/status_bar_fragment"
+        tools:layout="@layout/fragment_status_bar"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true" />
 </RelativeLayout>
