@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import me.justup.upme.R;
@@ -21,6 +22,7 @@ public class StatusBarFragment extends Fragment {
 
     private TextView mAccumulator;
     private TextView mClock;
+    private ImageView mWiFi;
 
     private BroadcastReceiver mStatusBarInfoReceiver = new BroadcastReceiver() {
         @Override
@@ -46,6 +48,7 @@ public class StatusBarFragment extends Fragment {
 
         mAccumulator = (TextView) v.findViewById(R.id.status_bar_accum_textView);
         mClock = (TextView) v.findViewById(R.id.status_bar_clock_textView);
+        mWiFi = (ImageView) v.findViewById(R.id.status_bar_wifi_imageView);
 
         getActivity().registerReceiver(this.mStatusBarInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
 
