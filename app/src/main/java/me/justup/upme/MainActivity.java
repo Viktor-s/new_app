@@ -60,7 +60,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     //GCM
     private GoogleCloudMessaging gcm;
     private String regid;
-    private String SENDER_ID = "App-Sender-ID";
+    private static final String SENDER_ID = "896253211448";
     private Context context = AppContext.getAppContext();
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 

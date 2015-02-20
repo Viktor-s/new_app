@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import me.justup.upme.R;
-import me.justup.upme.services.StatusBarService;
 
 
 public class StatusBarFragment extends Fragment {
@@ -47,7 +46,7 @@ public class StatusBarFragment extends Fragment {
             int minutes = intent.getIntExtra(BROADCAST_EXTRA_MINUTES, 0);
             boolean isConnected = intent.getBooleanExtra(BROADCAST_EXTRA_IS_CONNECTED, true);
 
-            mClock.setText(hours + DOTS + minutes);
+            mClock.setText(hours + DOTS + String.format("%02d", minutes));
 
             if (isConnected) {
                 mWiFi.setImageResource(R.drawable.wifi_3);
@@ -63,9 +62,7 @@ public class StatusBarFragment extends Fragment {
         super.onResume();
 
         getActivity().registerReceiver(this.mStatusBarAccumReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
-
         getActivity().registerReceiver(mStatusBarServiceReceiver, new IntentFilter(BROADCAST_ACTION));
-        getActivity().startService(new Intent(getActivity(), StatusBarService.class));
     }
 
     @Override
@@ -84,9 +81,7 @@ public class StatusBarFragment extends Fragment {
         super.onStop();
 
         getActivity().unregisterReceiver(this.mStatusBarAccumReceiver);
-
         getActivity().unregisterReceiver(mStatusBarServiceReceiver);
-        getActivity().stopService(new Intent(getActivity(), StatusBarService.class));
     }
 
 }

@@ -20,6 +20,7 @@ import me.justup.upme.entity.LoginPhoneQueryEntity;
 import me.justup.upme.entity.LoginPinCodeQueryEntity;
 import me.justup.upme.entity.LoginResponseEntity;
 import me.justup.upme.http.ApiWrapper;
+import me.justup.upme.services.StatusBarService;
 import me.justup.upme.utils.AppContext;
 import me.justup.upme.utils.AppPreferences;
 
@@ -52,6 +53,8 @@ public class LoginActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        startService(new Intent(this, StatusBarService.class));
 
         mLoginPhonePanel = (LinearLayout) findViewById(R.id.login_phone_layout);
         mLoginPinCodePanel = (LinearLayout) findViewById(R.id.login_pin_layout);
