@@ -42,6 +42,7 @@
         <service android:name=".http.HttpIntentService" />
         <service android:name=".services.GPSTracker" />
         <service android:name=".gcm.GcmIntentService" />
+        <service android:name=".services.StatusBarService" />
 
         <receiver
             android:name=".gcm.GcmBroadcastReceiver"

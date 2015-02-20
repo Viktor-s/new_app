@@ -167,6 +167,10 @@ public class NewsItemFragment extends Fragment {
             fillViewsWithData();
         }
 
+        if (cursorNews != null) {
+            cursorNews.close();
+        }
+
         AnimateButtonClose.animateButtonClose(mNewsItemCloseButton);
         BroadcastReceiver receiver = new BroadcastReceiver() {
             @Override
@@ -175,7 +179,10 @@ public class NewsItemFragment extends Fragment {
                     Cursor cursorNews = mDBHelper.getWritableDatabase().rawQuery(selectQueryFullNews, null);
                     mArticleFullEntity = fillFullNewsFromCursor(cursorNews);
                     fillViewsWithData();
-                    //LOGD("broadcast", "isBroadcastUpdateFullArticle");
+
+                    if (cursorNews != null) {
+                        cursorNews.close();
+                    }
 
                 } else if (isBroadcastAddComment) {
                     isBroadcastUpdateFullArticle = false;
@@ -261,6 +268,11 @@ public class NewsItemFragment extends Fragment {
             }
             articleFullEntity.setComments(commentsList);
         }
+
+        if (cursorComments != null) {
+            cursorComments.close();
+        }
+
         return articleFullEntity;
     }
 
@@ -279,6 +291,11 @@ public class NewsItemFragment extends Fragment {
                 commentsList.add(articleShortCommentEntity);
             }
         }
+
+        if (cursorComments != null) {
+            cursorComments.close();
+        }
+
         return commentsList;
     }
 

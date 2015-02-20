@@ -1,6 +1,5 @@
 package me.justup.upme;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.View;
@@ -15,7 +14,7 @@ import me.justup.upme.fragments.SettingsSocialFragment;
 import me.justup.upme.fragments.SettingsWifiFragment;
 
 
-public class SettingsActivity extends Activity implements View.OnClickListener {
+public class SettingsActivity extends BaseActivity implements View.OnClickListener {
     private TextView mWiFiMenu;
     private TextView mScreenSoundMenu;
     private TextView mSocialMenu;

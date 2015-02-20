@@ -1,8 +1,6 @@
 package me.justup.upme;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -17,7 +15,8 @@ import java.util.List;
 import me.justup.upme.entity.GroupProductEntity;
 import me.justup.upme.entity.ListGroupProductMock;
 
-public class ProductItemActivity extends FragmentActivity implements View.OnClickListener {
+
+public class ProductItemActivity extends BaseActivity implements View.OnClickListener {
 
     public static final String ID_CURRENT_GROUP = "ID_CURRENT_GROUP";
 

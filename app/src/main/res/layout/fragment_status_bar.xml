@@ -9,7 +9,7 @@
     <ImageView
         android:layout_width="18dp"
         android:layout_height="18dp"
-        android:src="@drawable/wifi_3"
+        tools:src="@drawable/wifi_3"
         android:id="@+id/status_bar_wifi_imageView"
         android:layout_marginEnd="10dp"
         android:contentDescription="@string/app_name" />

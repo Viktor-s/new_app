@@ -78,8 +78,12 @@ public class NewsFeedFragment extends Fragment {
         selectQueryShortNews = "SELECT * FROM " + SHORT_NEWS_TABLE_NAME;
         Cursor cursorNews = mDBHelper.getWritableDatabase().rawQuery(selectQueryShortNews, null);
         mNewsFeedEntityList = fillNewsFromCursor(cursorNews);
-        if (mNewsFeedEntityList.size() > 10)
+        if (mNewsFeedEntityList.size() > 10) {
             mNewsFeedEntityPartOfList = getNextArticlesPack();
+        }
+
+        if (cursorNews != null)
+            cursorNews.close();
     }
 
     @Override
@@ -132,6 +136,10 @@ public class NewsFeedFragment extends Fragment {
                 }
                 updateAdapter();
 
+                if (cursorNews != null) {
+                    cursorNews.close();
+                }
+
                 mProgressBar.setVisibility(View.GONE);
             }
         };
@@ -170,6 +178,11 @@ public class NewsFeedFragment extends Fragment {
                 articlesResponse.setComments(commentsList);
             }
             newsList.add(articlesResponse);
+
+            if (cursorComments != null) {
+                cursorComments.close();
+            }
+
         }
         return newsList;
     }
