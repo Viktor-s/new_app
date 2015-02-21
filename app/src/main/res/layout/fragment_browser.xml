@@ -10,42 +10,60 @@
         android:layout_height="wrap_content"
         android:background="@color/base_background">
 
-        <Button
-            android:layout_width="0dp"
+        <ImageButton
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/browser_back"
             android:id="@+id/browser_back_button"
-            android:layout_weight="1" />
+            android:src="@drawable/ic_browser_back"
+            android:contentDescription="@string/app_name" />
 
-        <Button
-            android:layout_width="0dp"
+        <ImageButton
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/browser_home"
-            android:id="@+id/browser_home_button"
-            android:layout_weight="1" />
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/browser_forward"
             android:id="@+id/browser_forward_button"
-            android:layout_weight="1" />
+            android:src="@drawable/ic_browser_forward"
+            android:contentDescription="@string/app_name" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/browser_reload_button"
+            android:src="@drawable/ic_browser_reload"
+            android:contentDescription="@string/app_name" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/browser_stop_button"
+            android:src="@drawable/ic_browser_stop"
+            android:contentDescription="@string/app_name" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/browser_home_button"
+            android:src="@drawable/ic_browser_home"
+            android:contentDescription="@string/app_name" />
 
         <EditText
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:padding="5dp"
             android:id="@+id/browser_url_editText"
             android:background="@color/white"
             android:textColor="@color/black"
+            android:layout_gravity="center_vertical"
             android:singleLine="true"
-            android:layout_weight="5" />
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/browser_go"
-            android:id="@+id/browser_go_button"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
             android:layout_weight="1" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/browser_go_button"
+            android:src="@drawable/ic_browser_go"
+            android:contentDescription="@string/app_name" />
     </LinearLayout>
 
     <WebView

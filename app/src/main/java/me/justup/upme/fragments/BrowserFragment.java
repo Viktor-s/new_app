@@ -9,14 +9,14 @@ import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import me.justup.upme.R;
 
 
-public class BrowserFragment extends Fragment {
-    private static final String HOME_URL = "http://www.google.com/";
+public class BrowserFragment extends Fragment implements View.OnClickListener {
+    private static final String HOME_URL = "https://duckduckgo.com/";
     private static final String HTTP = "http://";
 
     private WebView mWebView;
@@ -31,14 +31,19 @@ public class BrowserFragment extends Fragment {
         mWebView = (WebView) view.findViewById(R.id.browser_webView);
         mUrlField = (EditText) view.findViewById(R.id.browser_url_editText);
 
-        Button mGoButton = (Button) view.findViewById(R.id.browser_go_button);
+        ImageButton mGoButton = (ImageButton) view.findViewById(R.id.browser_go_button);
         mGoButton.setOnClickListener(new OnLoadUrlListener());
-        Button mBackButton = (Button) view.findViewById(R.id.browser_back_button);
-        mBackButton.setOnClickListener(new OnGoBackListener());
-        Button mHomeButton = (Button) view.findViewById(R.id.browser_home_button);
-        mHomeButton.setOnClickListener(new OnGoHomeListener());
-        Button mForwardButton = (Button) view.findViewById(R.id.browser_forward_button);
-        mForwardButton.setOnClickListener(new OnGoForwardListener());
+
+        ImageButton mBackButton = (ImageButton) view.findViewById(R.id.browser_back_button);
+        mBackButton.setOnClickListener(this);
+        ImageButton mHomeButton = (ImageButton) view.findViewById(R.id.browser_home_button);
+        mHomeButton.setOnClickListener(this);
+        ImageButton mForwardButton = (ImageButton) view.findViewById(R.id.browser_forward_button);
+        mForwardButton.setOnClickListener(this);
+        ImageButton mReloadButton = (ImageButton) view.findViewById(R.id.browser_reload_button);
+        mReloadButton.setOnClickListener(this);
+        ImageButton mStopButton = (ImageButton) view.findViewById(R.id.browser_stop_button);
+        mStopButton.setOnClickListener(this);
 
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.setWebChromeClient(new WebChromeClient());
@@ -61,6 +66,38 @@ public class BrowserFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.browser_back_button:
+                if (mWebView.canGoBack()) {
+                    mWebView.goBack();
+                }
+                break;
+
+            case R.id.browser_forward_button:
+                if (mWebView.canGoForward()) {
+                    mWebView.goForward();
+                }
+                break;
+
+            case R.id.browser_reload_button:
+                mWebView.reload();
+                break;
+
+            case R.id.browser_home_button:
+                mWebView.loadUrl(HOME_URL);
+                break;
+
+            case R.id.browser_stop_button:
+                mWebView.stopLoading();
+                break;
+
+            default:
+                break;
+        }
+    }
+
     private class OnLoadUrlListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
@@ -71,31 +108,6 @@ public class BrowserFragment extends Fragment {
             }
 
             mWebView.loadUrl(url);
-        }
-    }
-
-    private class OnGoHomeListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            mWebView.loadUrl(HOME_URL);
-        }
-    }
-
-    private class OnGoBackListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            if (mWebView.canGoBack()) {
-                mWebView.goBack();
-            }
-        }
-    }
-
-    private class OnGoForwardListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            if (mWebView.canGoForward()) {
-                mWebView.goForward();
-            }
         }
     }
 
