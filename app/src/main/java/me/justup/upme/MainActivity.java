@@ -135,6 +135,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         switch (view.getId()) {
             case R.id.news_menu_item:
+                startHttpIntent(getShortDescriptionQuery(20, 0), HttpIntentService.NEWS_PART_SHORT);
                 startHttpIntent(getShortDescriptionQuery(500, 0), HttpIntentService.NEWS_PART_SHORT);
                 changeButtonState(mNewsButton);
                 fragment = new NewsFeedFragment();
@@ -178,7 +179,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
 
         if (fragment != null) {
-            getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, fragment).commit();
+            getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, fragment).addToBackStack(null).commit();
         }
         if (!isShowMainFragmentContainer) {
             showMainFragmentContainer();
