@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/app_background">
 
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/news_RecyclerView"
         android:layout_width="match_parent"
