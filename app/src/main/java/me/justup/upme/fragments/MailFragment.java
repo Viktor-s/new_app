@@ -19,6 +19,8 @@ import me.justup.upme.R;
 import me.justup.upme.adapter.MailContactsAdapter;
 import me.justup.upme.db.DBAdapter;
 import me.justup.upme.db.DBHelper;
+import me.justup.upme.entity.SendNotificationQuery;
+import me.justup.upme.services.PushIntentService;
 import me.justup.upme.utils.AppContext;
 import me.justup.upme.utils.AppPreferences;
 
@@ -64,6 +66,8 @@ public class MailFragment extends Fragment {
                     String friendName = mMailContactsAdapter.getCursor().getString(mMailContactsAdapter.getCursor().getColumnIndex(DBHelper.MAIL_CONTACT_NAME));
                     String yourName = new AppPreferences(AppContext.getAppContext()).getUserName();
 
+                    startNotificationIntent(214, "Hello", "Android");
+
                     final FragmentTransaction ft = getChildFragmentManager().beginTransaction();
                     ft.replace(R.id.mail_messages_container_frameLayout, MailMessagesFragment.newInstance(yourName, friendName));
                     ft.commit();
@@ -85,6 +89,19 @@ public class MailFragment extends Fragment {
                 .registerReceiver(receiver, new IntentFilter(DBAdapter.MAIL_SQL_BROADCAST_INTENT));
 
         return view;
+    }
+
+    public void startNotificationIntent(int userId, String title, String message) {
+        SendNotificationQuery push = new SendNotificationQuery();
+        push.params.user_id = userId;
+        push.params.data.title = title;
+        push.params.data.message = message;
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(PushIntentService.PUSH_INTENT_QUERY_EXTRA, push);
+
+        Intent intent = new Intent(getActivity(), PushIntentService.class);
+        getActivity().startService(intent.putExtras(bundle));
     }
 
 }

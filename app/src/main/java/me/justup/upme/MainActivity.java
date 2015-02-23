@@ -20,6 +20,9 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+
+import org.apache.http.Header;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,6 +32,7 @@ import me.justup.upme.entity.ArticlesGetShortDescriptionQuery;
 import me.justup.upme.entity.BaseHttpQueryEntity;
 import me.justup.upme.entity.GetLoggedUserInfoQuery;
 import me.justup.upme.entity.GetMailContactQuery;
+import me.justup.upme.entity.SetGooglePushIdQuery;
 import me.justup.upme.fragments.BriefcaseFragment;
 import me.justup.upme.fragments.BrowserFragment;
 import me.justup.upme.fragments.CalendarFragment;
@@ -37,10 +41,12 @@ import me.justup.upme.fragments.MailFragment;
 import me.justup.upme.fragments.NewsFeedFragment;
 import me.justup.upme.fragments.ProductsFragment;
 import me.justup.upme.fragments.UserFragment;
+import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.http.HttpIntentService;
 import me.justup.upme.services.GPSTracker;
 import me.justup.upme.utils.AppContext;
 
+import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.LOGE;
 import static me.justup.upme.utils.LogUtils.LOGI;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
@@ -100,7 +106,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
             if (regid.isEmpty()) {
                 registerInBackground();
+            } else {
+                sendAsyncRegistrationIdToBackend(regid);
             }
+
         } else {
             LOGE(TAG, "No valid Google Play Services APK found.");
         }
@@ -284,7 +293,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
                 GooglePlayServicesUtil.getErrorDialog(resultCode, this, PLAY_SERVICES_RESOLUTION_REQUEST).show();
             } else {
-                LOGE(TAG, "This device is not supported.");
+                LOGE(TAG, "This device is not supported GCM");
                 // finish();
                 Toast.makeText(this, "Это устройство не поддерживает GCM", Toast.LENGTH_LONG).show();
             }
@@ -336,9 +345,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                         gcm = GoogleCloudMessaging.getInstance(context);
                     }
                     regid = gcm.register(SENDER_ID);
-                    msg = "Device registered, registration ID=" + regid;
 
-                    sendRegistrationIdToBackend();
+                    LOGD(TAG, "GCM registration ID:" + regid);
+                    msg = "Device registered in GCM";
+
+                    sendSyncRegistrationIdToBackend(regid);
 
                     // Persist the regID - no need to register again.
                     storeRegistrationId(context, regid);
@@ -392,12 +403,35 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         return getSharedPreferences(MainActivity.class.getSimpleName(), Context.MODE_PRIVATE);
     }
 
-    /**
-     * Sends the registration ID to your server over HTTP, so it can use GCM/HTTP or CCS to send
-     * messages to your app.
-     */
-    private void sendRegistrationIdToBackend() {
-        // Implementation here.
+    private SetGooglePushIdQuery createPushIdEntity(final String pushId) {
+        SetGooglePushIdQuery query = new SetGooglePushIdQuery();
+        query.params.google_push_id = pushId;
+
+        return query;
+    }
+
+    // for Main thread
+    private void sendAsyncRegistrationIdToBackend(final String pushId) {
+        ApiWrapper.query(createPushIdEntity(pushId), new OnPushRegisterResponse());
+    }
+
+    // for works threads
+    private void sendSyncRegistrationIdToBackend(final String pushId) {
+        ApiWrapper.syncQuery(createPushIdEntity(pushId), new OnPushRegisterResponse());
+    }
+
+    private class OnPushRegisterResponse extends AsyncHttpResponseHandler {
+        @Override
+        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+            String content = ApiWrapper.responseBodyToString(responseBody);
+            LOGD(TAG, "onSuccess(): " + content);
+        }
+
+        @Override
+        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            String content = ApiWrapper.responseBodyToString(responseBody);
+            LOGE(TAG, "onFailure(): " + content);
+        }
     }
 
 }

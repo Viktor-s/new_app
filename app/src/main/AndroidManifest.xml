@@ -43,6 +43,7 @@
         <service android:name=".services.GPSTracker" />
         <service android:name=".gcm.GcmIntentService" />
         <service android:name=".services.StatusBarService" />
+        <service android:name=".services.PushIntentService" />
 
         <receiver
             android:name=".gcm.GcmBroadcastReceiver"
