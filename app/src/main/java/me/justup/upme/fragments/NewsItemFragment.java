@@ -54,6 +54,7 @@ import static me.justup.upme.db.DBHelper.SHORT_NEWS_COMMENTS_CONTENT;
 import static me.justup.upme.db.DBHelper.SHORT_NEWS_COMMENTS_SERVER_ID;
 import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.LOGE;
+import static me.justup.upme.utils.LogUtils.LOGI;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 
@@ -82,6 +83,7 @@ public class NewsItemFragment extends Fragment {
 
     private SocialAuthAdapter adapter;
     private Button mShareButton;
+    private BroadcastReceiver receiver;
 
 
     public static NewsItemFragment newInstance(ArticleShortEntity articleShortEntity) {
@@ -105,77 +107,16 @@ public class NewsItemFragment extends Fragment {
         mDBAdapter.open();
     }
 
+
     @Override
-    public void onPause() {
-        super.onPause();
-        mDBAdapter.close();
-    }
-
-    @SuppressLint("SetJavaScriptEnabled")
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_news_item, container, false);
-        mNewsItemWebView = (WebView) view.findViewById(R.id.news_item_webView);
-        mNewsItemWebView.getSettings().setJavaScriptEnabled(true);
-        mNewsItemWebView.setWebViewClient(new WebViewClient() {
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
-                return true;
-            }
-        });
-
-        mNewsItemCommentEditText = (EditText) view.findViewById(R.id.news_item_comment_editText);
-        mNewsItemAddCommentButton = (Button) view.findViewById(R.id.news_item_button_add_comment);
-        mNewsItemAddCommentButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                hideKeyboard();
-
-                String comment = mNewsItemCommentEditText.getText().toString();
-
-                if (comment != null && comment.length() > 1) {
-                    isBroadcastAddComment = true;
-                    isBroadcastUpdateFullArticle = false;
-                    isBroadcastUpdateComments = false;
-
-                    mNewsItemAddCommentButton.setEnabled(false);
-                    addComment(comment);
-                } else {
-                    showWarningDialog(getString(R.string.warning_short_comment));
-                }
-            }
-        });
-
-        mNewsItemCommentsListView = (ListView) view.findViewById(R.id.news_item_comments_listView);
-        mNewsItemCloseButton = (Button) view.findViewById(R.id.news_item_close_button);
-        mNewsItemCloseButton.setVisibility(View.INVISIBLE);
-        mNewsItemCloseButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getParentFragment().getChildFragmentManager().beginTransaction().remove(NewsItemFragment.this).commit();
-
-            }
-        });
-
-        selectQueryFullNews = QUERY_FULL_ARTICLE_PATH + mNewsFeedEntity.getId();
-        Cursor cursorNews = mDBHelper.getWritableDatabase().rawQuery(selectQueryFullNews, null);
-        if (cursorNews != null && cursorNews.moveToFirst())
-
-        {
-            mArticleFullEntity = fillFullNewsFromCursor(cursorNews);
-            fillViewsWithData();
-        }
-
-        if (cursorNews != null) {
-            cursorNews.close();
-        }
-
-        AnimateButtonClose.animateButtonClose(mNewsItemCloseButton);
-        BroadcastReceiver receiver = new BroadcastReceiver() {
+    public void onResume() {
+        super.onResume();
+        LOGI(TAG, "RegisterRecNewsItem");
+        receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (isBroadcastUpdateFullArticle) {
+                    LOGI(TAG, "onReceive isBroadcastUpdateFullArticle");
                     Cursor cursorNews = mDBHelper.getWritableDatabase().rawQuery(selectQueryFullNews, null);
                     mArticleFullEntity = fillFullNewsFromCursor(cursorNews);
                     fillViewsWithData();
@@ -203,13 +144,69 @@ public class NewsItemFragment extends Fragment {
                     mNewsItemAddCommentButton.setEnabled(true);
                     mNewsItemCommentEditText.setText("");
                 }
-
             }
         };
         LocalBroadcastManager.getInstance(NewsItemFragment.this.getActivity()).registerReceiver(receiver, new IntentFilter(DBAdapter.NEWS_ITEM_SQL_BROADCAST_INTENT)
         );
 
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(NewsItemFragment.this.getActivity()).unregisterReceiver(receiver);
+        LOGI(TAG, "unregisterRecNewsItem");
+        mDBAdapter.close();
+    }
+
+
+    @SuppressLint("SetJavaScriptEnabled")
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_news_item, container, false);
+        mNewsItemWebView = (WebView) view.findViewById(R.id.news_item_webView);
+        mNewsItemWebView.getSettings().setJavaScriptEnabled(true);
+        mNewsItemWebView.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                view.loadUrl(url);
+                return true;
+            }
+        });
+
+        mNewsItemCommentEditText = (EditText) view.findViewById(R.id.news_item_comment_editText);
+        mNewsItemAddCommentButton = (Button) view.findViewById(R.id.news_item_button_add_comment);
+        mNewsItemAddCommentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideKeyboard();
+                String comment = mNewsItemCommentEditText.getText().toString();
+                if (comment != null && comment.length() > 1) {
+                    isBroadcastAddComment = true;
+                    isBroadcastUpdateFullArticle = false;
+                    isBroadcastUpdateComments = false;
+
+                    mNewsItemAddCommentButton.setEnabled(false);
+                    addComment(comment);
+                } else {
+                    showWarningDialog(getString(R.string.warning_short_comment));
+                }
+            }
+        });
+        mNewsItemCommentsListView = (ListView) view.findViewById(R.id.news_item_comments_listView);
+        mNewsItemCloseButton = (Button) view.findViewById(R.id.news_item_close_button);
+        mNewsItemCloseButton.setVisibility(View.INVISIBLE);
+        mNewsItemCloseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LocalBroadcastManager.getInstance(NewsItemFragment.this.getActivity()).unregisterReceiver(receiver);
+                getParentFragment().getChildFragmentManager().beginTransaction().remove(NewsItemFragment.this).commit();
+            }
+        });
+
+        updateFullNewsCursor();
+
+        AnimateButtonClose.animateButtonClose(mNewsItemCloseButton);
         // FB
         adapter = new SocialAuthAdapter(new ResponseListener());
         mShareButton = (Button) view.findViewById(R.id.fb_share_Button);
@@ -218,7 +215,28 @@ public class NewsItemFragment extends Fragment {
         return view;
     }
 
+    public void updateFragmentContent(ArticleShortEntity articleShortEntity) {
+        mNewsItemWebView.loadUrl("about:blank");
+        mNewsItemCommentsListView.setAdapter(null);
+        mNewsFeedEntity = articleShortEntity;
+        updateFullNewsCursor();
+    }
+
+    private void updateFullNewsCursor() {
+        selectQueryFullNews = QUERY_FULL_ARTICLE_PATH + mNewsFeedEntity.getId();
+        Cursor cursorNews = mDBHelper.getWritableDatabase().rawQuery(selectQueryFullNews, null);
+        if (cursorNews != null && cursorNews.moveToFirst()) {
+            mArticleFullEntity = fillFullNewsFromCursor(cursorNews);
+            fillViewsWithData();
+        }
+
+        if (cursorNews != null) {
+            cursorNews.close();
+        }
+    }
+
     private void fillViewsWithData() {
+        LOGI(TAG, "fillViewsWithData");
         mNewsItemWebView.loadDataWithBaseURL("", convertToHtml(mArticleFullEntity.getFull_descr()), "text/html", "UTF-8", "");
         updateCommentsList();
     }
@@ -248,6 +266,7 @@ public class NewsItemFragment extends Fragment {
     }
 
     private ArticleFullEntity fillFullNewsFromCursor(Cursor cursorNews) {
+        LOGI(TAG, "fillFullNewsFromCursor");
         cursorNews.moveToFirst();
         ArticleFullEntity articleFullEntity = new ArticleFullEntity();
         articleFullEntity.setId(cursorNews.getInt(cursorNews.getColumnIndex(FULL_NEWS_SERVER_ID)));
@@ -383,5 +402,6 @@ public class NewsItemFragment extends Fragment {
             inputManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
     }
+
 
 }
