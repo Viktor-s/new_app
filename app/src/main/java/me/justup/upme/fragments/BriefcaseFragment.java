@@ -143,6 +143,8 @@ public class BriefcaseFragment extends Fragment {
 //            }
 //        });
 
+        ///////////////////////////// ADD USER /////////////////////////////////////////////////////
+
         final LinearLayout addUserContainer = (LinearLayout) view.findViewById(R.id.add_user_container);
         addUserContainer.setVisibility(View.GONE);
 
@@ -279,7 +281,7 @@ public class BriefcaseFragment extends Fragment {
                 }
             });
 
-            TextView idObject = (TextView) photoLayout.getChildAt(1);
+            final TextView idObject = (TextView) photoLayout.getChildAt(1);
             idObject.setText(Integer.toString(personEntity.getId()));
             TextView rowObject = (TextView) photoLayout.getChildAt(2);
             rowObject.setText(Integer.toString(row + 1));
@@ -292,9 +294,8 @@ public class BriefcaseFragment extends Fragment {
             imageViewInfo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(getActivity(), "Вылазит боковое меню", Toast.LENGTH_SHORT).show();
-
-
+                    String idPersonal = idObject.getText().toString();
+                    Toast.makeText(getActivity(), "Вылазит боковое меню " + idPersonal, Toast.LENGTH_SHORT).show();
                 }
             });
 
