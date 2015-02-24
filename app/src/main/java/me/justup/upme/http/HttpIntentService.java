@@ -15,6 +15,7 @@ import me.justup.upme.entity.ArticleFullResponse;
 import me.justup.upme.entity.ArticlesGetShortDescriptionResponse;
 import me.justup.upme.entity.BaseHttpQueryEntity;
 import me.justup.upme.entity.CommentsArticleFullResponse;
+import me.justup.upme.entity.EventsCalendarResponse;
 import me.justup.upme.entity.GetMailContactResponse;
 import me.justup.upme.fragments.NewsItemFragment;
 import me.justup.upme.utils.AppContext;
@@ -39,6 +40,7 @@ public class HttpIntentService extends IntentService {
     public static final int ADD_COMMENT = 6;
     public static final int GET_COMMENTS_FULL_ARTICLE = 7;
     public static final int ADD_REFERAL = 8;
+    public static final int CALENDAR_PART = 9;
 
 
     private DBAdapter mDBAdapter;
@@ -107,6 +109,10 @@ public class HttpIntentService extends IntentService {
 
                 case ADD_REFERAL:
                     //startHttpIntent();
+                    break;
+
+                case CALENDAR_PART:
+                    fillEventsCalendarDB(content);
                     break;
 
                 default:
@@ -271,4 +277,17 @@ public class HttpIntentService extends IntentService {
         }
     }
 
+
+    private void fillEventsCalendarDB(String content) {
+        EventsCalendarResponse response = null;
+        try {
+            response = ApiWrapper.gson.fromJson(content, EventsCalendarResponse.class);
+        } catch (JsonSyntaxException e) {
+            LOGE(TAG, "gson.fromJson:\n" + content);
+        }
+
+        if (response != null && response.result != null) {
+          mDBAdapter.saveEventsCalendar(response);
+        }
+    }
 }

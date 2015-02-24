@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import me.justup.upme.dialogs.StatusBarSliderDialog;
 import me.justup.upme.entity.ArticlesGetShortDescriptionQuery;
 import me.justup.upme.entity.BaseHttpQueryEntity;
+import me.justup.upme.entity.GetEventsCalendarQuery;
 import me.justup.upme.entity.GetLoggedUserInfoQuery;
 import me.justup.upme.entity.GetMailContactQuery;
 import me.justup.upme.entity.SetGooglePushIdQuery;
@@ -148,6 +149,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 break;
 
             case R.id.calendar_menu_item:
+                startHttpIntent(new GetEventsCalendarQuery(), HttpIntentService.CALENDAR_PART);
                 changeButtonState(mCalendarButton);
                 fragment = new CalendarFragment();
                 break;

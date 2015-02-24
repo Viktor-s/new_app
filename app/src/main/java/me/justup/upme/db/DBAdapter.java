@@ -10,6 +10,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import me.justup.upme.entity.ArticleFullResponse;
 import me.justup.upme.entity.ArticlesGetShortDescriptionResponse;
 import me.justup.upme.entity.CommentsArticleFullResponse;
+import me.justup.upme.entity.EventsCalendarResponse;
 import me.justup.upme.entity.GetMailContactResponse;
 import me.justup.upme.utils.AppContext;
 
@@ -17,7 +18,16 @@ import static me.justup.upme.db.DBHelper.BASE_ID;
 import static me.justup.upme.db.DBHelper.BASE_PROJECT_ID;
 import static me.justup.upme.db.DBHelper.BASE_START_DATE;
 import static me.justup.upme.db.DBHelper.BASE_TABLE_NAME;
+import static me.justup.upme.db.DBHelper.CREATE_TABLE_EVENT_CALENDAR;
 import static me.justup.upme.db.DBHelper.CREATE_TABLE_MAIL_CONTACT;
+import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_DESCRIPTION;
+import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_END_DATETIME;
+import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_LOCATION;
+import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_NAME;
+import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_SERVER_ID;
+import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_START_DATETIME;
+import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_TABLE_NAME;
+import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_TYPE;
 import static me.justup.upme.db.DBHelper.FULL_NEWS_FULL_DESCR;
 import static me.justup.upme.db.DBHelper.FULL_NEWS_SERVER_ID;
 import static me.justup.upme.db.DBHelper.FULL_NEWS_TABLE_NAME;
@@ -62,6 +72,7 @@ public class DBAdapter {
     public static final String NEWS_FEED_SQL_BROADCAST_INTENT = "sql_news_feed_broadcast_intent";
     public static final String NEWS_ITEM_SQL_BROADCAST_INTENT = "sql_news_item_broadcast_intent";
     public static final String MAIL_SQL_BROADCAST_INTENT = "mail_sql_broadcast_intent";
+    public static final String CALENDAR_SQL_BROADCAST_INTENT = "calendar_sql_broadcast_intent";
     private SQLiteDatabase database;
     private DBHelper dbHelper;
     private String[] BASE_TABLE_COLUMNS = {BASE_ID, BASE_PROJECT_ID, BASE_START_DATE};
@@ -158,6 +169,20 @@ public class DBAdapter {
             database.insert(MAIL_CONTACT_TABLE_NAME, null, values);
         }
         sendBroadcast(MAIL_SQL_BROADCAST_INTENT);
+    }
+    public void saveEventsCalendar(EventsCalendarResponse entity) {
+        for (int i = 0; i < entity.result.size(); i++) {
+            ContentValues values = new ContentValues();
+            values.put(EVENT_CALENDAR_SERVER_ID, entity.result.get(i).id);
+            values.put(EVENT_CALENDAR_NAME, entity.result.get(i).name);
+            values.put(EVENT_CALENDAR_DESCRIPTION, entity.result.get(i).description);
+            values.put(EVENT_CALENDAR_TYPE, entity.result.get(i).type);
+            values.put(EVENT_CALENDAR_START_DATETIME, entity.result.get(i).start_datetime);
+            values.put(EVENT_CALENDAR_END_DATETIME, entity.result.get(i).end_datetime);
+            values.put(EVENT_CALENDAR_LOCATION, entity.result.get(i).location);
+            database.insert(EVENT_CALENDAR_TABLE_NAME, null, values);
+        }
+        sendBroadcast(CALENDAR_SQL_BROADCAST_INTENT);
     }
 
 

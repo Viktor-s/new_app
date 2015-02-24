@@ -48,6 +48,16 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String MAIL_CONTACT_PHONE = "phone";
     public static final String MAIL_CONTACT_IMG = "img";
 
+    public static final String EVENT_CALENDAR_TABLE_NAME = "event_calendar_table";
+    public static final String EVENT_CALENDAR_ID = BaseColumns._ID;
+    public static final String EVENT_CALENDAR_SERVER_ID = "server_id";
+    public static final String EVENT_CALENDAR_NAME = "name";
+    public static final String EVENT_CALENDAR_DESCRIPTION = "description";
+    public static final String EVENT_CALENDAR_TYPE = "type";
+    public static final String EVENT_CALENDAR_START_DATETIME = "start_datetime";
+    public static final String EVENT_CALENDAR_END_DATETIME = "end_datetime";
+    public static final String EVENT_CALENDAR_LOCATION = "location";
+
 
     private static final String CREATE_TABLE_BASE = "CREATE TABLE "
             + BASE_TABLE_NAME + "("
@@ -93,6 +103,17 @@ public class DBHelper extends SQLiteOpenHelper {
             + MAIL_CONTACT_PHONE + " TEXT, "
             + MAIL_CONTACT_IMG + " TEXT" + ")";
 
+    protected static final String CREATE_TABLE_EVENT_CALENDAR = "CREATE TABLE "
+            + EVENT_CALENDAR_TABLE_NAME + "("
+            + EVENT_CALENDAR_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + EVENT_CALENDAR_SERVER_ID + " INTEGER, "
+            + EVENT_CALENDAR_NAME + " TEXT, "
+            + EVENT_CALENDAR_DESCRIPTION + " TEXT, "
+            + EVENT_CALENDAR_TYPE + " TEXT, "
+            + EVENT_CALENDAR_START_DATETIME + " TEXT, "
+            + EVENT_CALENDAR_END_DATETIME + " TEXT, "
+            + EVENT_CALENDAR_LOCATION + " TEXT" + ")";
+
 
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -105,6 +126,7 @@ public class DBHelper extends SQLiteOpenHelper {
         database.execSQL(CREATE_TABLE_FULL_NEWS);
         database.execSQL(CREATE_TABLE_MAIL_CONTACT);
         database.execSQL(CREATE_TABLE_SHORT_NEWS_COMMENTS);
+        database.execSQL(CREATE_TABLE_EVENT_CALENDAR);
     }
 
     @Override
@@ -114,6 +136,8 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + MAIL_CONTACT_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + SHORT_NEWS_COMMENTS_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + FULL_NEWS_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + FULL_NEWS_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + EVENT_CALENDAR_TABLE_NAME);
         onCreate(db);
     }
 
