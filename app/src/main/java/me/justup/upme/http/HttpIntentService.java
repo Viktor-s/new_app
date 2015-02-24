@@ -2,6 +2,8 @@ package me.justup.upme.http;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.os.Bundle;
+import android.widget.Toast;
 
 import com.google.gson.JsonSyntaxException;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -36,6 +38,7 @@ public class HttpIntentService extends IntentService {
     public static final int MAIL_CONTACT_PART = 5;
     public static final int ADD_COMMENT = 6;
     public static final int GET_COMMENTS_FULL_ARTICLE = 7;
+    public static final int ADD_REFERAL = 8;
 
 
     private DBAdapter mDBAdapter;
@@ -102,6 +105,10 @@ public class HttpIntentService extends IntentService {
                     fillCommentsFullDB(content, NewsItemFragment.mNewsFeedEntity.getId());
                     break;
 
+                case ADD_REFERAL:
+                    //startHttpIntent();
+                    break;
+
                 default:
                     break;
             }
@@ -110,8 +117,20 @@ public class HttpIntentService extends IntentService {
         @Override
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
             String content = ApiWrapper.responseBodyToString(responseBody);
+            Toast.makeText(getApplicationContext(), content, Toast.LENGTH_SHORT).show();
             LOGE(TAG, "onFailure(): " + content);
+
         }
+    }
+
+
+    public void startHttpIntent(BaseHttpQueryEntity entity, int dbTable) {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(HTTP_INTENT_QUERY_EXTRA, entity);
+        bundle.putInt(HTTP_INTENT_PART_EXTRA, dbTable);
+
+        Intent intent = new Intent(this, HttpIntentService.class);
+        startService(intent.putExtras(bundle));
     }
 
     private void fillNewsShortDB(String content) {

@@ -173,7 +173,10 @@
 
                         <EditText
                             android:id="@+id/new_user_phone"
-                            style="@style/NewUserEditText" />
+                            style="@style/NewUserEditText"
+                            android:inputType="phone"
+                            android:digits="0123456789+"
+                            />
 
                         <Button
                             android:id="@+id/new_user_send_button"

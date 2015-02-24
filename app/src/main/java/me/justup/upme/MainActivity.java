@@ -278,7 +278,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         return query;
     }
 
-
     // GCM
     private static final String PROPERTY_REG_ID = "registration_id";
     private static final String PROPERTY_APP_VERSION = "appVersion";

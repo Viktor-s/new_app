@@ -1,14 +1,10 @@
 package me.justup.upme.fragments;
 
 import android.app.Fragment;
-import android.app.FragmentTransaction;
-import android.media.Image;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.GridLayout;
@@ -21,14 +17,13 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.justup.upme.MainActivity;
 import me.justup.upme.R;
-import me.justup.upme.adapter.NewsFeedAdapter;
-import me.justup.upme.entity.GetLoggedUserInfoQuery;
 import me.justup.upme.entity.PersonEntity;
-import me.justup.upme.utils.AppContext;
+import me.justup.upme.entity.ReferalAddQuery;
+import me.justup.upme.http.HttpIntentService;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
-import static me.justup.upme.utils.LogUtils.LOGI;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 
@@ -176,11 +171,16 @@ public class BriefcaseFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 addUserContainer.setVisibility(View.GONE);
-                PersonEntity newPerson = new PersonEntity(100, 1, nameField.getText().toString(), "");  // 100 - generate Id
-                listPerson.add(newPerson);
+                // PersonEntity newPerson = new PersonEntity(100, 1, nameField.getText().toString(), "");  // 100 - generate Id
+                // listPerson.add(newPerson);
 
-                containerLayout.removeAllViews();
-                containerLayout.addView(levelGenerate(photoLayout, listPerson));
+                // containerLayout.removeAllViews();
+                // containerLayout.addView(levelGenerate(photoLayout, listPerson));
+                if (nameField.getText().toString().length() > 1 && phoneField.getText().toString().length() == 13) {
+                    ((MainActivity) BriefcaseFragment.this.getActivity()).startHttpIntent(getReferalAddQuery(nameField.getText().toString() + " " + surnameField.getText().toString(), phoneField.getText().toString()), HttpIntentService.ADD_REFERAL);
+                } else {
+                    Toast.makeText(BriefcaseFragment.this.getActivity(), "wrong params", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -194,6 +194,14 @@ public class BriefcaseFragment extends Fragment {
         resultView.setImageResource(resId);
         return resultView;
 
+    }
+
+
+    public static ReferalAddQuery getReferalAddQuery(String name, String phone) {
+        ReferalAddQuery query = new ReferalAddQuery();
+        query.params.name = name;
+        query.params.phone = phone;
+        return query;
     }
 
     private GridLayout levelGenerate(final View v, final List<PersonEntity> listPerson) {
@@ -285,6 +293,8 @@ public class BriefcaseFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     Toast.makeText(getActivity(), "Вылазит боковое меню", Toast.LENGTH_SHORT).show();
+
+
                 }
             });
 

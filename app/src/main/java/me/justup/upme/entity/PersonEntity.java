@@ -1,8 +1,6 @@
 package me.justup.upme.entity;
 
-/**
- * Created by bogdan on 22.01.15.
- */
+
 public class PersonEntity {
 
     private int id;
