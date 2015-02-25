@@ -53,7 +53,7 @@ public class ApiWrapper {
     public static final String ACCOUNT_SEND_NOTIFICATION = "Account.sendNotification";
     public static final String ACCOUNT_ADD_REFERAL = "Account.addReferal";
 
-    public static final String CALENDAR_ADD_EVENT = "Calendar.addEvent";
+    public static final String CALENDAR_ADD_EVENT = "Calendar.getEvents";
 
 
     private static void post(final StringEntity se, AsyncHttpResponseHandler responseHandler) {

@@ -2,9 +2,14 @@ package me.justup.upme.fragments;
 
 import android.app.Dialog;
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.RectF;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,6 +59,7 @@ import static me.justup.upme.db.DBHelper.SHORT_NEWS_SHORT_DESCR;
 import static me.justup.upme.db.DBHelper.SHORT_NEWS_THUMBNAIL;
 import static me.justup.upme.db.DBHelper.SHORT_NEWS_TITLE;
 import static me.justup.upme.utils.LogUtils.LOGD;
+import static me.justup.upme.utils.LogUtils.LOGI;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 
@@ -87,6 +93,8 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
     private DBAdapter mDBAdapter;
     private DBHelper mDBHelper;
     private String selectQueryEvents;
+    private List<EventEntity> mEventEntityList;
+    private BroadcastReceiver receiver;
 
 
     @Override
@@ -98,15 +106,15 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
         events = new ArrayList<>();
 
         ////////////////////////////////////////////////////////////////////////////////////////////
-        mDBHelper = new DBHelper(AppContext.getAppContext());
+        mDBHelper  = new DBHelper(AppContext.getAppContext());
         mDBAdapter = new DBAdapter(AppContext.getAppContext());
         mDBAdapter.open();
         selectQueryEvents = "SELECT * FROM " + EVENT_CALENDAR_TABLE_NAME;
         Cursor cursorEvents = mDBHelper.getWritableDatabase().rawQuery(selectQueryEvents, null);
-        mNewsFeedEntityList = fillNewsFromCursor(cursorNews);
-        if (mNewsFeedEntityList.size() >= 10) {
-            mNewsFeedEntityPartOfList = getNextArticlesPack();
-        }
+        mEventEntityList = fillNewsFromCursor(cursorEvents);
+        LOGD("TAG_", mEventEntityList.toString());
+
+
         if (cursorEvents != null)
             cursorEvents.close();
     }
@@ -135,6 +143,33 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
             }
         }
         return eventsList;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(CalendarFragment.this.getActivity()).unregisterReceiver(receiver);
+        LOGI(TAG, "unregisterRecNewsFeed");
+        mDBAdapter.close();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        LOGI(TAG, "RegisterRecNewsFeed");
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                LOGI(TAG, "onReceive, first update");
+                Cursor cursorEvents = mDBHelper.getWritableDatabase().rawQuery(selectQueryEvents, null);
+                mEventEntityList = fillNewsFromCursor(cursorEvents);
+                LOGD("TAG_", mEventEntityList.toString());
+            }
+        };
+
+        LocalBroadcastManager.getInstance(CalendarFragment.this.getActivity())
+                .registerReceiver(receiver, new IntentFilter(DBAdapter.CALENDAR_SQL_BROADCAST_INTENT));
+
     }
 
     @Override

@@ -23,6 +23,9 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.apache.http.Header;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeConstants;
+import org.joda.time.LocalDateTime;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -149,7 +152,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 break;
 
             case R.id.calendar_menu_item:
-                startHttpIntent(new GetEventsCalendarQuery(), HttpIntentService.CALENDAR_PART);
+
+                LocalDateTime firstDayCurrentWeek = new LocalDateTime().withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0).withDayOfWeek(DateTimeConstants.MONDAY);
+                String startTime  = Long.toString(firstDayCurrentWeek.toDateTime().getMillis()/1000);
+                LocalDateTime lastDayCurrentWeek = new LocalDateTime().withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59).withDayOfWeek(DateTimeConstants.SUNDAY);
+                String endTime = Long.toString(lastDayCurrentWeek.toDateTime().getMillis()/1000);
+                LOGD("TAG_", "startTime " + startTime + " --- endTime " + endTime);
+
+                startHttpIntent(getEventCalendarQuery("1320969600", "1352592000"), HttpIntentService.CALENDAR_PART);
                 changeButtonState(mCalendarButton);
                 fragment = new CalendarFragment();
                 break;
@@ -277,6 +287,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         query.params.limit = limit;
         query.params.offset = offset;
         query.params.order = "DESC";
+        return query;
+    }
+
+    public static GetEventsCalendarQuery getEventCalendarQuery(String startDateTime, String endDateTime) {
+        GetEventsCalendarQuery query = new GetEventsCalendarQuery();
+        query.params.start_date_time = startDateTime;
+        query.params.end_date_time = endDateTime;
         return query;
     }
 

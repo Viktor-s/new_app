@@ -279,6 +279,7 @@ public class HttpIntentService extends IntentService {
 
 
     private void fillEventsCalendarDB(String content) {
+        LOGD("TAG_", content);
         EventsCalendarResponse response = null;
         try {
             response = ApiWrapper.gson.fromJson(content, EventsCalendarResponse.class);
