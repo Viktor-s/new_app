@@ -28,9 +28,9 @@
 
         <FrameLayout
             android:id="@+id/mapAndUserFragment"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
+            tools:layout_width="420dp"
             android:layout_height="match_parent"
-            android:layout_weight="40"
             tools:background="@color/blue_gray" />
     </LinearLayout>
 
@@ -115,5 +115,5 @@
         android:id="@+id/status_bar_fragment"
         tools:layout="@layout/fragment_status_bar"
         android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_toStartOf="@+id/main_content_container" />
 </RelativeLayout>
