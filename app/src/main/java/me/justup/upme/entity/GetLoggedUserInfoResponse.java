@@ -8,6 +8,7 @@ public class GetLoggedUserInfoResponse extends BaseHttpResponseEntity {
 
     public class Result implements Serializable {
         public String name = "";
+        public int id;
         public int dateAdd = 0;
         public String login = "";
         public int network = 0;

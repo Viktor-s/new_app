@@ -3,11 +3,9 @@ package me.justup.upme.adapter;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.nfc.Tag;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,13 +19,8 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import me.justup.upme.MainActivity;
 import me.justup.upme.R;
 import me.justup.upme.db.DBHelper;
-import me.justup.upme.fragments.MailMessagesFragment;
-import me.justup.upme.fragments.MailVideoFragment;
-import me.justup.upme.utils.AppContext;
-import me.justup.upme.utils.AppPreferences;
 import me.justup.upme.utils.CircularImageView;
 import me.justup.upme.webrtc.RTCActivity;
 
@@ -60,12 +53,14 @@ public class MailContactsAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, final Context context, Cursor cur) {
         final int id = cur.getInt(cur.getColumnIndex(DBHelper.MAIL_CONTACT_SERVER_ID));
-        String imagePath = cur.getString(cur.getColumnIndex(DBHelper.MAIL_CONTACT_IMG));
+        //String imagePath = cur.getString(cur.getColumnIndex(DBHelper.MAIL_CONTACT_IMG));
         String contactName = cur.getString(cur.getColumnIndex(DBHelper.MAIL_CONTACT_NAME));
         ViewHolder holder = (ViewHolder) view.getTag();
         if (holder != null) {
             holder.mName.setText(contactName);
-            Picasso.with(context).load(imagePath).into(holder.mImageView);
+            String imagePath = (cur.getString(cur.getColumnIndex(DBHelper.MAIL_CONTACT_IMG)) != null && cur.getString(cur.getColumnIndex(DBHelper.MAIL_CONTACT_IMG)).length() > 1) ? cur.getString(cur.getColumnIndex(DBHelper.MAIL_CONTACT_IMG)) : "fake";
+            Picasso.with(context).load(imagePath).placeholder(R.drawable.ic_launcher).into(holder.mImageView);
+           // Picasso.with(context).load(imagePath).into(holder.mImageView);
             holder.rowId = id;
 
             holder.mCall.setOnClickListener(new View.OnClickListener() {

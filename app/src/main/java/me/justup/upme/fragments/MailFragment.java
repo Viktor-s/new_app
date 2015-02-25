@@ -33,6 +33,7 @@ public class MailFragment extends Fragment {
     private DBHelper mDBHelper;
     private MailContactsAdapter mMailContactsAdapter;
     private String selectQuery;
+    private BroadcastReceiver receiver;
 
 
     @Override
@@ -50,7 +51,23 @@ public class MailFragment extends Fragment {
     public void onPause() {
         super.onPause();
 
+        LocalBroadcastManager.getInstance(MailFragment.this.getActivity()).unregisterReceiver(receiver);
         mDBAdapter.close();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Cursor cursor = mDBHelper.getWritableDatabase().rawQuery(selectQuery, null);
+                mMailContactsAdapter.changeCursor(cursor);
+                mMailContactsAdapter.notifyDataSetChanged();
+            }
+        };
+        LocalBroadcastManager.getInstance(MailFragment.this.getActivity())
+                .registerReceiver(receiver, new IntentFilter(DBAdapter.MAIL_SQL_BROADCAST_INTENT));
     }
 
     @Override
@@ -76,19 +93,6 @@ public class MailFragment extends Fragment {
                 }
             }
         });
-
-        BroadcastReceiver receiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                Cursor cursor = mDBHelper.getWritableDatabase().rawQuery(selectQuery, null);
-                mMailContactsAdapter.changeCursor(cursor);
-                mMailContactsAdapter.notifyDataSetChanged();
-            }
-        };
-
-        LocalBroadcastManager.getInstance(MailFragment.this.getActivity())
-                .registerReceiver(receiver, new IntentFilter(DBAdapter.MAIL_SQL_BROADCAST_INTENT));
-
         return view;
     }
 

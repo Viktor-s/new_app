@@ -2,8 +2,14 @@ package me.justup.upme.fragments;
 
 import android.app.Dialog;
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.database.Cursor;
 import android.graphics.RectF;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +19,6 @@ import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
@@ -27,12 +31,35 @@ import java.util.List;
 import java.util.Locale;
 
 import me.justup.upme.R;
+import me.justup.upme.db.DBAdapter;
+import me.justup.upme.db.DBHelper;
+import me.justup.upme.entity.ArticleShortCommentEntity;
+import me.justup.upme.entity.ArticleShortEntity;
 import me.justup.upme.entity.CalendarAddEventQuery;
+import me.justup.upme.entity.EventEntity;
 import me.justup.upme.http.ApiWrapper;
+import me.justup.upme.utils.AppContext;
 import me.justup.upme.weekview.WeekView;
 import me.justup.upme.weekview.WeekViewEvent;
 
+import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_DESCRIPTION;
+import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_NAME;
+import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_SERVER_ID;
+import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_START_DATETIME;
+import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_TABLE_NAME;
+import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_TYPE;
+import static me.justup.upme.db.DBHelper.SHORT_NEWS_COMMENTS_AUTHOR_ID;
+import static me.justup.upme.db.DBHelper.SHORT_NEWS_COMMENTS_AUTHOR_IMAGE;
+import static me.justup.upme.db.DBHelper.SHORT_NEWS_COMMENTS_AUTHOR_NAME;
+import static me.justup.upme.db.DBHelper.SHORT_NEWS_COMMENTS_CONTENT;
+import static me.justup.upme.db.DBHelper.SHORT_NEWS_COMMENTS_SERVER_ID;
+import static me.justup.upme.db.DBHelper.SHORT_NEWS_POSTED_AT;
+import static me.justup.upme.db.DBHelper.SHORT_NEWS_SERVER_ID;
+import static me.justup.upme.db.DBHelper.SHORT_NEWS_SHORT_DESCR;
+import static me.justup.upme.db.DBHelper.SHORT_NEWS_THUMBNAIL;
+import static me.justup.upme.db.DBHelper.SHORT_NEWS_TITLE;
 import static me.justup.upme.utils.LogUtils.LOGD;
+import static me.justup.upme.utils.LogUtils.LOGI;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 
@@ -63,6 +90,12 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
     private int currentWeek;
     private DateTime firstDayCurrentWeek;
 
+    private DBAdapter mDBAdapter;
+    private DBHelper mDBHelper;
+    private String selectQueryEvents;
+    private List<EventEntity> mEventEntityList;
+    private BroadcastReceiver receiver;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,6 +104,72 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
         firstDayCurrentWeek = currentDate.withDayOfWeek(1);
 
         events = new ArrayList<>();
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        mDBHelper  = new DBHelper(AppContext.getAppContext());
+        mDBAdapter = new DBAdapter(AppContext.getAppContext());
+        mDBAdapter.open();
+        selectQueryEvents = "SELECT * FROM " + EVENT_CALENDAR_TABLE_NAME;
+        Cursor cursorEvents = mDBHelper.getWritableDatabase().rawQuery(selectQueryEvents, null);
+        mEventEntityList = fillNewsFromCursor(cursorEvents);
+        LOGD("TAG_", mEventEntityList.toString());
+
+
+        if (cursorEvents != null)
+            cursorEvents.close();
+    }
+
+    private List<EventEntity> fillNewsFromCursor(Cursor cursorEvents) {
+
+        ArrayList<EventEntity> eventsList = new ArrayList<>();
+
+        for (cursorEvents.moveToFirst(); !cursorEvents.isAfterLast(); cursorEvents.moveToNext()) {
+            EventEntity articlesResponse = new EventEntity();
+            articlesResponse.setId(cursorEvents.getInt(cursorEvents.getColumnIndex(EVENT_CALENDAR_SERVER_ID)));
+            articlesResponse.setName(cursorEvents.getString(cursorEvents.getColumnIndex(EVENT_CALENDAR_NAME)));
+            articlesResponse.setDescription(cursorEvents.getString(cursorEvents.getColumnIndex(EVENT_CALENDAR_DESCRIPTION)));
+            articlesResponse.setType(cursorEvents.getString(cursorEvents.getColumnIndex(EVENT_CALENDAR_TYPE)));
+            articlesResponse.setStart_datetime(cursorEvents.getString(cursorEvents.getColumnIndex(EVENT_CALENDAR_START_DATETIME)));
+            int event_id = cursorEvents.getInt(cursorEvents.getColumnIndex(EVENT_CALENDAR_SERVER_ID));
+
+            //// start
+            String selectQueryShortNewsComments = "SELECT * FROM short_news_comments_table WHERE article_id=" + event_id;
+            Cursor cursorComments = mDBHelper.getWritableDatabase().rawQuery(selectQueryShortNewsComments, null);
+            ArrayList<ArticleShortCommentEntity> commentsList = new ArrayList<>();
+            eventsList.add(articlesResponse);
+
+            if (cursorComments != null) {
+                cursorComments.close();
+            }
+        }
+        return eventsList;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(CalendarFragment.this.getActivity()).unregisterReceiver(receiver);
+        LOGI(TAG, "unregisterRecNewsFeed");
+        mDBAdapter.close();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        LOGI(TAG, "RegisterRecNewsFeed");
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                LOGI(TAG, "onReceive, first update");
+                Cursor cursorEvents = mDBHelper.getWritableDatabase().rawQuery(selectQueryEvents, null);
+                mEventEntityList = fillNewsFromCursor(cursorEvents);
+                LOGD("TAG_", mEventEntityList.toString());
+            }
+        };
+
+        LocalBroadcastManager.getInstance(CalendarFragment.this.getActivity())
+                .registerReceiver(receiver, new IntentFilter(DBAdapter.CALENDAR_SQL_BROADCAST_INTENT));
+
     }
 
     @Override

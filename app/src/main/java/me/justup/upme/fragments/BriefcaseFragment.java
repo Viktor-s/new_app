@@ -1,14 +1,16 @@
 package me.justup.upme.fragments;
 
 import android.app.Fragment;
-import android.app.FragmentTransaction;
-import android.media.Image;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.GridLayout;
@@ -18,15 +20,28 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import me.justup.upme.MainActivity;
 import me.justup.upme.R;
-import me.justup.upme.adapter.NewsFeedAdapter;
-import me.justup.upme.entity.GetLoggedUserInfoQuery;
-import me.justup.upme.entity.PersonEntity;
+import me.justup.upme.db.DBAdapter;
+import me.justup.upme.db.DBHelper;
+import me.justup.upme.entity.GetAccountPanelInfoQuery;
+import me.justup.upme.entity.PersonBriefcaseEntity;
+import me.justup.upme.entity.ReferalAddQuery;
+import me.justup.upme.http.HttpIntentService;
 import me.justup.upme.utils.AppContext;
+import me.justup.upme.utils.AppPreferences;
+import me.justup.upme.utils.CircularImageView;
 
+import static me.justup.upme.db.DBHelper.MAIL_CONTACT_IMG;
+import static me.justup.upme.db.DBHelper.MAIL_CONTACT_NAME;
+import static me.justup.upme.db.DBHelper.MAIL_CONTACT_PARENT_ID;
+import static me.justup.upme.db.DBHelper.MAIL_CONTACT_SERVER_ID;
+import static me.justup.upme.db.DBHelper.MAIL_CONTACT_TABLE_NAME;
 import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.LOGI;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
@@ -34,127 +49,88 @@ import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 public class BriefcaseFragment extends Fragment {
     private static final String TAG = makeLogTag(BriefcaseFragment.class);
-
-    List<PersonEntity> listPerson;
-
-    LinearLayout containerLayout;
-
-    private FrameLayout mNewsItemContainer;
-    LinearLayout addUserContainer;
-
+    private List<PersonBriefcaseEntity> listPerson;
+    private LinearLayout containerLayout;
     private RelativeLayout photoLayout;
+    private Button mCloseUserFragmentButton;
+    private DBAdapter mDBAdapter;
+    private DBHelper mDBHelper;
+    private BroadcastReceiver receiver;
+    private String selectQuery;
+    private TextView mUserContactsCountTextView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        listPerson = new ArrayList<>();
-        PersonEntity person1 = new PersonEntity(1, 0, "Ваня", "");
-        PersonEntity person2 = new PersonEntity(2, 1, "Петя", "");
-        PersonEntity person3 = new PersonEntity(3, 1, "Вася", "");
-        PersonEntity person4 = new PersonEntity(4, 1, "Максим", "");
-        PersonEntity person5 = new PersonEntity(5, 1, "Иван", "");
-        PersonEntity person6 = new PersonEntity(6, 2, "Роман", "");
-        PersonEntity person7 = new PersonEntity(7, 2, "Леха", "");
-        PersonEntity person8 = new PersonEntity(8, 2, "Саша", "");
-        PersonEntity person9 = new PersonEntity(9, 2, "Андрей", "");
-        PersonEntity person10 = new PersonEntity(10, 3, "Женя", "");
-        PersonEntity person11 = new PersonEntity(11, 3, "Паша", "");
-        PersonEntity person12 = new PersonEntity(12, 3, "Богдан", "");
-        PersonEntity person13 = new PersonEntity(13, 3, "Глеб", "");
-        PersonEntity person14 = new PersonEntity(14, 7, "Глеб 1", "");
-        PersonEntity person15 = new PersonEntity(15, 7, "Глеб 2", "");
-        PersonEntity person16 = new PersonEntity(16, 5, "Глеб 3", "");
-        PersonEntity person17 = new PersonEntity(17, 4, "Глеб 4", "");
-        PersonEntity person18 = new PersonEntity(18, 4, "Глеб 5", "");
-        PersonEntity person19 = new PersonEntity(19, 4, "Глеб 6", "");
-        PersonEntity person20 = new PersonEntity(20, 4, "Глеб 7", "");
-        PersonEntity person21 = new PersonEntity(21, 4, "Глеб 8", "");
-        PersonEntity person22 = new PersonEntity(22, 4, "Глеб 9", "");
-        PersonEntity person23 = new PersonEntity(23, 4, "Глеб 10", "");
-        PersonEntity person24 = new PersonEntity(34, 8, "Глеб 11", "");
-        PersonEntity person25 = new PersonEntity(25, 8, "Глеб 12", "");
-        PersonEntity person26 = new PersonEntity(26, 8, "Глеб 13", "");
-        PersonEntity person27 = new PersonEntity(27, 7, "Глеб 14", "");
-        PersonEntity person28 = new PersonEntity(28, 7, "Глеб 15", "");
-        PersonEntity person29 = new PersonEntity(29, 7, "Глеб 16", "");
-        PersonEntity person30 = new PersonEntity(30, 7, "Глеб 17", "");
-        PersonEntity person31 = new PersonEntity(31, 7, "Глеб 18", "");
-        listPerson.add(person1);
-        listPerson.add(person2);
-        listPerson.add(person3);
-        listPerson.add(person4);
-        listPerson.add(person5);
-        listPerson.add(person6);
-        listPerson.add(person7);
-        listPerson.add(person8);
-        listPerson.add(person9);
-        listPerson.add(person10);
-        listPerson.add(person11);
-        listPerson.add(person12);
-        listPerson.add(person13);
-        listPerson.add(person14);
-        listPerson.add(person15);
-        listPerson.add(person16);
-        listPerson.add(person17);
-        listPerson.add(person18);
-        listPerson.add(person19);
-        listPerson.add(person20);
-        listPerson.add(person21);
-        listPerson.add(person22);
-        listPerson.add(person23);
-        listPerson.add(person24);
-        listPerson.add(person25);
-        listPerson.add(person26);
-        listPerson.add(person27);
-        listPerson.add(person28);
-        listPerson.add(person29);
-        listPerson.add(person30);
-        listPerson.add(person31);
-
+        mDBHelper = new DBHelper(AppContext.getAppContext());
+        mDBAdapter = new DBAdapter(AppContext.getAppContext());
+        mDBAdapter.open();
+        selectQuery = "SELECT * FROM " + MAIL_CONTACT_TABLE_NAME;
     }
 
-    public List<PersonEntity> getChildrenOnParent(List<PersonEntity> sourceList, int id) {
-        List<PersonEntity> resultList = new ArrayList<>();
-        for (PersonEntity person : sourceList) {
+    public List<PersonBriefcaseEntity> getChildrenOnParent(List<PersonBriefcaseEntity> sourceList, int id) {
+        List<PersonBriefcaseEntity> resultList = new ArrayList<>();
+        for (PersonBriefcaseEntity person : sourceList) {
             if (person.getParentId() == id)
                 resultList.add(person);
         }
         return resultList;
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(BriefcaseFragment.this.getActivity()).unregisterReceiver(receiver);
+        mDBAdapter.close();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                LOGI(TAG, "onReceive briefcase");
+                updatePersonsList();
+                containerLayout.removeAllViews();
+                containerLayout.addView(levelGenerate(photoLayout, listPerson));
+            }
+        };
+        LocalBroadcastManager.getInstance(BriefcaseFragment.this.getActivity())
+                .registerReceiver(receiver, new IntentFilter(DBAdapter.MAIL_SQL_BROADCAST_INTENT));
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_briefcase, container, false);
-
+        TextView mObjectIdTextView = (TextView) view.findViewById(R.id.briefcase_fragment_idObject);
+        TextView mUserNameTextView = (TextView) view.findViewById(R.id.briefcase_fragment_user_name);
+        mUserContactsCountTextView = (TextView) view.findViewById(R.id.briefcase_fragment_user_contacts_count);
+        CircularImageView mUserImageImageView = (CircularImageView) view.findViewById(R.id.briefcase_fragment_user_photo);
+        mObjectIdTextView.setText("" + new AppPreferences(AppContext.getAppContext()).getUserId());
+        mUserNameTextView.setText(new AppPreferences(AppContext.getAppContext()).getUserName());
+        updatePersonsList();
         containerLayout = (LinearLayout) view.findViewById(R.id.containerLayout);
-
         photoLayout = (RelativeLayout) view.findViewById(R.id.photo_main);
         containerLayout.addView(levelGenerate(photoLayout, listPerson));
-
-        mNewsItemContainer = (FrameLayout) view.findViewById(R.id.briefcase_item_container_frameLayout);
-
-//        Button addUser = (Button) view.findViewById(R.id.add_new_user_button);
-//        addUser.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Animation mFragmentSliderFadeIn = AnimationUtils.loadAnimation(AppContext.getAppContext(), R.anim.fragment_item_slide_fade_in);
-//                final FragmentTransaction ft = getChildFragmentManager().beginTransaction();
-//                // Fragment fragment = UserFragment.newInstance(new GetLoggedUserInfoQuery());
-//                ft.replace(R.id.briefcase_item_container_frameLayout, new Fragment());
-//                ft.commit();
-//                mNewsItemContainer.startAnimation(mFragmentSliderFadeIn);
-//            }
-//        });
+        FrameLayout mNewsItemContainer = (FrameLayout) view.findViewById(R.id.briefcase_item_container_frameLayout);
+        mCloseUserFragmentButton = (Button) view.findViewById(R.id.briefcase_close_button);
+        mCloseUserFragmentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment fragment = getChildFragmentManager().findFragmentByTag("UserFragmentBriefcase");
+                if (fragment != null) {
+                    getChildFragmentManager().beginTransaction().remove(fragment).commit();
+                    mCloseUserFragmentButton.setVisibility(View.GONE);
+                }
+            }
+        });
 
         final LinearLayout addUserContainer = (LinearLayout) view.findViewById(R.id.add_user_container);
         addUserContainer.setVisibility(View.GONE);
-
         final TextView nameField = (TextView) view.findViewById(R.id.new_user_name);
         final TextView surnameField = (TextView) view.findViewById(R.id.new_user_surname);
         final TextView phoneField = (TextView) view.findViewById(R.id.new_user_phone);
-
         Button addNewUserButton = (Button) view.findViewById(R.id.add_new_user_button);
         addNewUserButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -167,7 +143,6 @@ public class BriefcaseFragment extends Fragment {
 
                 } else
                     addUserContainer.setVisibility(View.GONE);
-
             }
         });
 
@@ -176,48 +151,81 @@ public class BriefcaseFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 addUserContainer.setVisibility(View.GONE);
-                PersonEntity newPerson = new PersonEntity(100, 1, nameField.getText().toString(), "");  // 100 - generate Id
-                listPerson.add(newPerson);
-
-                containerLayout.removeAllViews();
-                containerLayout.addView(levelGenerate(photoLayout, listPerson));
+                // PersonEntity newPerson = new PersonEntity(100, 1, nameField.getText().toString(), "");  // 100 - generate Id
+                // listPerson.add(newPerson);
+                // containerLayout.removeAllViews();
+                // containerLayout.addView(levelGenerate(photoLayout, listPerson));
+                if (nameField.getText().toString().length() > 1 && phoneField.getText().toString().length() == 13) {
+                    ((MainActivity) BriefcaseFragment.this.getActivity()).startHttpIntent(getReferalAddQuery(nameField.getText().toString() + " " + surnameField.getText().toString(), phoneField.getText().toString()), HttpIntentService.ADD_REFERAL);
+                } else {
+                    Toast.makeText(BriefcaseFragment.this.getActivity(), "wrong params", Toast.LENGTH_SHORT).show();
+                }
             }
         });
-
         return view;
     }
 
+
+    private void updatePersonsList() {
+        Cursor cursor = mDBHelper.getWritableDatabase().rawQuery(selectQuery, null);
+        listPerson = fillPersonsFromCursor(cursor);
+        mUserContactsCountTextView.setText(listPerson.size() - 1 + " " + "people in your network");
+        LOGI(TAG, listPerson.toString());
+        if (cursor != null)
+            cursor.close();
+    }
 
     private ImageView createDirection(int resId) {
         ImageView resultView = new ImageView(getActivity());
         resultView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         resultView.setImageResource(resId);
         return resultView;
-
     }
 
-    private GridLayout levelGenerate(final View v, final List<PersonEntity> listPerson) {
+    public static ReferalAddQuery getReferalAddQuery(String name, String phone) {
+        ReferalAddQuery query = new ReferalAddQuery();
+        query.params.name = name;
+        query.params.phone = phone;
+        return query;
+    }
 
-        int id = Integer.parseInt(((TextView) v.findViewById(R.id.idObject)).getText().toString());
+    private List<PersonBriefcaseEntity> fillPersonsFromCursor(Cursor cursorPersons) {
+        ArrayList<PersonBriefcaseEntity> personsList = new ArrayList<>();
+        AppPreferences appPreferences = new AppPreferences(AppContext.getAppContext());
+        int userId = appPreferences.getUserId();
+        String userName = appPreferences.getUserName();
+        PersonBriefcaseEntity personBriefcaseEntityUser = new PersonBriefcaseEntity(userId, 0, userName, " ");
+        personsList.add(personBriefcaseEntityUser);
+        for (cursorPersons.moveToFirst(); !cursorPersons.isAfterLast(); cursorPersons.moveToNext()) {
+            PersonBriefcaseEntity personBriefcaseEntity = new PersonBriefcaseEntity();
+            personBriefcaseEntity.setId(cursorPersons.getInt(cursorPersons.getColumnIndex(MAIL_CONTACT_SERVER_ID)));
+            personBriefcaseEntity.setParentId(cursorPersons.getInt(cursorPersons.getColumnIndex(MAIL_CONTACT_PARENT_ID)));
+            personBriefcaseEntity.setName(cursorPersons.getString(cursorPersons.getColumnIndex(MAIL_CONTACT_NAME)));
+            personBriefcaseEntity.setPhoto(cursorPersons.getString(cursorPersons.getColumnIndex(MAIL_CONTACT_IMG)));
+            personsList.add(personBriefcaseEntity);
+        }
+        if (cursorPersons != null) {
+            cursorPersons.close();
+        }
+        return personsList;
+    }
+
+    private GridLayout levelGenerate(final View v, final List<PersonBriefcaseEntity> listPerson) {
+        int id = Integer.parseInt(((TextView) v.findViewById(R.id.briefcase_fragment_idObject)).getText().toString());
         int row = Integer.parseInt(((TextView) v.findViewById(R.id.row)).getText().toString());
         int column = Integer.parseInt(((TextView) v.findViewById(R.id.column)).getText().toString());
-
-        List<PersonEntity> children = getChildrenOnParent(listPerson, id);
+        List<PersonBriefcaseEntity> children = getChildrenOnParent(listPerson, id);
         int countChildren = children.size();
         LOGD("TAG", "countChildren --- " + countChildren);
-
         // definition of the first cell to fill
         int x = (int) Math.round(countChildren / 2 - 0.1);
         LOGD("TAG", "X --- " + x);
         int startPosition = (x >= column) ? 0 : column - x;
         LOGD("TAG", "START POSITION --- " + startPosition);
-
         GridLayout gridLayout = new GridLayout(getActivity());
-
         for (int i = 0; i < startPosition; i++) {
             gridLayout.addView(createDirection(R.drawable.p00));
         }
-
         if (column == 0) {
             if (countChildren == 1) {
                 gridLayout.addView(createDirection(R.drawable.p13));
@@ -254,11 +262,13 @@ public class BriefcaseFragment extends Fragment {
 
         RelativeLayout layoutPhoto;
         LayoutInflater inflater = LayoutInflater.from(v.getContext());
-
         for (int i = 0; i < countChildren; i++) {
-            PersonEntity personEntity = children.get(i);
+            PersonBriefcaseEntity personBriefcaseEntity = children.get(i);
             layoutPhoto = (RelativeLayout) inflater.inflate(R.layout.item_briefcase, null, false);
             RelativeLayout photoLayout = (RelativeLayout) layoutPhoto.findViewById(R.id.image_container);
+            CircularImageView personPhoto = (CircularImageView) layoutPhoto.findViewById(R.id.briefcase_fragment_user_photo);
+            String imagePath = (personBriefcaseEntity.getPhoto() != null && personBriefcaseEntity.getPhoto().length() > 1) ? personBriefcaseEntity.getPhoto() : "fake";
+            Picasso.with(BriefcaseFragment.this.getActivity()).load(imagePath).placeholder(R.drawable.ic_launcher).into(personPhoto);
             photoLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -271,39 +281,37 @@ public class BriefcaseFragment extends Fragment {
                 }
             });
 
-            TextView idObject = (TextView) photoLayout.getChildAt(1);
-            idObject.setText(Integer.toString(personEntity.getId()));
+            final TextView idObject = (TextView) photoLayout.getChildAt(1);
+            idObject.setText(Integer.toString(personBriefcaseEntity.getId()));
             TextView rowObject = (TextView) photoLayout.getChildAt(2);
             rowObject.setText(Integer.toString(row + 1));
             TextView columnObject = (TextView) photoLayout.getChildAt(3);
             columnObject.setText(Integer.toString(startPosition + i));
-
-            LOGD("TAG", "id - " + personEntity.getId() + "; row - " + (row + 1) + "; column - " + (startPosition + i));
-
+            LOGD("TAG", "id - " + personBriefcaseEntity.getId() + "; row - " + (row + 1) + "; column - " + (startPosition + i));
             ImageView imageViewInfo = (ImageView) layoutPhoto.getChildAt(1);
             imageViewInfo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(getActivity(), "Вылазит боковое меню", Toast.LENGTH_SHORT).show();
+                    int idPersonal = Integer.parseInt(idObject.getText().toString());
+                    LOGI(TAG, "id personal " + idPersonal);
+                    GetAccountPanelInfoQuery getLoggedUserInfoQuery = new GetAccountPanelInfoQuery();
+                    getLoggedUserInfoQuery.params.id = idPersonal;
+                    Fragment fragment = UserFragment.newInstance(getLoggedUserInfoQuery, false);
+                    getChildFragmentManager().beginTransaction().replace(R.id.briefcase_user_info_container_frameLayout, fragment, "UserFragmentBriefcase").commit();
+                    mCloseUserFragmentButton.setVisibility(View.VISIBLE);
+
                 }
             });
-
             TextView text = (TextView) layoutPhoto.getChildAt(2);
-            text.setText(personEntity.getName());
-
+            text.setText(personBriefcaseEntity.getName());
             if (i == 0) {
                 GridLayout.LayoutParams param = new GridLayout.LayoutParams();
                 param.columnSpec = GridLayout.spec(startPosition);
                 param.rowSpec = GridLayout.spec(row + 1);
                 layoutPhoto.setLayoutParams(param);
             }
-
             gridLayout.addView(layoutPhoto);
-
         }
-
         return gridLayout;
     }
-
-
 }

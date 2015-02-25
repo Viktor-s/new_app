@@ -1,20 +1,21 @@
 package me.justup.upme.entity;
 
-/**
- * Created by bogdan on 22.01.15.
- */
-public class PersonEntity {
+
+public class PersonBriefcaseEntity {
 
     private int id;
     private int parentId;
     private String name;
     private String photo;
 
-    public PersonEntity(int id, int parent_id, String name, String photo) {
+    public PersonBriefcaseEntity(int id, int parent_id, String name, String photo) {
         this.id = id;
         this.parentId = parent_id;
         this.name = name;
         this.photo = photo;
+    }
+
+    public PersonBriefcaseEntity() {
     }
 
     public int getId() {
@@ -33,11 +34,27 @@ public class PersonEntity {
         return photo;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setParentId(int parentId) {
+        this.parentId = parentId;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
+
     @Override
     public String toString() {
         return "Person{" +
                 "id=" + id +
-                ", parent_id=" + parentId +
+                ", parentId=" + parentId +
                 ", name='" + name + '\'' +
                 ", photo='" + photo + '\'' +
                 '}';
