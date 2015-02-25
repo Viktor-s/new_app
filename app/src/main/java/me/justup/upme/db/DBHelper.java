@@ -42,6 +42,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String MAIL_CONTACT_TABLE_NAME = "mail_contact_table";
     public static final String MAIL_CONTACT_ID = BaseColumns._ID;
     public static final String MAIL_CONTACT_SERVER_ID = "server_id";
+    public static final String MAIL_CONTACT_PARENT_ID = "parentId";
     public static final String MAIL_CONTACT_NAME = "name";
     public static final String MAIL_CONTACT_LOGIN = "login";
     public static final String MAIL_CONTACT_DATE_ADD = "date_add";
@@ -97,6 +98,7 @@ public class DBHelper extends SQLiteOpenHelper {
             + MAIL_CONTACT_TABLE_NAME + "("
             + MAIL_CONTACT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
             + MAIL_CONTACT_SERVER_ID + " INTEGER, "
+            + MAIL_CONTACT_PARENT_ID + " INTEGER, "
             + MAIL_CONTACT_NAME + " TEXT, "
             + MAIL_CONTACT_LOGIN + " TEXT, "
             + MAIL_CONTACT_DATE_ADD + " INTEGER, "
