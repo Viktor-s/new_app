@@ -3,8 +3,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:padding="10dp"
+    android:background="@color/base_background"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
+
+    <ImageView
+        android:layout_width="21dp"
+        android:layout_height="21dp"
+        android:src="@drawable/ic_get_push"
+        android:id="@+id/status_bar_push_imageView"
+        android:layout_marginEnd="10dp"
+        android:contentDescription="@string/app_name"
+        tools:visibility="visible"
+        android:visibility="gone" />
 
     <ImageView
         android:layout_width="18dp"

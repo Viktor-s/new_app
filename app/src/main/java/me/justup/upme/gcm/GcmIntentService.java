@@ -8,6 +8,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import me.justup.upme.fragments.StatusBarFragment;
+
 import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.LOGE;
 import static me.justup.upme.utils.LogUtils.LOGI;
@@ -82,15 +84,13 @@ public class GcmIntentService extends IntentService {
 
     private void sendNotification(String title, String message) {
         LOGD(TAG, "sendNotification: " + title + " " + message);
+        makeToast("Принято сообщение");
 
-        makeToast("Принято сообщение: " + title + " " + message);
+        Intent i = new Intent(StatusBarFragment.BROADCAST_ACTION_PUSH);
+        i.putExtra(StatusBarFragment.BROADCAST_EXTRA_IS_NEW_MESSAGE, true); // for clear image - send false
+        sendBroadcast(i);
 
-        /*
-        Intent i = new Intent();
-                i.setAction("GCM_NOTIFY");
-                i.putExtra("message", message);
-                sendBroadcast(i);
-        */
+        // write to db
     }
 
     private void makeToast(final String message) {

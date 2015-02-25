@@ -21,13 +21,18 @@ public class StatusBarFragment extends Fragment {
     private static final String PERCENT = "%";
 
     public static final String BROADCAST_ACTION = "me.justup.upme.broadcast.status_bar.notify";
+    public static final String BROADCAST_ACTION_PUSH = "me.justup.upme.broadcast.status_bar.push";
+
     public static final String BROADCAST_EXTRA_HOURS = "broadcast_extra_hours";
     public static final String BROADCAST_EXTRA_MINUTES = "broadcast_extra_minutes";
     public static final String BROADCAST_EXTRA_IS_CONNECTED = "broadcast_extra_is_connected";
 
+    public static final String BROADCAST_EXTRA_IS_NEW_MESSAGE = "broadcast_extra_is_new_message";
+
     private TextView mAccumulator;
     private TextView mClock;
     private ImageView mWiFi;
+    private ImageView mPushIcon;
 
     private BroadcastReceiver mStatusBarAccumReceiver = new BroadcastReceiver() {
         @Override
@@ -56,6 +61,18 @@ public class StatusBarFragment extends Fragment {
         }
     };
 
+    private BroadcastReceiver mStatusBarPushReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context c, Intent intent) {
+            boolean isNewPush = intent.getBooleanExtra(BROADCAST_EXTRA_IS_NEW_MESSAGE, false);
+
+            if (isNewPush)
+                mPushIcon.setVisibility(View.VISIBLE);
+            else
+                mPushIcon.setVisibility(View.INVISIBLE);
+        }
+    };
+
 
     @Override
     public void onResume() {
@@ -63,6 +80,7 @@ public class StatusBarFragment extends Fragment {
 
         getActivity().registerReceiver(this.mStatusBarAccumReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
         getActivity().registerReceiver(mStatusBarServiceReceiver, new IntentFilter(BROADCAST_ACTION));
+        getActivity().registerReceiver(mStatusBarPushReceiver, new IntentFilter(BROADCAST_ACTION_PUSH));
     }
 
     @Override
@@ -72,6 +90,7 @@ public class StatusBarFragment extends Fragment {
         mAccumulator = (TextView) v.findViewById(R.id.status_bar_accum_textView);
         mClock = (TextView) v.findViewById(R.id.status_bar_clock_textView);
         mWiFi = (ImageView) v.findViewById(R.id.status_bar_wifi_imageView);
+        mPushIcon = (ImageView) v.findViewById(R.id.status_bar_push_imageView);
 
         return v;
     }
@@ -82,6 +101,7 @@ public class StatusBarFragment extends Fragment {
 
         getActivity().unregisterReceiver(this.mStatusBarAccumReceiver);
         getActivity().unregisterReceiver(mStatusBarServiceReceiver);
+        getActivity().unregisterReceiver(mStatusBarPushReceiver);
     }
 
 }
