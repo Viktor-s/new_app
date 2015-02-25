@@ -222,9 +222,9 @@ public class WebRtcClient {
             }
         }
 
-        @Override
-        public void onError() {
-        }
+//        @Override
+//        public void onError() {
+//        }
 
         @Override
         public void onAddStream(MediaStream mediaStream) {
@@ -256,7 +256,7 @@ public class WebRtcClient {
             this.id = id;
             this.endPoint = endPoint;
 
-            pc.addStream(lMS, new MediaConstraints());
+            pc.addStream(lMS);
 
             mListener.onStatusChanged("CONNECTING");
         }

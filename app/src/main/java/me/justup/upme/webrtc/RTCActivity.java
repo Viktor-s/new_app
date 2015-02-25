@@ -53,7 +53,7 @@ public class RTCActivity extends Activity implements WebRtcClient.RTCListener {
         mSocketAddress = "http://" + getResources().getString(R.string.host_webrtc);
         mSocketAddress += (":" + getResources().getString(R.string.port_webrtc) + "/");
 
-        PeerConnectionFactory.initializeAndroidGlobals(this, true, true);
+        PeerConnectionFactory.initializeAndroidGlobals(this, true, true, true, null);
 
         // Camera display view
         Point displaySize = new Point();

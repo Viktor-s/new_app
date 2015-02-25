@@ -57,7 +57,7 @@ public class MailVideoFragment extends Fragment implements WebRtcClient.RTCListe
         mSocketAddress = "http://" + getResources().getString(R.string.host_webrtc);
         mSocketAddress += (":" + getResources().getString(R.string.port_webrtc) + "/");
 
-        PeerConnectionFactory.initializeAndroidGlobals(this, true, true);
+        PeerConnectionFactory.initializeAndroidGlobals(this, true, true, true, null);
 
         // for fragment
         WindowManager wm = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
