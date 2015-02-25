@@ -25,6 +25,7 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import org.apache.http.Header;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
+import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
 
 import java.io.IOException;
@@ -154,12 +155,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             case R.id.calendar_menu_item:
 
                 LocalDateTime firstDayCurrentWeek = new LocalDateTime().withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0).withDayOfWeek(DateTimeConstants.MONDAY);
-                String startTime  = Long.toString(firstDayCurrentWeek.toDateTime().getMillis()/1000);
+                String startTime  = Long.toString(firstDayCurrentWeek.toDateTime(DateTimeZone.UTC).getMillis()/1000);
                 LocalDateTime lastDayCurrentWeek = new LocalDateTime().withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59).withDayOfWeek(DateTimeConstants.SUNDAY);
-                String endTime = Long.toString(lastDayCurrentWeek.toDateTime().getMillis()/1000);
+                String endTime = Long.toString(lastDayCurrentWeek.toDateTime(DateTimeZone.UTC).getMillis()/1000);
                 LOGD("TAG_", "startTime " + startTime + " --- endTime " + endTime);
 
-                startHttpIntent(getEventCalendarQuery("1320969600", "1352592000"), HttpIntentService.CALENDAR_PART);
+                startHttpIntent(getEventCalendarQuery(startTime, endTime), HttpIntentService.CALENDAR_PART);
                 changeButtonState(mCalendarButton);
                 fragment = new CalendarFragment();
                 break;
