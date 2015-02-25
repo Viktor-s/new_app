@@ -65,8 +65,9 @@ public class MailFragment extends Fragment {
                 if (lastChosenPosition != position) {
                     String friendName = mMailContactsAdapter.getCursor().getString(mMailContactsAdapter.getCursor().getColumnIndex(DBHelper.MAIL_CONTACT_NAME));
                     String yourName = new AppPreferences(AppContext.getAppContext()).getUserName();
+                    int userId = mMailContactsAdapter.getCursor().getInt(mMailContactsAdapter.getCursor().getColumnIndex(DBHelper.MAIL_CONTACT_SERVER_ID));
 
-                    startNotificationIntent(214, "Hello", "Android");
+                    startNotificationIntent(userId, "Hello!", "Go to chat with " + yourName);
 
                     final FragmentTransaction ft = getChildFragmentManager().beginTransaction();
                     ft.replace(R.id.mail_messages_container_frameLayout, MailMessagesFragment.newInstance(yourName, friendName));

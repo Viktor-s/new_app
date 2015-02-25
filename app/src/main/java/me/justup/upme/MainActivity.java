@@ -179,7 +179,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
 
         if (fragment != null) {
-            getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, fragment).addToBackStack(null).commit();
+            getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, fragment).commit();
         }
         if (!isShowMainFragmentContainer) {
             showMainFragmentContainer();
