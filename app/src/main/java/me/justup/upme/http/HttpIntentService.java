@@ -200,9 +200,8 @@ public class HttpIntentService extends IntentService {
                 "    \"jsonrpc\": \"2.0\",\n" +
                 "    \"result\": [\n" +
                 "        {\n" +
-                "            \"id\": \"5\",\n" +
-                "            \"parentId\":" + "\"" + userId + "\"" + ",\n" +
                 "            \"id\": \"1\",\n" +
+                "            \"parentId\":" + "\"" + userId + "\"" + ",\n" +
                 "            \"name\": \"test0\",\n" +
                 "            \"login\": \"Mr.Android0\",\n" +
                 "            \"dateAdd\": \"45554\",\n" +
@@ -210,9 +209,8 @@ public class HttpIntentService extends IntentService {
                 "            \"img\": \"http://www.edigames.net/images/callcenter.png\"\n" +
                 "        },\n" +
                 "        {\n" +
-                "            \"id\": \"71\",\n" +
-                "            \"parentId\":" + "\"" + userId + "\"" + ",\n" +
                 "            \"id\": \"2\",\n" +
+                "            \"parentId\":" + "\"" + userId + "\"" + ",\n" +
                 "            \"name\": \"test1\",\n" +
                 "            \"login\": \"Mr.Android1\",\n" +
                 "            \"dateAdd\": \"45554\",\n" +
@@ -221,7 +219,6 @@ public class HttpIntentService extends IntentService {
                 "        },\n" +
                 "        {\n" +
                 "            \"id\": \"3\",\n" +
-                "            \"id\": \"72\",\n" +
                 "            \"parentId\":" + "\"" + userId + "\"" + ",\n" +
                 "            \"name\": \"test2\",\n" +
                 "            \"login\": \"Mr.Android2\",\n" +
@@ -231,7 +228,6 @@ public class HttpIntentService extends IntentService {
                 "        },\n" +
                 "        {\n" +
                 "            \"id\": \"4\",\n" +
-                "            \"id\": \"73\",\n" +
                 "            \"parentId\":" + "\"" + userId + "\"" + ",\n" +
                 "            \"name\": \"test3\",\n" +
                 "            \"login\": \"Mr.Android3\",\n" +
@@ -241,7 +237,6 @@ public class HttpIntentService extends IntentService {
                 "        },\n" +
                 "        {\n" +
                 "            \"id\": \"5\",\n" +
-                "            \"id\": \"74\",\n" +
                 "            \"parentId\":" + "\"" + userId + "\"" + ",\n" +
                 "            \"name\": \"test4\",\n" +
                 "            \"login\": \"Mr.Android4\",\n" +
@@ -251,7 +246,6 @@ public class HttpIntentService extends IntentService {
                 "        },\n" +
                 "        {\n" +
                 "            \"id\": \"6\",\n" +
-                "            \"id\": \"75\",\n" +
                 "            \"parentId\":" + "\"" + userId + "\"" + ",\n" +
                 "            \"name\": \"test5\",\n" +
                 "            \"login\": \"Mr.Android5\",\n" +
@@ -261,7 +255,6 @@ public class HttpIntentService extends IntentService {
                 "        },\n" +
                 "        {\n" +
                 "            \"id\": \"7\",\n" +
-                "            \"id\": \"76\",\n" +
                 "            \"parentId\":" + "\"" + userId + "\"" + ",\n" +
                 "            \"name\": \"test6\",\n" +
                 "            \"login\": \"Mr.Android6\",\n" +
@@ -271,7 +264,6 @@ public class HttpIntentService extends IntentService {
                 "        },\n" +
                 "        {\n" +
                 "            \"id\": \"8\",\n" +
-                "            \"id\": 9,\n" +
                 "            \"parentId\":" + "\"" + 5 + "\"" + ",\n" +
                 "            \"name\": \"test7\",\n" +
                 "            \"login\": \"mr_ctd\",\n" +
