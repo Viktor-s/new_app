@@ -33,6 +33,7 @@ public class MailFragment extends Fragment {
     private DBHelper mDBHelper;
     private MailContactsAdapter mMailContactsAdapter;
     private String selectQuery;
+    private BroadcastReceiver receiver;
 
 
     @Override
@@ -49,8 +50,23 @@ public class MailFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-
+        LocalBroadcastManager.getInstance(MailFragment.this.getActivity()).unregisterReceiver(receiver);
         mDBAdapter.close();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Cursor cursor = mDBHelper.getWritableDatabase().rawQuery(selectQuery, null);
+                mMailContactsAdapter.changeCursor(cursor);
+                mMailContactsAdapter.notifyDataSetChanged();
+            }
+        };
+        LocalBroadcastManager.getInstance(MailFragment.this.getActivity())
+                .registerReceiver(receiver, new IntentFilter(DBAdapter.MAIL_SQL_BROADCAST_INTENT));
     }
 
     @Override
@@ -65,9 +81,7 @@ public class MailFragment extends Fragment {
                 if (lastChosenPosition != position) {
                     String friendName = mMailContactsAdapter.getCursor().getString(mMailContactsAdapter.getCursor().getColumnIndex(DBHelper.MAIL_CONTACT_NAME));
                     String yourName = new AppPreferences(AppContext.getAppContext()).getUserName();
-
                     startNotificationIntent(214, "Hello", "Android");
-
                     final FragmentTransaction ft = getChildFragmentManager().beginTransaction();
                     ft.replace(R.id.mail_messages_container_frameLayout, MailMessagesFragment.newInstance(yourName, friendName));
                     ft.commit();
@@ -75,19 +89,6 @@ public class MailFragment extends Fragment {
                 }
             }
         });
-
-        BroadcastReceiver receiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                Cursor cursor = mDBHelper.getWritableDatabase().rawQuery(selectQuery, null);
-                mMailContactsAdapter.changeCursor(cursor);
-                mMailContactsAdapter.notifyDataSetChanged();
-            }
-        };
-
-        LocalBroadcastManager.getInstance(MailFragment.this.getActivity())
-                .registerReceiver(receiver, new IntentFilter(DBAdapter.MAIL_SQL_BROADCAST_INTENT));
-
         return view;
     }
 
@@ -96,10 +97,8 @@ public class MailFragment extends Fragment {
         push.params.user_id = userId;
         push.params.data.title = title;
         push.params.data.message = message;
-
         Bundle bundle = new Bundle();
         bundle.putSerializable(PushIntentService.PUSH_INTENT_QUERY_EXTRA, push);
-
         Intent intent = new Intent(getActivity(), PushIntentService.class);
         getActivity().startService(intent.putExtras(bundle));
     }

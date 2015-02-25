@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/app_background"
@@ -58,14 +59,17 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content">
 
-                            <ImageView
-                                android:id="@+id/photo"
+                            <me.justup.upme.utils.CircularImageView
+                                android:id="@+id/briefcase_fragment_user_photo"
                                 android:layout_width="100dp"
                                 android:layout_height="100dp"
-                                android:src="@drawable/photo_face" />
+                                android:src="@drawable/photo_face"
+                                app:civ_border="true"
+                                app:civ_border_color="@color/white"
+                                app:civ_border_width="4dp" />
 
                             <TextView
-                                android:id="@+id/idObject"
+                                android:id="@+id/briefcase_fragment_idObject"
                                 android:layout_width="0dp"
                                 android:layout_height="0dp"
                                 android:text="1" />
@@ -91,17 +95,17 @@
                             android:orientation="vertical">
 
                             <TextView
+                                android:id="@+id/briefcase_fragment_user_name"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Виолетта Трофимова"
                                 android:textAllCaps="true"
                                 android:textColor="@color/blue_gray"
                                 android:textSize="26sp" />
 
                             <TextView
+                                android:id="@+id/briefcase_fragment_user_contacts_count"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="4 people in your network"
                                 android:textAllCaps="true"
                                 android:textColor="@color/gray" />
 
@@ -175,8 +179,7 @@
                             android:id="@+id/new_user_phone"
                             style="@style/NewUserEditText"
                             android:inputType="phone"
-                            android:digits="0123456789+"
-                            />
+                            android:digits="0123456789+" />
 
                         <Button
                             android:id="@+id/new_user_send_button"
@@ -201,5 +204,25 @@
         </HorizontalScrollView>
     </ScrollView>
 
+    <FrameLayout
+        android:id="@+id/briefcase_user_info_container_frameLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_alignParentStart="false"
+        android:layout_alignParentTop="true"
+        android:background="@android:color/white"
+        android:layout_gravity="right"
+        android:layout_alignParentEnd="true" />
 
+    <Button
+        android:layout_width="@dimen/close_button_size"
+        android:layout_height="@dimen/close_button_size"
+        android:id="@+id/briefcase_close_button"
+        android:visibility="gone"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/button_close_test"
+        android:clickable="false"
+        android:layout_marginTop="@dimen/news_item_add_comment_margin" />
 </RelativeLayout>

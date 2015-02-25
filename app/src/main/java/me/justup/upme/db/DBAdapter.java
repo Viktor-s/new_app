@@ -25,6 +25,7 @@ import static me.justup.upme.db.DBHelper.MAIL_CONTACT_DATE_ADD;
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_IMG;
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_LOGIN;
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_NAME;
+import static me.justup.upme.db.DBHelper.MAIL_CONTACT_PARENT_ID;
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_PHONE;
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_SERVER_ID;
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_TABLE_NAME;
@@ -150,6 +151,7 @@ public class DBAdapter {
         for (int i = 0; i < entity.result.size(); i++) {
             ContentValues values = new ContentValues();
             values.put(MAIL_CONTACT_SERVER_ID, entity.result.get(i).id);
+            values.put(MAIL_CONTACT_PARENT_ID, entity.result.get(i).parentId);
             values.put(MAIL_CONTACT_NAME, entity.result.get(i).name);
             values.put(MAIL_CONTACT_LOGIN, entity.result.get(i).login);
             values.put(MAIL_CONTACT_DATE_ADD, entity.result.get(i).dateAdd);

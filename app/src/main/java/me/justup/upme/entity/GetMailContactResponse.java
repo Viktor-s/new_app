@@ -8,6 +8,7 @@ public class GetMailContactResponse extends BaseHttpResponseEntity {
 
     public class Result implements Serializable {
         public int id = 0;
+        public int parentId;
         public String name = "";
         public String login = "";
         public int dateAdd = 0;
@@ -18,6 +19,7 @@ public class GetMailContactResponse extends BaseHttpResponseEntity {
         public String toString() {
             return "Result{" +
                     "id=" + id +
+                    "parentId=" + parentId +
                     ", name='" + name + '\'' +
                     ", login='" + login + '\'' +
                     ", dateAdd=" + dateAdd +

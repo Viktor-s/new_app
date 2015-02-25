@@ -159,7 +159,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 break;
 
             case R.id.briefcase_menu_item:
-                //startHttpIntent(new ArticlesGetShortDescriptionQuery(), HttpIntentService.BRIEFCASE_PART);
+                startHttpIntent(new GetMailContactQuery(), HttpIntentService.MAIL_CONTACT_PART);
                 changeButtonState(mBriefcaseButton);
                 fragment = new BriefcaseFragment();
                 break;
