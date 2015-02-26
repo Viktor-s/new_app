@@ -213,10 +213,9 @@ public class NewsFeedFragment extends Fragment {
             public void onItemClick(View view, int position) {
                 if (lastChosenPosition != position) {
 
-
+                    mNewsFeedEntityPartOfList.get(position).setViewed(true);
                     Animation mFragmentSliderFadeIn = AnimationUtils.loadAnimation(AppContext.getAppContext(), R.anim.fragment_item_slide_fade_in);
                     // final FragmentTransaction mFragmentTransaction = getChildFragmentManager().beginTransaction();
-
                     //  mNewsItemFragment = (NewsItemFragment) getChildFragmentManager().findFragmentById(R.id.news_item_container_frameLayout);
                     // if (mNewsItemFragment == null) {
                     //mNewsItemFragment = NewsItemFragment.newInstance(mNewsFeedEntityList.get(position));

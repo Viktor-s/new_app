@@ -46,7 +46,11 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
         viewHolder.mDate.setText(newsFeedEntity.getPosted_at());
         viewHolder.mTitle.setText(newsFeedEntity.getTitle());
         viewHolder.mText.setText(newsFeedEntity.getShort_descr());
-
+        if (newsFeedEntity.isViewed()) {
+            viewHolder.mIsNewsViewed.setVisibility(View.INVISIBLE);
+        } else {
+            viewHolder.mIsNewsViewed.setVisibility(View.VISIBLE);
+        }
         Picasso.with(context).load(newsFeedEntity.getThumbnail()).into(viewHolder.mImage);
         //viewHolder.mImage.setImageDrawable(newsFeedEntity.result.get(i).thumbnail);
         if (newsFeedEntity.getComments() != null) {
@@ -106,6 +110,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
 
         @Override
         public void onClick(View view) {
+
 
             if (mItemClickListener != null) {
                 mItemClickListener.onItemClick(view, getPosition());
