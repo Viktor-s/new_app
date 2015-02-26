@@ -14,6 +14,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -86,22 +88,17 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
     private final DateTime currentDate = new DateTime();
     private int currentWeek;
     private LocalDateTime firstDayCurrentWeek;
-//    private LocalDateTime lastDayCurrentWeek;
 
     private DBAdapter mDBAdapter;
     private DBHelper mDBHelper;
-    private List<EventEntity> mEventEntityList;
     private BroadcastReceiver receiver;
     private Spinner mCalendartypesSpinner;
-
-//    String startTime;
-//    String endTime;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mDBHelper  = new DBHelper(AppContext.getAppContext());
+        mDBHelper = new DBHelper(AppContext.getAppContext());
         mDBAdapter = new DBAdapter(AppContext.getAppContext());
         mDBAdapter.open();
 
@@ -117,14 +114,10 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
         receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                LOGI(TAG, "onReceive, first update");
                 listEventsForWeek(firstDayCurrentWeek);
             }
         };
-
-        LocalBroadcastManager.getInstance(CalendarFragment.this.getActivity())
-                .registerReceiver(receiver, new IntentFilter(DBAdapter.CALENDAR_SQL_BROADCAST_INTENT));
-
+        LocalBroadcastManager.getInstance(CalendarFragment.this.getActivity()).registerReceiver(receiver, new IntentFilter(DBAdapter.CALENDAR_SQL_BROADCAST_INTENT));
     }
 
     @Override
@@ -179,9 +172,9 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
 
     private void listEventsForWeek(LocalDateTime startWeek) {
 
-        String startTime  = Long.toString(startWeek.toDateTime(DateTimeZone.UTC).getMillis()/1000);
+        String startTime = Long.toString(startWeek.toDateTime(DateTimeZone.UTC).getMillis() / 1000);
         LocalDateTime lastDayCurrentWeek = startWeek.withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59).withDayOfWeek(DateTimeConstants.SUNDAY);
-        String endTime = Long.toString(lastDayCurrentWeek.toDateTime(DateTimeZone.UTC).getMillis()/1000);
+        String endTime = Long.toString(lastDayCurrentWeek.toDateTime(DateTimeZone.UTC).getMillis() / 1000);
         LOGD("TAG_listEventsForWeek", "startTime: " + startTime + " endTime: " + endTime);
 
         events.clear();
@@ -194,7 +187,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
             String type = cursorEvents.getString(cursorEvents.getColumnIndex(EVENT_CALENDAR_TYPE));
             String startDatetime = cursorEvents.getString(cursorEvents.getColumnIndex(EVENT_CALENDAR_START_DATETIME)) + "000";
             String endDatetime = cursorEvents.getString(cursorEvents.getColumnIndex(EVENT_CALENDAR_END_DATETIME)) + "000";
-            String location  = cursorEvents.getString(cursorEvents.getColumnIndex(EVENT_CALENDAR_LOCATION));
+            String location = cursorEvents.getString(cursorEvents.getColumnIndex(EVENT_CALENDAR_LOCATION));
             LOGD("TAG_listEventsForWeek", "startDatetime: " + startDatetime + " endDatetime: " + endDatetime);
             Calendar startTimeCalendar = Calendar.getInstance();
             startTimeCalendar.setTimeInMillis(Long.parseLong(startDatetime));
@@ -204,6 +197,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
             WeekViewEvent eventElement = new WeekViewEvent(id, name, startTimeCalendar, endTimeCalendar);
             LOGD("TAG_listEventsForWeek", "eventElement: " + eventElement.toString());
             events.add(eventElement);
+            mWeekView.notifyDatasetChanged();
         }
         cursorEvents.close();
     }
@@ -299,7 +293,9 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
     @Override
     public void onEmptyViewClicked(Calendar time) {
         startTimeEvent = time;
+        Animation mFragmentSliderFadeIn = AnimationUtils.loadAnimation(AppContext.getAppContext(), R.anim.fragment_item_slide_fade_in);
         panelAddEvent.setVisibility(View.VISIBLE);
+        panelAddEvent.startAnimation(mFragmentSliderFadeIn);
         String stTime = String.format("%02d:%02d", time.get(Calendar.HOUR_OF_DAY), time.get(Calendar.MINUTE));
         tvStartTimeEvent.setText(stTime);
         tvDurationEvent.setText("00:00");
@@ -342,6 +338,8 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                 TimePickerDialog(DURATION_EVENT);
                 break;
             case R.id.add_new_event_button:
+                panelAddEvent.setVisibility(View.GONE);
+
                 Calendar endTimeEvent = (Calendar) startTimeEvent.clone();
                 int minute = durationEventMin % 60;
                 int hour = (durationEventMin - minute) / 60;
@@ -349,38 +347,19 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                 endTimeEvent.add(Calendar.MINUTE, minute);
                 String eventName = etNewEventName.getText().toString();
                 String eventLocation = etNewEventLocation.getText().toString();
-                WeekViewEvent event = new WeekViewEvent(1, eventName, startTimeEvent, endTimeEvent);
-                event.setColor(getResources().getColor(R.color.event_color_01));
-                events.add(event);
-                mWeekView.notifyDatasetChanged();
-                panelAddEvent.setVisibility(View.GONE);
 
-                CalendarAddEventQuery calendarGetEventsQuery = new CalendarAddEventQuery();
-                calendarGetEventsQuery.params.name = eventName;
-                calendarGetEventsQuery.params.description = "description";
-                calendarGetEventsQuery.params.type = mCalendartypesSpinner.getSelectedItem().toString();
-                calendarGetEventsQuery.params.location = eventLocation;
-                calendarGetEventsQuery.params.start_date_time = String.valueOf(startTimeEvent);
-                calendarGetEventsQuery.params.end_date_time = String.valueOf(endTimeEvent);
-                ((MainActivity) CalendarFragment.this.getActivity()).startHttpIntent(calendarGetEventsQuery, HttpIntentService.CALENDAR_ADD_EVENT);
-
-                //ApiWrapper.query(calendarAddEventQuery, new OnAddEventResponce());
+                CalendarAddEventQuery calendarAddEventsQuery = new CalendarAddEventQuery();
+                calendarAddEventsQuery.params.name = eventName;
+                calendarAddEventsQuery.params.description = "description";
+                calendarAddEventsQuery.params.type = mCalendartypesSpinner.getSelectedItem().toString();
+                calendarAddEventsQuery.params.location = eventLocation;
+                calendarAddEventsQuery.params.start_date_time = String.valueOf(startTimeEvent.getTimeInMillis()/1000);
+                calendarAddEventsQuery.params.end_date_time = String.valueOf(endTimeEvent.getTimeInMillis()/1000);
+                ((MainActivity) CalendarFragment.this.getActivity()).startHttpIntent(calendarAddEventsQuery, HttpIntentService.CALENDAR_ADD_EVENT);
                 break;
         }
 
     }
-
-//    private class OnAddEventResponce extends AsyncHttpResponseHandler {
-//        @Override
-//        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-//            String content = ApiWrapper.responseBodyToString(responseBody);
-//            LOGD(TAG, "onSuccess(): " + content);
-//        }
-//
-//        @Override
-//        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-//        }
-//    }
 
     private enum CalendarEventTypes {
         REMINDER("reminder"),
@@ -406,7 +385,5 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
         LOGI(TAG, "unregisterRecNewsFeed");
         mDBAdapter.close();
     }
-
-
 }
 

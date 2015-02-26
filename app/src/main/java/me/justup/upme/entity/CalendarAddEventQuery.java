@@ -19,6 +19,25 @@ public class CalendarAddEventQuery extends BaseHttpQueryEntity {
         public String start_date_time;
         public String end_date_time;
 
+        @Override
+        public String toString() {
+            return "Params{" +
+                    "name='" + name + '\'' +
+                    ", description='" + description + '\'' +
+                    ", type='" + type + '\'' +
+                    ", location='" + location + '\'' +
+                    ", start_date_time='" + start_date_time + '\'' +
+                    ", end_date_time='" + end_date_time + '\'' +
+                    '}';
+        }
     }
 
+    @Override
+    public String toString() {
+        return "CalendarAddEventQuery{" +
+                "method='" + method + '\'' +
+                ", params=" + params +
+                ", id=" + id +
+                '}';
+    }
 }

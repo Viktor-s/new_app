@@ -119,16 +119,14 @@ public class HttpIntentService extends IntentService {
                     break;
 
                 case CALENDAR_PART:
+                    LOGI("TAG_","CALENDAR_PART");
                     fillEventsCalendarDB(content);
                     break;
 
                 case CALENDAR_ADD_EVENT:
+                    LOGI("TAG_","CALENDAR_ADD_EVENT");
                     LocalDateTime firstDayCurrentWeek = new LocalDateTime().withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0).withDayOfWeek(DateTimeConstants.MONDAY);
-                    String startTime = Long.toString(firstDayCurrentWeek.toDateTime(DateTimeZone.UTC).getMillis() / 1000);
-                    LocalDateTime lastDayCurrentWeek = new LocalDateTime().withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59).withDayOfWeek(DateTimeConstants.SUNDAY);
-                    String endTime = Long.toString(lastDayCurrentWeek.toDateTime(DateTimeZone.UTC).getMillis() / 1000);
-                    LOGD("TAG_", "startTime " + startTime + " --- endTime " + endTime);
-                    startHttpIntent(MainActivity.getEventCalendarQuery(startTime, endTime), HttpIntentService.CALENDAR_PART);
+                    startHttpIntent(MainActivity.getEventCalendarQuery(firstDayCurrentWeek), HttpIntentService.CALENDAR_PART);
                     break;
 
                 default:
