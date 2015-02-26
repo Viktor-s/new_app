@@ -9,7 +9,11 @@ import com.google.gson.JsonSyntaxException;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.apache.http.Header;
+import org.joda.time.DateTimeConstants;
+import org.joda.time.DateTimeZone;
+import org.joda.time.LocalDateTime;
 
+import me.justup.upme.MainActivity;
 import me.justup.upme.db.DBAdapter;
 import me.justup.upme.entity.ArticleFullResponse;
 import me.justup.upme.entity.ArticlesGetShortDescriptionResponse;
@@ -43,6 +47,7 @@ public class HttpIntentService extends IntentService {
     public static final int GET_COMMENTS_FULL_ARTICLE = 7;
     public static final int ADD_REFERAL = 8;
     public static final int CALENDAR_PART = 9;
+    public static final int CALENDAR_ADD_EVENT = 10;
 
 
     private DBAdapter mDBAdapter;
@@ -115,6 +120,15 @@ public class HttpIntentService extends IntentService {
 
                 case CALENDAR_PART:
                     fillEventsCalendarDB(content);
+                    break;
+
+                case CALENDAR_ADD_EVENT:
+                    LocalDateTime firstDayCurrentWeek = new LocalDateTime().withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0).withDayOfWeek(DateTimeConstants.MONDAY);
+                    String startTime = Long.toString(firstDayCurrentWeek.toDateTime(DateTimeZone.UTC).getMillis() / 1000);
+                    LocalDateTime lastDayCurrentWeek = new LocalDateTime().withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59).withDayOfWeek(DateTimeConstants.SUNDAY);
+                    String endTime = Long.toString(lastDayCurrentWeek.toDateTime(DateTimeZone.UTC).getMillis() / 1000);
+                    LOGD("TAG_", "startTime " + startTime + " --- endTime " + endTime);
+                    startHttpIntent(MainActivity.getEventCalendarQuery(startTime, endTime), HttpIntentService.CALENDAR_PART);
                     break;
 
                 default:
@@ -299,7 +313,7 @@ public class HttpIntentService extends IntentService {
         }
 
         if (response != null && response.result != null) {
-          mDBAdapter.saveEventsCalendar(response);
+            mDBAdapter.saveEventsCalendar(response);
         }
     }
 }

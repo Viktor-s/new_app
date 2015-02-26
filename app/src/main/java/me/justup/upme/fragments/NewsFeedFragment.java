@@ -121,7 +121,6 @@ public class NewsFeedFragment extends Fragment {
                     mNewsFeedEntityList = fillNewsFromCursor(cursorNews);
                     isFirstArticlesUpdate = true;
                 }
-
             }
         };
 
@@ -153,8 +152,10 @@ public class NewsFeedFragment extends Fragment {
                 pastVisibleItems = mLayoutManager.findFirstVisibleItemPosition();
                 if (isLoading) {
                     if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
+                        int oldListSize = mNewsFeedEntityPartOfList.size();
                         mNewsFeedEntityPartOfList.addAll(getNextArticlesPack());
-                        mNewsFeedAdapter.notifyDataSetChanged();
+                        mNewsFeedAdapter.notifyItemRangeInserted(oldListSize, mNewsFeedEntityPartOfList.size());
+                        //mNewsFeedAdapter.notifyDataSetChanged();
                         if (totalItemCount >= mNewsFeedEntityPartOfList.size()) {
                             isLoading = false;
                         }
@@ -211,6 +212,8 @@ public class NewsFeedFragment extends Fragment {
             @Override
             public void onItemClick(View view, int position) {
                 if (lastChosenPosition != position) {
+
+
                     Animation mFragmentSliderFadeIn = AnimationUtils.loadAnimation(AppContext.getAppContext(), R.anim.fragment_item_slide_fade_in);
                     // final FragmentTransaction mFragmentTransaction = getChildFragmentManager().beginTransaction();
 

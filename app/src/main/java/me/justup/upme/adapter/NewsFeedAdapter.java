@@ -28,6 +28,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
     private OnItemClickListener mItemClickListener;
     private Context context;
 
+
     public NewsFeedAdapter(List<ArticleShortEntity> newsModelEntities, Context context) {
         this.mNewsModelEntitiesList = newsModelEntities;
         this.context = context;
@@ -45,6 +46,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
         viewHolder.mDate.setText(newsFeedEntity.getPosted_at());
         viewHolder.mTitle.setText(newsFeedEntity.getTitle());
         viewHolder.mText.setText(newsFeedEntity.getShort_descr());
+
         Picasso.with(context).load(newsFeedEntity.getThumbnail()).into(viewHolder.mImage);
         //viewHolder.mImage.setImageDrawable(newsFeedEntity.result.get(i).thumbnail);
         if (newsFeedEntity.getComments() != null) {
@@ -106,7 +108,6 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
         public void onClick(View view) {
 
             if (mItemClickListener != null) {
-                mItemClickListener.onItemClick(view, getPosition());
                 mItemClickListener.onItemClick(view, getPosition());
                 if (mIsNewsViewed.getVisibility() == View.VISIBLE) {
                     Animation animation = AnimationUtils.loadAnimation(AppContext.getAppContext(), R.anim.news_is_viewed_scale);
