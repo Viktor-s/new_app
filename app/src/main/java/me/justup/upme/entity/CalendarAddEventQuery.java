@@ -7,7 +7,7 @@ import me.justup.upme.http.ApiWrapper;
 
 
 public class CalendarAddEventQuery extends BaseHttpQueryEntity {
-    private String method = ApiWrapper.CALENDAR_ADD_EVENT;
+    private String method = ApiWrapper.CALENDAR_GET_EVENT;
 
     public Params params = new Params();
     public int id = 123;

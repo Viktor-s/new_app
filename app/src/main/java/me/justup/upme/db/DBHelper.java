@@ -8,7 +8,7 @@ import android.provider.BaseColumns;
 
 public class DBHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "upme.db";
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
 
     public static final String BASE_TABLE_NAME = "base_table";
     public static final String BASE_ID = BaseColumns._ID;
@@ -107,8 +107,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
     protected static final String CREATE_TABLE_EVENT_CALENDAR = "CREATE TABLE "
             + EVENT_CALENDAR_TABLE_NAME + "("
-            + EVENT_CALENDAR_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + EVENT_CALENDAR_SERVER_ID + " INTEGER, "
+            + EVENT_CALENDAR_ID + " INTEGER, "
+            + EVENT_CALENDAR_SERVER_ID + " INTEGER PRIMARY KEY, "
             + EVENT_CALENDAR_NAME + " TEXT, "
             + EVENT_CALENDAR_DESCRIPTION + " TEXT, "
             + EVENT_CALENDAR_TYPE + " TEXT, "

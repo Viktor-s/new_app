@@ -18,7 +18,6 @@ import static me.justup.upme.db.DBHelper.BASE_ID;
 import static me.justup.upme.db.DBHelper.BASE_PROJECT_ID;
 import static me.justup.upme.db.DBHelper.BASE_START_DATE;
 import static me.justup.upme.db.DBHelper.BASE_TABLE_NAME;
-import static me.justup.upme.db.DBHelper.CREATE_TABLE_EVENT_CALENDAR;
 import static me.justup.upme.db.DBHelper.CREATE_TABLE_MAIL_CONTACT;
 import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_DESCRIPTION;
 import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_END_DATETIME;
@@ -172,6 +171,7 @@ public class DBAdapter {
         }
         sendBroadcast(MAIL_SQL_BROADCAST_INTENT);
     }
+
     public void saveEventsCalendar(EventsCalendarResponse entity) {
         for (int i = 0; i < entity.result.size(); i++) {
             ContentValues values = new ContentValues();
@@ -182,7 +182,7 @@ public class DBAdapter {
             values.put(EVENT_CALENDAR_START_DATETIME, entity.result.get(i).start_datetime);
             values.put(EVENT_CALENDAR_END_DATETIME, entity.result.get(i).end_datetime);
             values.put(EVENT_CALENDAR_LOCATION, entity.result.get(i).location);
-            database.insert(EVENT_CALENDAR_TABLE_NAME, null, values);
+            database.insertWithOnConflict(EVENT_CALENDAR_TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
         }
         sendBroadcast(CALENDAR_SQL_BROADCAST_INTENT);
     }
