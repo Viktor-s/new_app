@@ -47,7 +47,7 @@ public class PushIntentService extends IntentService {
             String content = ApiWrapper.responseBodyToString(responseBody);
             LOGD(TAG, "onSuccess(): " + content);
 
-            makeToast(content);
+            // makeToast(content);
         }
 
         @Override
