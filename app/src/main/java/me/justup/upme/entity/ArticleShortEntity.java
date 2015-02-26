@@ -53,12 +53,22 @@ public class ArticleShortEntity implements Serializable {
         this.comments = comments;
     }
 
+    public boolean isViewed() {
+        return isViewed;
+    }
+
+    public void setViewed(boolean isViewed) {
+        this.isViewed = isViewed;
+    }
+
     private int id;
     private String title;
     private String short_descr;
     private String thumbnail;
     private String posted_at;
     private List<ArticleShortCommentEntity> comments;
+
+    private boolean isViewed = false;
 
     @Override
     public String toString() {

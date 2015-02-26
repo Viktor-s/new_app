@@ -227,12 +227,13 @@ public class NewsItemFragment extends Fragment {
         Cursor cursorNews = mDBHelper.getWritableDatabase().rawQuery(selectQueryFullNews, null);
         if (cursorNews != null && cursorNews.moveToFirst()) {
             mArticleFullEntity = fillFullNewsFromCursor(cursorNews);
+            if (cursorNews != null) {
+                cursorNews.close();
+            }
             fillViewsWithData();
         }
 
-        if (cursorNews != null) {
-            cursorNews.close();
-        }
+
     }
 
     private void fillViewsWithData() {
@@ -266,34 +267,34 @@ public class NewsItemFragment extends Fragment {
     }
 
     private ArticleFullEntity fillFullNewsFromCursor(Cursor cursorNews) {
-        LOGI(TAG, "fillFullNewsFromCursor");
-        cursorNews.moveToFirst();
         ArticleFullEntity articleFullEntity = new ArticleFullEntity();
-        articleFullEntity.setId(cursorNews.getInt(cursorNews.getColumnIndex(FULL_NEWS_SERVER_ID)));
-        articleFullEntity.setFull_descr(cursorNews.getString(cursorNews.getColumnIndex(FULL_NEWS_FULL_DESCR)));
-        int news_id = cursorNews.getInt(cursorNews.getColumnIndex(FULL_NEWS_SERVER_ID));
-        String selectQueryShortNewsComments = QUERY_COMMENTS_PATH + news_id;
-        Cursor cursorComments = mDBHelper.getWritableDatabase().rawQuery(selectQueryShortNewsComments, null);
-        ArrayList<ArticleShortCommentEntity> commentsList = new ArrayList<>();
-        if (cursorComments != null) {
-            for (cursorComments.moveToFirst(); !cursorComments.isAfterLast(); cursorComments.moveToNext()) {
-                ArticleShortCommentEntity articleShortCommentEntity = new ArticleShortCommentEntity();
-                articleShortCommentEntity.setId(cursorComments.getInt(cursorComments.getColumnIndex(SHORT_NEWS_COMMENTS_SERVER_ID)));
-                articleShortCommentEntity.setContent(cursorComments.getString(cursorComments.getColumnIndex(SHORT_NEWS_COMMENTS_CONTENT)));
-                articleShortCommentEntity.setAuthor_id(cursorComments.getInt(cursorComments.getColumnIndex(SHORT_NEWS_COMMENTS_AUTHOR_ID)));
-                articleShortCommentEntity.setAuthor_name(cursorComments.getString(cursorComments.getColumnIndex(SHORT_NEWS_COMMENTS_AUTHOR_NAME)));
-                articleShortCommentEntity.setAuthor_img(cursorComments.getString(cursorComments.getColumnIndex(SHORT_NEWS_COMMENTS_AUTHOR_IMAGE)));
-                commentsList.add(articleShortCommentEntity);
+        LOGI(TAG, "fillFullNewsFromCursor");
+        if (cursorNews != null && cursorNews.moveToFirst()) {
+            articleFullEntity.setId(cursorNews.getInt(cursorNews.getColumnIndex(FULL_NEWS_SERVER_ID)));
+            articleFullEntity.setFull_descr(cursorNews.getString(cursorNews.getColumnIndex(FULL_NEWS_FULL_DESCR)));
+            int news_id = cursorNews.getInt(cursorNews.getColumnIndex(FULL_NEWS_SERVER_ID));
+            String selectQueryShortNewsComments = QUERY_COMMENTS_PATH + news_id;
+            Cursor cursorComments = mDBHelper.getWritableDatabase().rawQuery(selectQueryShortNewsComments, null);
+            ArrayList<ArticleShortCommentEntity> commentsList = new ArrayList<>();
+            if (cursorComments != null) {
+                for (cursorComments.moveToFirst(); !cursorComments.isAfterLast(); cursorComments.moveToNext()) {
+                    ArticleShortCommentEntity articleShortCommentEntity = new ArticleShortCommentEntity();
+                    articleShortCommentEntity.setId(cursorComments.getInt(cursorComments.getColumnIndex(SHORT_NEWS_COMMENTS_SERVER_ID)));
+                    articleShortCommentEntity.setContent(cursorComments.getString(cursorComments.getColumnIndex(SHORT_NEWS_COMMENTS_CONTENT)));
+                    articleShortCommentEntity.setAuthor_id(cursorComments.getInt(cursorComments.getColumnIndex(SHORT_NEWS_COMMENTS_AUTHOR_ID)));
+                    articleShortCommentEntity.setAuthor_name(cursorComments.getString(cursorComments.getColumnIndex(SHORT_NEWS_COMMENTS_AUTHOR_NAME)));
+                    articleShortCommentEntity.setAuthor_img(cursorComments.getString(cursorComments.getColumnIndex(SHORT_NEWS_COMMENTS_AUTHOR_IMAGE)));
+                    commentsList.add(articleShortCommentEntity);
+                }
+                articleFullEntity.setComments(commentsList);
+                if (cursorComments != null) {
+                    cursorComments.close();
+                }
             }
-            articleFullEntity.setComments(commentsList);
         }
-
-        if (cursorComments != null) {
-            cursorComments.close();
-        }
-
         return articleFullEntity;
     }
+
 
     private List<ArticleShortCommentEntity> fillCommentsFromCursor(int newsId) {
         String selectQueryShortNewsComments = QUERY_COMMENTS_PATH + newsId;
