@@ -23,7 +23,6 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.apache.http.Header;
-import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
@@ -34,7 +33,7 @@ import java.util.ArrayList;
 import me.justup.upme.dialogs.StatusBarSliderDialog;
 import me.justup.upme.entity.ArticlesGetShortDescriptionQuery;
 import me.justup.upme.entity.BaseHttpQueryEntity;
-import me.justup.upme.entity.GetEventsCalendarQuery;
+import me.justup.upme.entity.CalendarGetEventsQuery;
 import me.justup.upme.entity.GetLoggedUserInfoQuery;
 import me.justup.upme.entity.GetMailContactQuery;
 import me.justup.upme.entity.SetGooglePushIdQuery;
@@ -291,9 +290,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         return query;
     }
 
-    public static GetEventsCalendarQuery getEventCalendarQuery(String startDateTime, String endDateTime) {
-        GetEventsCalendarQuery query = new GetEventsCalendarQuery();
-        query.params.start_date_time = startDateTime;
+    public static CalendarGetEventsQuery getEventCalendarQuery(String startDateTime, String endDateTime) {
+        CalendarGetEventsQuery query = new CalendarGetEventsQuery();
+        query.params.start_date_time =startDateTime;
         query.params.end_date_time = endDateTime;
         return query;
     }

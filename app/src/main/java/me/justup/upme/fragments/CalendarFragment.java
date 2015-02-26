@@ -34,7 +34,7 @@ import me.justup.upme.R;
 import me.justup.upme.db.DBAdapter;
 import me.justup.upme.db.DBHelper;
 import me.justup.upme.entity.ArticleShortCommentEntity;
-import me.justup.upme.entity.CalendarAddEventQuery;
+import me.justup.upme.entity.CalendarGetEventsQuery;
 import me.justup.upme.entity.EventEntity;
 import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.utils.AppContext;
@@ -343,13 +343,13 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                 mWeekView.notifyDatasetChanged();
                 panelAddEvent.setVisibility(View.GONE);
 
-                CalendarAddEventQuery calendarAddEventQuery = new CalendarAddEventQuery();
-                calendarAddEventQuery.params.name = eventName;
-                calendarAddEventQuery.params.description = "description";
-                calendarAddEventQuery.params.type = "reminder";
-                calendarAddEventQuery.params.location = eventLocation;
-                calendarAddEventQuery.params.start_date_time = 1;
-                calendarAddEventQuery.params.end_date_time = 1;
+                CalendarGetEventsQuery calendarGetEventsQuery = new CalendarGetEventsQuery();
+//                calendarGetEventsQuery.params.name = eventName;
+//                calendarGetEventsQuery.params.description = "description";
+//                calendarGetEventsQuery.params.type = "reminder";
+//                calendarGetEventsQuery.params.location = eventLocation;
+//                calendarGetEventsQuery.params.start_date_time = 1;
+//                calendarGetEventsQuery.params.end_date_time = 1;
 
                 //ApiWrapper.query(calendarAddEventQuery, new OnAddEventResponce());
                 break;

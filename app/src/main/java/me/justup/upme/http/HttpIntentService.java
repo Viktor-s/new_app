@@ -15,7 +15,7 @@ import me.justup.upme.entity.ArticleFullResponse;
 import me.justup.upme.entity.ArticlesGetShortDescriptionResponse;
 import me.justup.upme.entity.BaseHttpQueryEntity;
 import me.justup.upme.entity.CommentsArticleFullResponse;
-import me.justup.upme.entity.EventsCalendarResponse;
+import me.justup.upme.entity.CalendarGetEventsResponse;
 import me.justup.upme.entity.GetMailContactQuery;
 import me.justup.upme.entity.GetMailContactResponse;
 import me.justup.upme.fragments.NewsItemFragment;
@@ -291,9 +291,9 @@ public class HttpIntentService extends IntentService {
 
     private void fillEventsCalendarDB(String content) {
         LOGD("TAG_", content);
-        EventsCalendarResponse response = null;
+        CalendarGetEventsResponse response = null;
         try {
-            response = ApiWrapper.gson.fromJson(content, EventsCalendarResponse.class);
+            response = ApiWrapper.gson.fromJson(content, CalendarGetEventsResponse.class);
         } catch (JsonSyntaxException e) {
             LOGE(TAG, "gson.fromJson:\n" + content);
         }

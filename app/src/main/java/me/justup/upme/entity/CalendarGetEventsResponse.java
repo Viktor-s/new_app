@@ -3,7 +3,7 @@ package me.justup.upme.entity;
 import java.io.Serializable;
 import java.util.List;
 
-public class EventsCalendarResponse extends BaseHttpResponseEntity {
+public class CalendarGetEventsResponse extends BaseHttpResponseEntity {
     public List<Result> result;
 
     public class Result implements Serializable {

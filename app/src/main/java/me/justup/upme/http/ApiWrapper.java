@@ -54,7 +54,7 @@ public class ApiWrapper {
     public static final String ACCOUNT_ADD_REFERAL = "Account.addReferal";
     public static final String ACCOUNT_GET_USER_PANEL_INFO = "Account.getUserPanelInfo";
 
-    public static final String CALENDAR_GET_EVENT = "Calendar.getEvents";
+    public static final String CALENDAR_GET_EVENTS = "Calendar.getEvents";
 
     public static final String CALENDAR_ADD_EVENT = "Calendar.addEvent";
 

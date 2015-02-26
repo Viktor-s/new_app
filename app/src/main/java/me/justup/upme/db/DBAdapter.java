@@ -10,7 +10,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import me.justup.upme.entity.ArticleFullResponse;
 import me.justup.upme.entity.ArticlesGetShortDescriptionResponse;
 import me.justup.upme.entity.CommentsArticleFullResponse;
-import me.justup.upme.entity.EventsCalendarResponse;
+import me.justup.upme.entity.CalendarGetEventsResponse;
 import me.justup.upme.entity.GetMailContactResponse;
 import me.justup.upme.utils.AppContext;
 
@@ -172,7 +172,7 @@ public class DBAdapter {
         sendBroadcast(MAIL_SQL_BROADCAST_INTENT);
     }
 
-    public void saveEventsCalendar(EventsCalendarResponse entity) {
+    public void saveEventsCalendar(CalendarGetEventsResponse entity) {
         for (int i = 0; i < entity.result.size(); i++) {
             ContentValues values = new ContentValues();
             values.put(EVENT_CALENDAR_SERVER_ID, entity.result.get(i).id);
