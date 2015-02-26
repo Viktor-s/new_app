@@ -152,14 +152,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 break;
 
             case R.id.calendar_menu_item:
-
                 LocalDateTime firstDayCurrentWeek = new LocalDateTime().withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0).withDayOfWeek(DateTimeConstants.MONDAY);
-                String startTime  = Long.toString(firstDayCurrentWeek.toDateTime(DateTimeZone.UTC).getMillis()/1000);
-                LocalDateTime lastDayCurrentWeek = new LocalDateTime().withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59).withDayOfWeek(DateTimeConstants.SUNDAY);
-                String endTime = Long.toString(lastDayCurrentWeek.toDateTime(DateTimeZone.UTC).getMillis()/1000);
-                LOGD("TAG_", "startTime " + startTime + " --- endTime " + endTime);
-
-                startHttpIntent(getEventCalendarQuery(startTime, endTime), HttpIntentService.CALENDAR_PART);
+                startHttpIntent(getEventCalendarQuery(firstDayCurrentWeek), HttpIntentService.CALENDAR_PART);
                 changeButtonState(mCalendarButton);
                 fragment = new CalendarFragment();
                 break;
@@ -290,10 +284,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         return query;
     }
 
-    public static CalendarGetEventsQuery getEventCalendarQuery(String startDateTime, String endDateTime) {
+    public static CalendarGetEventsQuery getEventCalendarQuery(LocalDateTime startWeek) {
+        String startTime  = Long.toString(startWeek.toDateTime(DateTimeZone.UTC).getMillis()/1000);
+        LocalDateTime lastDayCurrentWeek = startWeek.withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59).withDayOfWeek(DateTimeConstants.SUNDAY);
+        String endTime = Long.toString(lastDayCurrentWeek.toDateTime(DateTimeZone.UTC).getMillis()/1000);
+        LOGD("TAG_CalendarGetEventsQuery", "startTime " + startTime + " --- endTime " + endTime);
         CalendarGetEventsQuery query = new CalendarGetEventsQuery();
-        query.params.start_date_time =startDateTime;
-        query.params.end_date_time = endDateTime;
+        query.params.start_date_time = startTime;
+        query.params.end_date_time = endTime;
         return query;
     }
 
