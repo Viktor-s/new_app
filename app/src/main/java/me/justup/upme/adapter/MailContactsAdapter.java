@@ -60,8 +60,18 @@ public class MailContactsAdapter extends CursorAdapter {
             holder.mName.setText(contactName);
             String imagePath = (cur.getString(cur.getColumnIndex(DBHelper.MAIL_CONTACT_IMG)) != null && cur.getString(cur.getColumnIndex(DBHelper.MAIL_CONTACT_IMG)).length() > 1) ? cur.getString(cur.getColumnIndex(DBHelper.MAIL_CONTACT_IMG)) : "fake";
             Picasso.with(context).load(imagePath).placeholder(R.drawable.ic_launcher).into(holder.mImageView);
-           // Picasso.with(context).load(imagePath).into(holder.mImageView);
+            // Picasso.with(context).load(imagePath).into(holder.mImageView);
             holder.rowId = id;
+
+            holder.mInfo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+//                    final FragmentTransaction ft = hostFragment.getChildFragmentManager().beginTransaction();
+//                    ft.replace(R.id.mail_messages_container_frameLayout, new ProductsFragment());
+//                    ft.commit();
+                }
+            });
+
 
             holder.mCall.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -103,10 +113,7 @@ public class MailContactsAdapter extends CursorAdapter {
                             dialog.dismiss();
                         }
                     });
-
                     dialog.show();
-
-
                 }
             });
         }
