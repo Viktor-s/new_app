@@ -22,6 +22,7 @@ import me.justup.upme.entity.CommentsArticleFullResponse;
 import me.justup.upme.entity.CalendarGetEventsResponse;
 import me.justup.upme.entity.GetMailContactQuery;
 import me.justup.upme.entity.GetMailContactResponse;
+import me.justup.upme.fragments.CalendarFragment;
 import me.justup.upme.fragments.NewsItemFragment;
 import me.justup.upme.utils.AppContext;
 import me.justup.upme.utils.AppPreferences;
@@ -119,14 +120,11 @@ public class HttpIntentService extends IntentService {
                     break;
 
                 case CALENDAR_PART:
-                    LOGI("TAG_","CALENDAR_PART");
                     fillEventsCalendarDB(content);
                     break;
 
                 case CALENDAR_ADD_EVENT:
-                    LOGI("TAG_","CALENDAR_ADD_EVENT");
-                    LocalDateTime firstDayCurrentWeek = new LocalDateTime().withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0).withDayOfWeek(DateTimeConstants.MONDAY);
-                    startHttpIntent(MainActivity.getEventCalendarQuery(firstDayCurrentWeek), HttpIntentService.CALENDAR_PART);
+                    startHttpIntent(MainActivity.getEventCalendarQuery(CalendarFragment.firstDayCurrentWeek), HttpIntentService.CALENDAR_PART);
                     break;
 
                 default:

@@ -269,6 +269,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         startService(intent.putExtras(bundle));
     }
 
+
     @Override
     public void onStop() {
         super.onStop();

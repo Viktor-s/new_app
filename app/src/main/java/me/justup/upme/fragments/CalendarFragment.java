@@ -87,7 +87,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
 
     private final DateTime currentDate = new DateTime();
     private int currentWeek;
-    private LocalDateTime firstDayCurrentWeek;
+    public static LocalDateTime firstDayCurrentWeek;
 
     private DBAdapter mDBAdapter;
     private DBHelper mDBHelper;
