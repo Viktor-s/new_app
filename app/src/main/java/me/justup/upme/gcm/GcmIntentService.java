@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import me.justup.upme.R;
 import me.justup.upme.db.DBAdapter;
 import me.justup.upme.fragments.StatusBarFragment;
 
@@ -109,7 +110,7 @@ public class GcmIntentService extends IntentService {
 
     private void sendNotification(int userId, String userName, int connectionType, int room) {
         LOGD(TAG, "sendNotification: userId:" + userId + " userName:" + userName + " connectionType:" + connectionType + " room:" + room);
-        makeToast("Принято сообщение");
+        makeToast(getString(R.string.push_received));
 
         Intent i = new Intent(StatusBarFragment.BROADCAST_ACTION_PUSH);
         i.putExtra(StatusBarFragment.BROADCAST_EXTRA_IS_NEW_MESSAGE, true); // for clear image - send false

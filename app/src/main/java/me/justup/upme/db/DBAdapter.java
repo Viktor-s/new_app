@@ -176,8 +176,6 @@ public class DBAdapter {
         Cursor cursor = database.rawQuery(selectQuery, null);
 
         if (cursor.getCount() > 0) {
-            cursor.moveToFirst();
-
             while (cursor.moveToNext()) {
                 Push push = new Push();
                 push.setId(cursor.getInt(cursor.getColumnIndex(STATUS_BAR_PUSH_ID)));

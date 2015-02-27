@@ -138,5 +138,9 @@
     <string name="jabber_chat_connecting">Соединение…</string>
     <string name="jabber_chat_wait">Пожалуйста ожидайте…</string>
     <string name="warning_short_comment">Слишком короткий комментарий</string>
+    <string name="push_received">Принято сообщение</string>
+    <string name="invites_you">" приглашает вас "</string>
+    <string name="in_chat">в чат</string>
+    <string name="on_video">на видеосвязь</string>
 
 </resources>

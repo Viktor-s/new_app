@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import me.justup.upme.R;
 import me.justup.upme.db.DBAdapter;
 import me.justup.upme.entity.Push;
 import me.justup.upme.fragments.MailFragment;
+import me.justup.upme.fragments.StatusBarFragment;
 import me.justup.upme.utils.AppLocale;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
@@ -49,7 +51,9 @@ public class StatusBarSliderDialog extends DialogFragment {
         mDBAdapter = new DBAdapter(getActivity());
         mDBAdapter.open();
 
-        // send broadcast off icon
+        Intent i = new Intent(StatusBarFragment.BROADCAST_ACTION_PUSH);
+        i.putExtra(StatusBarFragment.BROADCAST_EXTRA_IS_NEW_MESSAGE, false);
+        getActivity().sendBroadcast(i);
     }
 
     @SuppressLint("InflateParams")
@@ -100,14 +104,14 @@ public class StatusBarSliderDialog extends DialogFragment {
         final View item = inflater.inflate(R.layout.item_push, null);
 
         mStringBuilder.setLength(0);
-        mStringBuilder.append(push.getUserName()).append(" приглашает вас ");
+        mStringBuilder.append(push.getUserName()).append(getString(R.string.invites_you));
         switch (push.getType()) {
             case MailFragment.JABBER:
-                mStringBuilder.append("в чат");
+                mStringBuilder.append(getString(R.string.in_chat));
                 break;
 
             case MailFragment.WEBRTC:
-                mStringBuilder.append("на видеосвязь");
+                mStringBuilder.append(getString(R.string.on_video));
                 break;
 
             default:
