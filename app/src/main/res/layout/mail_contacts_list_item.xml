@@ -34,7 +34,8 @@
         android:layout_centerVertical="true"
         android:layout_alignParentEnd="true"
         android:layout_marginRight="30dp"
-        android:background="@drawable/image_call" />
+        android:background="@drawable/image_call"
+        android:focusableInTouchMode="true" />
 
     <Button
         android:layout_width="38dp"
@@ -43,5 +44,6 @@
         android:layout_centerVertical="true"
         android:layout_toStartOf="@+id/mail_contacts_item_call_button"
         android:layout_marginRight="15dp"
-        android:background="@android:drawable/ic_dialog_info" />
+        android:background="@android:drawable/ic_dialog_info"
+        android:focusableInTouchMode="true" />
 </RelativeLayout>

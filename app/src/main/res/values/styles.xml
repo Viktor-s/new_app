@@ -4,6 +4,12 @@
         <item name="android:windowFullscreen">true</item>
     </style>
 
+    <style name="CallActivityTheme" parent="android:Theme.Black">
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
     <style name="StatusBarDialog" parent="@android:style/Theme.Dialog">
         <item name="android:windowAnimationStyle">@style/StatusBarDialogAnimation</item>
         <item name="android:windowBackground">@android:color/transparent</item>
