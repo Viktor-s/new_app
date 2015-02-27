@@ -6,6 +6,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,21 +22,26 @@ import com.squareup.picasso.Picasso;
 
 import me.justup.upme.R;
 import me.justup.upme.db.DBHelper;
+import me.justup.upme.entity.SendNotificationQuery;
+import me.justup.upme.fragments.MailFragment;
+import me.justup.upme.services.PushIntentService;
+import me.justup.upme.utils.AppPreferences;
 import me.justup.upme.utils.CircularImageView;
 import me.justup.upme.webrtc.RTCActivity;
 
+
 public class MailContactsAdapter extends CursorAdapter {
-
-
     private LayoutInflater mInflater;
     final Fragment hostFragment;
     private Activity parentActivity;
+    private Context context;
 
     public MailContactsAdapter(Fragment hostFragment, Context context, Cursor c, int flags) {
         super(context, c, flags);
         this.hostFragment = hostFragment;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         parentActivity = hostFragment.getActivity();
+        this.context = context;
     }
 
     @Override
@@ -99,6 +105,8 @@ public class MailContactsAdapter extends CursorAdapter {
                     buttonCallOut.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            startNotificationIntent(id, 0);
+
                             parentActivity.startActivity(new Intent(parentActivity, RTCActivity.class));
                             dialog.dismiss();
                         }
@@ -126,4 +134,24 @@ public class MailContactsAdapter extends CursorAdapter {
         private Button mInfo;
         private int rowId;
     }
+
+    public void startNotificationIntent(int userId, int roomNumber) {
+        AppPreferences appPreferences = new AppPreferences(context);
+        int ownerId = appPreferences.getUserId();
+        String ownerName = appPreferences.getUserName();
+
+        SendNotificationQuery push = new SendNotificationQuery();
+        push.params.user_id = userId;
+        push.params.data.owner_id = ownerId;
+        push.params.data.owner_name = ownerName;
+        push.params.data.connection_type = MailFragment.WEBRTC;
+        push.params.data.room = roomNumber;
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(PushIntentService.PUSH_INTENT_QUERY_EXTRA, push);
+
+        Intent intent = new Intent(context, PushIntentService.class);
+        context.startService(intent.putExtras(bundle));
+    }
+
 }
