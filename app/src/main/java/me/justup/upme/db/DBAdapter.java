@@ -159,11 +159,12 @@ public class DBAdapter {
         LocalBroadcastManager.getInstance(AppContext.getAppContext()).sendBroadcast(intent);
     }
 
-    public long savePush(int type, int userId, String userName, int room) {
+    public long savePush(int type, int userId, String userName, int room, String date) {
         ContentValues values = new ContentValues();
         values.put(STATUS_BAR_PUSH_TYPE, type);
         values.put(STATUS_BAR_PUSH_USER_ID, userId);
         values.put(STATUS_BAR_PUSH_USER_NAME, userName);
+        values.put(STATUS_BAR_PUSH_DATE, date);
         values.put(STATUS_BAR_PUSH_ROOM, room);
 
         return database.insert(STATUS_BAR_PUSH_TABLE_NAME, null, values);
@@ -182,6 +183,7 @@ public class DBAdapter {
                 push.setType(cursor.getInt(cursor.getColumnIndex(STATUS_BAR_PUSH_TYPE)));
                 push.setUserId(cursor.getInt(cursor.getColumnIndex(STATUS_BAR_PUSH_USER_ID)));
                 push.setUserName(cursor.getString(cursor.getColumnIndex(STATUS_BAR_PUSH_USER_NAME)));
+                push.setDate(cursor.getString(cursor.getColumnIndex(STATUS_BAR_PUSH_DATE)));
                 push.setRoom(cursor.getInt(cursor.getColumnIndex(STATUS_BAR_PUSH_ROOM)));
 
                 pushArray.add(push);

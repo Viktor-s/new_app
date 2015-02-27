@@ -8,7 +8,7 @@ import android.provider.BaseColumns;
 
 public class DBHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "upme.db";
-    private static final int DATABASE_VERSION = 6;
+    private static final int DATABASE_VERSION = 7;
 
     public static final String BASE_TABLE_NAME = "base_table";
     public static final String BASE_ID = BaseColumns._ID;
@@ -64,6 +64,7 @@ public class DBHelper extends SQLiteOpenHelper {
     protected static final String STATUS_BAR_PUSH_TYPE = "type";
     protected static final String STATUS_BAR_PUSH_USER_ID = "user_id";
     protected static final String STATUS_BAR_PUSH_USER_NAME = "user_name";
+    protected static final String STATUS_BAR_PUSH_DATE = "date";
     protected static final String STATUS_BAR_PUSH_ROOM = "room";
 
 
@@ -129,6 +130,7 @@ public class DBHelper extends SQLiteOpenHelper {
             + STATUS_BAR_PUSH_TYPE + " INTEGER, "
             + STATUS_BAR_PUSH_USER_ID + " INTEGER, "
             + STATUS_BAR_PUSH_USER_NAME + " TEXT, "
+            + STATUS_BAR_PUSH_DATE + " TEXT, "
             + STATUS_BAR_PUSH_ROOM + " INTEGER" + ")";
 
 

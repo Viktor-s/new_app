@@ -1,11 +1,13 @@
 package me.justup.upme.entity;
 
+
 public class Push {
     private int id;
     private int type;
     private int userId;
     private String userName;
     private int room;
+    private String date;
 
     public int getId() {
         return id;
@@ -47,6 +49,14 @@ public class Push {
         this.userName = userName;
     }
 
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
     @Override
     public String toString() {
         return "Push{" +
@@ -55,6 +65,7 @@ public class Push {
                 ", userId=" + userId +
                 ", userName=" + userName +
                 ", room=" + room +
+                ", date=" + date +
                 '}';
     }
 

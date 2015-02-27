@@ -103,6 +103,9 @@ public class StatusBarSliderDialog extends DialogFragment {
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View item = inflater.inflate(R.layout.item_push, null);
 
+        TextView mPushTitle = (TextView) item.findViewById(R.id.push_title_TextView);
+        TextView mPushDate = (TextView) item.findViewById(R.id.push_date_TextView);
+
         mStringBuilder.setLength(0);
         mStringBuilder.append(push.getUserName()).append(getString(R.string.invites_you));
         switch (push.getType()) {
@@ -118,8 +121,8 @@ public class StatusBarSliderDialog extends DialogFragment {
                 break;
         }
 
-        TextView mPushTitle = (TextView) item.findViewById(R.id.push_title_TextView);
         mPushTitle.setText(mStringBuilder.toString());
+        mPushDate.setText(push.getDate());
 
         item.setOnClickListener(new View.OnClickListener() {
             @Override

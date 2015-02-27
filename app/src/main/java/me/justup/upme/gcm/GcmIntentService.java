@@ -8,9 +8,13 @@ import android.widget.Toast;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import me.justup.upme.R;
 import me.justup.upme.db.DBAdapter;
 import me.justup.upme.fragments.StatusBarFragment;
+import me.justup.upme.utils.AppLocale;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.LOGE;
@@ -32,6 +36,8 @@ public class GcmIntentService extends IntentService {
     private static final String USER_NAME = "owner_name";
     private static final String CONNECTION_TYPE = "connection_type";
     private static final String ROOM = "room";
+
+    private static final String TIME_FORMAT = "HH:mm - dd MMMM yyyy";
 
     private Handler mHandler;
     private DBAdapter mDBAdapter;
@@ -116,7 +122,11 @@ public class GcmIntentService extends IntentService {
         i.putExtra(StatusBarFragment.BROADCAST_EXTRA_IS_NEW_MESSAGE, true); // for clear image - send false
         sendBroadcast(i);
 
-        mDBAdapter.savePush(connectionType, userId, userName, room);
+        Date date = new Date();
+        SimpleDateFormat mTimeFormat = new SimpleDateFormat(TIME_FORMAT, AppLocale.getAppLocale());
+        String pushTime = mTimeFormat.format(date);
+
+        mDBAdapter.savePush(connectionType, userId, userName, room, pushTime);
     }
 
     private void makeToast(final String message) {
