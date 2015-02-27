@@ -35,6 +35,9 @@ public class MailFragment extends Fragment {
     private String selectQuery;
     private BroadcastReceiver receiver;
 
+    public static final int JABBER = 1;
+    public static final int WEBRTC = 2;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -84,7 +87,11 @@ public class MailFragment extends Fragment {
                     String yourName = new AppPreferences(AppContext.getAppContext()).getUserName();
                     int userId = mMailContactsAdapter.getCursor().getInt(mMailContactsAdapter.getCursor().getColumnIndex(DBHelper.MAIL_CONTACT_SERVER_ID));
 
-                    startNotificationIntent(userId, "Hello!", "Go to chat with " + yourName);
+                    AppPreferences appPreferences = new AppPreferences(getActivity());
+                    int ownerId = appPreferences.getUserId();
+                    String ownerName = appPreferences.getUserName();
+
+                    startNotificationIntent(userId, ownerId, ownerName, JABBER, 0);
 
                     final FragmentTransaction ft = getChildFragmentManager().beginTransaction();
                     ft.replace(R.id.mail_messages_container_frameLayout, MailMessagesFragment.newInstance(yourName, friendName));
@@ -96,11 +103,13 @@ public class MailFragment extends Fragment {
         return view;
     }
 
-    public void startNotificationIntent(int userId, String title, String message) {
+    public void startNotificationIntent(int userId, int ownerId, String ownerName, int connectionType, int roomNumber) {
         SendNotificationQuery push = new SendNotificationQuery();
         push.params.user_id = userId;
-        push.params.data.title = title;
-        push.params.data.message = message;
+        push.params.data.owner_id = ownerId;
+        push.params.data.owner_name = ownerName;
+        push.params.data.connection_type = connectionType;
+        push.params.data.room = roomNumber;
 
         Bundle bundle = new Bundle();
         bundle.putSerializable(PushIntentService.PUSH_INTENT_QUERY_EXTRA, push);

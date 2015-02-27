@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import me.justup.upme.db.DBAdapter;
 import me.justup.upme.fragments.StatusBarFragment;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
@@ -26,10 +27,13 @@ import static me.justup.upme.utils.LogUtils.makeLogTag;
 public class GcmIntentService extends IntentService {
     private static final String TAG = makeLogTag(GcmIntentService.class);
 
-    private static final String PUSH_TITLE = "title";
-    private static final String PUSH_MESSAGE = "message";
+    private static final String USER_ID = "owner_id";
+    private static final String USER_NAME = "owner_name";
+    private static final String CONNECTION_TYPE = "connection_type";
+    private static final String ROOM = "room";
 
     private Handler mHandler;
+    private DBAdapter mDBAdapter;
 
 
     public GcmIntentService() {
@@ -41,6 +45,9 @@ public class GcmIntentService extends IntentService {
         super.onCreate();
 
         mHandler = new Handler();
+
+        mDBAdapter = new DBAdapter(this);
+        mDBAdapter.open();
     }
 
     @Override
@@ -64,12 +71,23 @@ public class GcmIntentService extends IntentService {
                 case GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE:
                     LOGI(TAG, "PUSH received: " + extras.toString());
 
-                    String title = (String) extras.get(PUSH_TITLE);
-                    String message = (String) extras.get(PUSH_MESSAGE);
+                    int userId = 0;
+                    int connectionType = 0;
+                    int room = 0;
+
+                    try {
+                        userId = Integer.parseInt((String) extras.get(USER_ID));
+                        connectionType = Integer.parseInt((String) extras.get(CONNECTION_TYPE));
+                        room = Integer.parseInt((String) extras.get(ROOM));
+                    } catch (Exception e) {
+                        LOGE(TAG, "Parse push extras", e);
+                    }
+
+                    String userName = (String) extras.get(USER_NAME);
 
                     // Post notification of received message.
-                    if (title != null && message != null) {
-                        sendNotification(title, message);
+                    if (userId != 0 && userName != null) {
+                        sendNotification(userId, userName, connectionType, room);
                     }
                     break;
 
@@ -82,15 +100,22 @@ public class GcmIntentService extends IntentService {
         GcmBroadcastReceiver.completeWakefulIntent(intent);
     }
 
-    private void sendNotification(String title, String message) {
-        LOGD(TAG, "sendNotification: " + title + " " + message);
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        mDBAdapter.close();
+    }
+
+    private void sendNotification(int userId, String userName, int connectionType, int room) {
+        LOGD(TAG, "sendNotification: userId:" + userId + " userName:" + userName + " connectionType:" + connectionType + " room:" + room);
         makeToast("Принято сообщение");
 
         Intent i = new Intent(StatusBarFragment.BROADCAST_ACTION_PUSH);
         i.putExtra(StatusBarFragment.BROADCAST_EXTRA_IS_NEW_MESSAGE, true); // for clear image - send false
         sendBroadcast(i);
 
-        // write to db
+        mDBAdapter.savePush(connectionType, userId, userName, room);
     }
 
     private void makeToast(final String message) {

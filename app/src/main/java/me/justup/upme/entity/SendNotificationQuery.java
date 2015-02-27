@@ -14,8 +14,10 @@ public class SendNotificationQuery extends BaseHttpQueryEntity {
         public Data data = new Data();
 
         public class Data extends BaseHttpParams {
-            public String title;
-            public String message;
+            public int owner_id;
+            public String owner_name;
+            public int connection_type;
+            public int room;
         }
     }
 

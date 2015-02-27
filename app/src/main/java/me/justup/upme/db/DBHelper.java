@@ -8,7 +8,7 @@ import android.provider.BaseColumns;
 
 public class DBHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "upme.db";
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 6;
 
     public static final String BASE_TABLE_NAME = "base_table";
     public static final String BASE_ID = BaseColumns._ID;
@@ -58,6 +58,13 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String EVENT_CALENDAR_START_DATETIME = "start_datetime";
     public static final String EVENT_CALENDAR_END_DATETIME = "end_datetime";
     public static final String EVENT_CALENDAR_LOCATION = "location";
+
+    protected static final String STATUS_BAR_PUSH_TABLE_NAME = "status_bar_push_table";
+    protected static final String STATUS_BAR_PUSH_ID = BaseColumns._ID;
+    protected static final String STATUS_BAR_PUSH_TYPE = "type";
+    protected static final String STATUS_BAR_PUSH_USER_ID = "user_id";
+    protected static final String STATUS_BAR_PUSH_USER_NAME = "user_name";
+    protected static final String STATUS_BAR_PUSH_ROOM = "room";
 
 
     private static final String CREATE_TABLE_BASE = "CREATE TABLE "
@@ -116,6 +123,14 @@ public class DBHelper extends SQLiteOpenHelper {
             + EVENT_CALENDAR_END_DATETIME + " TEXT, "
             + EVENT_CALENDAR_LOCATION + " TEXT" + ")";
 
+    private static final String CREATE_TABLE_STATUS_BAR_PUSH = "CREATE TABLE "
+            + STATUS_BAR_PUSH_TABLE_NAME + "("
+            + STATUS_BAR_PUSH_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + STATUS_BAR_PUSH_TYPE + " INTEGER, "
+            + STATUS_BAR_PUSH_USER_ID + " INTEGER, "
+            + STATUS_BAR_PUSH_USER_NAME + " TEXT, "
+            + STATUS_BAR_PUSH_ROOM + " INTEGER" + ")";
+
 
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -129,6 +144,7 @@ public class DBHelper extends SQLiteOpenHelper {
         database.execSQL(CREATE_TABLE_MAIL_CONTACT);
         database.execSQL(CREATE_TABLE_SHORT_NEWS_COMMENTS);
         database.execSQL(CREATE_TABLE_EVENT_CALENDAR);
+        database.execSQL(CREATE_TABLE_STATUS_BAR_PUSH);
     }
 
     @Override
@@ -140,6 +156,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + FULL_NEWS_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + FULL_NEWS_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + EVENT_CALENDAR_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + STATUS_BAR_PUSH_TABLE_NAME);
         onCreate(db);
     }
 

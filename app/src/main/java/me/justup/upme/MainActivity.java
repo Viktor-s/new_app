@@ -255,7 +255,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private class OnOpenStatusBarListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            StatusBarSliderDialog dialog = StatusBarSliderDialog.newInstance("test Status Bar");
+            StatusBarSliderDialog dialog = StatusBarSliderDialog.newInstance();
             dialog.show(getFragmentManager(), StatusBarSliderDialog.STATUS_BAR_DIALOG);
         }
     }
@@ -285,9 +285,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     public static CalendarGetEventsQuery getEventCalendarQuery(LocalDateTime startWeek) {
-        String startTime  = Long.toString(startWeek.toDateTime(DateTimeZone.UTC).getMillis()/1000);
+        String startTime = Long.toString(startWeek.toDateTime(DateTimeZone.UTC).getMillis() / 1000);
         LocalDateTime lastDayCurrentWeek = startWeek.withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59).withDayOfWeek(DateTimeConstants.SUNDAY);
-        String endTime = Long.toString(lastDayCurrentWeek.toDateTime(DateTimeZone.UTC).getMillis()/1000);
+        String endTime = Long.toString(lastDayCurrentWeek.toDateTime(DateTimeZone.UTC).getMillis() / 1000);
         LOGD("TAG_CalendarGetEventsQuery", "startTime " + startTime + " --- endTime " + endTime);
         CalendarGetEventsQuery query = new CalendarGetEventsQuery();
         query.params.start_date_time = startTime;
