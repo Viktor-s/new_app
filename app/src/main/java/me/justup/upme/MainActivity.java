@@ -56,7 +56,7 @@ import static me.justup.upme.utils.LogUtils.LOGI;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 
-public class MainActivity extends BaseActivity implements View.OnClickListener {
+public class MainActivity extends BaseActivity implements View.OnClickListener, StatusBarSliderDialog.LoadMailFragmentListener {
     private static final String TAG = makeLogTag(MainActivity.class);
 
     private FrameLayout mMainFragmentContainer;
@@ -449,6 +449,19 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
             String content = ApiWrapper.responseBodyToString(responseBody);
             LOGE(TAG, "onFailure(): " + content);
+        }
+    }
+
+    @Override
+    public void onLoadMailFragment(int pushType) {
+        startHttpIntent(new GetMailContactQuery(), HttpIntentService.MAIL_CONTACT_PART);
+
+        Fragment fragment = new MailFragment();
+        getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, fragment).commit();
+
+        changeButtonState(mMailButton);
+        if (!isShowMainFragmentContainer) {
+            showMainFragmentContainer();
         }
     }
 

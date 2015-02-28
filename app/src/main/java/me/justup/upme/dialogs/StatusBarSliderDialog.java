@@ -1,6 +1,7 @@
 package me.justup.upme.dialogs;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -30,6 +31,10 @@ import static me.justup.upme.utils.LogUtils.makeLogTag;
 public class StatusBarSliderDialog extends DialogFragment {
     private static final String TAG = makeLogTag(StatusBarSliderDialog.class);
 
+    public interface LoadMailFragmentListener {
+        public void onLoadMailFragment(int pushType);
+    }
+
     public static final String STATUS_BAR_DIALOG = "status_bar_dialog";
 
     private static final String TIME_FORMAT = "HH:mm";
@@ -38,10 +43,22 @@ public class StatusBarSliderDialog extends DialogFragment {
     private DBAdapter mDBAdapter;
     private LinearLayout mPushContainer;
     private StringBuilder mStringBuilder = new StringBuilder();
+    private LoadMailFragmentListener mListener;
 
 
     public static StatusBarSliderDialog newInstance() {
         return new StatusBarSliderDialog();
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        try {
+            mListener = (LoadMailFragmentListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement LoadMailFragmentListener");
+        }
     }
 
     @Override
@@ -128,9 +145,7 @@ public class StatusBarSliderDialog extends DialogFragment {
             @Override
             public void onClick(View v) {
                 mDBAdapter.deletePush(push.getId());
-
-                // do som
-
+                mListener.onLoadMailFragment(push.getType());
                 dismiss();
             }
         });
