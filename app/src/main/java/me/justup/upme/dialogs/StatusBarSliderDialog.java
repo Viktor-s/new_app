@@ -32,7 +32,7 @@ public class StatusBarSliderDialog extends DialogFragment {
     private static final String TAG = makeLogTag(StatusBarSliderDialog.class);
 
     public interface LoadMailFragmentListener {
-        public void onLoadMailFragment(int pushType);
+        public void onLoadMailFragment(Push push);
     }
 
     public static final String STATUS_BAR_DIALOG = "status_bar_dialog";
@@ -145,7 +145,7 @@ public class StatusBarSliderDialog extends DialogFragment {
             @Override
             public void onClick(View v) {
                 mDBAdapter.deletePush(push.getId());
-                mListener.onLoadMailFragment(push.getType());
+                mListener.onLoadMailFragment(push);
                 dismiss();
             }
         });

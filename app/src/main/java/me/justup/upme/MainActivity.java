@@ -36,6 +36,7 @@ import me.justup.upme.entity.BaseHttpQueryEntity;
 import me.justup.upme.entity.CalendarGetEventsQuery;
 import me.justup.upme.entity.GetLoggedUserInfoQuery;
 import me.justup.upme.entity.GetMailContactQuery;
+import me.justup.upme.entity.Push;
 import me.justup.upme.entity.SetGooglePushIdQuery;
 import me.justup.upme.fragments.BriefcaseFragment;
 import me.justup.upme.fragments.BrowserFragment;
@@ -66,6 +67,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     private ArrayList<Button> mButtonList = new ArrayList<>();
     private Button mNewsButton, mMailButton, mCalendarButton, mProductsButton, mBriefcaseButton, mDocsButton, mBrowserButton;
+    private Push push;
 
     //GCM
     private GoogleCloudMessaging gcm;
@@ -453,7 +455,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     @Override
-    public void onLoadMailFragment(int pushType) {
+    public void onLoadMailFragment(final Push push) {
+        setPush(push);
         startHttpIntent(new GetMailContactQuery(), HttpIntentService.MAIL_CONTACT_PART);
 
         Fragment fragment = new MailFragment();
@@ -463,6 +466,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         if (!isShowMainFragmentContainer) {
             showMainFragmentContainer();
         }
+    }
+
+    public Push getPush() {
+        return push;
+    }
+
+    public void setPush(Push push) {
+        this.push = push;
     }
 
 }

@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -82,7 +81,6 @@ public class MailContactsAdapter extends CursorAdapter {
             holder.mCall.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d("TAG11", "setOnClickListener");
 //                    final FragmentTransaction ft = hostFragment.getChildFragmentManager().beginTransaction();
 //                    ft.replace(R.id.mail_messages_container_frameLayout, MailVideoFragment.newInstance(Integer.toString(id)));
 //                    ft.commit();

@@ -15,10 +15,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import me.justup.upme.MainActivity;
 import me.justup.upme.R;
 import me.justup.upme.adapter.MailContactsAdapter;
 import me.justup.upme.db.DBAdapter;
 import me.justup.upme.db.DBHelper;
+import me.justup.upme.entity.Push;
 import me.justup.upme.entity.SendNotificationQuery;
 import me.justup.upme.services.PushIntentService;
 import me.justup.upme.utils.AppContext;
@@ -77,6 +79,22 @@ public class MailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mail, container, false);
 
+        final AppPreferences appPreferences = new AppPreferences(getActivity());
+
+        final Push push = ((MainActivity) getActivity()).getPush();
+        if (push != null) {
+            ((MainActivity) getActivity()).setPush(null);
+
+            if (push.getType() == JABBER) {
+                String friendName = push.getUserName();
+                String yourName = appPreferences.getUserName();
+
+                getChildFragmentManager().beginTransaction().replace(R.id.mail_messages_container_frameLayout, MailMessagesFragment.newInstance(yourName, friendName)).commit();
+            } else if (push.getType() == WEBRTC) {
+                // do something
+            }
+        }
+
         ListView contactsListView = (ListView) view.findViewById(R.id.mail_contacts_ListView);
         contactsListView.setAdapter(mMailContactsAdapter);
         contactsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -87,7 +105,6 @@ public class MailFragment extends Fragment {
                     String yourName = new AppPreferences(AppContext.getAppContext()).getUserName();
                     int userId = mMailContactsAdapter.getCursor().getInt(mMailContactsAdapter.getCursor().getColumnIndex(DBHelper.MAIL_CONTACT_SERVER_ID));
 
-                    AppPreferences appPreferences = new AppPreferences(getActivity());
                     int ownerId = appPreferences.getUserId();
                     String ownerName = appPreferences.getUserName();
 
