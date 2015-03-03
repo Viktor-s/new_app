@@ -84,6 +84,9 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
             case R.id.close_settings_activity_imageView:
                 finish();
                 break;
+
+            default:
+                break;
         }
 
         if (fragment != null) {
