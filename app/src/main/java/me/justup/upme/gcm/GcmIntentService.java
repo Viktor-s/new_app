@@ -122,6 +122,15 @@ public class GcmIntentService extends IntentService {
     private void sendNotification(int userId, String userName, int connectionType, int room, String link) {
         LOGD(TAG, "sendNotification: userId:" + userId + " userName:" + userName + " connectionType:"
                 + connectionType + " room:" + room + " link:" + link);
+
+        if (connectionType == MailFragment.BREAK_CALL) {
+            Intent i = new Intent(MainActivity.BROADCAST_ACTION_BREAK_CALL);
+            i.putExtra(MainActivity.BROADCAST_EXTRA_BREAK_CALL, true);
+            sendBroadcast(i);
+
+            return;
+        }
+
         makeToast(getString(R.string.push_received));
 
         Intent i = new Intent(StatusBarFragment.BROADCAST_ACTION_PUSH);
