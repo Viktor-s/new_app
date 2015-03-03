@@ -24,10 +24,17 @@
 
         <TextView
             android:id="@+id/status_bar_date"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textSize="18sp"
+            android:layout_weight="1"
             tools:text="Пн 23 февраля 2015" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/button_clear"
+            android:id="@+id/clear_all_messages_button" />
     </LinearLayout>
 
     <LinearLayout

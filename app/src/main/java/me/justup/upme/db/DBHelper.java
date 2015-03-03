@@ -124,7 +124,7 @@ public class DBHelper extends SQLiteOpenHelper {
             + EVENT_CALENDAR_END_DATETIME + " TEXT, "
             + EVENT_CALENDAR_LOCATION + " TEXT" + ")";
 
-    private static final String CREATE_TABLE_STATUS_BAR_PUSH = "CREATE TABLE "
+    protected static final String CREATE_TABLE_STATUS_BAR_PUSH = "CREATE TABLE "
             + STATUS_BAR_PUSH_TABLE_NAME + "("
             + STATUS_BAR_PUSH_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
             + STATUS_BAR_PUSH_TYPE + " INTEGER, "

@@ -11,8 +11,11 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import me.justup.upme.MainActivity;
 import me.justup.upme.R;
 import me.justup.upme.db.DBAdapter;
+import me.justup.upme.entity.Push;
+import me.justup.upme.fragments.MailFragment;
 import me.justup.upme.fragments.StatusBarFragment;
 import me.justup.upme.utils.AppLocale;
 
@@ -124,6 +127,17 @@ public class GcmIntentService extends IntentService {
         Intent i = new Intent(StatusBarFragment.BROADCAST_ACTION_PUSH);
         i.putExtra(StatusBarFragment.BROADCAST_EXTRA_IS_NEW_MESSAGE, true); // for clear image - send false
         sendBroadcast(i);
+
+        if (connectionType == MailFragment.WEBRTC) {
+            Push push = new Push();
+            push.setUserId(userId);
+            push.setUserName(userName);
+            push.setRoom(room);
+
+            Intent webrtcIntent = new Intent(MainActivity.BROADCAST_ACTION_CALL);
+            webrtcIntent.putExtra(MainActivity.BROADCAST_EXTRA_PUSH, push);
+            sendBroadcast(webrtcIntent);
+        }
 
         Date date = new Date();
         SimpleDateFormat mTimeFormat = new SimpleDateFormat(TIME_FORMAT, AppLocale.getAppLocale());

@@ -1,8 +1,10 @@
 package me.justup.upme;
 
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -30,6 +32,7 @@ import org.joda.time.LocalDateTime;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import me.justup.upme.dialogs.CallDialog;
 import me.justup.upme.dialogs.StatusBarSliderDialog;
 import me.justup.upme.entity.ArticlesGetShortDescriptionQuery;
 import me.justup.upme.entity.BaseHttpQueryEntity;
@@ -48,6 +51,7 @@ import me.justup.upme.fragments.ProductsFragment;
 import me.justup.upme.fragments.UserFragment;
 import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.http.HttpIntentService;
+import me.justup.upme.interfaces.OnLoadMailFragment;
 import me.justup.upme.services.GPSTracker;
 import me.justup.upme.utils.AppContext;
 
@@ -57,7 +61,7 @@ import static me.justup.upme.utils.LogUtils.LOGI;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 
-public class MainActivity extends BaseActivity implements View.OnClickListener, StatusBarSliderDialog.LoadMailFragmentListener {
+public class MainActivity extends BaseActivity implements View.OnClickListener, OnLoadMailFragment {
     private static final String TAG = makeLogTag(MainActivity.class);
 
     private FrameLayout mMainFragmentContainer;
@@ -76,12 +80,24 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private Context context = AppContext.getAppContext();
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
+    // broadcast push
+    public static final String BROADCAST_ACTION_CALL = "me.justup.upme.broadcast.call.call";
+    public static final String BROADCAST_EXTRA_PUSH = "me.justup.upme.broadcast.call.extra.push";
+    private BroadcastReceiver mCallPushReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context c, Intent intent) {
+            final Push push = (Push) intent.getSerializableExtra(BROADCAST_EXTRA_PUSH);
+            showCallDialog(push);
+        }
+    };
+
 
     @Override
     protected void onResume() {
         super.onResume();
 
         startService(new Intent(this, GPSTracker.class));
+        registerReceiver(mCallPushReceiver, new IntentFilter(BROADCAST_ACTION_CALL));
     }
 
     @Override
@@ -277,6 +293,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         super.onStop();
 
         stopService(new Intent(this, GPSTracker.class));
+        unregisterReceiver(mCallPushReceiver);
     }
 
     public static ArticlesGetShortDescriptionQuery getShortDescriptionQuery(int limit, int offset) {
@@ -474,6 +491,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     public void setPush(Push push) {
         this.push = push;
+    }
+
+    private void showCallDialog(final Push push) {
+        CallDialog dialog = CallDialog.newInstance(push);
+        dialog.show(getFragmentManager(), CallDialog.CALL_DIALOG);
     }
 
 }

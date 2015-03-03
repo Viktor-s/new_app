@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -22,6 +23,7 @@ import me.justup.upme.db.DBAdapter;
 import me.justup.upme.entity.Push;
 import me.justup.upme.fragments.MailFragment;
 import me.justup.upme.fragments.StatusBarFragment;
+import me.justup.upme.interfaces.OnLoadMailFragment;
 import me.justup.upme.utils.AppLocale;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
@@ -30,11 +32,6 @@ import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 public class StatusBarSliderDialog extends DialogFragment {
     private static final String TAG = makeLogTag(StatusBarSliderDialog.class);
-
-    public interface LoadMailFragmentListener {
-        public void onLoadMailFragment(Push push);
-    }
-
     public static final String STATUS_BAR_DIALOG = "status_bar_dialog";
 
     private static final String TIME_FORMAT = "HH:mm";
@@ -43,7 +40,7 @@ public class StatusBarSliderDialog extends DialogFragment {
     private DBAdapter mDBAdapter;
     private LinearLayout mPushContainer;
     private StringBuilder mStringBuilder = new StringBuilder();
-    private LoadMailFragmentListener mListener;
+    private OnLoadMailFragment mListener;
 
 
     public static StatusBarSliderDialog newInstance() {
@@ -55,9 +52,9 @@ public class StatusBarSliderDialog extends DialogFragment {
         super.onAttach(activity);
 
         try {
-            mListener = (LoadMailFragmentListener) activity;
+            mListener = (OnLoadMailFragment) activity;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement LoadMailFragmentListener");
+            throw new ClassCastException(activity.toString() + " must implement OnLoadMailFragment");
         }
     }
 
@@ -92,6 +89,9 @@ public class StatusBarSliderDialog extends DialogFragment {
         TextView mDateTextView = (TextView) dialogView.findViewById(R.id.status_bar_date);
         mTimeTextView.setText(currentTime);
         mDateTextView.setText(currentDate);
+
+        Button mClearAllMessages = (Button) dialogView.findViewById(R.id.clear_all_messages_button);
+        mClearAllMessages.setOnClickListener(new OnClearAllPush());
 
         @SuppressWarnings("unchecked")
         ArrayList<Push> mPushArray = mDBAdapter.loadPushArray();
@@ -151,6 +151,14 @@ public class StatusBarSliderDialog extends DialogFragment {
         });
 
         mPushContainer.addView(item);
+    }
+
+    private class OnClearAllPush implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            mDBAdapter.deleteAllPush();
+            dismiss();
+        }
     }
 
 }

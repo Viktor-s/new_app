@@ -1,7 +1,11 @@
 package me.justup.upme.entity;
 
+import java.io.Serializable;
 
-public class Push {
+
+public class Push implements Serializable {
+    private static final long serialVersionUID = 0L;
+
     private int id = 0;
     private int type = 0;
     private int userId = 0;

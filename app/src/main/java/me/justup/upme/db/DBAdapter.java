@@ -198,4 +198,8 @@ public class DBAdapter {
         database.delete(STATUS_BAR_PUSH_TABLE_NAME, STATUS_BAR_PUSH_ID + " = " + pushId, null);
     }
 
+    public void deleteAllPush() {
+        dropAndCreateTable(STATUS_BAR_PUSH_TABLE_NAME, CREATE_TABLE_STATUS_BAR_PUSH);
+    }
+
 }
