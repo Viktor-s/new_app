@@ -98,7 +98,7 @@ public class GcmIntentService extends IntentService {
                     String link = (String) extras.get(LINK);
 
                     // Post notification of received message.
-                    if (userId != 0 && userName != null) {
+                    if (connectionType != 0 && userName != null) {
                         sendNotification(userId, userName, connectionType, room, link);
                     }
                     break;
@@ -125,7 +125,7 @@ public class GcmIntentService extends IntentService {
 
         if (connectionType == MailFragment.BREAK_CALL) {
             Intent i = new Intent(MainActivity.BROADCAST_ACTION_BREAK_CALL);
-            i.putExtra(MainActivity.BROADCAST_EXTRA_BREAK_CALL, true);
+            i.putExtra(MainActivity.BROADCAST_EXTRA_BREAK_CALL, userName);
             sendBroadcast(i);
 
             return;
