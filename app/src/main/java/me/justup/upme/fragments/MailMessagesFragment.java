@@ -395,8 +395,7 @@ public class MailMessagesFragment extends Fragment {
 
                 Toast.makeText(getActivity(), getString(R.string.file_in_cloud), Toast.LENGTH_SHORT).show();
 
-                // send push
-                // startNotificationIntent(userId, mYourName, MailFragment.FILE, mPushLink);
+                //startNotificationIntent(userId, mYourName, MailFragment.FILE, mPushLink);
             }
 
             @Override

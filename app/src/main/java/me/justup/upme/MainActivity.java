@@ -32,6 +32,7 @@ import org.joda.time.LocalDateTime;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import me.justup.upme.dialogs.BreakCallDialog;
 import me.justup.upme.dialogs.CallDialog;
 import me.justup.upme.dialogs.StatusBarSliderDialog;
 import me.justup.upme.entity.ArticlesGetShortDescriptionQuery;
@@ -91,6 +92,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         }
     };
 
+    public static final String BROADCAST_ACTION_BREAK_CALL = "me.justup.upme.broadcast.call.break.call";
+    public static final String BROADCAST_EXTRA_BREAK_CALL = "me.justup.upme.broadcast.call.extra.break.user";
+    private BroadcastReceiver mBreakCallReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context c, Intent intent) {
+            String userName = intent.getStringExtra(BROADCAST_EXTRA_BREAK_CALL);
+            showBreakCallDialog(userName);
+        }
+    };
+
 
     @Override
     protected void onResume() {
@@ -98,6 +109,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
         startService(new Intent(this, GPSTracker.class));
         registerReceiver(mCallPushReceiver, new IntentFilter(BROADCAST_ACTION_CALL));
+        registerReceiver(mBreakCallReceiver, new IntentFilter(BROADCAST_ACTION_BREAK_CALL));
     }
 
     @Override
@@ -294,6 +306,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
         stopService(new Intent(this, GPSTracker.class));
         unregisterReceiver(mCallPushReceiver);
+        unregisterReceiver(mBreakCallReceiver);
     }
 
     public static ArticlesGetShortDescriptionQuery getShortDescriptionQuery(int limit, int offset) {
@@ -496,6 +509,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private void showCallDialog(final Push push) {
         CallDialog dialog = CallDialog.newInstance(push);
         dialog.show(getFragmentManager(), CallDialog.CALL_DIALOG);
+    }
+
+    private void showBreakCallDialog(final String userName) {
+        BreakCallDialog dialog = BreakCallDialog.newInstance(userName);
+        dialog.show(getFragmentManager(), BreakCallDialog.BREAK_CALL_DIALOG);
     }
 
 }

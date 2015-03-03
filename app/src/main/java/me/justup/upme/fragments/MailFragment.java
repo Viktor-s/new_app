@@ -42,6 +42,7 @@ public class MailFragment extends Fragment {
     public static final int JABBER = 1;
     public static final int WEBRTC = 2;
     public static final int FILE = 3;
+    public static final int BREAK_CALL = 4;
 
 
     @Override

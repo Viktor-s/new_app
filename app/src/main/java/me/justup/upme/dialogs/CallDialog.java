@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +14,12 @@ import android.widget.TextView;
 
 import me.justup.upme.R;
 import me.justup.upme.entity.Push;
+import me.justup.upme.entity.SendNotificationQuery;
+import me.justup.upme.fragments.MailFragment;
 import me.justup.upme.interfaces.OnLoadMailFragment;
+import me.justup.upme.services.PushIntentService;
+import me.justup.upme.utils.AppContext;
+import me.justup.upme.utils.AppPreferences;
 
 
 public class CallDialog extends DialogFragment {
@@ -53,6 +59,8 @@ public class CallDialog extends DialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_push_call, null);
 
+        setCancelable(false);
+
         TextView mUserName = (TextView) dialogView.findViewById(R.id.call_user_name_textView);
         mUserName.setText(push.getUserName());
 
@@ -66,14 +74,27 @@ public class CallDialog extends DialogFragment {
                 })
                 .setNegativeButton(R.string.dialog_cancel_call, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-
-                        // out push
-
+                        breakCall(push.getUserId());
                         dialog.dismiss();
                     }
                 });
 
         return builder.create();
+    }
+
+    public void breakCall(int userId) {
+        String ownerName = new AppPreferences(AppContext.getAppContext()).getUserName();
+
+        SendNotificationQuery push = new SendNotificationQuery();
+        push.params.user_id = userId;
+        push.params.data.owner_name = ownerName;
+        push.params.data.connection_type = MailFragment.BREAK_CALL;
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(PushIntentService.PUSH_INTENT_QUERY_EXTRA, push);
+
+        Intent intent = new Intent(getActivity(), PushIntentService.class);
+        getActivity().startService(intent.putExtras(bundle));
     }
 
 }
