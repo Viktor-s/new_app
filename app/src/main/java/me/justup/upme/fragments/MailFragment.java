@@ -15,8 +15,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import java.util.Random;
-
 import me.justup.upme.MainActivity;
 import me.justup.upme.R;
 import me.justup.upme.adapter.MailContactsAdapter;
@@ -93,7 +91,7 @@ public class MailFragment extends Fragment {
                 String friendName = push.getUserName();
                 String yourName = appPreferences.getUserName();
 
-                getChildFragmentManager().beginTransaction().replace(R.id.mail_messages_container_frameLayout, MailMessagesFragment.newInstance(yourName, friendName)).commit();
+                getChildFragmentManager().beginTransaction().replace(R.id.mail_messages_container_frameLayout, MailMessagesFragment.newInstance(yourName, friendName, push.getUserId())).commit();
             } else if (push.getType() == WEBRTC) {
                 final FragmentTransaction ft = getChildFragmentManager().beginTransaction();
                 ft.replace(R.id.mail_messages_container_frameLayout, WebRtcFragment.newInstance(String.valueOf(push.getRoom())));
@@ -117,7 +115,7 @@ public class MailFragment extends Fragment {
                     startNotificationIntent(userId, ownerId, ownerName, JABBER);
 
                     final FragmentTransaction ft = getChildFragmentManager().beginTransaction();
-                    ft.replace(R.id.mail_messages_container_frameLayout, MailMessagesFragment.newInstance(yourName, friendName));
+                    ft.replace(R.id.mail_messages_container_frameLayout, MailMessagesFragment.newInstance(yourName, friendName, userId));
                     ft.commit();
                     lastChosenPosition = position;
                 }

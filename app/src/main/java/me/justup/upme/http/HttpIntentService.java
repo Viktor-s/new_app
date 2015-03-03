@@ -274,8 +274,26 @@ public class HttpIntentService extends IntentService {
                 "        },\n" +
                 "        {\n" +
                 "            \"id\": \"8\",\n" +
-                "            \"parentId\":" + "\"" + 5 + "\"" + ",\n" +
+                "            \"parentId\":" + "\"" + userId + "\"" + ",\n" +
                 "            \"name\": \"test7\",\n" +
+                "            \"login\": \"Mr.Android6\",\n" +
+                "            \"dateAdd\": \"45554\",\n" +
+                "            \"phone\": \"+380934262276\",\n" +
+                "            \"img\": \"http://telemosa.mx/wp-content/uploads/2014/10/call-center1-300x231.png\"\n" +
+                "        },\n" +
+                "        {\n" +
+                "            \"id\": \"9\",\n" +
+                "            \"parentId\":" + "\"" + userId + "\"" + ",\n" +
+                "            \"name\": \"test8\",\n" +
+                "            \"login\": \"Mr.Android6\",\n" +
+                "            \"dateAdd\": \"45554\",\n" +
+                "            \"phone\": \"+380934262276\",\n" +
+                "            \"img\": \"http://www.universal-promotions.com/images/icon-callcenter.png\"\n" +
+                "        },\n" +
+                "        {\n" +
+                "            \"id\": \"10\",\n" +
+                "            \"parentId\":" + "\"" + 5 + "\"" + ",\n" +
+                "            \"name\": \"test9\",\n" +
                 "            \"login\": \"mr_ctd\",\n" +
                 "            \"dateAdd\": \"5543543\",\n" +
                 "            \"phone\": \"+380111111111\",\n" +
