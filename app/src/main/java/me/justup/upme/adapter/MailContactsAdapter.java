@@ -17,6 +17,8 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.Random;
+
 import me.justup.upme.R;
 import me.justup.upme.db.DBHelper;
 import me.justup.upme.entity.SendNotificationQuery;
@@ -69,20 +71,20 @@ public class MailContactsAdapter extends CursorAdapter {
             holder.mInfo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    final FragmentTransaction ft = hostFragment.getChildFragmentManager().beginTransaction();
-                    Log.d("TAG_", "mInfo id - " + id);
-                    ft.replace(R.id.mail_messages_container_frameLayout, WebRtcFragment.newInstance(Integer.toString(id)));
-                    ft.commit();
+
                 }
             });
-
 
             holder.mCall.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     final FragmentTransaction ft = hostFragment.getChildFragmentManager().beginTransaction();
-                    Log.d("TAG_", "mCall id - " + id);
-                    ft.replace(R.id.mail_messages_container_frameLayout, WebRtcFragment.newInstance("456987454"));
+                    Random rand = new Random();
+                    int min = 1000000000;
+                    int max = 2147483647;
+                    int roomId = rand.nextInt((max - min) + 1) + min;
+                    startNotificationIntent(id, roomId);
+                    ft.replace(R.id.mail_messages_container_frameLayout, WebRtcFragment.newInstance(String.valueOf(roomId)));
                     ft.commit();
                 }
             });

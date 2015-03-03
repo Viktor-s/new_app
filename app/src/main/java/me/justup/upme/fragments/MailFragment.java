@@ -15,6 +15,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import java.util.Random;
+
 import me.justup.upme.MainActivity;
 import me.justup.upme.R;
 import me.justup.upme.adapter.MailContactsAdapter;
@@ -92,7 +94,9 @@ public class MailFragment extends Fragment {
 
                 getChildFragmentManager().beginTransaction().replace(R.id.mail_messages_container_frameLayout, MailMessagesFragment.newInstance(yourName, friendName)).commit();
             } else if (push.getType() == WEBRTC) {
-                // do something
+                final FragmentTransaction ft = getChildFragmentManager().beginTransaction();
+                ft.replace(R.id.mail_messages_container_frameLayout, WebRtcFragment.newInstance(String.valueOf(push.getRoom())));
+                ft.commit();
             }
         }
 
