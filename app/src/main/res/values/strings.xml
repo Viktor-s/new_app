@@ -114,6 +114,7 @@
     <string name="settings_wifi">Настройки Wi-Fi</string>
     <string name="settings_screen_sound">Экран и Звук</string>
     <string name="settings_social">Соц. сети</string>
+    <string name="settings_webrtc">Настройки WebRTC</string>
     <string name="settings_lang">Выбор языка</string>
     <string name="settings_wifi_title">Доступные Wi-Fi сети</string>
     <string name="settings_lang_title">Смена языка</string>
@@ -172,51 +173,69 @@
     <string name="pref_room_list_key">room_list_preference</string>
 
     <string name="pref_resolution_key">resolution_preference</string>
-    <string name="pref_resolution_title">Video resolution.</string>
-    <string name="pref_resolution_dlg">Enter AppRTC local video resolution.</string>
+    <string name="pref_resolution_title_en">Video resolution.</string>
+    <string name="pref_resolution_title">Разрешение видео</string>
+    <string name="pref_resolution_dlg_en">Enter AppRTC local video resolution.</string>
+    <string name="pref_resolution_dlg">Выберите видео разрешение</string>
     <string name="pref_resolution_default">Default</string>
 
     <string name="pref_fps_key">fps_preference</string>
-    <string name="pref_fps_title">Camera fps.</string>
-    <string name="pref_fps_dlg">Enter local camera fps.</string>
+    <string name="pref_fps_title_en">Camera fps.</string>
+    <string name="pref_fps_title">Кадров в секунду для камеры</string>
+    <string name="pref_fps_dlg_en">Enter local camera fps.</string>
+    <string name="pref_fps_dlg">Выберите количество кадров в секунду</string>
     <string name="pref_fps_default">Default</string>
 
     <string name="pref_cpu_usage_detection_key">cpu_usage_detection</string>
-    <string name="pref_cpu_usage_detection_title">CPU overuse detection.</string>
-    <string name="pref_cpu_usage_detection_dlg">Adapt transmission to CPU status.</string>
+    <string name="pref_cpu_usage_detection_title">CPU overuse detection</string>
+    <string name="pref_cpu_usage_detection_dlg">Adapt transmission to CPU status</string>
     <string name="pref_cpu_usage_detection_default" translatable="false">true</string>
 
     <string name="pref_startbitrate_key">startbitrate_preference</string>
-    <string name="pref_startbitrate_title">Start bitrate setting.</string>
-    <string name="pref_startbitrate_dlg">Start bitrate setting.</string>
+    <string name="pref_startbitrate_title_en">Start bitrate setting.</string>
+    <string name="pref_startbitrate_title">Настройка битрейта</string>
+    <string name="pref_startbitrate_dlg_en">Start bitrate setting.</string>
+    <string name="pref_startbitrate_dlg">Настройка битрейта</string>
     <string name="pref_startbitrate_default">Default</string>
 
     <string name="pref_startbitratevalue_key">startbitratevalue_preference</string>
-    <string name="pref_startbitratevalue_title">Video encoder start bitrate.</string>
-    <string name="pref_startbitratevalue_dlg">Enter video encoder start bitrate in kbps.</string>
+    <string name="pref_startbitratevalue_title_en">Video encoder start bitrate.</string>
+    <string name="pref_startbitratevalue_title">Битрейт</string>
+    <string name="pref_startbitratevalue_dlg_en">Enter video encoder start bitrate in kbps.</string>
+    <string name="pref_startbitratevalue_dlg">Установите битрейт в килобитах</string>
     <string name="pref_startbitratevalue_default">1000</string>
 
     <string name="pref_videocodec_key">videocodec_preference</string>
-    <string name="pref_videocodec_title">Default video codec.</string>
-    <string name="pref_videocodec_dlg">Select default video codec.</string>
+    <string name="pref_videocodec_title_en">Default video codec.</string>
+    <string name="pref_videocodec_title">Видео кодек по умолчанию</string>
+    <string name="pref_videocodec_dlg_en">Select default video codec.</string>
+    <string name="pref_videocodec_dlg">Выберите видео кодек по умолчанию</string>
     <string name="pref_videocodec_default">VP8</string>
 
     <string name="pref_hwcodec_key">hwcodec_preference</string>
-    <string name="pref_hwcodec_title">Video codec hardware acceleration.</string>
-    <string name="pref_hwcodec_dlg">Use hardware accelerated video codec (if available).</string>
+    <string name="pref_hwcodec_title_en">Video codec hardware acceleration.</string>
+    <string name="pref_hwcodec_title">Аппаратное декодирование</string>
+    <string name="pref_hwcodec_dlg_en">Use hardware accelerated video codec (if available).</string>
+    <string name="pref_hwcodec_dlg">Используется аппаратное декодирование (если доступно)</string>
     <string name="pref_hwcodec_default">true</string>
 
-    <string name="pref_value_enabled">Enabled</string>
-    <string name="pref_value_disabled">Disabled</string>
+    <string name="pref_value_enabled_en">Enabled</string>
+    <string name="pref_value_enabled">Включено</string>
+    <string name="pref_value_disabled_en">Disabled</string>
+    <string name="pref_value_disabled">Отключено</string>
 
     <string name="pref_room_server_url_key">room_server_url_preference</string>
-    <string name="pref_room_server_url_title">Room server URL.</string>
-    <string name="pref_room_server_url_dlg">Enter a room server URL.</string>
+    <string name="pref_room_server_url_title_en">Room server URL.</string>
+    <string name="pref_room_server_url_title">URL сигнального сервера</string>
+    <string name="pref_room_server_url_dlg_en">Enter a room server URL.</string>
+    <string name="pref_room_server_url_dlg">Введите URL сигнального сервера</string>
     <string name="pref_room_server_url_default" translatable="false">https://apprtc.appspot.com</string>
 
     <string name="pref_displayhud_key">displayhud_preference</string>
-    <string name="pref_displayhud_title">Display call statistics.</string>
-    <string name="pref_displayhud_dlg">Display call statistics.</string>
+    <string name="pref_displayhud_title_en">Display call statistics.</string>
+    <string name="pref_displayhud_title">Отображать статистику</string>
+    <string name="pref_displayhud_dlg_">Display call statistics.</string>
+    <string name="pref_displayhud_dlg">Отображать статистику</string>
     <string name="pref_displayhud_default" translatable="false">false</string>
 
     <string name="sent_file">" [Отправлен файл] "</string>

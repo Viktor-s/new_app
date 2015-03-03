@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import me.justup.upme.fragments.SettingsLangFragment;
 import me.justup.upme.fragments.SettingsScreenFragment;
 import me.justup.upme.fragments.SettingsSocialFragment;
+import me.justup.upme.fragments.SettingsWebRtcFragment;
 import me.justup.upme.fragments.SettingsWifiFragment;
 
 
@@ -19,6 +20,7 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
     private TextView mScreenSoundMenu;
     private TextView mSocialMenu;
     private TextView mLangMenu;
+    private TextView mWebRTCMenu;
     private ArrayList<TextView> mButtonList = new ArrayList<>();
 
     @Override
@@ -30,16 +32,19 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
         mScreenSoundMenu = (TextView) findViewById(R.id.settings_screen_menu_textView);
         mSocialMenu = (TextView) findViewById(R.id.settings_social_menu_textView);
         mLangMenu = (TextView) findViewById(R.id.settings_lang_menu_textView);
+        mWebRTCMenu = (TextView) findViewById(R.id.settings_webrtc_menu_textView);
         ImageView mCloseSettings = (ImageView) findViewById(R.id.close_settings_activity_imageView);
 
         mWiFiMenu.setOnClickListener(this);
         mScreenSoundMenu.setOnClickListener(this);
         mSocialMenu.setOnClickListener(this);
         mLangMenu.setOnClickListener(this);
+        mWebRTCMenu.setOnClickListener(this);
         mCloseSettings.setOnClickListener(this);
 
         mButtonList.add(mWiFiMenu);
         mButtonList.add(mScreenSoundMenu);
+        mButtonList.add(mWebRTCMenu);
         mButtonList.add(mSocialMenu);
         mButtonList.add(mLangMenu);
 
@@ -71,7 +76,12 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
                 fragment = new SettingsLangFragment();
                 break;
 
-            default:
+            case R.id.settings_webrtc_menu_textView:
+                changeButtonState(mWebRTCMenu);
+                fragment = new SettingsWebRtcFragment();
+                break;
+
+            case R.id.close_settings_activity_imageView:
                 finish();
                 break;
         }

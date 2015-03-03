@@ -25,6 +25,12 @@
             style="@style/SettingsMenuItem" />
 
         <TextView
+            android:text="@string/settings_webrtc"
+            android:drawableStart="@android:drawable/ic_menu_call"
+            android:id="@+id/settings_webrtc_menu_textView"
+            style="@style/SettingsMenuItem" />
+
+        <TextView
             android:visibility="gone"
             android:text="@string/settings_social"
             android:drawableStart="@android:drawable/ic_menu_my_calendar"
@@ -40,21 +46,22 @@
     </LinearLayout>
 
     <FrameLayout
-        android:background="@drawable/settings_back_right"
         android:id="@+id/settings_fragment_container"
+        android:background="@drawable/settings_back_right"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_toEndOf="@+id/settings_left_menu">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
-            android:id="@+id/close_settings_activity_imageView"
-            android:src="@drawable/button_close_test"
-            android:layout_gravity="end|top"
-            android:contentDescription="@string/app_name" />
     </FrameLayout>
+
+    <ImageView
+        android:id="@+id/close_settings_activity_imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:src="@drawable/button_close_test"
+        android:contentDescription="@string/app_name" />
 
 </RelativeLayout>
