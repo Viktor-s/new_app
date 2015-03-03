@@ -36,6 +36,7 @@ public class GcmIntentService extends IntentService {
     private static final String USER_NAME = "owner_name";
     private static final String CONNECTION_TYPE = "connection_type";
     private static final String ROOM = "room";
+    private static final String LINK = "link";
 
     private static final String TIME_FORMAT = "HH:mm - dd MMMM yyyy";
 
@@ -91,10 +92,11 @@ public class GcmIntentService extends IntentService {
                     }
 
                     String userName = (String) extras.get(USER_NAME);
+                    String link = (String) extras.get(LINK);
 
                     // Post notification of received message.
                     if (userId != 0 && userName != null) {
-                        sendNotification(userId, userName, connectionType, room);
+                        sendNotification(userId, userName, connectionType, room, link);
                     }
                     break;
 
@@ -114,8 +116,9 @@ public class GcmIntentService extends IntentService {
         mDBAdapter.close();
     }
 
-    private void sendNotification(int userId, String userName, int connectionType, int room) {
-        LOGD(TAG, "sendNotification: userId:" + userId + " userName:" + userName + " connectionType:" + connectionType + " room:" + room);
+    private void sendNotification(int userId, String userName, int connectionType, int room, String link) {
+        LOGD(TAG, "sendNotification: userId:" + userId + " userName:" + userName + " connectionType:"
+                + connectionType + " room:" + room + " link:" + link);
         makeToast(getString(R.string.push_received));
 
         Intent i = new Intent(StatusBarFragment.BROADCAST_ACTION_PUSH);

@@ -238,4 +238,9 @@
     <string name="pref_displayhud_dlg">Отображать статистику</string>
     <string name="pref_displayhud_default" translatable="false">false</string>
 
+    <string name="sent_file">" [Отправлен файл] "</string>
+    <string name="file_in_cloud">Файл в облаке</string>
+    <string name="sent_file_error">Ошибка отправки файла!</string>
+
+
 </resources>

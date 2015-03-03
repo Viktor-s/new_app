@@ -2,12 +2,13 @@ package me.justup.upme.entity;
 
 
 public class Push {
-    private int id;
-    private int type;
-    private int userId;
-    private String userName;
-    private int room;
-    private String date;
+    private int id = 0;
+    private int type = 0;
+    private int userId = 0;
+    private String userName = "";
+    private int room = 0;
+    private String date = "";
+    private String link = "";
 
     public int getId() {
         return id;
@@ -57,6 +58,14 @@ public class Push {
         this.date = date;
     }
 
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
+    }
+
     @Override
     public String toString() {
         return "Push{" +
@@ -66,6 +75,7 @@ public class Push {
                 ", userName=" + userName +
                 ", room=" + room +
                 ", date=" + date +
+                ", link=" + link +
                 '}';
     }
 

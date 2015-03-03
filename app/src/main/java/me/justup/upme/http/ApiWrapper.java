@@ -7,12 +7,16 @@ import android.net.NetworkInfo;
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.FileAsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.SyncHttpClient;
 
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HTTP;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 
 import me.justup.upme.R;
@@ -31,7 +35,9 @@ public class ApiWrapper {
     private static final String JSON = "application/json";
     private static final String AUTHORIZATION_HEADER = "X-AUTH-UPMETOKEN";
     private static final String UTF_8 = "UTF-8";
+
     private static final String URL = "http://test.justup.me/uptabinterface/jsonrpc/";
+    private static final String CLOUD_STORAGE_URL = "http://test.justup.me/CloudStorage";
 
     private static AsyncHttpClient client = new AsyncHttpClient();
     private static AsyncHttpClient syncClient = new SyncHttpClient();
@@ -57,9 +63,12 @@ public class ApiWrapper {
     public static final String CALENDAR_GET_EVENTS = "Calendar.getEvents";
     public static final String CALENDAR_ADD_EVENT = "Calendar.addEvent";
 
+    private static final String CALL_CLOUD_UPLOAD = "/upload";
+    private static final String CALL_CLOUD_FILE = "/file/";
+
 
     private static void post(final StringEntity se, AsyncHttpResponseHandler responseHandler) {
-        client.addHeader(AUTHORIZATION_HEADER, getToken());
+        addClientHeader();
         client.post(null, URL, se, null, responseHandler);
     }
 
@@ -117,6 +126,29 @@ public class ApiWrapper {
 
         if (se != null)
             loginPost(se, responseHandler);
+    }
+
+    public static void sendFileToCloud(String path, AsyncHttpResponseHandler responseHandler) {
+        File file = new File(path);
+        RequestParams params = new RequestParams();
+
+        try {
+            params.put("file", file);
+        } catch (FileNotFoundException e) {
+            LOGE(TAG, "sendFileToCloud()\n", e);
+        }
+
+        addClientHeader();
+        client.post(CLOUD_STORAGE_URL + CALL_CLOUD_UPLOAD, params, responseHandler);
+    }
+
+    public static void downloadFileFromCloud(String fileHash, FileAsyncHttpResponseHandler fileResponseHandler) {
+        addClientHeader();
+        client.get(CLOUD_STORAGE_URL + CALL_CLOUD_FILE + fileHash, fileResponseHandler);
+    }
+
+    private static void addClientHeader() {
+        client.addHeader(AUTHORIZATION_HEADER, getToken());
     }
 
     public static String responseBodyToString(byte[] responseBody) {

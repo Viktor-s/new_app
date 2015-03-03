@@ -39,6 +39,7 @@ public class MailFragment extends Fragment {
 
     public static final int JABBER = 1;
     public static final int WEBRTC = 2;
+    public static final int FILE = 3;
 
 
     @Override
@@ -108,7 +109,7 @@ public class MailFragment extends Fragment {
                     int ownerId = appPreferences.getUserId();
                     String ownerName = appPreferences.getUserName();
 
-                    startNotificationIntent(userId, ownerId, ownerName, JABBER, 0);
+                    startNotificationIntent(userId, ownerId, ownerName, JABBER);
 
                     final FragmentTransaction ft = getChildFragmentManager().beginTransaction();
                     ft.replace(R.id.mail_messages_container_frameLayout, MailMessagesFragment.newInstance(yourName, friendName));
@@ -120,13 +121,12 @@ public class MailFragment extends Fragment {
         return view;
     }
 
-    public void startNotificationIntent(int userId, int ownerId, String ownerName, int connectionType, int roomNumber) {
+    public void startNotificationIntent(int userId, int ownerId, String ownerName, int connectionType) {
         SendNotificationQuery push = new SendNotificationQuery();
         push.params.user_id = userId;
         push.params.data.owner_id = ownerId;
         push.params.data.owner_name = ownerName;
         push.params.data.connection_type = connectionType;
-        push.params.data.room = roomNumber;
 
         Bundle bundle = new Bundle();
         bundle.putSerializable(PushIntentService.PUSH_INTENT_QUERY_EXTRA, push);

@@ -1,10 +1,13 @@
 package me.justup.upme.fragments;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.ContentUris;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -13,9 +16,11 @@ import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.text.Html;
 import android.text.Spanned;
@@ -33,12 +38,14 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.loopj.android.http.AsyncHttpResponseHandler;
+
+import org.apache.http.Header;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.PacketListener;
-import org.jivesoftware.smack.Roster;
-import org.jivesoftware.smack.RosterEntry;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.filter.MessageTypeFilter;
@@ -53,12 +60,15 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 
 import me.justup.upme.R;
+import me.justup.upme.entity.SendNotificationQuery;
+import me.justup.upme.http.ApiWrapper;
+import me.justup.upme.services.PushIntentService;
 import me.justup.upme.utils.AnimateButtonClose;
 import me.justup.upme.utils.AppContext;
+import me.justup.upme.utils.AppLocale;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.LOGE;
@@ -113,6 +123,8 @@ public class MailMessagesFragment extends Fragment {
     private EditText mTextMessage;
     private String mFriendName;
     private String mYourName;
+    private String mFilePath;
+    private String mPushLink;
 
 
     public static MailMessagesFragment newInstance(String yourName, String userName) {
@@ -221,6 +233,19 @@ public class MailMessagesFragment extends Fragment {
                 String to = mFriendName;
                 String text = mTextMessage.getText().toString();
                 mTextMessage.setText("");
+
+                if (mFilePath != null) {
+                    sendFileToCloud(mFilePath);
+
+                    if (text != null)
+                        text += getString(R.string.sent_file);
+                    else
+                        text = getString(R.string.sent_file);
+
+                    mPushLink = mFilePath;
+                    mFilePath = null;
+                    mImageAttachedImageView.setVisibility(View.GONE);
+                }
 
                 LOGI(TAG, "Sending text " + text + " to " + to);
                 Message msg = new Message(to, Message.Type.chat);
@@ -359,6 +384,45 @@ public class MailMessagesFragment extends Fragment {
         return Html.fromHtml(mChatLineBuilder.toString());
     }
 
+    private void sendFileToCloud(final String path) {
+        LOGD(TAG, "file path:" + path);
+
+        ApiWrapper.sendFileToCloud(path, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                String content = ApiWrapper.responseBodyToString(responseBody);
+                LOGD(TAG, "onSuccess(): " + content);
+
+                Toast.makeText(getActivity(), getString(R.string.file_in_cloud), Toast.LENGTH_SHORT).show();
+
+                // send push
+                // startNotificationIntent(userId, mYourName, MailFragment.FILE, mPushLink);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                String content = ApiWrapper.responseBodyToString(responseBody);
+                LOGE(TAG, "onFailure(): " + content);
+
+                Toast.makeText(getActivity(), getString(R.string.sent_file_error), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void startNotificationIntent(int userId, String ownerName, int connectionType, String link) {
+        SendNotificationQuery push = new SendNotificationQuery();
+        push.params.user_id = userId;
+        push.params.data.owner_name = ownerName;
+        push.params.data.connection_type = connectionType;
+        push.params.data.link = link;
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(PushIntentService.PUSH_INTENT_QUERY_EXTRA, push);
+
+        Intent intent = new Intent(getActivity(), PushIntentService.class);
+        getActivity().startService(intent.putExtras(bundle));
+    }
+
     private void selectImage() {
         createTakePictureDialog();
     }
@@ -405,6 +469,7 @@ public class MailMessagesFragment extends Fragment {
                     BitmapFactory.Options options = new BitmapFactory.Options();
                     options.inPreferredConfig = Bitmap.Config.ARGB_8888;
                     mAttachImageBitmap = BitmapFactory.decodeFile(mCurrentPhotoPath);
+                    mFilePath = mCurrentPhotoPath;
                     mImageAttachedImageView.setImageBitmap(mAttachImageBitmap);
                     mAttachFileType = AttachFileType.IMAGE;
                     mImageAttachedImageView.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_menu_camera));
@@ -423,8 +488,7 @@ public class MailMessagesFragment extends Fragment {
 
                 case REQUEST_TAKE_FILE:
                     Uri uriFile = data.getData();
-                    String path = getPath(uriFile, MailMessagesFragment.this.getActivity());
-                    // File file = new File(path);
+                    mFilePath = getPath(uriFile, AppContext.getAppContext());
                     mAttachFileType = AttachFileType.DOC;
                     mImageAttachedImageView.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_input_get));
                     break;
@@ -456,26 +520,123 @@ public class MailMessagesFragment extends Fragment {
         return BitmapFactory.decodeStream(getActivity().getContentResolver().openInputStream(selectedImage), null, o2);
     }
 
+    /*
     public String getPath(Uri uri, Activity activity) {
         if (uri == null) {
-            // show user feedback
             return null;
         }
-        String[] projection = {MediaStore.Images.Media.DATA};
-        Cursor cursor = activity.managedQuery(uri, projection, null, null, null);
-        if (cursor != null) {
-            int column_index = cursor
-                    .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+
+        Cursor cursor = null;
+        try {
+            String[] projection = {MediaStore.Images.Media.DATA};
+            cursor = activity.getContentResolver().query(uri, projection, null, null, null);
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             cursor.moveToFirst();
             return cursor.getString(column_index);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
         }
-        return uri.getPath();
+    }
+    */
+
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    public static String getPath(final Uri uri, final Context context) {
+        final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
+
+        // DocumentProvider
+        if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
+
+            // ExternalStorageProvider
+            if (isExternalStorageDocument(uri)) {
+                final String docId = DocumentsContract.getDocumentId(uri);
+                final String[] split = docId.split(":");
+                final String type = split[0];
+
+                if ("primary".equalsIgnoreCase(type)) {
+                    return Environment.getExternalStorageDirectory() + "/" + split[1];
+                }
+            }
+
+            // DownloadsProvider
+            else if (isDownloadsDocument(uri)) {
+                final String id = DocumentsContract.getDocumentId(uri);
+                final Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+
+                return getDataColumn(context, contentUri, null, null);
+            }
+
+            // MediaProvider
+            else if (isMediaDocument(uri)) {
+                final String docId = DocumentsContract.getDocumentId(uri);
+                final String[] split = docId.split(":");
+                final String type = split[0];
+
+                Uri contentUri = null;
+                switch (type) {
+                    case "image":
+                        contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+                        break;
+                    case "video":
+                        contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+                        break;
+                    case "audio":
+                        contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+                        break;
+                }
+
+                final String selection = "_id=?";
+                final String[] selectionArgs = new String[]{split[1]};
+
+                return getDataColumn(context, contentUri, selection, selectionArgs);
+            }
+        }
+
+        // MediaStore (and general)
+        else if ("content".equalsIgnoreCase(uri.getScheme())) {
+            return getDataColumn(context, uri, null, null);
+        }
+        // File
+        else if ("file".equalsIgnoreCase(uri.getScheme())) {
+            return uri.getPath();
+        }
+        return null;
+    }
+
+    public static String getDataColumn(Context context, Uri uri, String selection, String[] selectionArgs) {
+        Cursor cursor = null;
+        final String column = "_data";
+        final String[] projection = {column};
+
+        try {
+            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                final int index = cursor.getColumnIndexOrThrow(column);
+                return cursor.getString(index);
+            }
+        } finally {
+            if (cursor != null)
+                cursor.close();
+        }
+        return null;
+    }
+
+    public static boolean isExternalStorageDocument(Uri uri) {
+        return "com.android.externalstorage.documents".equals(uri.getAuthority());
+    }
+
+    public static boolean isDownloadsDocument(Uri uri) {
+        return "com.android.providers.downloads.documents".equals(uri.getAuthority());
+    }
+
+    public static boolean isMediaDocument(Uri uri) {
+        return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
 
     private File createImageFile() throws IOException {
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        File storageDir = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES);
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", AppLocale.getAppLocale()).format(new Date());
+        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
                 timeStamp,  /* prefix */
                 ".jpg",         /* suffix */
