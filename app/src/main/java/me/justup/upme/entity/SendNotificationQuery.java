@@ -19,6 +19,7 @@ public class SendNotificationQuery extends BaseHttpQueryEntity {
             public int connection_type;
             public int room;
             public String link;
+            public String text;
         }
     }
 

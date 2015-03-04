@@ -23,6 +23,7 @@ import me.justup.upme.db.DBAdapter;
 import me.justup.upme.entity.Push;
 import me.justup.upme.fragments.MailFragment;
 import me.justup.upme.fragments.StatusBarFragment;
+import me.justup.upme.interfaces.OnDownloadCloudFile;
 import me.justup.upme.interfaces.OnLoadMailFragment;
 import me.justup.upme.utils.AppLocale;
 
@@ -40,7 +41,8 @@ public class StatusBarSliderDialog extends DialogFragment {
     private DBAdapter mDBAdapter;
     private LinearLayout mPushContainer;
     private StringBuilder mStringBuilder = new StringBuilder();
-    private OnLoadMailFragment mListener;
+    private OnLoadMailFragment mOnLoadMailFragment;
+    private OnDownloadCloudFile mOnDownloadCloudFile;
 
 
     public static StatusBarSliderDialog newInstance() {
@@ -52,9 +54,15 @@ public class StatusBarSliderDialog extends DialogFragment {
         super.onAttach(activity);
 
         try {
-            mListener = (OnLoadMailFragment) activity;
+            mOnLoadMailFragment = (OnLoadMailFragment) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement OnLoadMailFragment");
+        }
+
+        try {
+            mOnDownloadCloudFile = (OnDownloadCloudFile) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement OnDownloadCloudFile");
         }
     }
 
@@ -124,14 +132,18 @@ public class StatusBarSliderDialog extends DialogFragment {
         TextView mPushDate = (TextView) item.findViewById(R.id.push_date_TextView);
 
         mStringBuilder.setLength(0);
-        mStringBuilder.append(push.getUserName()).append(getString(R.string.invites_you));
+        mStringBuilder.append(push.getUserName());
         switch (push.getType()) {
             case MailFragment.JABBER:
-                mStringBuilder.append(getString(R.string.in_chat));
+                mStringBuilder.append(getString(R.string.invites_you)).append(getString(R.string.in_chat));
                 break;
 
             case MailFragment.WEBRTC:
-                mStringBuilder.append(getString(R.string.on_video));
+                mStringBuilder.append(getString(R.string.invites_you)).append(getString(R.string.on_video));
+                break;
+
+            case MailFragment.FILE:
+                mStringBuilder.append(getString(R.string.submit_file)).append(push.getText());
                 break;
 
             default:
@@ -144,8 +156,13 @@ public class StatusBarSliderDialog extends DialogFragment {
         item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mDBAdapter.deletePush(push.getId());
-                mListener.onLoadMailFragment(push);
+                if (push.getType() != MailFragment.FILE) {
+                    mDBAdapter.deletePush(push.getId());
+                    mOnLoadMailFragment.onLoadMailFragment(push);
+                } else {
+                    mOnDownloadCloudFile.onDownloadCloudFile(push.getLink(), push.getText());
+                }
+
                 dismiss();
             }
         });

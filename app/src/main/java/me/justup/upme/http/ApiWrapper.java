@@ -128,12 +128,12 @@ public class ApiWrapper {
             loginPost(se, responseHandler);
     }
 
-    public static void sendFileToCloud(String path, AsyncHttpResponseHandler responseHandler) {
-        File file = new File(path);
+    public static void sendFileToCloud(final File file, AsyncHttpResponseHandler responseHandler) {
         RequestParams params = new RequestParams();
 
         try {
             params.put("file", file);
+            params.put("file_name", file.getName());
         } catch (FileNotFoundException e) {
             LOGE(TAG, "sendFileToCloud()\n", e);
         }

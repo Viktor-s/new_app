@@ -63,6 +63,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import me.justup.upme.R;
+import me.justup.upme.dialogs.WarningDialog;
 import me.justup.upme.entity.SendNotificationQuery;
 import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.services.PushIntentService;
@@ -120,6 +121,7 @@ public class MailMessagesFragment extends Fragment {
     private Handler mHandler = new Handler();
     private StringBuilder mChatLineBuilder = new StringBuilder();
     private ArrayAdapter<Spanned> mChatAdapter;
+    private Button mSendButton;
 
     private EditText mTextMessage;
     private String mFriendName;
@@ -231,8 +233,8 @@ public class MailMessagesFragment extends Fragment {
         mChatAdapter = new ArrayAdapter<>(getActivity(), R.layout.list_jabber_chat_item, mMessages);
         mJabberListView.setAdapter(mChatAdapter);
 
-        Button send = (Button) view.findViewById(R.id.mail_messages_add_button);
-        send.setOnClickListener(new View.OnClickListener() {
+        mSendButton = (Button) view.findViewById(R.id.mail_messages_add_button);
+        mSendButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 String to = mFriendName;
                 String text = mTextMessage.getText().toString();
@@ -300,11 +302,22 @@ public class MailMessagesFragment extends Fragment {
                 try {
                     connection.connect();
                     LOGI(TAG, "Connected to " + connection.getHost());
-                } catch (XMPPException ex) {
-                    LOGE(TAG, "Failed to connect to " + connection.getHost());
-                    LOGE(TAG, ex.toString());
+                } catch (final XMPPException ex) {
+                    LOGE(TAG, "Failed to connect to " + connection.getHost(), ex);
                     setConnection(null);
+
+                    dialog.dismiss();
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            showWarningDialog(ex.getMessage());
+                            mSendButton.setEnabled(false);
+                        }
+                    });
+
+                    return;
                 }
+
                 try {
                     // SASLAuthentication.supportSASLMechanism("PLAIN", 0);
                     connection.login(mYourName, PASSWORD);
@@ -391,7 +404,9 @@ public class MailMessagesFragment extends Fragment {
     private void sendFileToCloud(final String path) {
         LOGD(TAG, "file path:" + path);
 
-        ApiWrapper.sendFileToCloud(path, new AsyncHttpResponseHandler() {
+        final File file = new File(path);
+
+        ApiWrapper.sendFileToCloud(file, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 String content = ApiWrapper.responseBodyToString(responseBody);
@@ -399,7 +414,7 @@ public class MailMessagesFragment extends Fragment {
 
                 Toast.makeText(getActivity(), getString(R.string.file_in_cloud), Toast.LENGTH_SHORT).show();
 
-                startNotificationIntent(friendId, mYourName, MailFragment.FILE, mPushLink);
+                startNotificationIntent(friendId, mYourName, MailFragment.FILE, mPushLink, file.getName());
             }
 
             @Override
@@ -412,12 +427,13 @@ public class MailMessagesFragment extends Fragment {
         });
     }
 
-    public void startNotificationIntent(int userId, String ownerName, int connectionType, String link) {
+    public void startNotificationIntent(int userId, String ownerName, int connectionType, String link, String fileName) {
         SendNotificationQuery push = new SendNotificationQuery();
         push.params.user_id = userId;
         push.params.data.owner_name = ownerName;
         push.params.data.connection_type = connectionType;
         push.params.data.link = link;
+        push.params.data.text = fileName;
 
         Bundle bundle = new Bundle();
         bundle.putSerializable(PushIntentService.PUSH_INTENT_QUERY_EXTRA, push);
@@ -794,6 +810,11 @@ public class MailMessagesFragment extends Fragment {
 
     private enum AttachFileType {
         NOTHING, IMAGE, AUDIO, DOC
+    }
+
+    private void showWarningDialog(String message) {
+        WarningDialog dialog = WarningDialog.newInstance(getString(R.string.network_error), message);
+        dialog.show(getFragmentManager(), WarningDialog.WARNING_DIALOG);
     }
 
 }

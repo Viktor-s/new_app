@@ -162,7 +162,7 @@ public class DBAdapter {
         LocalBroadcastManager.getInstance(AppContext.getAppContext()).sendBroadcast(intent);
     }
 
-    public long savePush(int type, int userId, String userName, int room, String date, String link) {
+    public long savePush(int type, int userId, String userName, int room, String date, String link, String text) {
         ContentValues values = new ContentValues();
         values.put(STATUS_BAR_PUSH_TYPE, type);
         values.put(STATUS_BAR_PUSH_USER_ID, userId);
@@ -173,6 +173,12 @@ public class DBAdapter {
             values.put(STATUS_BAR_PUSH_LINK, link);
         } else {
             values.put(STATUS_BAR_PUSH_LINK, EMPTY_VALUE);
+        }
+
+        if (text != null) {
+            values.put(STATUS_BAR_PUSH_TEXT, text);
+        } else {
+            values.put(STATUS_BAR_PUSH_TEXT, EMPTY_VALUE);
         }
 
         values.put(STATUS_BAR_PUSH_ROOM, room);
@@ -195,6 +201,7 @@ public class DBAdapter {
                 push.setUserName(cursor.getString(cursor.getColumnIndex(STATUS_BAR_PUSH_USER_NAME)));
                 push.setDate(cursor.getString(cursor.getColumnIndex(STATUS_BAR_PUSH_DATE)));
                 push.setLink(cursor.getString(cursor.getColumnIndex(STATUS_BAR_PUSH_LINK)));
+                push.setText(cursor.getString(cursor.getColumnIndex(STATUS_BAR_PUSH_TEXT)));
                 push.setRoom(cursor.getInt(cursor.getColumnIndex(STATUS_BAR_PUSH_ROOM)));
 
                 pushArray.add(push);

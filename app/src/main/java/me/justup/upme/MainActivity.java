@@ -23,12 +23,14 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.FileAsyncHttpResponseHandler;
 
 import org.apache.http.Header;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -52,9 +54,11 @@ import me.justup.upme.fragments.ProductsFragment;
 import me.justup.upme.fragments.UserFragment;
 import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.http.HttpIntentService;
+import me.justup.upme.interfaces.OnDownloadCloudFile;
 import me.justup.upme.interfaces.OnLoadMailFragment;
 import me.justup.upme.services.GPSTracker;
 import me.justup.upme.utils.AppContext;
+import me.justup.upme.utils.FileSaveThread;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.LOGE;
@@ -62,7 +66,7 @@ import static me.justup.upme.utils.LogUtils.LOGI;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 
-public class MainActivity extends BaseActivity implements View.OnClickListener, OnLoadMailFragment {
+public class MainActivity extends BaseActivity implements View.OnClickListener, OnLoadMailFragment, OnDownloadCloudFile {
     private static final String TAG = makeLogTag(MainActivity.class);
 
     private FrameLayout mMainFragmentContainer;
@@ -514,6 +518,23 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private void showBreakCallDialog(final String userName) {
         BreakCallDialog dialog = BreakCallDialog.newInstance(userName);
         dialog.show(getFragmentManager(), BreakCallDialog.BREAK_CALL_DIALOG);
+    }
+
+    @Override
+    public void onDownloadCloudFile(final String fileHash, final String fileName) {
+        ApiWrapper.downloadFileFromCloud(fileHash, new FileAsyncHttpResponseHandler(this) {
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
+                LOGE(TAG, "onDownloadCloudFile(): onFailure", throwable);
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, File file) {
+                LOGI(TAG, "onDownloadCloudFile(): onSuccess");
+
+                new FileSaveThread(MainActivity.this, file, fileName).execute();
+            }
+        });
     }
 
 }

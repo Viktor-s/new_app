@@ -13,6 +13,7 @@ public class Push implements Serializable {
     private int room = 0;
     private String date = "";
     private String link = "";
+    private String text = "";
 
     public int getId() {
         return id;
@@ -70,6 +71,14 @@ public class Push implements Serializable {
         this.link = link;
     }
 
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
     @Override
     public String toString() {
         return "Push{" +
@@ -80,6 +89,7 @@ public class Push implements Serializable {
                 ", room=" + room +
                 ", date=" + date +
                 ", link=" + link +
+                ", text=" + text +
                 '}';
     }
 

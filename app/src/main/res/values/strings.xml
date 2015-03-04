@@ -143,6 +143,7 @@
     <string name="invites_you">" приглашает вас "</string>
     <string name="in_chat">в чат</string>
     <string name="on_video">на видеосвязь</string>
+    <string name="submit_file">" прислал файл "</string>
 
     <!-- //////////////////////// WebRTC ////////////////////////  -->
     <string name="settings_name" translatable="no">AppRTC Settings</string>
@@ -240,6 +241,8 @@
 
     <string name="sent_file">" [Отправлен файл] "</string>
     <string name="file_in_cloud">Файл в облаке</string>
+    <string name="file_from_cloud_ok">Файл загружен</string>
+    <string name="file_from_cloud_error">Ошибка записи!</string>
     <string name="sent_file_error">Ошибка отправки файла!</string>
     <string name="dialog_video_call">Входящий видео-звонок</string>
     <string name="dialog_answer_call">Ответить</string>

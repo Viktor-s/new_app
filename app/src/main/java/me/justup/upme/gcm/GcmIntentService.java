@@ -40,6 +40,7 @@ public class GcmIntentService extends IntentService {
     private static final String CONNECTION_TYPE = "connection_type";
     private static final String ROOM = "room";
     private static final String LINK = "link";
+    private static final String TEXT = "text";
 
     private static final String TIME_FORMAT = "HH:mm - dd MMMM yyyy";
 
@@ -96,10 +97,11 @@ public class GcmIntentService extends IntentService {
 
                     String userName = (String) extras.get(USER_NAME);
                     String link = (String) extras.get(LINK);
+                    String text = (String) extras.get(TEXT);
 
                     // Post notification of received message.
                     if (connectionType != 0 && userName != null) {
-                        sendNotification(userId, userName, connectionType, room, link);
+                        sendNotification(userId, userName, connectionType, room, link, text);
                     }
                     break;
 
@@ -119,9 +121,9 @@ public class GcmIntentService extends IntentService {
         mDBAdapter.close();
     }
 
-    private void sendNotification(int userId, String userName, int connectionType, int room, String link) {
+    private void sendNotification(int userId, String userName, int connectionType, int room, String link, String text) {
         LOGD(TAG, "sendNotification: userId:" + userId + " userName:" + userName + " connectionType:"
-                + connectionType + " room:" + room + " link:" + link);
+                + connectionType + " room:" + room + " link:" + link + " text:" + text);
 
         if (connectionType == MailFragment.BREAK_CALL) {
             Intent i = new Intent(MainActivity.BROADCAST_ACTION_BREAK_CALL);
@@ -152,7 +154,7 @@ public class GcmIntentService extends IntentService {
         SimpleDateFormat mTimeFormat = new SimpleDateFormat(TIME_FORMAT, AppLocale.getAppLocale());
         String pushTime = mTimeFormat.format(date);
 
-        mDBAdapter.savePush(connectionType, userId, userName, room, pushTime, link);
+        mDBAdapter.savePush(connectionType, userId, userName, room, pushTime, link, text);
     }
 
     private void makeToast(final String message) {
