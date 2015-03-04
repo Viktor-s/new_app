@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.Fragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -46,9 +47,9 @@ public class BreakCallDialog extends DialogFragment {
                 .setPositiveButton(R.string.button_close, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-
-                        // do some
-
+                        Fragment videoFragment = getFragmentManager().findFragmentById(R.id.container_video_chat);
+                        if (videoFragment != null)
+                            getFragmentManager().beginTransaction().remove(videoFragment).commit();
                         dialog.dismiss();
                     }
                 });

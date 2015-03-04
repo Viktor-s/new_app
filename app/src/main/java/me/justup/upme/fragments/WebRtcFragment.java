@@ -14,6 +14,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.URLUtil;
+import android.widget.RelativeLayout;
+import android.widget.TableLayout;
 import android.widget.Toast;
 
 import org.webrtc.IceCandidate;
@@ -117,6 +119,7 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         roomId = (String) getArguments().getSerializable(ROOM_ID);
+        Log.d("TAG_11", "onCreate roomId" + roomId);
 
         // Get setting keys.
         PreferenceManager.setDefaultValues(getActivity(), R.xml.preferences, false);
@@ -313,7 +316,18 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
     @Override
     public void onVideoScalingSwitch(VideoRendererGui.ScalingType scalingType) {
         this.scalingType = scalingType;
-        updateVideoView();
+        RelativeLayout containerVideoChat = (RelativeLayout) getActivity().findViewById(R.id.container_video_chat);
+        if (scalingType == VideoRendererGui.ScalingType.SCALE_ASPECT_FIT)
+            containerVideoChat.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
+        else {
+            int dpValue = 250;
+            float d = getActivity().getResources().getDisplayMetrics().density;
+            int size = (int)(dpValue * d);
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(size, size);
+            params.addRule(RelativeLayout.ALIGN_PARENT_END, 1);
+            containerVideoChat.setLayoutParams(params);
+        }
+        // updateVideoView();
     }
 
     // Helper functions.
@@ -334,14 +348,11 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
     }
 
     private void updateVideoView() {
-        VideoRendererGui.update(remoteRender, REMOTE_X, REMOTE_Y,
-                REMOTE_WIDTH, REMOTE_HEIGHT, scalingType);
+        VideoRendererGui.update(remoteRender, REMOTE_X, REMOTE_Y, REMOTE_WIDTH, REMOTE_HEIGHT, scalingType);
         if (iceConnected) {
-            VideoRendererGui.update(localRender, LOCAL_X_CONNECTED, LOCAL_Y_CONNECTED,
-                    LOCAL_WIDTH_CONNECTED, LOCAL_HEIGHT_CONNECTED, VideoRendererGui.ScalingType.SCALE_ASPECT_FIT);
+            VideoRendererGui.update(localRender, LOCAL_X_CONNECTED, LOCAL_Y_CONNECTED, LOCAL_WIDTH_CONNECTED, LOCAL_HEIGHT_CONNECTED, VideoRendererGui.ScalingType.SCALE_ASPECT_FIT);
         } else {
-            VideoRendererGui.update(localRender, LOCAL_X_CONNECTING, LOCAL_Y_CONNECTING,
-                    LOCAL_WIDTH_CONNECTING, LOCAL_HEIGHT_CONNECTING, scalingType);
+            VideoRendererGui.update(localRender, LOCAL_X_CONNECTING, LOCAL_Y_CONNECTING, LOCAL_WIDTH_CONNECTING, LOCAL_HEIGHT_CONNECTING, scalingType);
         }
     }
 
@@ -389,8 +400,7 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
             public void run() {
                 if (peerConnectionClient == null) {
                     peerConnectionClient = new PeerConnectionClient();
-                    peerConnectionClient.createPeerConnectionFactory(getActivity(), videoCodec, hwCodecAcceleration,
-                            VideoRendererGui.getEGLContext(), WebRtcFragment.this);
+                    peerConnectionClient.createPeerConnectionFactory(getActivity(), videoCodec, hwCodecAcceleration, VideoRendererGui.getEGLContext(), WebRtcFragment.this);
                 }
                 if (signalingParameters != null) {
                     Log.w(TAG, "EGL context is ready after room connection.");
@@ -520,8 +530,7 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
             @Override
             public void run() {
                 if (peerConnectionClient == null) {
-                    Log.e(TAG,
-                            "Received ICE candidate for non-initilized peer connection.");
+                    Log.e(TAG, "Received ICE candidate for non-initilized peer connection.");
                     return;
                 }
                 peerConnectionClient.addRemoteIceCandidate(candidate);

@@ -167,8 +167,7 @@ public class CallFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        callEvents = (OnCallEvents) getFragmentManager().findFragmentById(R.id.mail_messages_container_frameLayout);
-        Log.d("TAG_", "onAttach --- callEvents" + callEvents);
+        callEvents = (OnCallEvents) getFragmentManager().findFragmentById(R.id.container_video_chat);
     }
 
     private Map<String, String> getReportMap(StatsReport report) {

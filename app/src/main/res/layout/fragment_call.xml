@@ -72,8 +72,7 @@
            android:background="@drawable/ic_action_return_from_full_screen"
            android:contentDescription="@string/disconnect_call"
            android:layout_width="48dp"
-           android:layout_height="48dp"
-           android:visibility="gone"/>
+           android:layout_height="48dp"/>
     </LinearLayout>
 
 </RelativeLayout>
