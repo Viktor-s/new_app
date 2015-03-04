@@ -41,6 +41,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.google.gson.JsonSyntaxException;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.apache.http.Header;
@@ -64,6 +65,7 @@ import java.util.Date;
 
 import me.justup.upme.R;
 import me.justup.upme.dialogs.WarningDialog;
+import me.justup.upme.entity.SendFileToCloudResponse;
 import me.justup.upme.entity.SendNotificationQuery;
 import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.services.PushIntentService;
@@ -128,7 +130,6 @@ public class MailMessagesFragment extends Fragment {
     private int friendId;
     private String mYourName;
     private String mFilePath;
-    private String mPushLink;
 
 
     public static MailMessagesFragment newInstance(String yourName, String userName, int userId) {
@@ -248,7 +249,6 @@ public class MailMessagesFragment extends Fragment {
                     else
                         text = getString(R.string.sent_file);
 
-                    mPushLink = mFilePath;
                     mFilePath = null;
                     mImageAttachedImageView.setVisibility(View.GONE);
                 }
@@ -412,9 +412,24 @@ public class MailMessagesFragment extends Fragment {
                 String content = ApiWrapper.responseBodyToString(responseBody);
                 LOGD(TAG, "onSuccess(): " + content);
 
-                Toast.makeText(getActivity(), getString(R.string.file_in_cloud), Toast.LENGTH_SHORT).show();
+                SendFileToCloudResponse response = null;
+                try {
+                    response = ApiWrapper.gson.fromJson(content, SendFileToCloudResponse.class);
+                } catch (JsonSyntaxException e) {
+                    LOGE(TAG, "gson.fromJson:\n" + content);
+                }
 
-                startNotificationIntent(friendId, mYourName, MailFragment.FILE, mPushLink, file.getName());
+                if (response != null) {
+                    if (response.status.equals(SendFileToCloudResponse.STATUS_OK)) {
+                        Toast.makeText(getActivity(), getString(R.string.file_in_cloud), Toast.LENGTH_SHORT).show();
+                        startNotificationIntent(friendId, mYourName, MailFragment.FILE, response.file_hash, file.getName());
+                    } else {
+                        showWarningDialog(response.reason);
+                    }
+
+                } else {
+                    Toast.makeText(getActivity(), getString(R.string.inner_error), Toast.LENGTH_LONG).show();
+                }
             }
 
             @Override
@@ -496,6 +511,8 @@ public class MailMessagesFragment extends Fragment {
 
                 case REQUEST_TAKE_IMAGE_FILE:
                     Uri selectedImageUri = data.getData();
+                    mFilePath = getPath(selectedImageUri, AppContext.getAppContext());
+
                     try {
                         mAttachImageBitmap = decodeUri(selectedImageUri);
                     } catch (FileNotFoundException e) {
@@ -508,6 +525,7 @@ public class MailMessagesFragment extends Fragment {
                 case REQUEST_TAKE_FILE:
                     Uri uriFile = data.getData();
                     mFilePath = getPath(uriFile, AppContext.getAppContext());
+
                     mAttachFileType = AttachFileType.DOC;
                     mImageAttachedImageView.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_input_get));
                     break;

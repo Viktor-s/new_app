@@ -250,5 +250,6 @@
     <string name="button_clear">Отчистить</string>
     <string name="button_close">Закрыть</string>
     <string name="user_break_call">отбил звонок</string>
+    <string name="inner_error">Внутренняя ошибка!</string>
 
 </resources>
