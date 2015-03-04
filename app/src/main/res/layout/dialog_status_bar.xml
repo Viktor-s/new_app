@@ -37,11 +37,16 @@
             android:id="@+id/clear_all_messages_button" />
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/push_container"
-        android:orientation="vertical"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/push_container"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </ScrollView>
 
     <TextView
         android:layout_width="match_parent"

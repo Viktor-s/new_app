@@ -38,6 +38,9 @@ public class StatusBarSliderDialog extends DialogFragment {
     private static final String TIME_FORMAT = "HH:mm";
     private static final String DATE_FORMAT = "E dd MMMM yyyy";
 
+    private static final String LEFT_BRACERS = "[ ";
+    private static final String RIGHT_BRACERS = " ]";
+
     private DBAdapter mDBAdapter;
     private LinearLayout mPushContainer;
     private StringBuilder mStringBuilder = new StringBuilder();
@@ -143,7 +146,7 @@ public class StatusBarSliderDialog extends DialogFragment {
                 break;
 
             case MailFragment.FILE:
-                mStringBuilder.append(getString(R.string.submit_file)).append(push.getText());
+                mStringBuilder.append(getString(R.string.submit_file)).append(LEFT_BRACERS).append(push.getText()).append(RIGHT_BRACERS);
                 break;
 
             default:
