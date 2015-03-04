@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CursorAdapter;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -56,7 +57,7 @@ public class MailContactsAdapter extends CursorAdapter {
     }
 
     @Override
-    public void bindView(View view, final Context context, Cursor cur) {
+    public void bindView(final View view, final Context context, Cursor cur) {
         final int id = cur.getInt(cur.getColumnIndex(DBHelper.MAIL_CONTACT_SERVER_ID));
         //String imagePath = cur.getString(cur.getColumnIndex(DBHelper.MAIL_CONTACT_IMG));
         String contactName = cur.getString(cur.getColumnIndex(DBHelper.MAIL_CONTACT_NAME));
@@ -78,13 +79,11 @@ public class MailContactsAdapter extends CursorAdapter {
             holder.mCall.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    final FragmentTransaction ft = hostFragment.getChildFragmentManager().beginTransaction();
-                    Random rand = new Random();
-                    int min = 1000000000;
-                    int max = 2147483647;
+                    final FragmentTransaction ft = parentActivity.getFragmentManager().beginTransaction();
+                    Random rand = new Random(); int min = 1000000000; int max = 2147483647;
                     int roomId = rand.nextInt((max - min) + 1) + min;
                     startNotificationIntent(id, roomId);
-                    ft.replace(R.id.mail_messages_container_frameLayout, WebRtcFragment.newInstance(String.valueOf(roomId)));
+                    ft.replace(R.id.container_video_chat, WebRtcFragment.newInstance(String.valueOf(roomId)));
                     ft.commit();
                 }
             });

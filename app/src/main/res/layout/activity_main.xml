@@ -116,4 +116,12 @@
         tools:layout="@layout/fragment_status_bar"
         android:layout_alignParentTop="true"
         android:layout_toStartOf="@+id/main_content_container" />
+
+    <RelativeLayout
+        android:id="@+id/container_video_chat"
+        android:layout_alignParentEnd="true"
+        android:layout_width="250dp"
+        android:layout_height="250dp">
+    </RelativeLayout>
+
 </RelativeLayout>
