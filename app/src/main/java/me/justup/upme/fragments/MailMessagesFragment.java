@@ -80,6 +80,7 @@ public class MailMessagesFragment extends Fragment {
     private static final String TAG = makeLogTag(MailMessagesFragment.class);
     private static final String FRIEND_NAME = "mail_messages_friend_name";
     private static final String YOUR_NAME = "mail_messages_your_name";
+    private static final String FRIEND_ID = "mail_messages_friend_id";
 
     private static final int REQUEST_TAKE_PHOTO = 0;
     private static final int REQUEST_TAKE_IMAGE_FILE = 1;
@@ -122,17 +123,19 @@ public class MailMessagesFragment extends Fragment {
 
     private EditText mTextMessage;
     private String mFriendName;
+    private int friendId;
     private String mYourName;
     private String mFilePath;
     private String mPushLink;
 
 
-    public static MailMessagesFragment newInstance(String yourName, String userName) {
+    public static MailMessagesFragment newInstance(String yourName, String userName, int userId) {
         MailMessagesFragment fragment = new MailMessagesFragment();
 
         Bundle args = new Bundle();
         args.putString(FRIEND_NAME, userName);
         args.putString(YOUR_NAME, yourName);
+        args.putInt(FRIEND_ID, userId);
         fragment.setArguments(args);
 
         return fragment;
@@ -145,6 +148,7 @@ public class MailMessagesFragment extends Fragment {
 
         mYourName = getArguments().getString(YOUR_NAME, "");
         mFriendName = getArguments().getString(FRIEND_NAME, "") + AT + SERVICE;
+        friendId = getArguments().getInt(FRIEND_ID, 0);
     }
 
     @Override
@@ -395,7 +399,7 @@ public class MailMessagesFragment extends Fragment {
 
                 Toast.makeText(getActivity(), getString(R.string.file_in_cloud), Toast.LENGTH_SHORT).show();
 
-                //startNotificationIntent(userId, mYourName, MailFragment.FILE, mPushLink);
+                startNotificationIntent(friendId, mYourName, MailFragment.FILE, mPushLink);
             }
 
             @Override

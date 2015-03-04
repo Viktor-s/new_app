@@ -152,7 +152,7 @@ public class GcmIntentService extends IntentService {
         SimpleDateFormat mTimeFormat = new SimpleDateFormat(TIME_FORMAT, AppLocale.getAppLocale());
         String pushTime = mTimeFormat.format(date);
 
-        mDBAdapter.savePush(connectionType, userId, userName, room, pushTime);
+        mDBAdapter.savePush(connectionType, userId, userName, room, pushTime, link);
     }
 
     private void makeToast(final String message) {

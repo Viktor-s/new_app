@@ -44,6 +44,9 @@ public class DBAdapter {
     private SQLiteDatabase database;
     private DBHelper dbHelper;
 
+    public static final String EMPTY_VALUE = "-";
+
+
     public DBAdapter(Context context) {
         dbHelper = new DBHelper(context);
     }
@@ -159,12 +162,19 @@ public class DBAdapter {
         LocalBroadcastManager.getInstance(AppContext.getAppContext()).sendBroadcast(intent);
     }
 
-    public long savePush(int type, int userId, String userName, int room, String date) {
+    public long savePush(int type, int userId, String userName, int room, String date, String link) {
         ContentValues values = new ContentValues();
         values.put(STATUS_BAR_PUSH_TYPE, type);
         values.put(STATUS_BAR_PUSH_USER_ID, userId);
         values.put(STATUS_BAR_PUSH_USER_NAME, userName);
         values.put(STATUS_BAR_PUSH_DATE, date);
+
+        if (link != null) {
+            values.put(STATUS_BAR_PUSH_LINK, link);
+        } else {
+            values.put(STATUS_BAR_PUSH_LINK, EMPTY_VALUE);
+        }
+
         values.put(STATUS_BAR_PUSH_ROOM, room);
 
         return database.insert(STATUS_BAR_PUSH_TABLE_NAME, null, values);
@@ -184,6 +194,7 @@ public class DBAdapter {
                 push.setUserId(cursor.getInt(cursor.getColumnIndex(STATUS_BAR_PUSH_USER_ID)));
                 push.setUserName(cursor.getString(cursor.getColumnIndex(STATUS_BAR_PUSH_USER_NAME)));
                 push.setDate(cursor.getString(cursor.getColumnIndex(STATUS_BAR_PUSH_DATE)));
+                push.setLink(cursor.getString(cursor.getColumnIndex(STATUS_BAR_PUSH_LINK)));
                 push.setRoom(cursor.getInt(cursor.getColumnIndex(STATUS_BAR_PUSH_ROOM)));
 
                 pushArray.add(push);
