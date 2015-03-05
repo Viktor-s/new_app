@@ -1,6 +1,7 @@
 package me.justup.upme;
 
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -52,6 +53,7 @@ import me.justup.upme.fragments.MailFragment;
 import me.justup.upme.fragments.NewsFeedFragment;
 import me.justup.upme.fragments.ProductsFragment;
 import me.justup.upme.fragments.UserFragment;
+import me.justup.upme.fragments.WebRtcFragment;
 import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.http.HttpIntentService;
 import me.justup.upme.interfaces.OnDownloadCloudFile;
@@ -491,8 +493,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public void onLoadMailFragment(final Push push) {
         setPush(push);
-        startHttpIntent(new GetMailContactQuery(), HttpIntentService.MAIL_CONTACT_PART);
 
+        if (push.getType() == MailFragment.WEBRTC) {
+            final FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.replace(R.id.container_video_chat, WebRtcFragment.newInstance(String.valueOf(push.getRoom())));
+            ft.commit();
+            return;
+        }
+
+        startHttpIntent(new GetMailContactQuery(), HttpIntentService.MAIL_CONTACT_PART);
         Fragment fragment = new MailFragment();
         getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, fragment).commit();
 
