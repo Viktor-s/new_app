@@ -65,6 +65,7 @@ import java.util.Date;
 
 import me.justup.upme.R;
 import me.justup.upme.dialogs.WarningDialog;
+import me.justup.upme.entity.FileAddShareWithQuery;
 import me.justup.upme.entity.SendFileToCloudResponse;
 import me.justup.upme.entity.SendNotificationQuery;
 import me.justup.upme.http.ApiWrapper;
@@ -410,7 +411,7 @@ public class MailMessagesFragment extends Fragment {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 String content = ApiWrapper.responseBodyToString(responseBody);
-                LOGD(TAG, "onSuccess(): " + content);
+                LOGD(TAG, "sendFileToCloud onSuccess(): " + content);
 
                 SendFileToCloudResponse response = null;
                 try {
@@ -422,7 +423,8 @@ public class MailMessagesFragment extends Fragment {
                 if (response != null) {
                     if (response.status.equals(SendFileToCloudResponse.STATUS_OK)) {
                         Toast.makeText(getActivity(), getString(R.string.file_in_cloud), Toast.LENGTH_SHORT).show();
-                        startNotificationIntent(friendId, mYourName, MailFragment.FILE, response.file_hash, file.getName());
+                        addFileShareWith(response.file_hash, file.getName());
+
                     } else {
                         showWarningDialog(response.reason);
                     }
@@ -435,14 +437,14 @@ public class MailMessagesFragment extends Fragment {
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                 String content = ApiWrapper.responseBodyToString(responseBody);
-                LOGE(TAG, "onFailure(): " + content);
+                LOGE(TAG, "sendFileToCloud onFailure(): " + content);
 
                 Toast.makeText(getActivity(), getString(R.string.sent_file_error), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    public void startNotificationIntent(int userId, String ownerName, int connectionType, String link, String fileName) {
+    private void startNotificationIntent(int userId, String ownerName, int connectionType, String link, String fileName) {
         SendNotificationQuery push = new SendNotificationQuery();
         push.params.user_id = userId;
         push.params.data.owner_name = ownerName;
@@ -455,6 +457,28 @@ public class MailMessagesFragment extends Fragment {
 
         Intent intent = new Intent(getActivity(), PushIntentService.class);
         getActivity().startService(intent.putExtras(bundle));
+    }
+
+    private void addFileShareWith(final String fileHash, final String fileName) {
+        FileAddShareWithQuery query = new FileAddShareWithQuery();
+        query.params.file_hash = fileHash;
+        query.params.member_ids = friendId;
+
+        ApiWrapper.query(query, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                String content = ApiWrapper.responseBodyToString(responseBody);
+                LOGD(TAG, "addFileShareWith onSuccess(): " + content);
+
+                startNotificationIntent(friendId, mYourName, MailFragment.FILE, fileHash, fileName);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                String content = ApiWrapper.responseBodyToString(responseBody);
+                LOGE(TAG, "addFileShareWith onFailure(): " + content);
+            }
+        });
     }
 
     private void selectImage() {

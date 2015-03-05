@@ -66,6 +66,8 @@ public class ApiWrapper {
     private static final String CALL_CLOUD_UPLOAD = "/upload";
     private static final String CALL_CLOUD_FILE = "/file/";
 
+    public static final String FILE_ADD_SHARE_WITH = "File.addShareWith";
+
 
     private static void post(final StringEntity se, AsyncHttpResponseHandler responseHandler) {
         addClientHeader();
