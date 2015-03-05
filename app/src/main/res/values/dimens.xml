@@ -72,4 +72,6 @@
     <dimen name="ordering_fragment_block_border">30dp</dimen>
     <dimen name="main_left_menu_width">210dp</dimen>
 
+    <dimen name="file_browser_item_end_margin">15dp</dimen>
+
 </resources>

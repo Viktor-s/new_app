@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import me.justup.upme.dialogs.BreakCallDialog;
 import me.justup.upme.dialogs.CallDialog;
 import me.justup.upme.dialogs.StatusBarSliderDialog;
+import me.justup.upme.dialogs.WarningDialog;
 import me.justup.upme.entity.ArticlesGetShortDescriptionQuery;
 import me.justup.upme.entity.BaseHttpQueryEntity;
 import me.justup.upme.entity.CalendarGetEventsQuery;
@@ -526,6 +527,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
                 LOGE(TAG, "onDownloadCloudFile(): onFailure", throwable);
+
+                if (throwable != null) {
+                    showWarningDialog(throwable.getMessage());
+                }
             }
 
             @Override
@@ -535,6 +540,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 new FileSaveThread(MainActivity.this, file, fileName).execute();
             }
         });
+    }
+
+    private void showWarningDialog(String message) {
+        WarningDialog dialog = WarningDialog.newInstance(getString(R.string.network_error), message);
+        dialog.show(getFragmentManager(), WarningDialog.WARNING_DIALOG);
     }
 
 }
