@@ -1,6 +1,7 @@
 package me.justup.upme;
 
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -53,6 +54,7 @@ import me.justup.upme.fragments.MailFragment;
 import me.justup.upme.fragments.NewsFeedFragment;
 import me.justup.upme.fragments.ProductsFragment;
 import me.justup.upme.fragments.UserFragment;
+import me.justup.upme.fragments.WebRtcFragment;
 import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.http.HttpIntentService;
 import me.justup.upme.interfaces.OnDownloadCloudFile;
@@ -69,6 +71,15 @@ import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener, OnLoadMailFragment, OnDownloadCloudFile {
     private static final String TAG = makeLogTag(MainActivity.class);
+    private static final int SELECTED_FRAGMENT_NEWS = 1;
+    private static final int SELECTED_FRAGMENT_MAIL = 2;
+    private static final int SELECTED_FRAGMENT_CALENDAR = 3;
+    private static final int SELECTED_FRAGMENT_PRODUCTS = 4;
+    private static final int SELECTED_FRAGMENT_BRIEFCASE = 5;
+    private static final int SELECTED_FRAGMENT_DOCS = 6;
+    private static final int SELECTED_FRAGMENT_BROWSER = 7;
+    private int currentlySelectedFragment;
+
 
     private FrameLayout mMainFragmentContainer;
     private Animation mFragmentSliderOut;
@@ -174,45 +185,67 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
         switch (view.getId()) {
             case R.id.news_menu_item:
-                startHttpIntent(getShortDescriptionQuery(20, 0), HttpIntentService.NEWS_PART_SHORT);
-                startHttpIntent(getShortDescriptionQuery(500, 0), HttpIntentService.NEWS_PART_SHORT);
-                changeButtonState(mNewsButton);
-                fragment = new NewsFeedFragment();
+                if (currentlySelectedFragment != SELECTED_FRAGMENT_NEWS) {
+                    startHttpIntent(getShortDescriptionQuery(20, 0), HttpIntentService.NEWS_PART_SHORT);
+                    startHttpIntent(getShortDescriptionQuery(500, 20), HttpIntentService.NEWS_PART_SHORT);
+                    changeButtonState(mNewsButton);
+                    fragment = new NewsFeedFragment();
+                    currentlySelectedFragment = SELECTED_FRAGMENT_NEWS;
+                }
+
                 break;
 
             case R.id.mail_menu_item:
-                startHttpIntent(new GetMailContactQuery(), HttpIntentService.MAIL_CONTACT_PART);
-                changeButtonState(mMailButton);
-                fragment = new MailFragment();
+                if (currentlySelectedFragment != SELECTED_FRAGMENT_MAIL) {
+                    startHttpIntent(new GetMailContactQuery(), HttpIntentService.MAIL_CONTACT_PART);
+                    changeButtonState(mMailButton);
+                    fragment = new MailFragment();
+                    currentlySelectedFragment = SELECTED_FRAGMENT_MAIL;
+                }
                 break;
 
             case R.id.calendar_menu_item:
-                LocalDateTime firstDayCurrentWeek = new LocalDateTime().withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0).withDayOfWeek(DateTimeConstants.MONDAY);
-                startHttpIntent(getEventCalendarQuery(firstDayCurrentWeek), HttpIntentService.CALENDAR_PART);
-                changeButtonState(mCalendarButton);
-                fragment = new CalendarFragment();
+                if (currentlySelectedFragment != SELECTED_FRAGMENT_CALENDAR) {
+                    LocalDateTime firstDayCurrentWeek = new LocalDateTime().withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0).withDayOfWeek(DateTimeConstants.MONDAY);
+                    startHttpIntent(getEventCalendarQuery(firstDayCurrentWeek), HttpIntentService.CALENDAR_PART);
+                    changeButtonState(mCalendarButton);
+                    fragment = new CalendarFragment();
+                    currentlySelectedFragment = SELECTED_FRAGMENT_CALENDAR;
+                }
                 break;
 
             case R.id.products_menu_item:
-                startHttpIntent(new ArticlesGetShortDescriptionQuery(), HttpIntentService.PRODUCTS_PART);
-                changeButtonState(mProductsButton);
-                fragment = new ProductsFragment();
+                if (currentlySelectedFragment != SELECTED_FRAGMENT_PRODUCTS) {
+                    startHttpIntent(new ArticlesGetShortDescriptionQuery(), HttpIntentService.PRODUCTS_PART);
+                    changeButtonState(mProductsButton);
+                    fragment = new ProductsFragment();
+                    currentlySelectedFragment = SELECTED_FRAGMENT_PRODUCTS;
+                }
                 break;
 
             case R.id.briefcase_menu_item:
-                startHttpIntent(new GetMailContactQuery(), HttpIntentService.MAIL_CONTACT_PART);
-                changeButtonState(mBriefcaseButton);
-                fragment = new BriefcaseFragment();
+                if (currentlySelectedFragment != SELECTED_FRAGMENT_BRIEFCASE) {
+                    startHttpIntent(new GetMailContactQuery(), HttpIntentService.MAIL_CONTACT_PART);
+                    changeButtonState(mBriefcaseButton);
+                    fragment = new BriefcaseFragment();
+                    currentlySelectedFragment = SELECTED_FRAGMENT_BRIEFCASE;
+                }
                 break;
 
             case R.id.docs_menu_item:
-                changeButtonState(mDocsButton);
-                fragment = new DocumentsFragment();
+                if (currentlySelectedFragment != SELECTED_FRAGMENT_DOCS) {
+                    changeButtonState(mDocsButton);
+                    fragment = new DocumentsFragment();
+                    currentlySelectedFragment = SELECTED_FRAGMENT_DOCS;
+                }
                 break;
 
             case R.id.browser_menu_item:
-                changeButtonState(mBrowserButton);
-                fragment = new BrowserFragment();
+                if (currentlySelectedFragment != SELECTED_FRAGMENT_BROWSER) {
+                    changeButtonState(mBrowserButton);
+                    fragment = new BrowserFragment();
+                    currentlySelectedFragment = SELECTED_FRAGMENT_BROWSER;
+                }
                 break;
 
             default:
@@ -492,8 +525,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public void onLoadMailFragment(final Push push) {
         setPush(push);
-        startHttpIntent(new GetMailContactQuery(), HttpIntentService.MAIL_CONTACT_PART);
 
+        if (push.getType() == MailFragment.WEBRTC) {
+            final FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.replace(R.id.container_video_chat, WebRtcFragment.newInstance(String.valueOf(push.getRoom())));
+            ft.commit();
+            return;
+        }
+
+        startHttpIntent(new GetMailContactQuery(), HttpIntentService.MAIL_CONTACT_PART);
         Fragment fragment = new MailFragment();
         getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, fragment).commit();
 

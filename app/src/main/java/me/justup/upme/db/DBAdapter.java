@@ -87,6 +87,14 @@ public class DBAdapter {
         sendBroadcast(NEWS_FEED_SQL_BROADCAST_INTENT);
     }
 
+    public void saveNewsReadValue(int articleId) {
+        ContentValues values = new ContentValues();
+        values.put(IS_SHORT_NEWS_READ_ARTICLE_ID, articleId);
+        values.put(IS_SHORT_NEWS_READ_VALUE, 1);
+        database.insertWithOnConflict(IS_SHORT_NEWS_READ_TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+    }
+
+
     public void saveFullNews(ArticleFullResponse entity) {
 
         ContentValues values = new ContentValues();

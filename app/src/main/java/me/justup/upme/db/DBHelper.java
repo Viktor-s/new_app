@@ -8,7 +8,7 @@ import android.provider.BaseColumns;
 
 public class DBHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "upme.db";
-    private static final int DATABASE_VERSION = 9;
+    private static final int DATABASE_VERSION = 10;
 
     public static final String BASE_TABLE_NAME = "base_table";
     public static final String BASE_ID = BaseColumns._ID;
@@ -38,6 +38,11 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String SHORT_NEWS_COMMENTS_AUTHOR_ID = "author_id";
     public static final String SHORT_NEWS_COMMENTS_AUTHOR_NAME = "author_name";
     public static final String SHORT_NEWS_COMMENTS_AUTHOR_IMAGE = "author_image";
+
+    public static final String IS_SHORT_NEWS_READ_TABLE_NAME = "is_short_news_read_table";
+    public static final String IS_SHORT_NEWS_READ_ID = BaseColumns._ID;
+    public static final String IS_SHORT_NEWS_READ_ARTICLE_ID = "article_id";
+    public static final String IS_SHORT_NEWS_READ_VALUE = "value";
 
     public static final String MAIL_CONTACT_TABLE_NAME = "mail_contact_table";
     public static final String MAIL_CONTACT_ID = BaseColumns._ID;
@@ -76,6 +81,13 @@ public class DBHelper extends SQLiteOpenHelper {
             + BASE_PROJECT_ID + " INTEGER, "
             + BASE_START_DATE + " TEXT);";
 
+    protected static final String CREATE_TABLE_IS_SHORT_NEWS_READ = "CREATE TABLE "
+            + IS_SHORT_NEWS_READ_TABLE_NAME + "("
+            + IS_SHORT_NEWS_READ_ID + " INTEGER, "
+            + IS_SHORT_NEWS_READ_ARTICLE_ID + " INTEGER PRIMARY KEY, "
+            + IS_SHORT_NEWS_READ_VALUE + " INTEGER DEFAULT 0" + ")";
+
+
     protected static final String CREATE_TABLE_SHORT_NEWS_COMMENTS = "CREATE TABLE "
             + SHORT_NEWS_COMMENTS_TABLE_NAME + "("
             + SHORT_NEWS_COMMENTS_ID + " INTEGER, "
@@ -86,6 +98,7 @@ public class DBHelper extends SQLiteOpenHelper {
             + SHORT_NEWS_COMMENTS_AUTHOR_NAME + " TEXT, "
             + SHORT_NEWS_COMMENTS_AUTHOR_IMAGE + " TEXT, "
             + SHORT_NEWS_IS_READED + " INTEGER" + ")";
+
 
     protected static final String CREATE_TABLE_SHORT_NEWS = "CREATE TABLE "
             + SHORT_NEWS_TABLE_NAME + "("
@@ -146,6 +159,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase database) {
         database.execSQL(CREATE_TABLE_BASE);
         database.execSQL(CREATE_TABLE_SHORT_NEWS);
+        database.execSQL(CREATE_TABLE_IS_SHORT_NEWS_READ);
         database.execSQL(CREATE_TABLE_FULL_NEWS);
         database.execSQL(CREATE_TABLE_MAIL_CONTACT);
         database.execSQL(CREATE_TABLE_SHORT_NEWS_COMMENTS);
@@ -157,6 +171,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + BASE_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + SHORT_NEWS_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + IS_SHORT_NEWS_READ_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + MAIL_CONTACT_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + SHORT_NEWS_COMMENTS_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + FULL_NEWS_TABLE_NAME);

@@ -1,6 +1,7 @@
 package me.justup.upme.fragments;
 
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -16,10 +17,13 @@ import java.util.List;
 
 import me.justup.upme.ProductItemActivity;
 import me.justup.upme.R;
+import me.justup.upme.db.DBAdapter;
+import me.justup.upme.db.DBHelper;
 import me.justup.upme.entity.CategoryProductEntityMock;
 import me.justup.upme.entity.GroupProductEntity;
 import me.justup.upme.entity.ListGroupProductMock;
 import me.justup.upme.entity.ProductEntityMock;
+import me.justup.upme.utils.AppContext;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
@@ -32,9 +36,17 @@ public class ProductsFragment extends Fragment implements View.OnClickListener {
     List<GroupProductEntity> listGroup;
     ListGroupProductMock listGroupProductMock;
 
+    private DBAdapter mDBAdapter;
+    private DBHelper mDBHelper;
+    private BroadcastReceiver receiver;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mDBHelper = new DBHelper(AppContext.getAppContext());
+        mDBAdapter = new DBAdapter(AppContext.getAppContext());
+
 
         listGroupProductMock = ListGroupProductMock.getInstance(getActivity());
         listGroup = listGroupProductMock.getListGroupProduct();

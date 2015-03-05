@@ -82,9 +82,9 @@ public class MailContactsAdapter extends CursorAdapter {
                     final FragmentTransaction ft = parentActivity.getFragmentManager().beginTransaction();
                     Random rand = new Random(); int min = 1000000000; int max = 2147483647;
                     int roomId = rand.nextInt((max - min) + 1) + min;
-                    startNotificationIntent(id, roomId);
                     ft.replace(R.id.container_video_chat, WebRtcFragment.newInstance(String.valueOf(roomId)));
                     ft.commit();
+                    startNotificationIntent(id, roomId);
                 }
             });
         }

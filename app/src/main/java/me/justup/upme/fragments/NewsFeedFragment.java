@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,9 +29,12 @@ import me.justup.upme.db.DBHelper;
 import me.justup.upme.entity.ArticleFullQuery;
 import me.justup.upme.entity.ArticleShortCommentEntity;
 import me.justup.upme.entity.ArticleShortEntity;
+import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.http.HttpIntentService;
 import me.justup.upme.utils.AppContext;
 
+import static me.justup.upme.db.DBHelper.IS_SHORT_NEWS_READ_ARTICLE_ID;
+import static me.justup.upme.db.DBHelper.IS_SHORT_NEWS_READ_TABLE_NAME;
 import static me.justup.upme.db.DBHelper.SHORT_NEWS_COMMENTS_AUTHOR_ID;
 import static me.justup.upme.db.DBHelper.SHORT_NEWS_COMMENTS_AUTHOR_IMAGE;
 import static me.justup.upme.db.DBHelper.SHORT_NEWS_COMMENTS_AUTHOR_NAME;
@@ -65,23 +69,25 @@ public class NewsFeedFragment extends Fragment {
     private int to = 10;
     private FrameLayout mProgressBar;
     private boolean isFirstArticlesUpdate = true;
-    private BroadcastReceiver receiver;
+    private BroadcastReceiver mNewsFeedReceiver;
+    private ArrayList<Integer> mReadNewsList;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         mDBHelper = new DBHelper(AppContext.getAppContext());
         mDBAdapter = new DBAdapter(AppContext.getAppContext());
-        mDBAdapter.open();
+        Cursor cursorReadNews = mDBHelper.getWritableDatabase().rawQuery("SELECT * FROM " + IS_SHORT_NEWS_READ_TABLE_NAME, null);
+        mReadNewsList = getAllReadNewsFromCursor(cursorReadNews);
+        if (cursorReadNews != null)
+            cursorReadNews.close();
         selectQueryShortNews = "SELECT * FROM " + SHORT_NEWS_TABLE_NAME;
         Cursor cursorNews = mDBHelper.getWritableDatabase().rawQuery(selectQueryShortNews, null);
-        mNewsFeedEntityList = fillNewsFromCursor(cursorNews);
+        mNewsFeedEntityList = fillNewsFromCursor(cursorNews, mReadNewsList);
         if (mNewsFeedEntityList.size() >= 10) {
             mNewsFeedEntityPartOfList = getNextArticlesPack();
         }
-
         if (cursorNews != null)
             cursorNews.close();
     }
@@ -89,7 +95,7 @@ public class NewsFeedFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        LocalBroadcastManager.getInstance(NewsFeedFragment.this.getActivity()).unregisterReceiver(receiver);
+        LocalBroadcastManager.getInstance(NewsFeedFragment.this.getActivity()).unregisterReceiver(mNewsFeedReceiver);
         LOGI(TAG, "unregisterRecNewsFeed");
         mDBAdapter.close();
     }
@@ -97,38 +103,47 @@ public class NewsFeedFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        mDBAdapter.open();
         LOGI(TAG, "RegisterRecNewsFeed");
-        receiver = new BroadcastReceiver() {
+        mNewsFeedReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (isFirstArticlesUpdate) {
-                    LOGI(TAG, "onReceive, first update");
-                    Cursor cursorNews = mDBHelper.getWritableDatabase().rawQuery(selectQueryShortNews, null);
-                    mNewsFeedEntityList = fillNewsFromCursor(cursorNews);
-                    if (mNewsFeedEntityPartOfList.size() < 10) {
-                        mNewsFeedEntityPartOfList.addAll(getNextArticlesPack());
-                    }
-                    updateAdapter();
 
-                    if (cursorNews != null) {
-                        cursorNews.close();
+                if (DBAdapter.NEWS_FEED_SQL_BROADCAST_INTENT.equals(intent.getAction())) {
+                    if (isFirstArticlesUpdate) {
+                        LOGI(TAG, "onReceive, first update");
+                        Cursor cursorNews = mDBHelper.getWritableDatabase().rawQuery(selectQueryShortNews, null);
+                        mNewsFeedEntityList = fillNewsFromCursor(cursorNews, mReadNewsList);
+                        if (mNewsFeedEntityPartOfList.size() < 10) {
+                            mNewsFeedEntityPartOfList.addAll(getNextArticlesPack());
+                        }
+                        updateAdapter();
+
+                        if (cursorNews != null) {
+                            cursorNews.close();
+                        }
+                        mProgressBar.setVisibility(View.GONE);
+                        isFirstArticlesUpdate = false;
+                    } else {
+                        LOGI(TAG, "onReceive, second update");
+                        Cursor cursorNews = mDBHelper.getWritableDatabase().rawQuery(selectQueryShortNews, null);
+                        mNewsFeedEntityList = fillNewsFromCursor(cursorNews, mReadNewsList);
+                        isFirstArticlesUpdate = true;
                     }
-                    mProgressBar.setVisibility(View.GONE);
-                    isFirstArticlesUpdate = false;
-                } else {
-                    LOGI(TAG, "onReceive, second update");
-                    Cursor cursorNews = mDBHelper.getWritableDatabase().rawQuery(selectQueryShortNews, null);
-                    mNewsFeedEntityList = fillNewsFromCursor(cursorNews);
-                    isFirstArticlesUpdate = true;
                 }
+                if (HttpIntentService.BROADCAST_INTENT_NEWS_FEED_SERVER_ERROR.equals(intent.getAction())) {
+                    LOGI(TAG, "onReceive, error");
+                    Toast.makeText(AppContext.getAppContext(), "Server error", Toast.LENGTH_SHORT).show();
+                    mProgressBar.setVisibility(View.GONE);
+                }
+
             }
         };
-
+        IntentFilter filter = new IntentFilter(DBAdapter.NEWS_FEED_SQL_BROADCAST_INTENT);
+        filter.addAction(HttpIntentService.BROADCAST_INTENT_NEWS_FEED_SERVER_ERROR);
         LocalBroadcastManager.getInstance(NewsFeedFragment.this.getActivity())
-                .registerReceiver(receiver, new IntentFilter(DBAdapter.NEWS_FEED_SQL_BROADCAST_INTENT));
-
+                .registerReceiver(mNewsFeedReceiver, filter);
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -137,6 +152,10 @@ public class NewsFeedFragment extends Fragment {
         mNewsItemContainer = (FrameLayout) view.findViewById(R.id.news_item_container_frameLayout);
         mNewsFeedView = (RecyclerView) view.findViewById(R.id.news_RecyclerView);
         mProgressBar = (FrameLayout) view.findViewById(R.id.base_progressBar);
+        if (!ApiWrapper.isOnline()) {
+            mProgressBar.setVisibility(View.GONE);
+        }
+
         mLayoutManager = new LinearLayoutManager(AppContext.getAppContext());
         mNewsFeedView.setLayoutManager(mLayoutManager);
 
@@ -168,7 +187,7 @@ public class NewsFeedFragment extends Fragment {
         return view;
     }
 
-    private List<ArticleShortEntity> fillNewsFromCursor(Cursor cursorNews) {
+    private List<ArticleShortEntity> fillNewsFromCursor(Cursor cursorNews, ArrayList<Integer> readNewsList) {
 
         ArrayList<ArticleShortEntity> newsList = new ArrayList<>();
 
@@ -180,6 +199,9 @@ public class NewsFeedFragment extends Fragment {
             articlesResponse.setThumbnail(cursorNews.getString(cursorNews.getColumnIndex(SHORT_NEWS_THUMBNAIL)));
             articlesResponse.setPosted_at(cursorNews.getString(cursorNews.getColumnIndex(SHORT_NEWS_POSTED_AT)));
             int news_id = cursorNews.getInt(cursorNews.getColumnIndex(SHORT_NEWS_SERVER_ID));
+            if (readNewsList.contains(news_id)) {
+                articlesResponse.setViewed(true);
+            }
             String selectQueryShortNewsComments = "SELECT * FROM short_news_comments_table WHERE article_id=" + news_id;
             Cursor cursorComments = mDBHelper.getWritableDatabase().rawQuery(selectQueryShortNewsComments, null);
             ArrayList<ArticleShortCommentEntity> commentsList = new ArrayList<>();
@@ -205,6 +227,14 @@ public class NewsFeedFragment extends Fragment {
         return newsList;
     }
 
+    private ArrayList<Integer> getAllReadNewsFromCursor(Cursor cursorIsRead) {
+        ArrayList<Integer> allReadValues = new ArrayList<>();
+        for (cursorIsRead.moveToFirst(); !cursorIsRead.isAfterLast(); cursorIsRead.moveToNext()) {
+            allReadValues.add(cursorIsRead.getInt(cursorIsRead.getColumnIndex(IS_SHORT_NEWS_READ_ARTICLE_ID)));
+        }
+        return allReadValues;
+    }
+
     private void updateAdapter() {
         mNewsFeedAdapter = new NewsFeedAdapter(mNewsFeedEntityPartOfList, getActivity());
         mNewsFeedView.setAdapter(mNewsFeedAdapter);
@@ -212,21 +242,10 @@ public class NewsFeedFragment extends Fragment {
             @Override
             public void onItemClick(View view, int position) {
                 if (lastChosenPosition != position) {
-
                     mNewsFeedEntityPartOfList.get(position).setViewed(true);
+                    mDBAdapter.saveNewsReadValue(mNewsFeedEntityPartOfList.get(position).getId());
                     Animation mFragmentSliderFadeIn = AnimationUtils.loadAnimation(AppContext.getAppContext(), R.anim.fragment_item_slide_fade_in);
-                    // final FragmentTransaction mFragmentTransaction = getChildFragmentManager().beginTransaction();
-                    //  mNewsItemFragment = (NewsItemFragment) getChildFragmentManager().findFragmentById(R.id.news_item_container_frameLayout);
-                    // if (mNewsItemFragment == null) {
-                    //mNewsItemFragment = NewsItemFragment.newInstance(mNewsFeedEntityList.get(position));
                     getChildFragmentManager().beginTransaction().replace(R.id.news_item_container_frameLayout, NewsItemFragment.newInstance(mNewsFeedEntityList.get(position))).commit();
-                    LOGI(TAG, "mNewsItemFragment create");
-                    // } else {
-                    //    mNewsItemFragment.updateFragmentContent(mNewsFeedEntityList.get(position));
-                    //    LOGI(TAG, "mNewsItemFragment update");
-                    // }
-                    // ft.replace(R.id.news_item_container_frameLayout, NewsItemFragment.newInstance(mNewsFeedEntityList.get(position)));
-                    // ft.commit();
                     mNewsItemContainer.startAnimation(mFragmentSliderFadeIn);
                     lastChosenPosition = position;
                     ((MainActivity) NewsFeedFragment.this.getActivity()).startHttpIntent(getFullDescriptionQuery(mNewsFeedEntityList.get(position).getId()), HttpIntentService.NEWS_PART_FULL);

@@ -3,23 +3,19 @@ package me.justup.upme.http;
 import android.app.IntentService;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import com.google.gson.JsonSyntaxException;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.apache.http.Header;
-import org.joda.time.DateTimeConstants;
-import org.joda.time.DateTimeZone;
-import org.joda.time.LocalDateTime;
 
 import me.justup.upme.MainActivity;
 import me.justup.upme.db.DBAdapter;
 import me.justup.upme.entity.ArticleFullResponse;
 import me.justup.upme.entity.ArticlesGetShortDescriptionResponse;
 import me.justup.upme.entity.BaseHttpQueryEntity;
-import me.justup.upme.entity.CommentsArticleFullResponse;
 import me.justup.upme.entity.CalendarGetEventsResponse;
+import me.justup.upme.entity.CommentsArticleFullResponse;
 import me.justup.upme.entity.GetMailContactQuery;
 import me.justup.upme.entity.GetMailContactResponse;
 import me.justup.upme.fragments.CalendarFragment;
@@ -38,6 +34,7 @@ public class HttpIntentService extends IntentService {
 
     public static final String HTTP_INTENT_QUERY_EXTRA = "http_intent_query_extra";
     public static final String HTTP_INTENT_PART_EXTRA = "http_intent_part_extra";
+    public static final String BROADCAST_INTENT_NEWS_FEED_SERVER_ERROR = "broadcast_intent_news_feed_server_error";
 
     public static final int NEWS_PART_SHORT = 1;
     public static final int NEWS_PART_FULL = 2;
@@ -135,9 +132,15 @@ public class HttpIntentService extends IntentService {
         @Override
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
             String content = ApiWrapper.responseBodyToString(responseBody);
-            Toast.makeText(getApplicationContext(), content, Toast.LENGTH_SHORT).show();
             LOGE(TAG, "onFailure(): " + content);
-
+            //mDBAdapter.sendBroadcast(BROADCAST_INTENT_NEWS_FEED_SERVER_ERROR);
+            switch (partNumber) {
+                case NEWS_PART_SHORT:
+                    mDBAdapter.sendBroadcast(BROADCAST_INTENT_NEWS_FEED_SERVER_ERROR);
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
@@ -161,6 +164,8 @@ public class HttpIntentService extends IntentService {
 
         if (response != null && response.result != null) {
             mDBAdapter.saveShortNews(response);
+        } else {
+            mDBAdapter.sendBroadcast(BROADCAST_INTENT_NEWS_FEED_SERVER_ERROR);
         }
     }
 
