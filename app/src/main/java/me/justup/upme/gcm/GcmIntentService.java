@@ -143,6 +143,7 @@ public class GcmIntentService extends IntentService {
             Push push = new Push();
             push.setUserId(userId);
             push.setUserName(userName);
+            push.setType(connectionType);
             push.setRoom(room);
 
             Intent webrtcIntent = new Intent(MainActivity.BROADCAST_ACTION_CALL);
