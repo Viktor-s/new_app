@@ -37,12 +37,13 @@ public class LoginActivity extends BaseActivity {
     private LinearLayout mLoginPhonePanel;
     private LinearLayout mLoginPinCodePanel;
 
-    private StringBuilder mNumberString = new StringBuilder("+380");
+    private StringBuilder mNumberString = new StringBuilder("+");
     private AppPreferences mAppPreferences = new AppPreferences(AppContext.getAppContext());
 
     private static final int phoneNumberLength = 12;
+    private static final int minPhoneNumberLength = 11;
     private static final int pinNumberLength = 4;
-    private static final int phoneCountryNumberLength = 4;
+    private static final int phoneCountryNumberLength = 1;
     private boolean isPhoneVerification = true;
     private String mPhoneNumber;
     private Animation mNumberPanelDown;
@@ -175,7 +176,7 @@ public class LoginActivity extends BaseActivity {
         public void onClick(View v) {
             mPhoneNumber = mPhoneField.getText().toString();
 
-            if (mPhoneNumber.length() > phoneNumberLength) {
+            if (mPhoneNumber.length() > minPhoneNumberLength) {
                 LoginPhoneQueryEntity mQueryLoginEntity = new LoginPhoneQueryEntity();
                 mQueryLoginEntity.params.phone = mPhoneNumber;
 

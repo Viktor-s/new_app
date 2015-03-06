@@ -25,7 +25,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="+380"
+                android:text="+"
                 tools:text="+380977552530"
                 android:id="@+id/phone_number_textView"
                 android:background="@color/login_phone_number_background"
