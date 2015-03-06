@@ -41,4 +41,8 @@
     <color name="event_color_02">#f57f68</color>
     <color name="event_color_03">#87d288</color>
     <color name="event_color_04">#f8b552</color>
+
+    <color name="local_drive_title">#4a724a</color>
+    <color name="cloud_drive_title">#425b8e</color>
+    <color name="cloud_drive_background">#474449</color>
 </resources>

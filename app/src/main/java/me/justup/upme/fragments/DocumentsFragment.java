@@ -19,11 +19,11 @@ import me.justup.upme.dialogs.ViewImageDialog;
 
 
 public class DocumentsFragment extends Fragment {
-    private static final String KB = "kB";
-    private static final int SIZE_VALUE = 1024;
+    public static final String KB = "kB";
+    public static final int SIZE_VALUE = 1024;
 
-    private static final int IMAGE = 1;
-    private static final int DOC = 2;
+    public static final int IMAGE = 1;
+    public static final int DOC = 2;
 
     private TableLayout mFileExplorer;
     private LayoutInflater mLayoutInflater;
@@ -36,12 +36,14 @@ public class DocumentsFragment extends Fragment {
         mLayoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mFileExplorer = (TableLayout) view.findViewById(R.id.files_panel);
 
+        getChildFragmentManager().beginTransaction().add(R.id.cloud_explorer_fragment_container, new CloudExplorerFragment()).commit();
+
         File mStorageDirectory = Environment.getExternalStorageDirectory();
         File[] mDirList = mStorageDirectory.listFiles();
 
         for (File file : mDirList) {
             if (!file.isDirectory()) {
-                setFileItem(file);
+                setFileItem(file.getName(), file.getAbsolutePath(), file.length());
             }
         }
 
@@ -49,11 +51,8 @@ public class DocumentsFragment extends Fragment {
     }
 
     @SuppressLint("InflateParams")
-    private void setFileItem(final File file) {
+    private void setFileItem(final String fileName, final String filePath, final long fileLength) {
         final View item = mLayoutInflater.inflate(R.layout.item_documents_file, null);
-
-        final String fileName = file.getName();
-        final String filePath = file.getAbsolutePath();
 
         final boolean isImage = fileName.contains(".jpg") || fileName.contains(".jpeg") || fileName.contains(".png");
 
@@ -72,7 +71,7 @@ public class DocumentsFragment extends Fragment {
             mFileImage.setImageResource(R.drawable.ic_file_image);
         }
         mFileName.setText(fileName);
-        mFileSize.setText((file.length() / SIZE_VALUE) + KB);
+        mFileSize.setText((fileLength / SIZE_VALUE) + KB);
 
         mFileImage.setOnClickListener(new OnOpenFileListener(fileName, filePath, type));
         mFileName.setOnClickListener(new OnOpenFileListener(fileName, filePath, type));
@@ -106,7 +105,7 @@ public class DocumentsFragment extends Fragment {
 
     private void showViewImageDialog(String mFileName, String mFilePath) {
         ViewImageDialog dialog = ViewImageDialog.newInstance(mFileName, mFilePath);
-        dialog.show(getFragmentManager(), ViewImageDialog.VIEW_IMAGE_DIALOG);
+        dialog.show(getChildFragmentManager(), ViewImageDialog.VIEW_IMAGE_DIALOG);
     }
 
 }

@@ -383,4 +383,20 @@
         <item name="android:layout_marginBottom">20dp</item>
     </style>
 
+    <style name="FileExplorerTitle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="FileExplorerScrollViewStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:paddingStart">10dp</item>
+        <item name="android:paddingEnd">10dp</item>
+        <item name="android:background">@color/cloud_drive_background</item>
+    </style>
+
 </resources>

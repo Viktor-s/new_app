@@ -67,6 +67,8 @@ public class ApiWrapper {
     private static final String CALL_CLOUD_FILE = "/file/";
 
     public static final String FILE_ADD_SHARE_WITH = "File.addShareWith";
+    public static final String FILE_GET_MY_FILES = "File.getAllOwn";
+    public static final String FILE_GET_ALL_SHARED_WITH_ME = "File.getAllSharedWithMe";
 
 
     private static void post(final StringEntity se, AsyncHttpResponseHandler responseHandler) {

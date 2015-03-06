@@ -251,5 +251,9 @@
     <string name="button_close">Закрыть</string>
     <string name="user_break_call">отбил звонок</string>
     <string name="inner_error">Внутренняя ошибка!</string>
+    <string name="local_drive">Локальный диск</string>
+    <string name="cloud">UPME Облако</string>
+    <string name="my_files">Мои файлы</string>
+    <string name="share_with_me">Доступные мне</string>
 
 </resources>
