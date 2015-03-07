@@ -5,9 +5,12 @@ import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TabHost;
 import android.widget.TableLayout;
 import android.widget.TextView;
@@ -107,6 +110,9 @@ public class CloudExplorerFragment extends Fragment {
         TextView mFileName = (TextView) item.findViewById(R.id.file_name_textView);
         TextView mFileSize = (TextView) item.findViewById(R.id.file_size_textView);
 
+        ImageButton mFileActionButton = (ImageButton) item.findViewById(R.id.file_action_button);
+        mFileActionButton.setOnClickListener(new OnFileActionListener(parentLayout));
+
         if (type == IMAGE) {
             mFileImage.setImageResource(R.drawable.ic_file_image);
         }
@@ -149,6 +155,67 @@ public class CloudExplorerFragment extends Fragment {
             String content = ApiWrapper.responseBodyToString(responseBody);
             LOGE(TAG, "onFailure(): " + content);
         }
+    }
+
+    private class OnFileActionListener implements View.OnClickListener {
+        TableLayout parentLayout;
+
+        public OnFileActionListener(TableLayout parentLayout) {
+            this.parentLayout = parentLayout;
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (parentLayout.equals(mMyFileExplorer)) {
+                showCloudPopupMenu(v);
+            } else {
+                showSharePopupMenu(v);
+            }
+        }
+    }
+
+    private void showCloudPopupMenu(View v) {
+        PopupMenu popup = new PopupMenu(getActivity(), v);
+        popup.inflate(R.menu.file_cloud_popup_menu);
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.file_download:
+                        //
+                        return true;
+
+                    case R.id.file_delete:
+                        //
+                        return true;
+
+                    default:
+                        return false;
+                }
+            }
+        });
+
+        popup.show();
+    }
+
+    private void showSharePopupMenu(View v) {
+        PopupMenu popup = new PopupMenu(getActivity(), v);
+        popup.inflate(R.menu.file_share_popup_menu);
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.file_share_download:
+                        //
+                        return true;
+
+                    default:
+                        return false;
+                }
+            }
+        });
+
+        popup.show();
     }
 
 }

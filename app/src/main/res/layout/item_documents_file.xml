@@ -6,8 +6,8 @@
     android:layout_height="wrap_content">
 
     <ImageView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
         android:layout_marginEnd="@dimen/file_browser_item_end_margin"
         android:src="@drawable/file"
         android:contentDescription="@string/app_name"
@@ -23,6 +23,15 @@
         android:layout_gravity="center_vertical"
         android:id="@+id/file_name_textView" />
 
+    <ImageButton
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/abc_ic_menu_share_mtrl_alpha"
+        android:id="@+id/file_action_button"
+        android:contentDescription="@string/app_name" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -37,6 +46,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/user_fragment_red_money_color"
-        android:text="[ не синхронизировано ]"
+        android:text="[не синхр.]"
         android:layout_gravity="center_vertical" />
 </TableRow>

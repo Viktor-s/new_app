@@ -255,5 +255,7 @@
     <string name="cloud">UPME Облако</string>
     <string name="my_files">Мои файлы</string>
     <string name="share_with_me">Доступные мне</string>
+    <string name="file_download">Скачать</string>
+    <string name="file_delete">Удалить</string>
 
 </resources>
