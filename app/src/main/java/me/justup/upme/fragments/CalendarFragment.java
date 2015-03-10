@@ -94,6 +94,8 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
     private BroadcastReceiver receiver;
     private Spinner mCalendartypesSpinner;
 
+    private static String[] months = new String[] {"ЯНВАРЬ", "ФЕВРАЛЬ", "МАРТ", "АПРЕЛЬ", "МАЙ", "ИЮНЬ", "ИЮЛЬ", "АВГУСТ", "СЕНТЯБРЬ", "ОКТЯБРЬ", "НОЯБРЬ", "ДЕКАБРЬ"};
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,9 +129,10 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
         mWeekView = (WeekView) v.findViewById(R.id.weekView);
 
         TextView currentDateTextView = (TextView) v.findViewById(R.id.current_date_textView);
-        currentDateTextView.setText(currentDate.toString("MMMM d, yyyy", new Locale("ru")));
+        currentDateTextView.setText(currentDate.toString("d MMMM yyyy", new Locale("ru")));
         TextView selectMonthTextView = (TextView) v.findViewById(R.id.select_month_textView);
-        selectMonthTextView.setText(currentDate.toString("MMMM yyyy", new Locale("ru")));
+        String strMonthYear = String.format("%s %d", months[currentDate.getMonthOfYear()], currentDate.getYear());
+        selectMonthTextView.setText(strMonthYear);
         selectWeekTextView = (TextView) v.findViewById(R.id.select_week_textView);
         selectWeekTextView.setText(Integer.toString(currentWeek) + getResources().getString(R.string.week));
 
@@ -140,6 +143,8 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
         previousWeekButton.setOnClickListener(this);
         Button nextWeekButton = (Button) v.findViewById(R.id.next_week_button);
         nextWeekButton.setOnClickListener(this);
+        Button addButton = (Button) v.findViewById(R.id.add_button);
+        addButton.setOnClickListener(this);
 
         /////////////////////////////// RIGHT PANEL ////////////////////////////////////////////////
 
@@ -312,11 +317,14 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.add_button:
+                onEmptyViewClicked(Calendar.getInstance());
+                break;
             case R.id.previous_week_button:
                 firstDayCurrentWeek = firstDayCurrentWeek.minusDays(Calendar.DAY_OF_WEEK);
                 LOGD("TAG_", "firstDayCurrentWeek: " + firstDayCurrentWeek);
                 mWeekView.goToDate(firstDayCurrentWeek.toDateTime(DateTimeZone.UTC).toGregorianCalendar());
-                selectWeekTextView.setText(Integer.toString(--currentWeek) + getResources().getString(R.string.week));
+                selectWeekTextView.setText(Integer.toString(currentWeek == 1 ? currentWeek = 52 : --currentWeek) + getResources().getString(R.string.week));
                 listEventsForWeek(firstDayCurrentWeek);
                 ((MainActivity) getActivity()).startHttpIntent(MainActivity.getEventCalendarQuery(firstDayCurrentWeek), HttpIntentService.CALENDAR_PART);
                 break;
@@ -324,7 +332,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                 firstDayCurrentWeek = firstDayCurrentWeek.plusDays(Calendar.DAY_OF_WEEK);
                 LOGD("TAG_", "firstDayCurrentWeek: " + firstDayCurrentWeek);
                 mWeekView.goToDate(firstDayCurrentWeek.toDateTime(DateTimeZone.UTC).toGregorianCalendar());
-                selectWeekTextView.setText(Integer.toString(++currentWeek) + getResources().getString(R.string.week));
+                selectWeekTextView.setText(Integer.toString(currentWeek == 52 ? currentWeek = 1 : ++currentWeek) + getResources().getString(R.string.week));
                 listEventsForWeek(firstDayCurrentWeek);
                 ((MainActivity) getActivity()).startHttpIntent(MainActivity.getEventCalendarQuery(firstDayCurrentWeek), HttpIntentService.CALENDAR_PART);
                 break;

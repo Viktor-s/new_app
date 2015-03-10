@@ -50,8 +50,9 @@
             android:layout_marginRight="10dp"
             android:layout_toLeftOf="@+id/add_button"
             android:background="@color/blue_gray"
+            android:drawableRight="@drawable/arrow_next"
             android:gravity="center"
-            android:text="ne"
+            android:paddingRight="10dp"
             android:textStyle="bold" />
 
         <Button
@@ -61,8 +62,9 @@
             android:layout_marginRight="10dp"
             android:layout_toLeftOf="@+id/next_week_button"
             android:background="@color/blue_gray"
+            android:drawableLeft="@drawable/arrow_previous"
             android:gravity="center"
-            android:text="pr"
+            android:paddingLeft="10dp"
             android:textStyle="bold" />
 
         <TextView
@@ -116,8 +118,8 @@
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
         android:background="@color/user_fragment_block_border"
-        android:visibility="gone"
-        android:clickable="true">
+        android:clickable="true"
+        android:visibility="gone">
 
 
         <LinearLayout
@@ -139,68 +141,113 @@
 
             <View style="@style/SeparationLine" />
 
-            <TextView
-                style="@style/NewUserTextView"
-                android:text="Начало" />
-
-            <TextView
-                android:id="@+id/start_time_event"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="18:00"
-                android:textSize="30sp" />
-
-            <TextView
-                style="@style/NewUserTextView"
-                android:text="Длительность" />
-
-            <TextView
-                android:id="@+id/duration_event"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="00:00"
-                android:textSize="20sp" />
-
-            <View style="@style/SeparationLine" />
-
-            <TextView
-                style="@style/NewUserTextView"
-                android:text="Название" />
-
-            <EditText
-                android:id="@+id/new_event_name"
-                style="@style/NewUserEditText"
-                android:layout_marginBottom="8dp" />
-
-
-            <TextView
-                style="@style/NewUserTextView"
-                android:text="Локация" />
-
-            <EditText
-                android:id="@+id/new_event_location"
-                style="@style/NewUserEditText"
-                android:layout_marginBottom="8dp" />
-
-
-            <TextView
-                style="@style/NewUserTextView"
-                android:text="Тип" />
-
-            <Spinner
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/calendar_fragment_types_spinner"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="40dp"
-                android:layout_marginRight="40dp" />
+                android:layout_height="match_parent">
 
-            <View style="@style/SeparationLine" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center">
 
-            <Button
-                android:id="@+id/add_new_event_button"
-                style="@style/ButtonPink"
-                android:text="Добавить" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:visibility="visible">
+
+                        <TextView
+                            style="@style/NewUserTextView"
+                            android:text="Дата" />
+
+                        <TextView
+                            android:id="@+id/start_date_event"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="02/06/2014"
+                            android:textSize="20sp" />
+                    </LinearLayout>
+
+                    <TextView
+                        style="@style/NewUserTextView"
+                        android:text="Начало" />
+
+                    <TextView
+                        android:id="@+id/start_time_event"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="18:00"
+                        android:textSize="30sp" />
+
+                    <TextView
+                        style="@style/NewUserTextView"
+                        android:text="Длительность" />
+
+                    <TextView
+                        android:id="@+id/duration_event"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="00:00"
+                        android:textSize="20sp" />
+
+                    <View style="@style/SeparationLine" />
+
+                    <TextView
+                        style="@style/NewUserTextView"
+                        android:text="Название" />
+
+                    <EditText
+                        android:id="@+id/new_event_name"
+                        style="@style/NewUserEditText"
+                        android:layout_marginBottom="8dp" />
+
+                    <TextView
+                        style="@style/NewUserTextView"
+                        android:text="Описание" />
+
+                    <EditText
+                        android:id="@+id/new_event_description"
+                        android:singleLine="false"
+                        style="@style/NewUserEditText"
+                        android:layout_marginBottom="8dp" />
+
+                    <TextView
+                        style="@style/NewUserTextView"
+                        android:text="Локация" />
+
+                    <EditText
+                        android:id="@+id/new_event_location"
+                        style="@style/NewUserEditText"
+                        android:layout_marginBottom="8dp" />
+
+
+                    <TextView
+                        style="@style/NewUserTextView"
+                        android:text="Тип" />
+
+                    <Spinner
+                        android:id="@+id/calendar_fragment_types_spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginLeft="40dp"
+                        android:layout_marginRight="40dp" />
+
+                    <View style="@style/SeparationLine" />
+
+                    <Button
+                        android:id="@+id/add_new_event_button"
+                        android:layout_marginBottom="20dp"
+                        style="@style/ButtonPink"
+                        android:text="Добавить" />
+
+                </LinearLayout>
+
+
+            </ScrollView>
+
 
 
         </LinearLayout>
@@ -216,6 +263,7 @@
             android:background="@drawable/button_close_test"
             android:clickable="false"
             android:layout_marginTop="@dimen/base20dp720sw" />
+            android:visibility="visible" />
 
     </RelativeLayout>
 </RelativeLayout>
