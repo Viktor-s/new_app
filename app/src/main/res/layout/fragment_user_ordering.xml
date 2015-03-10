@@ -30,7 +30,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="$ 2 500"
-                android:textSize="22sp"
+                android:textSize="@dimen/base22sp720sw"
                 android:id="@+id/ordering_summ_textView" />
         </LinearLayout>
 
@@ -50,16 +50,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="$ 2 500"
-                android:textSize="22sp"
+                android:textSize="@dimen/base22sp720sw"
                 android:id="@+id/ordering_comm_textView" />
         </LinearLayout>
 
         <Button
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="@dimen/base50dp720sw"
+            android:layout_height="@dimen/base50dp720sw"
             android:id="@+id/order_fragment_close_button"
             android:background="@drawable/button_close_test"
-            android:layout_marginTop="@dimen/news_item_add_comment_margin" />
+            android:layout_marginTop="@dimen/base20dp720sw" />
     </LinearLayout>
 
     <ScrollView

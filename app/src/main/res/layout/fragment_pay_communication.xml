@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:text="@string/extract_completions"
             android:textAllCaps="true"
-            android:textSize="@dimen/pay_panel_text_size"
+            android:textSize="@dimen/base16sp720sw"
             android:id="@+id/extract_completions_textView"
             android:layout_weight="1" />
     </LinearLayout>

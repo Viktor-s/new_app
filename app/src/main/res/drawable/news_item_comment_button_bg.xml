@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
-    <corners android:radius="@dimen/news_item_comment_bg_radius" />
+    <corners android:radius="@dimen/base12dp720sw" />
     <solid android:color="@color/login_enter_button_background" />
 </shape>

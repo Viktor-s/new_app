@@ -28,9 +28,9 @@
     <style name="PinCodeButton" parent="android:style/Widget.Button">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:layout_margin">@dimen/pincode_button_margin</item>
+        <item name="android:layout_margin">@dimen/base5dp720sw</item>
         <item name="android:onClick">onPinCodeButtonClickHandler</item>
-        <item name="android:textSize">@dimen/pincode_button_text_size</item>
+        <item name="android:textSize">@dimen/base20sp720sw</item>
         <item name="android:background">@drawable/digit_button_selector</item>
         <item name="android:textColor">@android:color/white</item>
     </style>
@@ -39,18 +39,18 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">@dimen/base16sp720sw</item>
         <item name="android:textAllCaps">true</item>
-        <item name="android:layout_margin">10dp</item>
+        <item name="android:layout_margin">@dimen/base10dp720sw</item>
         <item name="android:textColor">@color/product_title</item>
     </style>
 
     <style name="ProductTitle" parent="android:style/Widget.TextView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_margin">@dimen/product_title_text_margin</item>
+        <item name="android:layout_margin">@dimen/base15dp720sw</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">@dimen/base14sp720sw</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:textColor">@android:color/white</item>
 
@@ -59,18 +59,18 @@
     <style name="ProductDescription" parent="android:style/Widget.TextView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:padding">@dimen/product_title_text_margin</item>
-        <item name="android:layout_marginBottom">20dp</item>
+        <item name="android:padding">@dimen/base15dp720sw</item>
+        <item name="android:layout_marginBottom">@dimen/base20dp720sw</item>
         <item name="android:background">@android:color/white</item>
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">@dimen/base12sp720sw</item>
         <item name="android:textColor">@color/product_description</item>
     </style>
 
     <!-- FORM -->
     <style name="FormTextView16" parent="android:style/Widget.TextView">
-        <item name="android:layout_width">@dimen/form_tv_width_16</item>
-        <item name="android:layout_margin">@dimen/form_tv_margin</item>
-        <item name="android:textSize">@dimen/form_tv_text_size</item>
+        <item name="android:layout_width">@dimen/base50dp720sw</item>
+        <item name="android:layout_margin">@dimen/base5dp720sw</item>
+        <item name="android:textSize">@dimen/base15sp720sw</item>
         <item name="android:textColor">@color/gray</item>
         <item name="android:textAllCaps">true</item>
     </style>
@@ -78,9 +78,9 @@
     <style name="FormTextView26" parent="android:style/Widget.TextView">
         <item name="android:layout_columnSpan">2</item>
         <item name="android:layout_gravity">fill</item>
-        <item name="android:layout_width">@dimen/form_tv_width_26</item>
-        <item name="android:layout_margin">@dimen/form_tv_margin</item>
-        <item name="android:textSize">@dimen/form_tv_text_size</item>
+        <item name="android:layout_width">@dimen/base100dp720sw</item>
+        <item name="android:layout_margin">@dimen/base5dp720sw</item>
+        <item name="android:textSize">@dimen/base15sp720sw</item>
         <item name="android:textColor">@color/gray</item>
         <item name="android:textAllCaps">true</item>
     </style>
@@ -88,9 +88,9 @@
     <style name="FormTextView36" parent="android:style/Widget.TextView">
         <item name="android:layout_columnSpan">3</item>
         <item name="android:layout_gravity">fill</item>
-        <item name="android:layout_width">@dimen/form_tv_width_36</item>
-        <item name="android:layout_margin">@dimen/form_tv_margin</item>
-        <item name="android:textSize">@dimen/form_tv_text_size</item>
+        <item name="android:layout_width">@dimen/base150dp720sw</item>
+        <item name="android:layout_margin">@dimen/base5dp720sw</item>
+        <item name="android:textSize">@dimen/base15sp720sw</item>
         <item name="android:textColor">@color/gray</item>
         <item name="android:textAllCaps">true</item>
     </style>
@@ -98,65 +98,65 @@
     <style name="FormTextView46" parent="android:style/Widget.TextView">
         <item name="android:layout_columnSpan">4</item>
         <item name="android:layout_gravity">fill</item>
-        <item name="android:layout_width">@dimen/form_tv_width_46</item>
-        <item name="android:layout_margin">@dimen/form_tv_margin</item>
-        <item name="android:textSize">@dimen/form_tv_text_size</item>
+        <item name="android:layout_width">@dimen/base200dp720sw</item>
+        <item name="android:layout_margin">@dimen/base5dp720sw</item>
+        <item name="android:textSize">@dimen/base15sp720sw</item>
         <item name="android:textColor">@color/gray</item>
         <item name="android:textAllCaps">true</item>
     </style>
 
     <style name="FormEditText16" parent="android:style/Widget.EditText">
-        <item name="android:layout_width">@dimen/form_tv_width_16</item>
-        <item name="android:layout_margin">@dimen/form_tv_margin</item>
-        <item name="android:textSize">@dimen/form_tv_text_size</item>
+        <item name="android:layout_width">@dimen/base50dp720sw</item>
+        <item name="android:layout_margin">@dimen/base5dp720sw</item>
+        <item name="android:textSize">@dimen/base15sp720sw</item>
         <item name="android:background">@drawable/edittext_bg</item>
     </style>
 
     <style name="FormEditText26" parent="android:style/Widget.EditText">
         <item name="android:layout_columnSpan">2</item>
         <item name="android:layout_gravity">fill</item>
-        <item name="android:layout_width">@dimen/form_tv_width_26</item>
-        <item name="android:layout_margin">@dimen/form_tv_margin</item>
-        <item name="android:textSize">@dimen/form_tv_text_size</item>
+        <item name="android:layout_width">@dimen/base100dp720sw</item>
+        <item name="android:layout_margin">@dimen/base5dp720sw</item>
+        <item name="android:textSize">@dimen/base15sp720sw</item>
         <item name="android:background">@drawable/edittext_bg</item>
     </style>
 
     <style name="FormEditText36" parent="android:style/Widget.EditText">
         <item name="android:layout_columnSpan">3</item>
         <item name="android:layout_gravity">fill</item>
-        <item name="android:layout_width">@dimen/form_tv_width_36</item>
-        <item name="android:layout_margin">@dimen/form_tv_margin</item>
-        <item name="android:textSize">@dimen/form_tv_text_size</item>
+        <item name="android:layout_width">@dimen/base150dp720sw</item>
+        <item name="android:layout_margin">@dimen/base5dp720sw</item>
+        <item name="android:textSize">@dimen/base15sp720sw</item>
         <item name="android:background">@drawable/edittext_bg</item>
     </style>
 
     <style name="FormEditText46" parent="android:style/Widget.EditText">
         <item name="android:layout_columnSpan">4</item>
         <item name="android:layout_gravity">fill</item>
-        <item name="android:layout_width">@dimen/form_tv_width_46</item>
-        <item name="android:layout_margin">@dimen/form_tv_margin</item>
-        <item name="android:textSize">@dimen/form_tv_text_size</item>
+        <item name="android:layout_width">@dimen/base200dp720sw</item>
+        <item name="android:layout_margin">@dimen/base5dp720sw</item>
+        <item name="android:textSize">@dimen/base15sp720sw</item>
         <item name="android:background">@drawable/edittext_bg</item>
     </style>
 
     <style name="ButtonPink" parent="android:style/Widget.Button">
-        <item name="android:layout_width">180dp</item>
+        <item name="android:layout_width">@dimen/base180dp720sw</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">@dimen/base14sp720sw</item>
         <item name="android:textAllCaps">true</item>
-        <item name="android:padding">10dp</item>
+        <item name="android:padding">@dimen/base10dp720sw</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:background">@drawable/button_pink_bg</item>
     </style>
 
     <style name="ButtonGray" parent="android:style/Widget.Button">
-        <item name="android:layout_width">120dp</item>
+        <item name="android:layout_width">@dimen/base120dp720sw</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">@dimen/base16sp720sw</item>
         <item name="android:textAllCaps">true</item>
-        <item name="android:padding">10dp</item>
+        <item name="android:padding">@dimen/base10dp720sw</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:background">@drawable/button_gray_bg</item>
     </style>
@@ -164,8 +164,8 @@
     <style name="StepText" parent="android:style/Widget.TextView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:padding">10dp</item>
+        <item name="android:textSize">@dimen/base16sp720sw</item>
+        <item name="android:padding">@dimen/base10dp720sw</item>
         <item name="android:textColor">@color/gray</item>
         <item name="android:gravity">center_horizontal</item>
     </style>
@@ -174,26 +174,26 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAllCaps">true</item>
-        <item name="android:textSize">@dimen/pay_panel_text_size</item>
-        <item name="android:layout_marginLeft">20dp</item>
-        <item name="android:layout_marginBottom">5dp</item>
+        <item name="android:textSize">@dimen/base16sp720sw</item>
+        <item name="android:layout_marginLeft">@dimen/base20dp720sw</item>
+        <item name="android:layout_marginBottom">@dimen/base5dp720sw</item>
     </style>
 
     <style name="PayPanelInfoTextHide">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAllCaps">true</item>
-        <item name="android:textSize">@dimen/pay_panel_text_size</item>
-        <item name="android:layout_marginLeft">20dp</item>
+        <item name="android:textSize">@dimen/base16sp720sw</item>
+        <item name="android:layout_marginLeft">@dimen/base20dp720sw</item>
         <item name="android:layout_marginBottom">2dp</item>
     </style>
 
     <style name="PayPanelField">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:padding">10dp</item>
+        <item name="android:padding">@dimen/base10dp720sw</item>
         <item name="android:textColor">@color/black</item>
-        <item name="android:layout_marginBottom">20dp</item>
+        <item name="android:layout_marginBottom">@dimen/base20dp720sw</item>
         <item name="android:background">@drawable/pay_panel_rounded_edittext</item>
     </style>
 
@@ -201,17 +201,17 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAllCaps">true</item>
-        <item name="android:textSize">28sp</item>
-        <item name="android:paddingStart">20dp</item>
-        <item name="android:paddingTop">5dp</item>
-        <item name="android:layout_marginBottom">10dp</item>
-        <item name="android:drawablePadding">15dp</item>
+        <item name="android:textSize">@dimen/base28sp720sw</item>
+        <item name="android:paddingStart">@dimen/base20dp720sw</item>
+        <item name="android:paddingTop">@dimen/base5dp720sw</item>
+        <item name="android:layout_marginBottom">@dimen/base10dp720sw</item>
+        <item name="android:drawablePadding">@dimen/base15dp720sw</item>
     </style>
 
     <style name="PayPanelTitleDivider">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
-        <item name="android:layout_marginBottom">25dp</item>
+        <item name="android:layout_marginBottom">@dimen/base25dp720sw</item>
         <item name="android:layout_marginLeft">1dp</item>
         <item name="android:layout_marginRight">1dp</item>
         <item name="android:background">@color/login_phone_number_background</item>
@@ -232,10 +232,10 @@
 
     <style name="UserFragmentBlock">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:paddingLeft">@dimen/user_fragment_left_margin</item>
-        <item name="android:paddingRight">@dimen/user_fragment_left_margin</item>
-        <item name="android:paddingTop">@dimen/user_fragment_block_padding</item>
-        <item name="android:paddingBottom">@dimen/user_fragment_block_padding</item>
+        <item name="android:paddingLeft">@dimen/base30dp720sw</item>
+        <item name="android:paddingRight">@dimen/base30dp720sw</item>
+        <item name="android:paddingTop">@dimen/base35dp720sw</item>
+        <item name="android:paddingBottom">@dimen/base35dp720sw</item>
         <item name="android:background">@drawable/user_fragment_block_gradient</item>
     </style>
 
@@ -244,7 +244,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/user_fragment_info_text</item>
         <item name="android:textAllCaps">true</item>
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">@dimen/base12sp720sw</item>
     </style>
 
     <style name="LoginEnterLayout">
@@ -257,41 +257,41 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAllCaps">true</item>
-        <item name="android:paddingBottom">25dp</item>
+        <item name="android:paddingBottom">@dimen/base25dp720sw</item>
         <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">@dimen/base18sp720sw</item>
     </style>
 
     <style name="MainMenuItemLayout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">@dimen/base20sp720sw</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:textAllCaps">true</item>
-        <item name="android:padding">10dp</item>
-        <item name="android:drawablePadding">10dp</item>
+        <item name="android:padding">@dimen/base10dp720sw</item>
+        <item name="android:drawablePadding">@dimen/base10dp720sw</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:background">@drawable/main_menu_selector</item>
     </style>
 
     <style name="PayFragmentButtonStyle">
-        <item name="android:layout_width">120dp</item>
+        <item name="android:layout_width">@dimen/base120dp720sw</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingTop">20dp</item>
-        <item name="android:paddingBottom">20dp</item>
-        <item name="android:paddingLeft">10dp</item>
-        <item name="android:paddingRight">10dp</item>
-        <item name="android:layout_marginRight">10dp</item>
-        <item name="android:drawablePadding">10dp</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:paddingTop">@dimen/base20dp720sw</item>
+        <item name="android:paddingBottom">@dimen/base20dp720sw</item>
+        <item name="android:paddingLeft">@dimen/base10dp720sw</item>
+        <item name="android:paddingRight">@dimen/base10dp720sw</item>
+        <item name="android:layout_marginRight">@dimen/base10dp720sw</item>
+        <item name="android:drawablePadding">@dimen/base10dp720sw</item>
+        <item name="android:textSize">@dimen/base18sp720sw</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:background">@drawable/digit_button_selector</item>
     </style>
 
     <style name="SettingsButton">
-        <item name="android:layout_width">250dp</item>
-        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_width">@dimen/base250dp720sw</item>
+        <item name="android:layout_height">@dimen/base50dp720sw</item>
         <item name="android:layout_centerHorizontal">true</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:textAllCaps">true</item>
@@ -301,10 +301,10 @@
         <item name="android:orientation">vertical</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingStart">@dimen/ordering_fragment_text_left_padding</item>
-        <item name="android:paddingEnd">@dimen/ordering_fragment_text_right_padding</item>
-        <item name="android:paddingTop">@dimen/ordering_fragment_block_border</item>
-        <item name="android:paddingBottom">@dimen/ordering_fragment_block_border</item>
+        <item name="android:paddingStart">@dimen/base40dp720sw</item>
+        <item name="android:paddingEnd">@dimen/base10dp720sw</item>
+        <item name="android:paddingTop">@dimen/base30dp720sw</item>
+        <item name="android:paddingBottom">@dimen/base30dp720sw</item>
         <item name="android:layout_weight">1</item>
     </style>
 
@@ -312,8 +312,8 @@
     <style name="NewUserTextView" parent="android:style/Widget.TextView">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_margin">@dimen/form_tv_margin</item>
-        <item name="android:textSize">@dimen/form_tv_text_size</item>
+        <item name="android:layout_margin">@dimen/base5dp720sw</item>
+        <item name="android:textSize">@dimen/base15sp720sw</item>
         <item name="android:textColor">@color/gray</item>
         <item name="android:textAllCaps">true</item>
     </style>
@@ -321,11 +321,11 @@
     <style name="NewUserEditText" parent="android:style/Widget.EditText">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginLeft">40dp</item>
-        <item name="android:layout_marginRight">40dp</item>
+        <item name="android:layout_marginLeft">@dimen/base40dp720sw</item>
+        <item name="android:layout_marginRight">@dimen/base40dp720sw</item>
         <item name="android:singleLine">true</item>
-        <item name="android:padding">10dp</item>
-        <item name="android:textSize">@dimen/form_tv_text_size</item>
+        <item name="android:padding">@dimen/base10dp720sw</item>
+        <item name="android:textSize">@dimen/base15sp720sw</item>
         <item name="android:textColor">@android:color/black</item>
         <item name="android:background">@drawable/edittext_bg</item>
     </style>
@@ -333,16 +333,16 @@
     <style name="SeparationLine">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
-        <item name="android:layout_marginTop">12dp</item>
-        <item name="android:layout_marginBottom">12dp</item>
+        <item name="android:layout_marginTop">@dimen/base12dp720sw</item>
+        <item name="android:layout_marginBottom">@dimen/base12dp720sw</item>
         <item name="android:background">@android:color/black</item>
     </style>
 
     <style name="CornerSettingsButton">
-        <item name="android:layout_width">40dp</item>
-        <item name="android:layout_height">40dp</item>
-        <item name="android:layout_marginStart">10dp</item>
-        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:layout_width">@dimen/base40dp720sw</item>
+        <item name="android:layout_height">@dimen/base40dp720sw</item>
+        <item name="android:layout_marginStart">@dimen/base10dp720sw</item>
+        <item name="android:layout_marginBottom">@dimen/base10dp720sw</item>
         <item name="android:background">@drawable/gear</item>
         <item name="android:layout_alignParentStart">true</item>
     </style>
@@ -350,19 +350,19 @@
     <style name="SettingsMenuItem">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:padding">15dp</item>
-        <item name="android:drawablePadding">10dp</item>
+        <item name="android:padding">@dimen/base15dp720sw</item>
+        <item name="android:drawablePadding">@dimen/base10dp720sw</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">@dimen/base18sp720sw</item>
     </style>
 
     <style name="SettingsTitle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
-        <item name="android:layout_marginBottom">20dp</item>
+        <item name="android:layout_marginBottom">@dimen/base20dp720sw</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:layout_gravity">center_horizontal</item>
     </style>
@@ -372,21 +372,21 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">center_horizontal</item>
         <item name="android:textAllCaps">true</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:layout_margin">10dp</item>
+        <item name="android:textSize">@dimen/base16sp720sw</item>
+        <item name="android:layout_margin">@dimen/base10dp720sw</item>
     </style>
 
     <style name="SettingsSeekBar">
         <item name="android:layout_width">400dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">center_horizontal</item>
-        <item name="android:layout_marginBottom">20dp</item>
+        <item name="android:layout_marginBottom">@dimen/base20dp720sw</item>
     </style>
 
     <style name="FileExplorerTitle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:padding">10dp</item>
+        <item name="android:padding">@dimen/base10dp720sw</item>
         <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
         <item name="android:gravity">center_horizontal</item>
     </style>
@@ -394,8 +394,8 @@
     <style name="FileExplorerScrollViewStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:paddingStart">10dp</item>
-        <item name="android:paddingEnd">10dp</item>
+        <item name="android:paddingStart">@dimen/base10dp720sw</item>
+        <item name="android:paddingEnd">@dimen/base10dp720sw</item>
         <item name="android:background">@color/cloud_drive_background</item>
     </style>
 

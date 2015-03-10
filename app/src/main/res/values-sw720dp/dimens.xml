@@ -1,0 +1,68 @@
+<resources>
+
+    <dimen name="base5dp720sw">5dp</dimen>
+    <dimen name="base6dp720sw">6dp</dimen>
+    <dimen name="base10dp720sw">10dp</dimen>
+    <dimen name="base12dp720sw">12dp</dimen>
+    <dimen name="base15dp720sw">15dp</dimen>
+    <dimen name="base18dp720sw">18dp</dimen>
+    <dimen name="base20dp720sw">20dp</dimen>
+    <dimen name="base25dp720sw">25dp</dimen>
+    <dimen name="base30dp720sw">30dp</dimen>
+    <dimen name="base35dp720sw">35dp</dimen>
+    <dimen name="base40dp720sw">40dp</dimen>
+    <dimen name="base45dp720sw">45dp</dimen>
+    <dimen name="base50dp720sw">50dp</dimen>
+    <dimen name="base55dp720sw">55dp</dimen>
+    <dimen name="base60dp720sw">60dp</dimen>
+    <dimen name="base65dp720sw">65dp</dimen>
+    <dimen name="base70dp720sw">70dp</dimen>
+    <dimen name="base75dp720sw">75dp</dimen>
+    <dimen name="base80dp720sw">80dp</dimen>
+    <dimen name="base85dp720sw">85dp</dimen>
+    <dimen name="base90dp720sw">90dp</dimen>
+    <dimen name="base95dp720sw">96dp</dimen>
+    <dimen name="base100dp720sw">100dp</dimen>
+    <dimen name="base110dp720sw">110dp</dimen>
+    <dimen name="base120dp720sw">120dp</dimen>
+    <dimen name="base130dp720sw">130dp</dimen>
+    <dimen name="base140dp720sw">140dp</dimen>
+    <dimen name="base150dp720sw">150dp</dimen>
+    <dimen name="base160dp720sw">160dp</dimen>
+    <dimen name="base170dp720sw">170dp</dimen>
+    <dimen name="base180dp720sw">180dp</dimen>
+    <dimen name="base190dp720sw">190dp</dimen>
+    <dimen name="base195dp720sw">195dp</dimen>
+    <dimen name="base200dp720sw">200dp</dimen>
+    <dimen name="base210dp720sw">210dp</dimen>
+    <dimen name="base220dp720sw">220dp</dimen>
+    <dimen name="base230dp720sw">230dp</dimen>
+    <dimen name="base240dp720sw">240dp</dimen>
+    <dimen name="base250dp720sw">250dp</dimen>
+    <dimen name="base270dp720sw">270dp</dimen>
+    <dimen name="base340dp720sw">340dp</dimen>
+    <dimen name="base350dp720sw">350dp</dimen>
+    <dimen name="base420dp720sw">420dp</dimen>
+    <dimen name="base510dp720sw">510dp</dimen>
+    <dimen name="base530dp720sw">530dp</dimen>
+
+
+    <dimen name="base12sp720sw">12sp</dimen>
+    <dimen name="base13sp720sw">13sp</dimen>
+    <dimen name="base14sp720sw">14sp</dimen>
+    <dimen name="base15sp720sw">15sp</dimen>
+    <dimen name="base16sp720sw">16sp</dimen>
+    <dimen name="base17sp720sw">17sp</dimen>
+    <dimen name="base18sp720sw">18sp</dimen>
+    <dimen name="base19sp720sw">19sp</dimen>
+    <dimen name="base20sp720sw">20sp</dimen>
+    <dimen name="base21sp720sw">21sp</dimen>
+    <dimen name="base22sp720sw">22sp</dimen>
+    <dimen name="base23sp720sw">23sp</dimen>
+    <dimen name="base24sp720sw">24sp</dimen>
+    <dimen name="base25sp720sw">25sp</dimen>
+    <dimen name="base26sp720sw">26sp</dimen>
+    <dimen name="base28sp720sw">28sp</dimen>
+    <dimen name="base42sp720sw">42sp</dimen>
+
+</resources>

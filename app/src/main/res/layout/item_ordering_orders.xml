@@ -11,7 +11,7 @@
         <TextView
             android:id="@+id/ordering_item_date_textView"
             android:text="08:35"
-            android:layout_marginBottom="@dimen/ordering_fragment_text_margin_bottom"
+            android:layout_marginBottom="@dimen/base5dp720sw"
             style="@style/UserFragmentInfoText" />
 
         <TextView
@@ -27,7 +27,7 @@
 
         <TextView
             android:text="@string/summa"
-            android:layout_marginBottom="@dimen/ordering_fragment_text_margin_bottom"
+            android:layout_marginBottom="@dimen/base5dp720sw"
             style="@style/UserFragmentInfoText" />
 
         <TextView
@@ -40,7 +40,7 @@
         <TextView
             android:text="@string/commission"
             android:layout_marginTop="15dp"
-            android:layout_marginBottom="@dimen/ordering_fragment_text_margin_bottom"
+            android:layout_marginBottom="@dimen/base5dp720sw"
             style="@style/UserFragmentInfoText" />
 
         <TextView

@@ -53,7 +53,7 @@
                     android:id="@+id/textView1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_marginLeft="@dimen/base250dp720sw"
                     android:text="MINI MBA LIGHT"
                     android:textColor="@color/gray" />
 
@@ -62,7 +62,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/textView1"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_marginLeft="@dimen/base250dp720sw"
                     android:text="Срок обучения: 1 месяц / 110 часов"
                     android:textColor="@color/gray" />
 
@@ -71,7 +71,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/textView2"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_marginLeft="@dimen/base250dp720sw"
                     android:text="Уровень: Новичок;"
                     android:textColor="@color/gray" />
 
@@ -80,7 +80,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/textView3"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_marginLeft="@dimen/base250dp720sw"
                     android:text="Аудитория: Менеджеры низшего звена;"
                     android:textColor="@color/gray" />
 
@@ -89,7 +89,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/textView4"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_marginLeft="@dimen/base250dp720sw"
                     android:text="Программа: 1 учебный модуль + 1 Тест;"
                     android:textColor="@color/gray" />
 
@@ -97,7 +97,7 @@
                     android:id="@+id/buttonIssue"
                     style="@style/ButtonPink"
                     android:layout_below="@id/textView5"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_marginLeft="@dimen/base250dp720sw"
                     android:text="970 ГРН" />
 
                 <Button
@@ -127,7 +127,7 @@
                     android:id="@+id/textView12"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_marginLeft="@dimen/base250dp720sw"
                     android:text="MINI MBA DISTANCE"
                     android:textColor="@color/gray" />
 
@@ -136,7 +136,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/textView12"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_marginLeft="@dimen/base250dp720sw"
                     android:text="Срок обучения: 3 месяца / 210 часов"
                     android:textColor="@color/gray" />
 
@@ -145,7 +145,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/textView22"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_marginLeft="@dimen/base250dp720sw"
                     android:text="Уровень: Специалист;"
                     android:textColor="@color/gray" />
 
@@ -154,7 +154,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/textView32"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_marginLeft="@dimen/base250dp720sw"
                     android:text="Аудитория: Менеджеры среднего звена;"
                     android:textColor="@color/gray" />
 
@@ -163,7 +163,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/textView42"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_marginLeft="@dimen/base250dp720sw"
                     android:text="Программа: 5 учебных модулей + 5 тестов"
                     android:textColor="@color/gray" />
 
@@ -171,7 +171,7 @@
                     android:id="@+id/buttonIssue2"
                     style="@style/ButtonPink"
                     android:layout_below="@id/textView52"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_marginLeft="@dimen/base250dp720sw"
                     android:text="3700 ГРН" />
 
                 <Button

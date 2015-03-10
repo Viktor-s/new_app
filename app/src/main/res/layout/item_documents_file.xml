@@ -11,7 +11,7 @@
     <ImageView
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:layout_marginEnd="@dimen/file_browser_item_end_margin"
+        android:layout_marginEnd="@dimen/base15dp720sw"
         android:src="@drawable/file"
         android:contentDescription="@string/app_name"
         android:id="@+id/file_image_imageView" />
@@ -20,7 +20,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_marginEnd="@dimen/file_browser_item_end_margin"
+        android:layout_marginEnd="@dimen/base15dp720sw"
         tools:text="My document.doc"
         android:singleLine="true"
         android:layout_gravity="center_vertical"
@@ -31,7 +31,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="16sp"
-        android:layout_marginEnd="@dimen/file_browser_item_end_margin"
+        android:layout_marginEnd="@dimen/base15dp720sw"
         tools:text="32Kb"
         android:textColor="@color/gray"
         android:singleLine="true"
