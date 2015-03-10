@@ -6,9 +6,9 @@
     android:background="@drawable/app_background" >
 
     <ScrollView
-        android:layout_width="@dimen/product_column_size"
+        android:layout_width="@dimen/base200dp720sw"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/product_scroll_margin">
+        android:layout_margin="@dimen/base15dp720sw">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -22,7 +22,7 @@
             <RelativeLayout
                 android:id="@+id/product_without_bail_image"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/height_title_picture"
+                android:layout_height="@dimen/base100dp720sw"
                 android:background="@color/gray">
 
                 <TextView
@@ -39,7 +39,7 @@
             <RelativeLayout
                 android:id="@+id/product_bail_image"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/height_title_picture"
+                android:layout_height="@dimen/base100dp720sw"
                 android:background="@color/gray">
 
                 <TextView
@@ -58,9 +58,9 @@
     </ScrollView>
 
     <ScrollView
-        android:layout_width="@dimen/product_column_size"
+        android:layout_width="@dimen/base200dp720sw"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/product_scroll_margin">
+        android:layout_margin="@dimen/base15dp720sw">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -74,7 +74,7 @@
             <RelativeLayout
                 android:id="@+id/product_life_insurance_image"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/height_title_picture"
+                android:layout_height="@dimen/base100dp720sw"
                 android:background="@color/gray">
 
                 <TextView
@@ -91,7 +91,7 @@
             <RelativeLayout
                 android:id="@+id/product_risk_insurance_image"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/height_title_picture"
+                android:layout_height="@dimen/base100dp720sw"
                 android:background="@color/gray">
 
                 <TextView
@@ -110,9 +110,9 @@
     </ScrollView>
 
     <ScrollView
-        android:layout_width="@dimen/product_column_size"
+        android:layout_width="@dimen/base200dp720sw"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/product_scroll_margin">
+        android:layout_margin="@dimen/base15dp720sw">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -126,7 +126,7 @@
             <RelativeLayout
                 android:id="@+id/product_tickets_image"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/height_title_picture"
+                android:layout_height="@dimen/base100dp720sw"
                 android:background="@color/gray">
 
                 <TextView
@@ -145,9 +145,9 @@
     </ScrollView>
 
     <ScrollView
-        android:layout_width="@dimen/product_column_size"
+        android:layout_width="@dimen/base200dp720sw"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/product_scroll_margin">
+        android:layout_margin="@dimen/base15dp720sw">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -161,7 +161,7 @@
             <RelativeLayout
                 android:id="@+id/product_education_image"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/height_title_picture"
+                android:layout_height="@dimen/base100dp720sw"
                 android:background="@color/gray">
 
                 <TextView

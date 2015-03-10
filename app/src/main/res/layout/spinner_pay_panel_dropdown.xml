@@ -6,6 +6,6 @@
     android:layout_height="wrap_content"
     android:padding="15dp"
     android:background="@color/login_phone_number_background"
-    android:textSize="@dimen/pay_spinner_text_size"
+    android:textSize="@dimen/base16sp720sw"
     android:textAllCaps="true"
     android:textColor="@color/white" />

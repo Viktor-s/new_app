@@ -14,7 +14,7 @@
 
         <LinearLayout
             android:id="@+id/login_phone_layout"
-            tools:visibility="gone"
+            tools:visibility="visible"
             style="@style/LoginEnterLayout">
 
             <TextView
@@ -29,14 +29,14 @@
                 tools:text="+380977552530"
                 android:id="@+id/phone_number_textView"
                 android:background="@color/login_phone_number_background"
-                android:layout_marginBottom="10dp"
-                android:padding="10dp" />
+                android:layout_marginBottom="@dimen/base10dp720sw"
+                android:padding="@dimen/base10dp720sw" />
 
             <Button
-                android:layout_width="193dp"
-                android:layout_height="50dp"
+                android:layout_width="@dimen/base195dp720sw"
+                android:layout_height="@dimen/base50dp720sw"
                 android:text="@string/login_button"
-                android:textSize="19sp"
+                android:textSize="@dimen/base19sp720sw"
                 android:background="@drawable/enter_button_selector"
                 android:id="@+id/login_button" />
         </LinearLayout>
@@ -59,24 +59,24 @@
                 android:gravity="center"
                 android:id="@+id/pin_number_textView"
                 android:background="@color/login_phone_number_background"
-                android:layout_marginBottom="10dp"
-                android:padding="10dp" />
+                android:layout_marginBottom="@dimen/base10dp720sw"
+                android:padding="@dimen/base10dp720sw" />
 
             <Button
-                android:layout_width="193dp"
-                android:layout_height="50dp"
+                android:layout_width="@dimen/base195dp720sw"
+                android:layout_height="@dimen/base50dp720sw"
                 android:text="@string/enter_button"
-                android:textSize="19sp"
+                android:textSize="@dimen/base19sp720sw"
                 android:background="@drawable/enter_button_selector"
                 android:id="@+id/login_pin_button" />
         </LinearLayout>
 
         <TableLayout
-            android:layout_width="220dp"
-            android:layout_height="220dp"
+            android:layout_width="@dimen/base220dp720sw"
+            android:layout_height="@dimen/base220dp720sw"
             android:stretchColumns="*"
             android:id="@+id/tableLayout"
-            android:layout_marginLeft="35dp">
+            android:layout_marginLeft="@dimen/base35dp720sw">
 
             <TableRow android:layout_weight="1">
 

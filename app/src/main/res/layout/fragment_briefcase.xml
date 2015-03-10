@@ -202,7 +202,7 @@
         android:layout_height="fill_parent"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="@dimen/news_fragment_block_size"
+        android:layout_marginLeft="@dimen/base240dp720sw"
         android:background="@android:color/white" />
 
     <FrameLayout
@@ -216,8 +216,8 @@
         android:layout_alignParentEnd="true" />
 
     <Button
-        android:layout_width="@dimen/close_button_size"
-        android:layout_height="@dimen/close_button_size"
+        android:layout_width="@dimen/base50dp720sw"
+        android:layout_height="@dimen/base50dp720sw"
         android:id="@+id/briefcase_close_button"
         android:visibility="gone"
         android:layout_alignParentTop="true"
@@ -225,5 +225,5 @@
         android:layout_alignParentEnd="true"
         android:background="@drawable/button_close_test"
         android:clickable="false"
-        android:layout_marginTop="@dimen/news_item_add_comment_margin" />
+        android:layout_marginTop="@dimen/base20dp720sw" />
 </RelativeLayout>

@@ -97,20 +97,20 @@ public class NewsItemFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             mNewsFeedEntity = (ArticleShortEntity) bundle.getSerializable(ARG_NEWS_FEED_ENTITY);
         }
         mDBHelper = new DBHelper(AppContext.getAppContext());
         mDBAdapter = new DBAdapter(AppContext.getAppContext());
-        mDBAdapter.open();
+
     }
 
 
     @Override
     public void onResume() {
         super.onResume();
+        mDBAdapter.open();
         LOGI(TAG, "RegisterRecNewsItem");
         receiver = new BroadcastReceiver() {
             @Override
@@ -140,7 +140,6 @@ public class NewsItemFragment extends Fragment {
                     mNewsItemCommentsListView.setAdapter(newsCommentsAdapter);
                     newsCommentsAdapter.notifyDataSetChanged();
                     setListViewHeightBasedOnChildren(mNewsItemCommentsListView);
-
                     mNewsItemAddCommentButton.setEnabled(true);
                     mNewsItemCommentEditText.setText("");
                 }
@@ -199,19 +198,18 @@ public class NewsItemFragment extends Fragment {
         mNewsItemCloseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ((NewsFeedFragment) getParentFragment()).updateLastChousenPosition();
                 LocalBroadcastManager.getInstance(NewsItemFragment.this.getActivity()).unregisterReceiver(receiver);
                 getParentFragment().getChildFragmentManager().beginTransaction().remove(NewsItemFragment.this).commit();
             }
         });
 
         updateFullNewsCursor();
-
         AnimateButtonClose.animateButtonClose(mNewsItemCloseButton);
         // FB
         adapter = new SocialAuthAdapter(new ResponseListener());
         mShareButton = (Button) view.findViewById(R.id.fb_share_Button);
         mShareButton.setOnClickListener(new OnShareFBListener());
-
         return view;
     }
 
@@ -232,8 +230,6 @@ public class NewsItemFragment extends Fragment {
             }
             fillViewsWithData();
         }
-
-
     }
 
     private void fillViewsWithData() {
@@ -295,7 +291,6 @@ public class NewsItemFragment extends Fragment {
         return articleFullEntity;
     }
 
-
     private List<ArticleShortCommentEntity> fillCommentsFromCursor(int newsId) {
         String selectQueryShortNewsComments = QUERY_COMMENTS_PATH + newsId;
         Cursor cursorComments = mDBHelper.getWritableDatabase().rawQuery(selectQueryShortNewsComments, null);
@@ -311,18 +306,15 @@ public class NewsItemFragment extends Fragment {
                 commentsList.add(articleShortCommentEntity);
             }
         }
-
         if (cursorComments != null) {
             cursorComments.close();
         }
-
         return commentsList;
     }
 
     private void addComment(String message) {
         ((MainActivity) NewsItemFragment.this.getActivity()).startHttpIntent(getAddCommentQuery(mArticleFullEntity.getId(), message), HttpIntentService.ADD_COMMENT);
     }
-
 
     public static CommentAddQuery getAddCommentQuery(int article_id, String content) {
         CommentAddQuery query = new CommentAddQuery();

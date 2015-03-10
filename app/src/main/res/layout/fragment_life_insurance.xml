@@ -55,7 +55,7 @@
                     android:id="@+id/textView1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_marginLeft="@dimen/base250dp720sw"
                     android:text="ПЕНСИОННЫЙ ФОНД"
                     android:textColor="@color/gray" />
 
@@ -64,7 +64,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/textView1"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_marginLeft="@dimen/base250dp720sw"
                     android:text="Накопления денежных средств для достойной жизни на пенсии"
                     android:textColor="@color/gray" />
 
@@ -73,7 +73,7 @@
                     android:id="@+id/buttonIssue"
                     style="@style/ButtonPink"
                     android:layout_below="@id/textView2"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_marginLeft="@dimen/base250dp720sw"
                     android:text="ОФОРМИТ" />
 
                 <Button
@@ -104,7 +104,7 @@
                     android:id="@+id/textView12"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_marginLeft="@dimen/base250dp720sw"
                     android:text="НАСЛЕДНИК"
                     android:textColor="@color/gray" />
 
@@ -113,7 +113,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/textView12"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_marginLeft="@dimen/base250dp720sw"
                     android:text="Целевое накопление денежных средств к какой либо дате в жизни ребенка"
                     android:textColor="@color/gray" />
 
@@ -121,7 +121,7 @@
                     android:id="@+id/buttonIssue2"
                     style="@style/ButtonPink"
                     android:layout_below="@id/textView22"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_marginLeft="@dimen/base250dp720sw"
                     android:text="ОФОРМИТ" />
 
                 <Button
@@ -152,7 +152,7 @@
                     android:id="@+id/textView13"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_marginLeft="@dimen/base250dp720sw"
                     android:text="ИНВЕСТОР"
                     android:textColor="@color/gray" />
 
@@ -161,7 +161,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/textView13"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_marginLeft="@dimen/base250dp720sw"
                     android:text="Максимальное накопление денежных средств и одновременная страховая защита на случай непредвиденных ситуаций."
                     android:textColor="@color/gray" />
 
@@ -169,7 +169,7 @@
                     android:id="@+id/buttonIssue3"
                     style="@style/ButtonPink"
                     android:layout_below="@id/textView23"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_marginLeft="@dimen/base250dp720sw"
                     android:text="ОФОРМИТ" />
 
                 <Button
@@ -200,7 +200,7 @@
                     android:id="@+id/textView14"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_marginLeft="@dimen/base250dp720sw"
                     android:text="НАДЕЖНАЯ ЗАЩИТА"
                     android:textColor="@color/gray" />
 
@@ -209,7 +209,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/textView14"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_marginLeft="@dimen/base250dp720sw"
                     android:text="Продукта: комплексное целевое накопление денежных средств и одновременная материальная защита на случай непредвиденных ситуаций."
                     android:textColor="@color/gray" />
 
@@ -217,7 +217,7 @@
                     android:id="@+id/buttonIssue4"
                     style="@style/ButtonPink"
                     android:layout_below="@id/textView24"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_marginLeft="@dimen/base250dp720sw"
                     android:text="ОФОРМИТ" />
 
                 <Button

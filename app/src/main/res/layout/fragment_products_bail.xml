@@ -55,7 +55,7 @@
                     android:id="@+id/textView1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_marginLeft="@dimen/base250dp720sw"
                     android:text="АВТОТРАНСПОРТ"
                     android:textColor="@color/gray" />
 
@@ -64,7 +64,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/textView1"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_marginLeft="@dimen/base250dp720sw"
                     android:text="Документы: Паспорт + ИНН, Свидетелство о регистрации автомобиля, генеральная доверенность при отустсвии собственника. Транспортное средство."
                     android:textColor="@color/gray" />
 
@@ -73,7 +73,7 @@
                     android:id="@+id/buttonIssue"
                     style="@style/ButtonPink"
                     android:layout_below="@id/textView2"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_marginLeft="@dimen/base250dp720sw"
                     android:text="ОФОРМИТ" />
 
                 <Button
@@ -104,7 +104,7 @@
                     android:id="@+id/textView12"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_marginLeft="@dimen/base250dp720sw"
                     android:text="НЕВДИЖИМОСТЬ"
                     android:textColor="@color/gray" />
 
@@ -113,7 +113,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/textView12"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_marginLeft="@dimen/base250dp720sw"
                     android:text="Документы: Паспорт, ИНН, правоустанавливающие документы, технический паспорт, форма №3. Предмет залога"
                     android:textColor="@color/gray" />
 
@@ -121,7 +121,7 @@
                     android:id="@+id/buttonIssue2"
                     style="@style/ButtonPink"
                     android:layout_below="@id/textView22"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_marginLeft="@dimen/base250dp720sw"
                     android:text="ОФОРМИТ" />
 
                 <Button
@@ -151,7 +151,7 @@
                     android:id="@+id/textView13"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_marginLeft="@dimen/base250dp720sw"
                     android:text="ЗОЛОТО"
                     android:textColor="@color/gray" />
 
@@ -160,7 +160,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/textView13"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_marginLeft="@dimen/base250dp720sw"
                     android:text="Документы: Паспорт или любой документ с фото, ИНН. Предмет залога"
                     android:textColor="@color/gray" />
 
@@ -168,7 +168,7 @@
                     android:id="@+id/buttonIssue3"
                     style="@style/ButtonPink"
                     android:layout_below="@id/textView23"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_marginLeft="@dimen/base250dp720sw"
                     android:text="ОФОРМИТ" />
 
                 <Button
@@ -198,7 +198,7 @@
                     android:id="@+id/textView14"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_marginLeft="@dimen/base250dp720sw"
                     android:text="БЫТОВАЯ ТЕХНИКА"
                     android:textColor="@color/gray" />
 
@@ -207,7 +207,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/textView14"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_marginLeft="@dimen/base250dp720sw"
                     android:text="Документы: Паспорт или любой документ с фото, ИНН Предмет залога"
                     android:textColor="@color/gray" />
 
@@ -215,7 +215,7 @@
                     android:id="@+id/buttonIssue4"
                     style="@style/ButtonPink"
                     android:layout_below="@id/textView24"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_marginLeft="@dimen/base250dp720sw"
                     android:text="ОФОРМИТ" />
 
                 <Button

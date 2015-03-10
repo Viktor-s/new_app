@@ -11,9 +11,9 @@
         android:id="@+id/mail_video_close_button"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_width="@dimen/close_button_size"
-        android:layout_height="@dimen/close_button_size"
+        android:layout_width="@dimen/base50dp720sw"
+        android:layout_height="@dimen/base50dp720sw"
         android:background="@drawable/button_close_test"
-        android:layout_marginTop="@dimen/news_item_add_comment_margin" />
+        android:layout_marginTop="@dimen/base20dp720sw" />
 
 </RelativeLayout>
