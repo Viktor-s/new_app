@@ -31,6 +31,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 import me.justup.upme.R;
 
@@ -977,10 +978,13 @@ public class WeekView extends View {
                 @Override
                 public String interpretDate(Calendar date) {
                     SimpleDateFormat sdf;
-                    sdf = mDayNameLength == LENGTH_SHORT ? new SimpleDateFormat("EEEEE") : new SimpleDateFormat("EEE");
+                    Locale locale = new Locale("ru");
+                    sdf = new SimpleDateFormat("EE", locale);
+                    // sdf = mDayNameLength == LENGTH_SHORT ? new SimpleDateFormat("EEEEE") : new SimpleDateFormat("EEE");
                     try {
                         String dayName = sdf.format(date.getTime()).toUpperCase();
-                        return String.format("%s %d/%02d-%d", dayName, date.get(Calendar.MONTH) + 1, date.get(Calendar.DAY_OF_MONTH), date.get(Calendar.YEAR));
+                        // return String.format("%s %d/%02d-%d", dayName, date.get(Calendar.MONTH) + 1, date.get(Calendar.DAY_OF_MONTH), date.get(Calendar.YEAR));
+                        return String.format("%s, %d/%02d", dayName, date.get(Calendar.DAY_OF_MONTH), date.get(Calendar.MONTH) + 1);
                     } catch (Exception e) {
                         e.printStackTrace();
                         return "";
@@ -989,12 +993,13 @@ public class WeekView extends View {
 
                 @Override
                 public String interpretTime(int hour) {
-                    String amPm;
-                    if (hour >= 0 && hour < 12) amPm = "AM";
-                    else amPm = "PM";
-                    if (hour == 0) hour = 12;
-                    if (hour > 12) hour -= 12;
-                    return String.format("%02d %s", hour, amPm);
+//                    String amPm;
+//                    if (hour >= 0 && hour < 12) amPm = "AM";
+//                    else amPm = "PM";
+//                    if (hour == 0) hour = 12;
+//                    if (hour > 12) hour -= 12;
+//                    return String.format("%02d %s", hour, amPm);
+                    return String.format("%02d:00", hour);
                 }
             };
         }
