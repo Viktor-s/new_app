@@ -69,6 +69,7 @@ public class ApiWrapper {
     public static final String FILE_ADD_SHARE_WITH = "File.addShareWith";
     public static final String FILE_GET_MY_FILES = "File.getAllOwn";
     public static final String FILE_GET_ALL_SHARED_WITH_ME = "File.getAllSharedWithMe";
+    public static final String FILE_DELETE = "File.delete";
 
 
     private static void post(final StringEntity se, AsyncHttpResponseHandler responseHandler) {

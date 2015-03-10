@@ -15,6 +15,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import me.justup.upme.entity.FileDeleteQuery;
 import me.justup.upme.http.ApiWrapper;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
@@ -33,6 +34,7 @@ public class FileExplorerService extends IntentService {
 
     public static final int DOWNLOAD = 1;
     public static final int UPLOAD = 2;
+    public static final int DELETE = 3;
 
 
     public FileExplorerService() {
@@ -54,6 +56,10 @@ public class FileExplorerService extends IntentService {
 
             case UPLOAD:
                 uploadFileQuery(filePath);
+                break;
+
+            case DELETE:
+                deleteFileQuery(fileHash);
                 break;
 
             default:
@@ -93,6 +99,25 @@ public class FileExplorerService extends IntentService {
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                 String content = ApiWrapper.responseBodyToString(responseBody);
                 LOGE(TAG, "syncSendFileToCloud onFailure(): " + content);
+            }
+        });
+    }
+
+    private void deleteFileQuery(final String fileHash) {
+        FileDeleteQuery query = new FileDeleteQuery();
+        query.params.file_hash = fileHash;
+
+        ApiWrapper.syncQuery(query, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                String content = ApiWrapper.responseBodyToString(responseBody);
+                LOGD(TAG, "deleteFileQuery onSuccess(): " + content);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                String content = ApiWrapper.responseBodyToString(responseBody);
+                LOGE(TAG, "deleteFileQuery onFailure(): " + content);
             }
         });
     }
