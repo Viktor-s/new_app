@@ -5,9 +5,9 @@
     android:layout_height="match_parent">
 
     <ScrollView
-        android:layout_width="@dimen/product_column_size"
+        android:layout_width="@dimen/base200dp720sw"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/product_scroll_margin">
+        android:layout_margin="@dimen/base15dp720sw">
 
         <LinearLayout
             android:id="@+id/category_product_container"

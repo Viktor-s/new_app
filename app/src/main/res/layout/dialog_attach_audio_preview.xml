@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="@dimen/mail_messages_dialog_width"
-    android:layout_height="@dimen/mail_messages_dialog_height"
+    android:layout_width="@dimen/base340dp720sw"
+    android:layout_height="@dimen/base250dp720sw"
     tools:context=".MainActivity">
 
     <SeekBar

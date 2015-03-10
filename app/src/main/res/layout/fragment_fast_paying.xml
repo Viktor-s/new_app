@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:paddingLeft="20dp"
+    android:paddingLeft="@dimen/base20dp720sw"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -10,19 +10,19 @@
         android:layout_height="wrap_content"
         android:text="@string/fast_pay"
         android:textAllCaps="true"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="15dp"
-        android:textSize="42sp" />
+        android:layout_marginTop="@dimen/base20dp720sw"
+        android:layout_marginBottom="@dimen/base15dp720sw"
+        android:textSize="@dimen/base42sp720sw" />
 
     <ImageView
-        android:layout_width="160dp"
-        android:layout_height="40dp"
-        android:layout_marginBottom="35dp"
+        android:layout_width="@dimen/base160dp720sw"
+        android:layout_height="@dimen/base40dp720sw"
+        android:layout_marginBottom="@dimen/base35dp720sw"
         android:src="@drawable/ic_fastpay_cards" />
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_width="530dp"
+        android:layout_width="@dimen/base530dp720sw"
         android:layout_height="wrap_content">
 
         <Button
@@ -52,10 +52,10 @@
 
     <FrameLayout
         android:id="@+id/paying_fragment_panel"
-        android:layout_width="510dp"
-        android:layout_marginTop="20dp"
+        android:layout_width="@dimen/base510dp720sw"
+        android:layout_marginTop="@dimen/base20dp720sw"
         android:layout_height="wrap_content"
-        android:padding="10dp"
+        android:padding="@dimen/base10dp720sw"
         android:background="@drawable/digit_button_selector" />
 
 </LinearLayout>

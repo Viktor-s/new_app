@@ -34,7 +34,7 @@
                     android:id="@+id/textView1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_marginLeft="@dimen/base250dp720sw"
                     android:text="ДЕНЬГИ В КОШЕЛЕК"
                     android:textColor="@color/gray" />
 
@@ -43,7 +43,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/textView1"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_marginLeft="@dimen/base250dp720sw"
                     android:text="Сумма: до 3000 грн"
                     android:textColor="@color/gray" />
 
@@ -52,7 +52,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/textView2"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_marginLeft="@dimen/base250dp720sw"
                     android:text="Срок кредитования: до 30 дней"
                     android:textColor="@color/gray" />
 
@@ -61,7 +61,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/textView3"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_marginLeft="@dimen/base250dp720sw"
                     android:text="Условия: Без справки о доходах"
                     android:textColor="@color/gray" />
 
@@ -70,7 +70,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/textView4"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_marginLeft="@dimen/base250dp720sw"
                     android:text="Документы: Паспорт + ИНН"
                     android:textColor="@color/gray" />
 
@@ -78,7 +78,7 @@
                     android:id="@+id/buttonIssue"
                     style="@style/ButtonPink"
                     android:layout_below="@id/textView5"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_marginLeft="@dimen/base250dp720sw"
                     android:text="ОФОРМИТ" />
 
                 <Button
@@ -108,7 +108,7 @@
                     android:id="@+id/textView12"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_marginLeft="@dimen/base250dp720sw"
                     android:text="ДЕНЬГИ В КОШЕЛЕК"
                     android:textColor="@color/gray" />
 
@@ -117,7 +117,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/textView12"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_marginLeft="@dimen/base250dp720sw"
                     android:text="Сумма: до 3000 грн"
                     android:textColor="@color/gray" />
 
@@ -126,7 +126,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/textView22"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_marginLeft="@dimen/base250dp720sw"
                     android:text="Срок кредитования: до 30 дней"
                     android:textColor="@color/gray" />
 
@@ -135,7 +135,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/textView32"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_marginLeft="@dimen/base250dp720sw"
                     android:text="Условия: Без справки о доходах"
                     android:textColor="@color/gray" />
 
@@ -144,7 +144,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/textView42"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_marginLeft="@dimen/base250dp720sw"
                     android:text="Документы: Паспорт + ИНН"
                     android:textColor="@color/gray" />
 
@@ -152,7 +152,7 @@
                     android:id="@+id/buttonIssue2"
                     style="@style/ButtonPink"
                     android:layout_below="@id/textView52"
-                    android:layout_marginLeft="@dimen/product_item_margin_left"
+                    android:layout_marginLeft="@dimen/base250dp720sw"
                     android:text="ОФОРМИТ" />
 
                 <Button

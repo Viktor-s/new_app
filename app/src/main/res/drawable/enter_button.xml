@@ -2,6 +2,6 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
 
     <solid android:color="@color/login_enter_button_background" />
-    <corners android:radius="@dimen/num_button_radius" />
+    <corners android:radius="@dimen/base5dp720sw" />
 
 </shape>

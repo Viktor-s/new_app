@@ -8,10 +8,10 @@
         android:id="@+id/mail_messages_close_button"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_width="@dimen/close_button_size"
-        android:layout_height="@dimen/close_button_size"
+        android:layout_width="@dimen/base50dp720sw"
+        android:layout_height="@dimen/base50dp720sw"
         android:background="@drawable/button_close_test"
-        android:layout_marginTop="@dimen/news_item_add_comment_margin" />
+        android:layout_marginTop="@dimen/base20dp720sw" />
 
     <LinearLayout
         android:orientation="vertical"
@@ -24,7 +24,7 @@
 
         <RelativeLayout
             android:layout_width="fill_parent"
-            android:layout_height="@dimen/mail_messages_block_height"
+            android:layout_height="@dimen/base90dp720sw"
             android:background="@color/white">
 
             <View
@@ -34,8 +34,8 @@
                 android:layout_toEndOf="@+id/news_comment_imageView" />
 
             <Button
-                android:layout_width="@dimen/mail_messages_staple_width"
-                android:layout_height="@dimen/mail_messages_staple_height"
+                android:layout_width="@dimen/base60dp720sw"
+                android:layout_height="@dimen/base35dp720sw"
                 android:id="@+id/mail_messages_staple_button"
                 android:layout_centerVertical="true"
                 android:layout_alignParentStart="true"
@@ -50,12 +50,12 @@
                 android:layout_alignTop="@+id/mail_messages_staple_button"
                 android:layout_alignBottom="@+id/mail_messages_staple_button"
                 android:id="@+id/button12"
-                android:layout_marginLeft="@dimen/mail_messages_staple_line_margin"
-                android:layout_marginRight="@dimen/mail_messages_staple_line_margin" />
+                android:layout_marginLeft="@dimen/base12dp720sw"
+                android:layout_marginRight="@dimen/base12dp720sw" />
 
             <EditText
-                android:layout_width="@dimen/mail_messages_text_width"
-                android:layout_height="@dimen/mail_messages_text_height"
+                android:layout_width="@dimen/base250dp720sw"
+                android:layout_height="@dimen/base40dp720sw"
                 android:id="@+id/chatET"
                 android:layout_centerVertical="true"
                 android:layout_toEndOf="@+id/button12"
@@ -63,23 +63,23 @@
                 android:background="@color/white" />
 
             <Button
-                android:layout_width="@dimen/mail_messages_text_height"
-                android:layout_height="@dimen/mail_messages_text_height"
+                android:layout_width="@dimen/base40dp720sw"
+                android:layout_height="@dimen/base40dp720sw"
                 android:id="@+id/mail_messages_call_button"
                 android:layout_centerVertical="true"
                 android:layout_alignParentEnd="true"
                 android:background="@drawable/image_call"
-                android:layout_marginRight="@dimen/mail_messages_call_margin" />
+                android:layout_marginRight="@dimen/base15dp720sw" />
 
             <Button
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/mail_messages_text_height"
+                android:layout_height="@dimen/base40dp720sw"
                 android:id="@+id/mail_messages_add_button"
                 android:layout_centerVertical="true"
                 android:layout_toStartOf="@+id/mail_messages_call_button"
                 android:background="@drawable/pay_panel_button_selector"
                 android:padding="6dp"
-                android:layout_marginRight="@dimen/mail_messages_call_margin"
+                android:layout_marginRight="@dimen/base15dp720sw"
                 android:text="@string/mail_messages_send"
                 android:textAllCaps="true"
                 android:gravity="center" />
@@ -94,7 +94,7 @@
 
         <RelativeLayout
             android:layout_width="fill_parent"
-            android:layout_height="@dimen/mail_messages_block_height"
+            android:layout_height="@dimen/base90dp720sw"
             android:visibility="gone"
             android:layout_centerVertical="true"
             android:layout_toEndOf="@+id/mail_messages_staple_button"
@@ -102,16 +102,16 @@
             android:background="@color/mail_add_file_bg">
 
             <Button
-                android:layout_width="@dimen/mail_messages_camera_button_height"
-                android:layout_height="@dimen/mail_messages_camera_button_height"
+                android:layout_width="@dimen/base55dp720sw"
+                android:layout_height="@dimen/base55dp720sw"
                 android:id="@+id/mail_messages_add_audio_button"
                 android:layout_centerVertical="true"
                 android:layout_centerHorizontal="true"
                 android:background="@drawable/button_sound_bg" />
 
             <Button
-                android:layout_width="@dimen/mail_messages_camera_button_height"
-                android:layout_height="@dimen/mail_messages_camera_button_height"
+                android:layout_width="@dimen/base55dp720sw"
+                android:layout_height="@dimen/base55dp720sw"
                 android:id="@+id/mail_messages_add_photo_button"
                 android:background="@drawable/button_camera_bg"
                 android:layout_alignTop="@+id/mail_messages_add_audio_button"
@@ -135,8 +135,8 @@
                 android:layout_marginRight="4dp" />
 
             <Button
-                android:layout_width="@dimen/mail_messages_camera_button_height"
-                android:layout_height="@dimen/mail_messages_camera_button_height"
+                android:layout_width="@dimen/base55dp720sw"
+                android:layout_height="@dimen/base55dp720sw"
                 android:id="@+id/mail_messages_add_document_button"
                 android:layout_alignBottom="@+id/mail_messages_add_audio_button"
                 android:layout_toEndOf="@+id/textView8"
@@ -151,12 +151,12 @@
         android:stackFromBottom="true"
         android:transcriptMode="alwaysScroll"
         android:layout_above="@+id/linearLayout3"
-        android:layout_marginEnd="@dimen/news_item_margin_right"
+        android:layout_marginEnd="@dimen/base60dp720sw"
         android:src="@android:drawable/dark_header" />
 
     <ImageButton
-        android:layout_width="@dimen/mail_messages_attach_image_size"
-        android:layout_height="@dimen/mail_messages_attach_image_size"
+        android:layout_width="@dimen/base50dp720sw"
+        android:layout_height="@dimen/base50dp720sw"
         android:id="@+id/mail_messages_image_attach_imageView"
         android:layout_alignBottom="@+id/jabber_listMessages"
         android:layout_alignParentStart="true"

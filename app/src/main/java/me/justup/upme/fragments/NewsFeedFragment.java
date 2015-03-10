@@ -187,6 +187,10 @@ public class NewsFeedFragment extends Fragment {
         return view;
     }
 
+    public void updateLastChousenPosition() {
+        lastChosenPosition = -1;
+    }
+
     private List<ArticleShortEntity> fillNewsFromCursor(Cursor cursorNews, ArrayList<Integer> readNewsList) {
 
         ArrayList<ArticleShortEntity> newsList = new ArrayList<>();
