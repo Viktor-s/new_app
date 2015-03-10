@@ -3,11 +3,13 @@ package me.justup.upme.fragments;
 import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
@@ -24,11 +26,16 @@ import me.justup.upme.R;
 import me.justup.upme.entity.FileGetAllQuery;
 import me.justup.upme.entity.FileGetAllResponse;
 import me.justup.upme.http.ApiWrapper;
+import me.justup.upme.services.FileExplorerService;
 
 import static me.justup.upme.fragments.DocumentsFragment.DOC;
 import static me.justup.upme.fragments.DocumentsFragment.IMAGE;
 import static me.justup.upme.fragments.DocumentsFragment.KB;
 import static me.justup.upme.fragments.DocumentsFragment.SIZE_VALUE;
+import static me.justup.upme.services.FileExplorerService.DOWNLOAD;
+import static me.justup.upme.services.FileExplorerService.EXPLORER_SERVICE_ACTION_TYPE;
+import static me.justup.upme.services.FileExplorerService.EXPLORER_SERVICE_FILE_HASH;
+import static me.justup.upme.services.FileExplorerService.EXPLORER_SERVICE_FILE_NAME;
 import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.LOGE;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
@@ -43,6 +50,7 @@ public class CloudExplorerFragment extends Fragment {
     private TableLayout mMyFileExplorer;
     private TableLayout mShareFileExplorer;
     private LayoutInflater mLayoutInflater;
+    private FrameLayout mProgressBar;
 
 
     @Override
@@ -67,6 +75,8 @@ public class CloudExplorerFragment extends Fragment {
 
         tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
             public void onTabChanged(String tabId) {
+                mProgressBar.setVisibility(View.VISIBLE);
+
                 if (tabId.equals(TAB_1)) {
                     fileQuery(ApiWrapper.FILE_GET_MY_FILES, mMyFileExplorer);
                 } else {
@@ -77,6 +87,7 @@ public class CloudExplorerFragment extends Fragment {
 
         mMyFileExplorer = (TableLayout) view.findViewById(R.id.files_panel_my);
         mShareFileExplorer = (TableLayout) view.findViewById(R.id.files_panel_share);
+        mProgressBar = (FrameLayout) view.findViewById(R.id.base_progressBar);
 
         fileQuery(ApiWrapper.FILE_GET_MY_FILES, mMyFileExplorer);
 
@@ -111,7 +122,7 @@ public class CloudExplorerFragment extends Fragment {
         TextView mFileSize = (TextView) item.findViewById(R.id.file_size_textView);
 
         ImageButton mFileActionButton = (ImageButton) item.findViewById(R.id.file_action_button);
-        mFileActionButton.setOnClickListener(new OnFileActionListener(parentLayout));
+        mFileActionButton.setOnClickListener(new OnFileActionListener(parentLayout, fileHash, fileName));
 
         if (type == IMAGE) {
             mFileImage.setImageResource(R.drawable.ic_file_image);
@@ -148,33 +159,41 @@ public class CloudExplorerFragment extends Fragment {
                     setFileItem(parentLayout, file.hash_name, file.origin_name, file.size);
                 }
             }
+
+            mProgressBar.setVisibility(View.GONE);
         }
 
         @Override
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
             String content = ApiWrapper.responseBodyToString(responseBody);
             LOGE(TAG, "onFailure(): " + content);
+
+            mProgressBar.setVisibility(View.GONE);
         }
     }
 
     private class OnFileActionListener implements View.OnClickListener {
-        TableLayout parentLayout;
+        private final TableLayout parentLayout;
+        private final String fileName;
+        private final String fileHash;
 
-        public OnFileActionListener(TableLayout parentLayout) {
+        public OnFileActionListener(TableLayout parentLayout, String fileHash, String fileName) {
             this.parentLayout = parentLayout;
+            this.fileHash = fileHash;
+            this.fileName = fileName;
         }
 
         @Override
         public void onClick(View v) {
             if (parentLayout.equals(mMyFileExplorer)) {
-                showCloudPopupMenu(v);
+                showCloudPopupMenu(v, fileHash, fileName);
             } else {
-                showSharePopupMenu(v);
+                showSharePopupMenu(v, fileHash, fileName);
             }
         }
     }
 
-    private void showCloudPopupMenu(View v) {
+    private void showCloudPopupMenu(View v, final String fileHash, final String fileName) {
         PopupMenu popup = new PopupMenu(getActivity(), v);
         popup.inflate(R.menu.file_cloud_popup_menu);
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -182,10 +201,14 @@ public class CloudExplorerFragment extends Fragment {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.file_download:
-                        //
+                        startExplorerService(fileHash, fileName, DOWNLOAD);
                         return true;
 
                     case R.id.file_delete:
+                        //
+                        return true;
+
+                    case R.id.file_share_for:
                         //
                         return true;
 
@@ -198,7 +221,7 @@ public class CloudExplorerFragment extends Fragment {
         popup.show();
     }
 
-    private void showSharePopupMenu(View v) {
+    private void showSharePopupMenu(View v, final String fileHash, final String fileName) {
         PopupMenu popup = new PopupMenu(getActivity(), v);
         popup.inflate(R.menu.file_share_popup_menu);
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -206,6 +229,10 @@ public class CloudExplorerFragment extends Fragment {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.file_share_download:
+                        startExplorerService(fileHash, fileName, DOWNLOAD);
+                        return true;
+
+                    case R.id.file_share_copy:
                         //
                         return true;
 
@@ -216,6 +243,16 @@ public class CloudExplorerFragment extends Fragment {
         });
 
         popup.show();
+    }
+
+    private void startExplorerService(final String fileHash, final String fileName, final int actionType) {
+        Bundle bundle = new Bundle();
+        bundle.putString(EXPLORER_SERVICE_FILE_HASH, fileHash);
+        bundle.putString(EXPLORER_SERVICE_FILE_NAME, fileName);
+        bundle.putInt(EXPLORER_SERVICE_ACTION_TYPE, actionType);
+
+        Intent intent = new Intent(getActivity(), FileExplorerService.class);
+        getActivity().startService(intent.putExtras(bundle));
     }
 
 }

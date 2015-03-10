@@ -151,6 +151,25 @@ public class ApiWrapper {
         client.get(CLOUD_STORAGE_URL + CALL_CLOUD_FILE + fileHash, fileResponseHandler);
     }
 
+    public static void syncDownloadFileFromCloud(String fileHash, FileAsyncHttpResponseHandler fileResponseHandler) {
+        syncClient.addHeader(AUTHORIZATION_HEADER, getToken());
+        syncClient.get(CLOUD_STORAGE_URL + CALL_CLOUD_FILE + fileHash, fileResponseHandler);
+    }
+
+    public static void syncSendFileToCloud(final File file, AsyncHttpResponseHandler responseHandler) {
+        RequestParams params = new RequestParams();
+
+        try {
+            params.put("file", file);
+            params.put("file_name", file.getName());
+        } catch (FileNotFoundException e) {
+            LOGE(TAG, "syncSendFileToCloud()\n", e);
+        }
+
+        syncClient.addHeader(AUTHORIZATION_HEADER, getToken());
+        syncClient.post(CLOUD_STORAGE_URL + CALL_CLOUD_UPLOAD, params, responseHandler);
+    }
+
     private static void addClientHeader() {
         client.addHeader(AUTHORIZATION_HEADER, getToken());
     }

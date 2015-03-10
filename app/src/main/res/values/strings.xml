@@ -257,5 +257,8 @@
     <string name="share_with_me">Доступные мне</string>
     <string name="file_download">Скачать</string>
     <string name="file_delete">Удалить</string>
+    <string name="file_share_for">Расшарить для…</string>
+    <string name="file_copy">Скопировать</string>
+    <string name="file_local_to_cloud">Загрузить в облако</string>
 
 </resources>

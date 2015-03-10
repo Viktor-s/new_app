@@ -72,12 +72,12 @@ public class FileSaveThread extends AsyncTask<Void, Void, Boolean> {
             Toast.makeText(mContext, R.string.file_from_cloud_error, Toast.LENGTH_LONG).show();
     }
 
-    public boolean isExternalStorageWritable() {
+    private boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();
         return Environment.MEDIA_MOUNTED.equals(state);
     }
 
-    public byte[] fileToByteArray(File file) {
+    private byte[] fileToByteArray(File file) {
         byte[] buffer = new byte[(int) file.length()];
         InputStream ios = null;
 

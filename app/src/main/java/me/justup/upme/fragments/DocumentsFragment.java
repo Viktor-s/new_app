@@ -3,12 +3,16 @@ package me.justup.upme.fragments;
 import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
@@ -16,6 +20,11 @@ import java.io.File;
 
 import me.justup.upme.R;
 import me.justup.upme.dialogs.ViewImageDialog;
+import me.justup.upme.services.FileExplorerService;
+
+import static me.justup.upme.services.FileExplorerService.EXPLORER_SERVICE_ACTION_TYPE;
+import static me.justup.upme.services.FileExplorerService.EXPLORER_SERVICE_FILE_PATH;
+import static me.justup.upme.services.FileExplorerService.UPLOAD;
 
 
 public class DocumentsFragment extends Fragment {
@@ -38,6 +47,14 @@ public class DocumentsFragment extends Fragment {
 
         getChildFragmentManager().beginTransaction().add(R.id.cloud_explorer_fragment_container, new CloudExplorerFragment()).commit();
 
+        getLocalFileList();
+
+        return view;
+    }
+
+    private void getLocalFileList() {
+        mFileExplorer.removeAllViews();
+
         File mStorageDirectory = Environment.getExternalStorageDirectory();
         File[] mDirList = mStorageDirectory.listFiles();
 
@@ -46,8 +63,6 @@ public class DocumentsFragment extends Fragment {
                 setFileItem(file.getName(), file.getAbsolutePath(), file.length());
             }
         }
-
-        return view;
     }
 
     @SuppressLint("InflateParams")
@@ -66,6 +81,9 @@ public class DocumentsFragment extends Fragment {
         ImageView mFileImage = (ImageView) item.findViewById(R.id.file_image_imageView);
         TextView mFileName = (TextView) item.findViewById(R.id.file_name_textView);
         TextView mFileSize = (TextView) item.findViewById(R.id.file_size_textView);
+
+        ImageButton mFileActionButton = (ImageButton) item.findViewById(R.id.file_action_button);
+        mFileActionButton.setOnClickListener(new OnFileActionListener(filePath));
 
         if (type == IMAGE) {
             mFileImage.setImageResource(R.drawable.ic_file_image);
@@ -106,6 +124,51 @@ public class DocumentsFragment extends Fragment {
     private void showViewImageDialog(String mFileName, String mFilePath) {
         ViewImageDialog dialog = ViewImageDialog.newInstance(mFileName, mFilePath);
         dialog.show(getChildFragmentManager(), ViewImageDialog.VIEW_IMAGE_DIALOG);
+    }
+
+    private class OnFileActionListener implements View.OnClickListener {
+        private final String filePath;
+
+        public OnFileActionListener(String filePath) {
+            this.filePath = filePath;
+        }
+
+        @Override
+        public void onClick(View v) {
+            PopupMenu popup = new PopupMenu(getActivity(), v);
+            popup.inflate(R.menu.file_local_popup_menu);
+            popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    switch (item.getItemId()) {
+                        case R.id.file_local_upload:
+                            startExplorerService(filePath, UPLOAD);
+                            return true;
+
+                        case R.id.file_local_delete:
+                            File file = new File(filePath);
+                            if (file.delete()) {
+                                getLocalFileList();
+                            }
+                            return true;
+
+                        default:
+                            return false;
+                    }
+                }
+            });
+
+            popup.show();
+        }
+    }
+
+    private void startExplorerService(final String filePath, final int actionType) {
+        Bundle bundle = new Bundle();
+        bundle.putString(EXPLORER_SERVICE_FILE_PATH, filePath);
+        bundle.putInt(EXPLORER_SERVICE_ACTION_TYPE, actionType);
+
+        Intent intent = new Intent(getActivity(), FileExplorerService.class);
+        getActivity().startService(intent.putExtras(bundle));
     }
 
 }

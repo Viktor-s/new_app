@@ -47,4 +47,6 @@
                 android:layout_weight="0" />
         </LinearLayout>
     </TabHost>
+
+    <include layout="@layout/base_progress_bar" />
 </FrameLayout>

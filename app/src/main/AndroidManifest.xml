@@ -44,6 +44,7 @@
         <service android:name=".gcm.GcmIntentService" />
         <service android:name=".services.StatusBarService" />
         <service android:name=".services.PushIntentService" />
+        <service android:name=".services.FileExplorerService" />
 
         <receiver
             android:name=".gcm.GcmBroadcastReceiver"
@@ -87,12 +88,6 @@
             android:screenOrientation="landscape"
             android:windowSoftInputMode="stateHidden"
             android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
-
-        <activity
-            android:name="me.justup.upme.webrtc.RTCActivity"
-            android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
-
     </application>
 
 </manifest>

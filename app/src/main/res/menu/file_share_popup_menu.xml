@@ -3,4 +3,8 @@
     <item
         android:id="@+id/file_share_download"
         android:title="@string/file_download" />
+
+    <item
+        android:id="@+id/file_share_copy"
+        android:title="@string/file_copy" />
 </menu>
