@@ -49,7 +49,7 @@
 
         <Space
             android:layout_width="0dp"
-            android:layout_height="50dp"
+            android:layout_height="@dimen/base50dp720sw"
             android:layout_weight="10" />
 
         <LinearLayout

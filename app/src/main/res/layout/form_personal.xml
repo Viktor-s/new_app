@@ -71,7 +71,7 @@
 
     <Button
         style="@style/ButtonPink"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="@dimen/base10dp720sw"
         android:text="Отправить" />
 
 </LinearLayout>

@@ -48,14 +48,14 @@
         <EditText
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:padding="5dp"
+            android:padding="@dimen/base5dp720sw"
             android:id="@+id/browser_url_editText"
             android:background="@color/white"
             android:textColor="@color/black"
             android:layout_gravity="center_vertical"
             android:singleLine="true"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp"
+            android:layout_marginStart="@dimen/base5dp720sw"
+            android:layout_marginEnd="@dimen/base5dp720sw"
             android:layout_weight="1" />
 
         <ImageButton

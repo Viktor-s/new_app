@@ -3,20 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="70dp"
+    android:layout_height="@dimen/base70dp720sw"
     android:descendantFocusability="blocksDescendants">
 
     <me.justup.upme.utils.CircularImageView
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="@dimen/base60dp720sw"
+        android:layout_height="@dimen/base60dp720sw"
         android:id="@+id/mail_contacts_item_imageView"
         android:layout_centerVertical="true"
         android:layout_alignParentStart="true"
-        android:layout_marginRight="15dp"
-        android:layout_marginLeft="30dp"
+        android:layout_marginRight="@dimen/base15dp720sw"
+        android:layout_marginLeft="@dimen/base30dp720sw"
         app:civ_border="true"
         app:civ_border_color="@color/white"
-        app:civ_border_width="4dp" />
+        app:civ_border_width="@dimen/base5dp720sw" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -28,22 +28,22 @@
         android:textColor="@android:color/darker_gray" />
 
     <Button
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="@dimen/base40dp720sw"
+        android:layout_height="@dimen/base40dp720sw"
         android:id="@+id/mail_contacts_item_call_button"
         android:layout_centerVertical="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginRight="30dp"
+        android:layout_marginRight="@dimen/base30dp720sw"
         android:background="@drawable/image_call"
         android:focusableInTouchMode="true" />
 
     <Button
-        android:layout_width="38dp"
-        android:layout_height="38dp"
+        android:layout_width="@dimen/base40dp720sw"
+        android:layout_height="@dimen/base40dp720sw"
         android:id="@+id/mail_contacts_item_info_button"
         android:layout_centerVertical="true"
         android:layout_toStartOf="@+id/mail_contacts_item_call_button"
-        android:layout_marginRight="15dp"
+        android:layout_marginRight="@dimen/base15dp720sw"
         android:background="@android:drawable/ic_dialog_info"
         android:focusableInTouchMode="true" />
 </RelativeLayout>

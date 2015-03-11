@@ -19,13 +19,13 @@
         android:layout_above="@+id/vk_button"
         android:layout_centerHorizontal="true"
         android:textAllCaps="true"
-        android:layout_marginTop="20dp" />
+        android:layout_marginTop="@dimen/base20dp720sw" />
 
     <Button
         android:text="@string/settings_facebook"
         android:id="@+id/fb_button"
         android:layout_above="@+id/settings_or_textView"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="@dimen/base20dp720sw"
         android:background="@drawable/settings_fb_button_selector"
         style="@style/SettingsButton" />
 
@@ -35,7 +35,7 @@
         android:text="@string/settings_title"
         android:layout_above="@+id/fb_button"
         android:layout_centerHorizontal="true"
-        android:textSize="28sp"
+        android:textSize="@dimen/base28sp720sw"
         android:gravity="center"
         android:textAllCaps="true" />
 
@@ -47,7 +47,7 @@
         android:layout_below="@+id/vk_button"
         android:layout_centerHorizontal="true"
         android:textAllCaps="true"
-        android:layout_marginTop="20dp" />
+        android:layout_marginTop="@dimen/base20dp720sw" />
 
     <Button
         android:text="@string/settings_self"

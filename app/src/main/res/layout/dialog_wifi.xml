@@ -11,15 +11,15 @@
         android:textAllCaps="true"
         android:text="@string/settings_wifi_dialog_pass"
         android:layout_gravity="center_horizontal"
-        android:paddingBottom="5dp"
-        android:paddingTop="5dp" />
+        android:paddingBottom="@dimen/base5dp720sw"
+        android:paddingTop="@dimen/base5dp720sw" />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textPassword"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginStart="@dimen/base20dp720sw"
+        android:layout_marginEnd="@dimen/base20dp720sw"
         android:ems="10"
         android:id="@+id/wifi_pass"
         android:layout_gravity="center_horizontal" />

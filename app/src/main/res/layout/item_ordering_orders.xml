@@ -18,7 +18,7 @@
             android:id="@+id/ordering_item_title_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="26sp"
+            android:textSize="@dimen/base26sp720sw"
             android:textColor="@color/white"
             tools:text="Кредит наличными (без залога)" />
     </LinearLayout>
@@ -33,20 +33,20 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="26sp"
+            android:textSize="@dimen/base26sp720sw"
             android:text="$ 2 500"
             android:id="@+id/ordering_item_amount" />
 
         <TextView
             android:text="@string/commission"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="@dimen/base15dp720sw"
             android:layout_marginBottom="@dimen/base5dp720sw"
             style="@style/UserFragmentInfoText" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="22sp"
+            android:textSize="@dimen/base22sp720sw"
             android:text="$ 2 500"
             android:id="@+id/ordering_item_commission" />
     </LinearLayout>

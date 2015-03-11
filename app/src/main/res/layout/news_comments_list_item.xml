@@ -6,7 +6,7 @@
     android:background="@android:color/transparent">
 
     <ImageView
-        android:layout_width="50dp"
+        android:layout_width="@dimen/base50dp720sw"
         android:layout_height="@dimen/base40dp720sw"
         android:id="@+id/news_comment_imageView"
         android:layout_alignParentTop="true"
@@ -25,8 +25,8 @@
         android:layout_toRightOf="@+id/news_comment_imageView"
         android:layout_toEndOf="@+id/news_comment_imageView"
         android:textColor="#666666"
-        android:layout_marginBottom="4dp"
-        android:textSize="14sp" />
+        android:layout_marginBottom="@dimen/base5dp720sw"
+        android:textSize="@dimen/base14sp720sw" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -37,7 +37,7 @@
         android:layout_toRightOf="@+id/news_comment_imageView"
         android:layout_toEndOf="@+id/news_comment_imageView"
         android:textColor="@android:color/black"
-        android:textSize="12sp" />
+        android:textSize="@dimen/base12dp720sw" />
 
     <View
         android:layout_width="wrap_content"

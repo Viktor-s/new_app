@@ -66,8 +66,8 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginTop="@dimen/base40dp720sw"
+        android:layout_marginBottom="@dimen/base20dp720sw"
         android:text="ДОПОЛНИТЕЛЬНЫЕ РИСКИ"/>
 
     <GridLayout
@@ -79,7 +79,7 @@
 
         <RadioGroup
             android:id="@+id/radio_gr0"
-            android:layout_width="250dp"
+            android:layout_width="@dimen/base250dp720sw"
             android:layout_height="wrap_content" >
 
         <RadioButton
@@ -103,7 +103,7 @@
 
         <RadioGroup
             android:id="@+id/radio_gr1"
-            android:layout_width="250dp"
+            android:layout_width="@dimen/base250dp720sw"
             android:layout_height="wrap_content" >
 
             <RadioButton
@@ -129,9 +129,9 @@
 
     <Button
         style="@style/ButtonPink"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="@dimen/base10dp720sw"
         android:layout_gravity="left"
-        android:layout_marginLeft="240dp"
+        android:layout_marginLeft="@dimen/base240dp720sw"
         android:text="Посчитать" />
 
 </LinearLayout>
