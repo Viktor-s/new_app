@@ -25,6 +25,7 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import org.apache.http.Header;
 
 import me.justup.upme.R;
+import me.justup.upme.dialogs.FileShareDialog;
 import me.justup.upme.entity.FileGetAllQuery;
 import me.justup.upme.entity.FileGetAllResponse;
 import me.justup.upme.http.ApiWrapper;
@@ -245,7 +246,8 @@ public class CloudExplorerFragment extends Fragment {
                         return true;
 
                     case R.id.file_share_for:
-                        //
+                        FileShareDialog dialog = FileShareDialog.newInstance();
+                        dialog.show(getChildFragmentManager(), FileShareDialog.FILE_SHARE_DIALOG);
                         return true;
 
                     default:
