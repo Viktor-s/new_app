@@ -2,8 +2,10 @@ package me.justup.upme.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.LayoutInflater;
@@ -22,8 +24,11 @@ import me.justup.upme.R;
 import me.justup.upme.dialogs.ViewImageDialog;
 import me.justup.upme.services.FileExplorerService;
 
+import static me.justup.upme.services.FileExplorerService.BROADCAST_EXTRA_ACTION_TYPE;
+import static me.justup.upme.services.FileExplorerService.DOWNLOAD;
 import static me.justup.upme.services.FileExplorerService.EXPLORER_SERVICE_ACTION_TYPE;
 import static me.justup.upme.services.FileExplorerService.EXPLORER_SERVICE_FILE_PATH;
+import static me.justup.upme.services.FileExplorerService.FILE_ACTION_DONE_BROADCAST;
 import static me.justup.upme.services.FileExplorerService.UPLOAD;
 
 
@@ -37,6 +42,23 @@ public class DocumentsFragment extends Fragment {
     private TableLayout mFileExplorer;
     private LayoutInflater mLayoutInflater;
 
+    private BroadcastReceiver mFileActionDoneReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int actionType = intent.getIntExtra(BROADCAST_EXTRA_ACTION_TYPE, 0);
+            if (actionType == DOWNLOAD) {
+                getLocalFileList();
+            }
+        }
+    };
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        getActivity().registerReceiver(mFileActionDoneReceiver, new IntentFilter(FILE_ACTION_DONE_BROADCAST));
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -50,6 +72,13 @@ public class DocumentsFragment extends Fragment {
         getLocalFileList();
 
         return view;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        getActivity().unregisterReceiver(mFileActionDoneReceiver);
     }
 
     private void getLocalFileList() {

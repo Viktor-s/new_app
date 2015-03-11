@@ -2,8 +2,10 @@ package me.justup.upme.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -32,11 +34,14 @@ import static me.justup.upme.fragments.DocumentsFragment.DOC;
 import static me.justup.upme.fragments.DocumentsFragment.IMAGE;
 import static me.justup.upme.fragments.DocumentsFragment.KB;
 import static me.justup.upme.fragments.DocumentsFragment.SIZE_VALUE;
+import static me.justup.upme.services.FileExplorerService.BROADCAST_EXTRA_ACTION_TYPE;
 import static me.justup.upme.services.FileExplorerService.DELETE;
 import static me.justup.upme.services.FileExplorerService.DOWNLOAD;
 import static me.justup.upme.services.FileExplorerService.EXPLORER_SERVICE_ACTION_TYPE;
 import static me.justup.upme.services.FileExplorerService.EXPLORER_SERVICE_FILE_HASH;
 import static me.justup.upme.services.FileExplorerService.EXPLORER_SERVICE_FILE_NAME;
+import static me.justup.upme.services.FileExplorerService.FILE_ACTION_DONE_BROADCAST;
+import static me.justup.upme.services.FileExplorerService.UPLOAD;
 import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.LOGE;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
@@ -53,6 +58,23 @@ public class CloudExplorerFragment extends Fragment {
     private LayoutInflater mLayoutInflater;
     private FrameLayout mProgressBar;
 
+    private BroadcastReceiver mFileActionDoneReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int actionType = intent.getIntExtra(BROADCAST_EXTRA_ACTION_TYPE, 0);
+            if (actionType == UPLOAD || actionType == DELETE) {
+                fileQuery(ApiWrapper.FILE_GET_MY_FILES, mMyFileExplorer);
+            }
+        }
+    };
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        getActivity().registerReceiver(mFileActionDoneReceiver, new IntentFilter(FILE_ACTION_DONE_BROADCAST));
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -93,6 +115,13 @@ public class CloudExplorerFragment extends Fragment {
         fileQuery(ApiWrapper.FILE_GET_MY_FILES, mMyFileExplorer);
 
         return view;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        getActivity().unregisterReceiver(mFileActionDoneReceiver);
     }
 
     private void fileQuery(String apiMethod, TableLayout parentLayout) {
