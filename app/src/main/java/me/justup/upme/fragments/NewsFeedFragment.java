@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -67,7 +68,9 @@ public class NewsFeedFragment extends Fragment {
     private DBHelper mDBHelper;
     private int from = 0;
     private int to = 10;
-    private FrameLayout mProgressBar;
+    //private FrameLayout mProgressBarLayout;
+    private ProgressBar mProgressBar;
+
     private boolean isFirstArticlesUpdate = true;
     private BroadcastReceiver mNewsFeedReceiver;
     private ArrayList<Integer> mReadNewsList;
@@ -122,6 +125,7 @@ public class NewsFeedFragment extends Fragment {
                         if (cursorNews != null) {
                             cursorNews.close();
                         }
+                        // mProgressBarLayout.setVisibility(View.GONE);
                         mProgressBar.setVisibility(View.GONE);
                         isFirstArticlesUpdate = false;
                     } else {
@@ -134,6 +138,7 @@ public class NewsFeedFragment extends Fragment {
                 if (HttpIntentService.BROADCAST_INTENT_NEWS_FEED_SERVER_ERROR.equals(intent.getAction())) {
                     LOGI(TAG, "onReceive, error");
                     Toast.makeText(AppContext.getAppContext(), "Server error", Toast.LENGTH_SHORT).show();
+                    // mProgressBarLayout.setVisibility(View.GONE);
                     mProgressBar.setVisibility(View.GONE);
                 }
 
@@ -151,8 +156,10 @@ public class NewsFeedFragment extends Fragment {
 
         mNewsItemContainer = (FrameLayout) view.findViewById(R.id.news_item_container_frameLayout);
         mNewsFeedView = (RecyclerView) view.findViewById(R.id.news_RecyclerView);
-        mProgressBar = (FrameLayout) view.findViewById(R.id.base_progressBar);
+        //mProgressBarLayout = (FrameLayout) view.findViewById(R.id.base_progressBar);
+        mProgressBar = (ProgressBar) view.findViewById(R.id.news_feed_progressbar);
         if (!ApiWrapper.isOnline()) {
+            //mProgressBarLayout.setVisibility(View.GONE);
             mProgressBar.setVisibility(View.GONE);
         }
 

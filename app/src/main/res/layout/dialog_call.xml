@@ -3,11 +3,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="15dp"
-    android:layout_marginRight="15dp"
+    android:layout_marginLeft="@dimen/base15dp720sw"
+    android:layout_marginRight="@dimen/base15dp720sw"
     android:background="#555566"
     android:orientation="vertical"
-    android:padding="20dp">
+    android:padding="@dimen/base20dp720sw">
 
 
     <ScrollView
@@ -25,30 +25,30 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="@dimen/base10dp720sw"
                 android:gravity="center"
-                android:padding="5dp"
+                android:padding="@dimen/base5dp720sw"
                 android:text="Позвонить/принять звонок"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="#D5D9DE"
                 android:textIsSelectable="false"
-                android:textSize="16sp" />
+                android:textSize="@dimen/base15sp720sw" />
 
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="3dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="@dimen/base10dp720sw"
                 android:background="#0186D5" />
 
             <TextView
                 android:id="@+id/textText"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:padding="4dp"
+                android:layout_marginBottom="@dimen/base10dp720sw"
+                android:padding="@dimen/base5dp720sw"
                 android:text="1. Для дозвона нажмите кнопку 'Позвонить'.\n2. Для принятия звонка:\n- заполните поле 'Идентификатор комнаты'\n- нажмите кнопку 'Пинять звонок'"
                 android:textColor="#D5D9DE"
-                android:textSize="14sp" />
+                android:textSize="@dimen/base14sp720sw" />
 
 
             <LinearLayout
@@ -59,13 +59,13 @@
                 <Button
                     android:id="@+id/button_call_out"
                     android:layout_width="match_parent"
-                    android:layout_height="65dp"
-                    android:layout_margin="10dp"
+                    android:layout_height="@dimen/base65dp720sw"
+                    android:layout_margin="@dimen/base10dp720sw"
                     android:drawableLeft="@drawable/ic_call_out"
-                    android:paddingLeft="20dp"
+                    android:paddingLeft="@dimen/base20dp720sw"
                     android:text="Позвонить"
                     android:textColor="#D5D9DE"
-                    android:textSize="17sp" />
+                    android:textSize="@dimen/base17sp720sw" />
 
 
                 <EditText
@@ -83,7 +83,7 @@
                     android:paddingLeft="20dp"
                     android:text="Принять звонок"
                     android:textColor="#D5D9DE"
-                    android:textSize="17sp" />
+                    android:textSize="@dimen/base17sp720sw" />
 
                 <Button
                     android:id="@+id/cancell"
@@ -94,7 +94,7 @@
                     android:layout_marginTop="30dp"
                     android:text="ОТМЕНА"
                     android:textColor="#D5D9DE"
-                    android:textSize="17sp" />
+                    android:textSize="@dimen/base17sp720sw" />
 
             </LinearLayout>
 

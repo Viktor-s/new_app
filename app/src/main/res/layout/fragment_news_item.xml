@@ -23,9 +23,9 @@
                 android:visibility="visible" />
 
             <Button
-                android:layout_width="240dp"
+                android:layout_width="@dimen/base240dp720sw"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="35dp"
+                android:layout_marginTop="@dimen/base35dp720sw"
                 android:id="@+id/fb_share_Button"
                 android:background="@drawable/facebook" />
 
@@ -49,14 +49,14 @@
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="@dimen/base50dp720sw"
                 android:layout_marginBottom="@dimen/base40dp720sw">
 
                 <EditText
-                    android:layout_width="260dp"
+                    android:layout_width="@dimen/base250dp720sw"
                     android:layout_height="match_parent"
                     android:id="@+id/news_item_comment_editText"
-                    android:layout_marginRight="20dp"
+                    android:layout_marginRight="@dimen/base20dp720sw"
                     android:background="@drawable/news_item_comment_edittext_bg"
                     android:textColor="@color/black" />
 
@@ -67,12 +67,12 @@
                     android:id="@+id/news_item_button_add_comment"
                     android:textAllCaps="true"
                     android:background="@drawable/pay_panel_button_selector"
-                    android:padding="6dp" />
+                    android:padding="@dimen/base6dp720sw" />
             </LinearLayout>
 
             <ListView
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="@dimen/base50dp720sw"
                 android:id="@+id/news_item_comments_listView" />
         </LinearLayout>
     </ScrollView>

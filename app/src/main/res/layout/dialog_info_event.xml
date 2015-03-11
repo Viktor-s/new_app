@@ -1,8 +1,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="300dp"
+    android:layout_width="@dimen/base300dp720sw"
     android:layout_height="wrap_content"
-    android:padding="50dp"
+    android:padding="@dimen/base50dp720sw"
     android:background="@color/form_bg"
     android:orientation="vertical"
     android:gravity="center">
@@ -11,17 +11,17 @@
         android:id="@+id/user_name_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="25sp"
-        android:layout_marginBottom="20dp"
+        android:textSize="@dimen/base25sp720sw"
+        android:layout_marginBottom="@dimen/base20dp720sw"
         tools:text="Hello John"/>
 
     <Button
         android:id="@+id/cancel_button"
-        android:layout_width="250dp"
+        android:layout_width="@dimen/base250dp720sw"
         android:layout_height="wrap_content"
         android:background="@drawable/button_pink_bg"
         android:textColor="@android:color/white"
-        android:textSize="17sp"
+        android:textSize="@dimen/base17sp720sw"
         android:text="Отмена"/>
 
 </LinearLayout>

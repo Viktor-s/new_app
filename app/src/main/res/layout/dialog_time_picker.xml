@@ -11,7 +11,7 @@
         android:text="Set start time"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="#D5D9DE"
-        android:textSize="16sp" />
+        android:textSize="@dimen/base16sp720sw" />
 
     <View
         android:id="@+id/view"
@@ -20,7 +20,7 @@
         android:layout_alignLeft="@+id/textTitleDialogTime"
         android:layout_alignStart="@+id/textTitleDialogTime"
         android:layout_below="@+id/textTitleDialogTime"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="@dimen/base6dp720sw"
         android:background="#0186D5" />
 
     <LinearLayout
@@ -31,9 +31,9 @@
         android:layout_centerHorizontal="true"
         android:layout_gravity="center"
         android:orientation="horizontal"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="6dp">
+        android:layout_marginLeft="@dimen/base10dp720sw"
+        android:layout_marginRight="@dimen/base10dp720sw"
+        android:layout_marginBottom="@dimen/base6dp720sw">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -52,7 +52,7 @@
                 android:layout_gravity="center_horizontal"
                 android:text="hours"
                 android:textColor="@android:color/white"
-                android:textSize="14sp" />
+                android:textSize="@dimen/base14sp720sw" />
         </LinearLayout>
 
         <LinearLayout
@@ -72,7 +72,7 @@
                 android:layout_gravity="center_horizontal"
                 android:text="mins"
                 android:textColor="@android:color/white"
-                android:textSize="14sp" />
+                android:textSize="@dimen/base14sp720sw" />
         </LinearLayout>
 
 
@@ -81,17 +81,17 @@
     <Button
         android:id="@+id/buttonDialogCalendarTimeOk"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_marginStart="50dp"
-        android:layout_marginEnd="50dp"
+        android:layout_height="@dimen/base45dp720sw"
+        android:layout_marginStart="@dimen/base50dp720sw"
+        android:layout_marginEnd="@dimen/base50dp720sw"
         android:layout_below="@+id/linearLayout"
         android:layout_centerHorizontal="true"
         android:background="@drawable/button_pink_bg"
         android:text="Set time"
         android:textColor="@android:color/white"
-        android:textSize="17sp"
-        android:layout_marginLeft="100dp"
-        android:layout_marginRight="100dp"
-        android:layout_marginBottom="6dp" />
+        android:textSize="@dimen/base17sp720sw"
+        android:layout_marginLeft="@dimen/base100dp720sw"
+        android:layout_marginRight="@dimen/base100dp720sw"
+        android:layout_marginBottom="@dimen/base6dp720sw" />
 
 </RelativeLayout>

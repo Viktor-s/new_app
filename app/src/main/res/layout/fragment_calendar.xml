@@ -12,7 +12,7 @@
         android:id="@+id/top_panel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp">
+        android:layout_margin="@dimen/base10dp720sw">
 
         <TextView
             android:id="@+id/today_textView"
@@ -21,7 +21,7 @@
             android:text="Сегодня"
             android:textAllCaps="true"
             android:textColor="@color/gray"
-            android:textSize="20dp"
+            android:textSize="@dimen/base20dp720sw"
             android:textStyle="bold" />
 
         <TextView
@@ -31,12 +31,12 @@
             android:layout_below="@+id/today_textView"
             android:text="февраль 2, 2014"
             android:textColor="@color/gray"
-            android:textSize="12sp" />
+            android:textSize="@dimen/base12sp720sw" />
 
         <Button
             android:id="@+id/add_button"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="@dimen/base40dp720sw"
+            android:layout_height="@dimen/base40dp720sw"
             android:layout_alignParentRight="true"
             android:background="@color/button_back_pink"
             android:gravity="center"
@@ -45,38 +45,38 @@
 
         <Button
             android:id="@+id/next_week_button"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginRight="10dp"
+            android:layout_width="@dimen/base40dp720sw"
+            android:layout_height="@dimen/base40dp720sw"
+            android:layout_marginRight="@dimen/base10dp720sw"
             android:layout_toLeftOf="@+id/add_button"
             android:background="@color/blue_gray"
             android:drawableRight="@drawable/arrow_next"
             android:gravity="center"
-            android:paddingRight="10dp"
+            android:paddingRight="@dimen/base10dp720sw"
             android:textStyle="bold" />
 
         <Button
             android:id="@+id/previous_week_button"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginRight="10dp"
+            android:layout_width="@dimen/base40dp720sw"
+            android:layout_height="@dimen/base40dp720sw"
+            android:layout_marginRight="@dimen/base10dp720sw"
             android:layout_toLeftOf="@+id/next_week_button"
             android:background="@color/blue_gray"
             android:drawableLeft="@drawable/arrow_previous"
             android:gravity="center"
-            android:paddingLeft="10dp"
+            android:paddingLeft="@dimen/base10dp720sw"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/select_month_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="@dimen/base10dp720sw"
             android:layout_toLeftOf="@+id/previous_week_button"
             android:text="август 2014"
             android:textAllCaps="true"
             android:textColor="@color/gray"
-            android:textSize="20dp"
+            android:textSize="@dimen/base20dp720sw"
             android:textStyle="bold" />
 
         <TextView
@@ -84,11 +84,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/select_month_textView"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="@dimen/base10dp720sw"
             android:layout_toLeftOf="@+id/previous_week_button"
             android:text="1 неделя"
             android:textColor="@color/gray"
-            android:textSize="12sp" />
+            android:textSize="@dimen/base12sp720sw" />
 
     </RelativeLayout>
 
@@ -98,23 +98,23 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/top_panel"
-        app:columnGap="8dp"
+        app:columnGap="@dimen/base10dp720sw"
         app:dayBackgroundColor="#05000000"
         app:eventTextColor="@android:color/white"
         app:headerColumnBackground="#ffffffff"
-        app:headerColumnPadding="8dp"
+        app:headerColumnPadding="@dimen/base10dp720sw"
         app:headerColumnTextColor="#8f000000"
         app:headerRowBackgroundColor="#ffefefef"
-        app:headerRowPadding="12dp"
-        app:hourHeight="60dp"
+        app:headerRowPadding="@dimen/base12dp720sw"
+        app:hourHeight="@dimen/base60dp720sw"
         app:noOfVisibleDays="7"
-        app:textSize="12sp"
+        app:textSize="@dimen/base12sp720sw"
         app:todayBackgroundColor="#1848adff" />
 
 
     <RelativeLayout
         android:id="@+id/panel_add_event"
-        android:layout_width="300dp"
+        android:layout_width="@dimen/base300dp720sw"
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
         android:background="@color/user_fragment_block_border"
@@ -132,11 +132,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:layout_marginTop="12dp"
+                android:layout_marginBottom="@dimen/base12dp720sw"
+                android:layout_marginTop="@dimen/base12dp720sw"
                 android:text="Добавление\nсобытия"
                 android:textAllCaps="true"
-                android:textSize="20sp"
+                android:textSize="@dimen/base20dp720sw"
                 android:textStyle="bold" />
 
             <View style="@style/SeparationLine" />
@@ -152,6 +152,7 @@
                     android:gravity="center">
 
                     <LinearLayout
+                        android:id="@+id/choose_date_layout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
@@ -167,7 +168,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="02/06/2014"
-                            android:textSize="20sp" />
+                            android:textSize="@dimen/base20dp720sw" />
                     </LinearLayout>
 
                     <TextView
@@ -179,7 +180,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="18:00"
-                        android:textSize="30sp" />
+                        android:textSize="@dimen/base30dp720sw" />
 
                     <TextView
                         style="@style/NewUserTextView"
@@ -190,7 +191,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="00:00"
-                        android:textSize="20sp" />
+                        android:textSize="@dimen/base20dp720sw" />
 
                     <View style="@style/SeparationLine" />
 
@@ -201,7 +202,7 @@
                     <EditText
                         android:id="@+id/new_event_name"
                         style="@style/NewUserEditText"
-                        android:layout_marginBottom="8dp" />
+                        android:layout_marginBottom="@dimen/base10dp720sw" />
 
                     <TextView
                         style="@style/NewUserTextView"
@@ -211,7 +212,7 @@
                         android:id="@+id/new_event_description"
                         android:singleLine="false"
                         style="@style/NewUserEditText"
-                        android:layout_marginBottom="8dp" />
+                        android:layout_marginBottom="@dimen/base10dp720sw" />
 
                     <TextView
                         style="@style/NewUserTextView"
@@ -220,7 +221,7 @@
                     <EditText
                         android:id="@+id/new_event_location"
                         style="@style/NewUserEditText"
-                        android:layout_marginBottom="8dp" />
+                        android:layout_marginBottom="@dimen/base10dp720sw" />
 
 
                     <TextView
@@ -232,24 +233,25 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:layout_marginLeft="40dp"
-                        android:layout_marginRight="40dp" />
+                        android:layout_marginLeft="@dimen/base40dp720sw"
+                        android:layout_marginRight="@dimen/base40dp720sw" />
+
+                    <Button
+                        android:id="@+id/choose_referral_button"
+                        android:layout_marginTop="@dimen/base20dp720sw"
+                        style="@style/ButtonPink"
+                        android:text="Выбрать рефералов" />
 
                     <View style="@style/SeparationLine" />
 
                     <Button
                         android:id="@+id/add_new_event_button"
-                        android:layout_marginBottom="20dp"
+                        android:layout_marginBottom="@dimen/base20dp720sw"
                         style="@style/ButtonPink"
                         android:text="Добавить" />
 
                 </LinearLayout>
-
-
             </ScrollView>
-
-
-
         </LinearLayout>
 
         <Button

@@ -10,8 +10,8 @@
         android:layout_weight="1"/>
 
     <ImageView
-        android:layout_width="30dp"
-        android:layout_height="15dp"
+        android:layout_width="@dimen/base30dp720sw"
+        android:layout_height="@dimen/base15dp720sw"
         android:src="@drawable/triangle_in_top" />
 
     <View

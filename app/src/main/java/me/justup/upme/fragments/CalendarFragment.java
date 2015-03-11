@@ -1,36 +1,47 @@
 package me.justup.upme.fragments;
 
+import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -75,10 +86,13 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
     private List<WeekViewEvent> events = new ArrayList<>();
 
     private RelativeLayout panelAddEvent;
+    private LinearLayout chooseDateLayout;
+    private TextView startDateEvent;
     private TextView tvStartTimeEvent;
     private TextView tvDurationEvent;
     private EditText etNewEventName;
     private EditText etNewEventLocation;
+    private EditText etNewEventDescription;
 
     private Calendar startTimeEvent;
     private int durationEventMin;
@@ -94,7 +108,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
     private BroadcastReceiver receiver;
     private Spinner mCalendartypesSpinner;
 
-    private static String[] months = new String[] {"ЯНВАРЬ", "ФЕВРАЛЬ", "МАРТ", "АПРЕЛЬ", "МАЙ", "ИЮНЬ", "ИЮЛЬ", "АВГУСТ", "СЕНТЯБРЬ", "ОКТЯБРЬ", "НОЯБРЬ", "ДЕКАБРЬ"};
+    private static String[] months = new String[]{"ЯНВАРЬ", "ФЕВРАЛЬ", "МАРТ", "АПРЕЛЬ", "МАЙ", "ИЮНЬ", "ИЮЛЬ", "АВГУСТ", "СЕНТЯБРЬ", "ОКТЯБРЬ", "НОЯБРЬ", "ДЕКАБРЬ"};
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -136,8 +150,29 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
         selectWeekTextView = (TextView) v.findViewById(R.id.select_week_textView);
         selectWeekTextView.setText(Integer.toString(currentWeek) + getResources().getString(R.string.week));
 
+        final Button chooseReferralButton = (Button) v.findViewById(R.id.choose_referral_button);
+        chooseReferralButton.setOnClickListener(this);
         mCalendartypesSpinner = (Spinner) v.findViewById(R.id.calendar_fragment_types_spinner);
         mCalendartypesSpinner.setAdapter(new ArrayAdapter<>(CalendarFragment.this.getActivity(), R.layout.calendar_spinner_item, CalendarEventTypes.values()));
+        mCalendartypesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch (position) { // ПЕРЕДЕЛАТЬ НА ПЕРЕЧИСЛЕНИЯ
+                    case 0:
+                        chooseReferralButton.setVisibility(View.GONE);
+                        break;
+                    case 1:
+                        chooseReferralButton.setVisibility(View.VISIBLE);
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
 
         Button previousWeekButton = (Button) v.findViewById(R.id.previous_week_button);
         previousWeekButton.setOnClickListener(this);
@@ -152,16 +187,23 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
 
         Button calendarItemCloseButton = (Button) v.findViewById(R.id.calendar_item_close_button);
         calendarItemCloseButton.setOnClickListener(this);
+
+        chooseDateLayout = (LinearLayout) v.findViewById(R.id.choose_date_layout);
+        startDateEvent = (TextView) v.findViewById(R.id.start_date_event);
+        startDateEvent.setText(currentDate.toString("dd/MM/yyyy"));
+        startDateEvent.setOnClickListener(this);
         tvStartTimeEvent = (TextView) v.findViewById(R.id.start_time_event);
         tvStartTimeEvent.setOnClickListener(this);
         tvDurationEvent = (TextView) v.findViewById(R.id.duration_event);
         tvDurationEvent.setOnClickListener(this);
         etNewEventName = (EditText) v.findViewById(R.id.new_event_name);
         etNewEventLocation = (EditText) v.findViewById(R.id.new_event_location);
+        etNewEventDescription = (EditText) v.findViewById(R.id.new_event_description);
         Button addNewEventButton = (Button) v.findViewById(R.id.add_new_event_button);
         addNewEventButton.setOnClickListener(this);
 
         /////////////////////////////// CALENDAR ///////////////////////////////////////////////////
+
         mWeekView.setOnEventClickListener(this);
         mWeekView.setMonthChangeListener(this);
         mWeekView.setEmptyViewClickListener(this);
@@ -278,9 +320,77 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
         dialogInfoEvent.show();
     }
 
+    public void alertDatePicker(String strDate) {
+        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.dialog_date_picker, null, false);
+        final DatePicker myDatePicker = (DatePicker) view.findViewById(R.id.myDatePicker);
+        myDatePicker.setCalendarViewShown(true);
+        Calendar chooseDate = convertStringToDate(strDate);
+        myDatePicker.updateDate(chooseDate.get(Calendar.YEAR), chooseDate.get(Calendar.MONTH), chooseDate.get(Calendar.DAY_OF_MONTH));
+        new AlertDialog.Builder(getActivity()).setView(view)
+                .setTitle("Выберите дату")
+                .setPositiveButton("Установить дату", new DialogInterface.OnClickListener() {
+                    @TargetApi(11)
+                    public void onClick(DialogInterface dialog, int id) {
+                        int month = myDatePicker.getMonth() + 1;
+                        int day = myDatePicker.getDayOfMonth();
+                        int year = myDatePicker.getYear();
+                        startDateEvent.setText(String.format("%02d/%02d/%d", day, month, year));
+                        dialog.cancel();
+                    }
+                }).show();
+    }
+
+    public void alertMultipleChoiceReferals() {
+
+//        final ArrayList<String> mSelectedItems = new ArrayList<>();
+//        mSelectedItems.add("Вася");
+//        mSelectedItems.add("Петя");
+//        mSelectedItems.add("Рома");
+//
+//        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//        builder.setTitle("Выберите исполнителей задачи").setMultiChoiceItems(R.array.choices, null, new DialogInterface.OnMultiChoiceClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+//                if (isChecked) {
+//                    mSelectedItems.add(which);
+//                } else if (mSelectedItems.contains(which)) {
+//                    mSelectedItems.remove(Integer.valueOf(which));
+//                }
+//            }
+//        })
+//                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int id) {
+//                        String selectedIndex = "";
+//                        for (String i : mSelectedItems) {
+//                            selectedIndex += i + ", ";
+//                        }
+//                        Toast.makeText(getActivity(), "Selected index: " + selectedIndex, Toast.LENGTH_SHORT);
+//                    }
+//                })
+//                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int id) {
+//                        // removes the AlertDialog in the screen
+//                    }
+//                })
+//                .show();
+    }
 
     public static String convertTimeToString(int hours, int minutes) {
         return String.format("%02d", hours) + ":" + String.format("%02d", minutes);
+    }
+
+    public static Calendar convertStringToDate(String strDate) {
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", new Locale("ru"));
+        try {
+            cal.setTime(sdf.parse(strDate));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return cal;
     }
 
 
@@ -297,14 +407,21 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
 
     @Override
     public void onEmptyViewClicked(Calendar time) {
+        chooseDateLayout.setVisibility(View.GONE);
+        CreateLayoutForNewEvent(time);
+    }
+
+    private void CreateLayoutForNewEvent(Calendar time) {
         startTimeEvent = time;
         Animation mFragmentSliderFadeIn = AnimationUtils.loadAnimation(AppContext.getAppContext(), R.anim.fragment_item_slide_fade_in);
         panelAddEvent.setVisibility(View.VISIBLE);
         panelAddEvent.startAnimation(mFragmentSliderFadeIn);
-        String stTime = String.format("%02d:%02d", time.get(Calendar.HOUR_OF_DAY), time.get(Calendar.MINUTE));
-        tvStartTimeEvent.setText(stTime);
+        startDateEvent.setText(String.format("%02d/%02d/%d", time.get(Calendar.DAY_OF_MONTH), time.get(Calendar.MONTH), time.get(Calendar.YEAR)));
+        tvStartTimeEvent.setText(String.format("%02d:%02d", time.get(Calendar.HOUR_OF_DAY), time.get(Calendar.MINUTE)));
+        durationEventMin = 0;
         tvDurationEvent.setText("00:00");
         etNewEventName.setText("");
+        etNewEventDescription.setText("");
         etNewEventLocation.setText("");
     }
 
@@ -318,7 +435,8 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.add_button:
-                onEmptyViewClicked(Calendar.getInstance());
+                chooseDateLayout.setVisibility(View.VISIBLE);
+                CreateLayoutForNewEvent(Calendar.getInstance());
                 break;
             case R.id.previous_week_button:
                 firstDayCurrentWeek = firstDayCurrentWeek.minusDays(Calendar.DAY_OF_WEEK);
@@ -339,11 +457,17 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
             case R.id.calendar_item_close_button:
                 panelAddEvent.setVisibility(View.GONE);
                 break;
+            case R.id.start_date_event:
+                alertDatePicker(startDateEvent.getText().toString());
+                break;
             case R.id.start_time_event:
                 TimePickerDialog(START_TIME_EVENT);
                 break;
             case R.id.duration_event:
                 TimePickerDialog(DURATION_EVENT);
+                break;
+            case R.id.choose_referral_button:
+                alertMultipleChoiceReferals();
                 break;
             case R.id.add_new_event_button:
                 panelAddEvent.setVisibility(View.GONE);
@@ -361,8 +485,8 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                 calendarAddEventsQuery.params.description = "description";
                 calendarAddEventsQuery.params.type = mCalendartypesSpinner.getSelectedItem().toString();
                 calendarAddEventsQuery.params.location = eventLocation;
-                calendarAddEventsQuery.params.start_date_time = String.valueOf(startTimeEvent.getTimeInMillis()/1000);
-                calendarAddEventsQuery.params.end_date_time = String.valueOf(endTimeEvent.getTimeInMillis()/1000);
+                calendarAddEventsQuery.params.start_date_time = String.valueOf(startTimeEvent.getTimeInMillis() / 1000);
+                calendarAddEventsQuery.params.end_date_time = String.valueOf(endTimeEvent.getTimeInMillis() / 1000);
                 ((MainActivity) CalendarFragment.this.getActivity()).startHttpIntent(calendarAddEventsQuery, HttpIntentService.CALENDAR_ADD_EVENT);
                 break;
         }
@@ -371,7 +495,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
 
     private enum CalendarEventTypes {
         REMINDER("reminder"),
-        WEBINAR("webinar");
+        TASK("task");
 
         private final String value;
 

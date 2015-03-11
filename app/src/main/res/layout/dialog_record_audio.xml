@@ -6,8 +6,8 @@
 
     <ToggleButton
         android:id="@+id/dialog_audio_record_button"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="@dimen/base60dp720sw"
+        android:layout_height="@dimen/base60dp720sw"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
         android:checked="false"

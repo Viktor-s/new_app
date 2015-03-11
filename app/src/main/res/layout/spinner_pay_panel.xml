@@ -4,8 +4,8 @@
     android:singleLine="true"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="15dp"
+    android:padding="@dimen/base15dp720sw"
     android:textSize="@dimen/base16sp720sw"
     android:drawableStart="@drawable/ic_fastpay_number_cards"
-    android:drawablePadding="10dp"
+    android:drawablePadding="@dimen/base10dp720sw"
     android:textAllCaps="true" />

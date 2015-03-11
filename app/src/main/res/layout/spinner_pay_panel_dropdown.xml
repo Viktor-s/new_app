@@ -4,7 +4,7 @@
     android:singleLine="true"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="15dp"
+    android:padding="@dimen/base15dp720sw"
     android:background="@color/login_phone_number_background"
     android:textSize="@dimen/base16sp720sw"
     android:textAllCaps="true"
