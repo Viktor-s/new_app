@@ -14,7 +14,7 @@
 
 
         <LinearLayout
-            android:layout_width="200dp"
+            android:layout_width="@dimen/base200dp720sw"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
@@ -26,12 +26,12 @@
             <TextView
                 android:id="@+id/previous_product_group"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="@dimen/base200dp720sw"
                 android:background="@color/gray"
                 android:gravity="center"
                 android:text="previous"
                 android:textAllCaps="true"
-                android:textSize="24dp"
+                android:textSize="@dimen/base24sp720sw"
                 android:textStyle="bold" />
 
             <View
@@ -45,15 +45,15 @@
             android:id="@+id/container_group_product_item"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginLeft="100dp"
-            android:layout_marginRight="100dp"
+            android:layout_marginLeft="@dimen/base100dp720sw"
+            android:layout_marginRight="@dimen/base100dp720sw"
             android:layout_weight="1">
 
 
         </RelativeLayout>
 
         <LinearLayout
-            android:layout_width="200dp"
+            android:layout_width="@dimen/base200dp720sw"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
@@ -69,15 +69,15 @@
                     android:id="@+id/group_products_close_button"
                     android:layout_alignParentRight="true"
                     android:background="@drawable/button_close_test"
-                    android:layout_marginTop="80dp"/>
+                    android:layout_marginTop="@dimen/base80dp720sw"/>
 
                 <CheckBox
                     android:id="@+id/check_lock"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:layout_marginRight="80dp"
-                    android:layout_marginTop="85dp"
+                    android:layout_marginRight="@dimen/base80dp720sw"
+                    android:layout_marginTop="@dimen/base85dp720sw"
                     android:background="@android:color/transparent"
                     android:button="@drawable/checkbox_selector"
                     android:checked="false" />
@@ -87,12 +87,12 @@
             <TextView
                 android:id="@+id/next_product_group"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="@dimen/base200dp720sw"
                 android:background="@color/gray"
                 android:gravity="center"
                 android:text="next"
                 android:textAllCaps="true"
-                android:textSize="24dp"
+                android:textSize="@dimen/base24sp720sw"
                 android:textStyle="bold" />
 
             <View
@@ -118,75 +118,75 @@
             android:id="@+id/button1"
             android:onClick="onClick"
             style="@style/PinCodeButton"
-            android:layout_width="50dp"
+            android:layout_width="@dimen/base50dp720sw"
             android:text="1" />
 
         <Button
             android:id="@+id/button2"
             android:onClick="onClick"
             style="@style/PinCodeButton"
-            android:layout_width="50dp"
+            android:layout_width="@dimen/base50dp720sw"
             android:text="2" />
 
         <Button
             android:id="@+id/button3"
             android:onClick="onClick"
             style="@style/PinCodeButton"
-            android:layout_width="50dp"
+            android:layout_width="@dimen/base50dp720sw"
             android:text="3" />
 
         <Button
             android:id="@+id/button4"
             android:onClick="onClick"
             style="@style/PinCodeButton"
-            android:layout_width="50dp"
+            android:layout_width="@dimen/base50dp720sw"
             android:text="4" />
 
         <Button
             android:id="@+id/button5"
             android:onClick="onClick"
             style="@style/PinCodeButton"
-            android:layout_width="50dp"
+            android:layout_width="@dimen/base50dp720sw"
             android:text="5" />
 
         <Button
             android:id="@+id/button6"
             android:onClick="onClick"
             style="@style/PinCodeButton"
-            android:layout_width="50dp"
+            android:layout_width="@dimen/base50dp720sw"
             android:text="6" />
 
         <Button
             android:id="@+id/button7"
             android:onClick="onClick"
             style="@style/PinCodeButton"
-            android:layout_width="50dp"
+            android:layout_width="@dimen/base50dp720sw"
             android:text="7" />
 
         <Button
             android:id="@+id/button8"
             android:onClick="onClick"
             style="@style/PinCodeButton"
-            android:layout_width="50dp"
+            android:layout_width="@dimen/base50dp720sw"
             android:text="8" />
 
         <Button
             android:id="@+id/button9"
             android:onClick="onClick"
             style="@style/PinCodeButton"
-            android:layout_width="50dp"
+            android:layout_width="@dimen/base50dp720sw"
             android:text="9" />
 
         <Button
             android:id="@+id/button_clear"
             android:onClick="onClick"
             style="@style/PinCodeButton"
-            android:layout_width="50dp"
+            android:layout_width="@dimen/base50dp720sw"
             android:text="@string/picode_button_del" />
 
         <TextView
             android:id="@+id/number_textView"
-            android:layout_width="100dp"
+            android:layout_width="@dimen/base100dp720sw"
             android:layout_height="match_parent"
             android:layout_margin="@dimen/base5dp720sw"
             android:background="@color/login_phone_number_background"
@@ -199,8 +199,8 @@
             android:id="@+id/button_unlock1"
             android:onClick="onClick"
             style="@style/PinCodeButton"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="@dimen/base50dp720sw"
+            android:layout_height="@dimen/base50dp720sw"
             android:drawableTop="@drawable/unlock" />
     </LinearLayout>
 </RelativeLayout>

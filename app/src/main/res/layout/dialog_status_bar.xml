@@ -4,14 +4,14 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minWidth="700dp"
-    android:padding="20dp"
+    android:minWidth="@dimen/base700dp720sw"
+    android:padding="@dimen/base20dp720sw"
     android:baselineAligned="false">
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="@dimen/base30dp720sw"
         android:layout_height="wrap_content">
 
         <TextView
@@ -19,14 +19,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="11:00"
-            android:layout_marginEnd="10dp"
-            android:textSize="28sp" />
+            android:layout_marginEnd="@dimen/base10dp720sw"
+            android:textSize="@dimen/base28sp720sw" />
 
         <TextView
             android:id="@+id/status_bar_date"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
+            android:textSize="@dimen/base18sp720sw"
             android:layout_weight="1"
             tools:text="Пн 23 февраля 2015" />
 
@@ -51,9 +51,9 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:padding="20dp"
-        android:textSize="18sp"
+        android:layout_marginTop="@dimen/base10dp720sw"
+        android:padding="@dimen/base20dp720sw"
+        android:textSize="@dimen/base18sp720sw"
         android:background="@drawable/user_fragment_block_gradient"
         tools:text="Вам нужно обновить систему до версии 1.2!"
         android:visibility="gone" />

@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/app_background"
     android:orientation="vertical"
-    android:padding="30dp">
+    android:padding="@dimen/base30dp720sw">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -17,35 +17,35 @@
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:layout_marginTop="40dp"
+                android:layout_height="@dimen/base150dp720sw"
+                android:layout_marginTop="@dimen/base40dp720sw"
                 android:background="@color/blue_gray"
                 android:gravity="center_vertical"
-                android:padding="20dp"
+                android:padding="@dimen/base20dp720sw"
                 android:text="@string/product_title_credit_risk_insurance"
                 android:textAllCaps="true"
-                android:textSize="23sp" />
+                android:textSize="@dimen/base23sp720sw" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginBottom="@dimen/base20dp720sw"
+                android:layout_marginTop="@dimen/base20dp720sw"
                 android:text="@string/product_description_credit_risk_insurance"
                 android:textColor="@color/gray"
-                android:textSize="12dp" />
+                android:textSize="@dimen/base12sp720sw" />
 
             <RelativeLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="@dimen/base20dp720sw"
                 android:background="@drawable/product_item_bg"
                 android:orientation="horizontal">
 
 
                 <ImageView
-                    android:layout_width="240dp"
-                    android:layout_height="160dp"
+                    android:layout_width="@dimen/base240dp720sw"
+                    android:layout_height="@dimen/base160dp720sw"
                     android:layout_alignParentLeft="true"
                     android:src="@drawable/mba_light" />
 
@@ -104,7 +104,7 @@
                     android:id="@+id/buttonDetails"
                     style="@style/ButtonGray"
                     android:layout_below="@id/textView5"
-                    android:layout_marginLeft="20dp"
+                    android:layout_marginLeft="@dimen/base20dp720sw"
                     android:layout_toRightOf="@id/buttonIssue"
                     android:text="ПОДРОБНЕЕ" />
 

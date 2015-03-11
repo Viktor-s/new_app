@@ -30,7 +30,7 @@
 
         <TextView
             android:layout_column="0"
-            android:paddingBottom="10dp"
+            android:paddingBottom="@dimen/base10dp720sw"
             style="@style/FormTextView26"
             android:text="@string/form_tv_sum_from_to" />
 

@@ -14,8 +14,8 @@
         android:id="@+id/dialog_image_preview_close_button"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="@dimen/base40dp720sw"
+        android:layout_height="@dimen/base40dp720sw"
         android:background="@drawable/button_close_test" />
 
 </RelativeLayout>

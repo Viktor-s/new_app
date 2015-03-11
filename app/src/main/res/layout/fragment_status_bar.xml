@@ -2,26 +2,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
-    android:padding="10dp"
+    android:padding="@dimen/base10dp720sw"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
     <ImageView
-        android:layout_width="21dp"
-        android:layout_height="21dp"
+        android:layout_width="@dimen/base20dp720sw"
+        android:layout_height="@dimen/base20dp720sw"
         android:src="@drawable/ic_get_push"
         android:id="@+id/status_bar_push_imageView"
-        android:layout_marginEnd="10dp"
+        android:layout_marginEnd="@dimen/base10dp720sw"
         android:contentDescription="@string/app_name"
         tools:visibility="visible"
         android:visibility="gone" />
 
     <ImageView
-        android:layout_width="18dp"
-        android:layout_height="18dp"
+        android:layout_width="@dimen/base18dp720sw"
+        android:layout_height="@dimen/base18dp720sw"
         tools:src="@drawable/wifi_3"
         android:id="@+id/status_bar_wifi_imageView"
-        android:layout_marginEnd="10dp"
+        android:layout_marginEnd="@dimen/base10dp720sw"
         android:contentDescription="@string/app_name" />
 
     <TextView
@@ -32,7 +32,7 @@
         android:gravity="center"
         android:textColor="@color/white"
         android:id="@+id/status_bar_accum_textView"
-        android:layout_marginEnd="8dp" />
+        android:layout_marginEnd="@dimen/base10dp720sw" />
 
     <TextView
         android:layout_width="wrap_content"

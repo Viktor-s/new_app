@@ -40,11 +40,14 @@
     <dimen name="base240dp720sw">240dp</dimen>
     <dimen name="base250dp720sw">250dp</dimen>
     <dimen name="base270dp720sw">270dp</dimen>
+    <dimen name="base300dp720sw">300dp</dimen>
+    <dimen name="base320dp720sw">320dp</dimen>
     <dimen name="base340dp720sw">340dp</dimen>
     <dimen name="base350dp720sw">350dp</dimen>
     <dimen name="base420dp720sw">420dp</dimen>
     <dimen name="base510dp720sw">510dp</dimen>
     <dimen name="base530dp720sw">530dp</dimen>
+    <dimen name="base700dp720sw">700dp</dimen>
 
 
     <dimen name="base12sp720sw">12sp</dimen>

@@ -34,7 +34,7 @@
                 android:autoText="true"
                 android:textSize="@dimen/base15sp720sw"
                 android:gravity="center"
-                android:padding="4dp" />
+                android:padding="@dimen/base5dp720sw" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -134,14 +134,14 @@
     </LinearLayout>
 
     <ImageView
-        android:layout_width="22dp"
-        android:layout_height="22dp"
+        android:layout_width="@dimen/base20dp720sw"
+        android:layout_height="@dimen/base20dp720sw"
         android:id="@+id/is_news_viewed_imageView"
-        android:layout_marginLeft="14dp"
+        android:layout_marginLeft="@dimen/base15dp720sw"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:src="@drawable/ic_launcher"
-        android:layout_marginTop="22dp" />
+        android:layout_marginTop="@dimen/base20dp720sw" />
 
 </RelativeLayout>

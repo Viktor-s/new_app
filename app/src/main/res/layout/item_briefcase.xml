@@ -4,21 +4,21 @@
     android:id="@+id/r_layout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:paddingLeft="30dp">
+    android:paddingLeft="@dimen/base30dp720sw">
 
     <RelativeLayout
         android:id="@+id/image_container"
-        android:layout_width="70dp"
-        android:layout_height="70dp">
+        android:layout_width="@dimen/base70dp720sw"
+        android:layout_height="@dimen/base70dp720sw">
 
         <me.justup.upme.utils.CircularImageView
             android:id="@+id/briefcase_fragment_user_photo"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="@dimen/base70dp720sw"
+            android:layout_height="@dimen/base70dp720sw"
             android:src="@drawable/photo_face"
             app:civ_border="true"
             app:civ_border_color="@color/white"
-            app:civ_border_width="4dp" />
+            app:civ_border_width="@dimen/base5dp720sw" />
 
         <TextView
             android:id="@+id/briefcase_fragment_idObject"
@@ -39,15 +39,15 @@
 
     <ImageView
         android:id="@+id/image2"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="@dimen/base30dp720sw"
+        android:layout_height="@dimen/base30dp720sw"
         android:src="@drawable/photo_info"
         android:layout_toRightOf="@+id/image_container"
         android:layout_alignBottom="@+id/image_container" />
 
     <TextView
         android:id="@+id/tv1"
-        android:layout_width="100dp"
+        android:layout_width="@dimen/base100dp720sw"
         android:layout_height="wrap_content"
         android:text="ВИОЛКТТА ТРОФИМОВА"
         android:textColor="@android:color/black"
