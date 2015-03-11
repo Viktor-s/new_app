@@ -12,6 +12,7 @@
     <dimen name="base35dp720sw">35dp</dimen>
     <dimen name="base40dp720sw">40dp</dimen>
     <dimen name="base45dp720sw">45dp</dimen>
+    <dimen name="base47.5dp720sw">47.5dp</dimen>
     <dimen name="base50dp720sw">50dp</dimen>
     <dimen name="base55dp720sw">55dp</dimen>
     <dimen name="base60dp720sw">60dp</dimen>

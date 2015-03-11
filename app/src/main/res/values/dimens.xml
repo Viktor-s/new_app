@@ -11,7 +11,7 @@
     <dimen name="base30dp720sw">19.2dp</dimen>
     <dimen name="base35dp720sw">22.4dp</dimen>
     <dimen name="base40dp720sw">25.6dp</dimen>
-    <dimen name="base45dp720sw">28.8dp</dimen>
+    <dimen name="base47.5dp720sw">30.4dp</dimen>
     <dimen name="base50dp720sw">32dp</dimen>
     <dimen name="base55dp720sw">35.2dp</dimen>
     <dimen name="base60dp720sw">38.4dp</dimen>

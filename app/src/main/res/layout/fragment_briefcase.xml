@@ -18,14 +18,22 @@
             android:layout_marginLeft="@dimen/base20dp720sw"
             android:visibility="visible">
 
-            <TableRow
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
-                <ImageView
-                    android:layout_width="@dimen/base100dp720sw"
+                <!--<ImageView-->
+                    <!--android:layout_width="@dimen/base100dp720sw"-->
+                    <!--android:layout_height="@dimen/base100dp720sw"-->
+                    <!--android:src="@drawable/p13" />-->
+
+
+                <View
+                    android:layout_width="3dp"
                     android:layout_height="@dimen/base100dp720sw"
-                    android:src="@drawable/p13" />
+                    android:background="@color/black"
+                    android:layout_marginLeft="@dimen/base47.5dp720sw"
+                    android:layout_marginRight="@dimen/base50dp720sw" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -36,11 +44,11 @@
                     <Button
                         android:id="@+id/add_new_user_button"
                         style="@style/ButtonPink"
-                        android:layout_gravity="bottom"
+                        android:layout_gravity="center_vertical"
                         android:text="Добавить  \n пользователя" />
                 </LinearLayout>
 
-            </TableRow>
+            </LinearLayout>
 
             <TableRow
                 android:layout_width="wrap_content"

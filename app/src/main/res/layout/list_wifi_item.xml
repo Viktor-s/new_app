@@ -40,7 +40,7 @@
         android:layout_height="@dimen/base15dp720sw"
         android:id="@+id/wifi_strength"
         tools:background="@drawable/wifi_4"
-        android:layout_marginEnd="@dimen/base24dp720sw"
+        android:layout_marginEnd="@dimen/base25dp720sw"
         android:contentDescription="@string/app_name" />
 
 </LinearLayout>

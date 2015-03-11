@@ -12,6 +12,8 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -84,6 +86,7 @@ public class NewsItemFragment extends Fragment {
     private SocialAuthAdapter adapter;
     private Button mShareButton;
     private BroadcastReceiver receiver;
+    private Animation mFragmentSliderOut;
 
 
     public static NewsItemFragment newInstance(ArticleShortEntity articleShortEntity) {
@@ -163,6 +166,23 @@ public class NewsItemFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_news_item, container, false);
+
+        mFragmentSliderOut = AnimationUtils.loadAnimation(getActivity(), R.anim.order_slider_out);
+        mFragmentSliderOut.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                getParentFragment().getChildFragmentManager().beginTransaction().remove(NewsItemFragment.this).commit();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
+
         mNewsItemWebView = (WebView) view.findViewById(R.id.news_item_webView);
         mNewsItemWebView.getSettings().setJavaScriptEnabled(true);
         mNewsItemWebView.setWebViewClient(new WebViewClient() {
@@ -196,11 +216,12 @@ public class NewsItemFragment extends Fragment {
         mNewsItemCloseButton = (Button) view.findViewById(R.id.news_item_close_button);
         mNewsItemCloseButton.setVisibility(View.INVISIBLE);
         mNewsItemCloseButton.setOnClickListener(new View.OnClickListener() {
+            @SuppressWarnings("ConstantConditions")
             @Override
             public void onClick(View view) {
                 ((NewsFeedFragment) getParentFragment()).updateLastChousenPosition();
                 LocalBroadcastManager.getInstance(NewsItemFragment.this.getActivity()).unregisterReceiver(receiver);
-                getParentFragment().getChildFragmentManager().beginTransaction().remove(NewsItemFragment.this).commit();
+                NewsItemFragment.this.getView().startAnimation(mFragmentSliderOut);
             }
         });
 

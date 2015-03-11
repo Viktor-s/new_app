@@ -11,6 +11,8 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.GridLayout;
@@ -58,6 +60,9 @@ public class BriefcaseFragment extends Fragment {
     private BroadcastReceiver receiver;
     private String selectQuery;
     private TextView mUserContactsCountTextView;
+    private FrameLayout mUserContainer;
+    private Animation mFragmentSliderFadeIn;
+    private Animation mFragmentSliderOut;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -103,9 +108,30 @@ public class BriefcaseFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_briefcase, container, false);
+        mFragmentSliderFadeIn = AnimationUtils.loadAnimation(AppContext.getAppContext(), R.anim.fragment_item_slide_fade_in);
+        mFragmentSliderOut = AnimationUtils.loadAnimation(getActivity(), R.anim.order_slider_out);
+        mFragmentSliderOut.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                Fragment fragment = getChildFragmentManager().findFragmentByTag("UserFragmentBriefcase");
+                if (fragment != null) {
+                    mCloseUserFragmentButton.setVisibility(View.GONE);
+                    getChildFragmentManager().beginTransaction().remove(fragment).commit();
+                }
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
         TextView mObjectIdTextView = (TextView) view.findViewById(R.id.briefcase_fragment_idObject);
         TextView mUserNameTextView = (TextView) view.findViewById(R.id.briefcase_fragment_user_name);
         mUserContactsCountTextView = (TextView) view.findViewById(R.id.briefcase_fragment_user_contacts_count);
+        mUserContainer = (FrameLayout) view.findViewById(R.id.briefcase_user_info_container_frameLayout);
         CircularImageView mUserImageImageView = (CircularImageView) view.findViewById(R.id.briefcase_fragment_user_photo);
         mObjectIdTextView.setText("" + new AppPreferences(AppContext.getAppContext()).getUserId());
         mUserNameTextView.setText(new AppPreferences(AppContext.getAppContext()).getUserName());
@@ -118,11 +144,7 @@ public class BriefcaseFragment extends Fragment {
         mCloseUserFragmentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Fragment fragment = getChildFragmentManager().findFragmentByTag("UserFragmentBriefcase");
-                if (fragment != null) {
-                    getChildFragmentManager().beginTransaction().remove(fragment).commit();
-                    mCloseUserFragmentButton.setVisibility(View.GONE);
-                }
+                mUserContainer.startAnimation(mFragmentSliderOut);
             }
         });
 
@@ -296,8 +318,10 @@ public class BriefcaseFragment extends Fragment {
                     LOGI(TAG, "id personal " + idPersonal);
                     GetAccountPanelInfoQuery getLoggedUserInfoQuery = new GetAccountPanelInfoQuery();
                     getLoggedUserInfoQuery.params.id = idPersonal;
+                    Animation mFragmentSliderFadeIn = AnimationUtils.loadAnimation(AppContext.getAppContext(), R.anim.fragment_item_slide_fade_in);
                     Fragment fragment = UserFragment.newInstance(getLoggedUserInfoQuery, false);
                     getChildFragmentManager().beginTransaction().replace(R.id.briefcase_user_info_container_frameLayout, fragment, "UserFragmentBriefcase").commit();
+                    mUserContainer.startAnimation(mFragmentSliderFadeIn);
                     mCloseUserFragmentButton.setVisibility(View.VISIBLE);
 
                 }

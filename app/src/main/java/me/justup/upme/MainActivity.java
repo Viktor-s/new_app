@@ -567,7 +567,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
                 LOGE(TAG, "onDownloadCloudFile(): onFailure", throwable);
-
                 if (throwable != null) {
                     showWarningDialog(throwable.getMessage());
                 }
@@ -584,7 +583,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     private void showWarningDialog(String message) {
         WarningDialog dialog = WarningDialog.newInstance(getString(R.string.network_error), message);
-        dialog.show(getFragmentManager(), WarningDialog.WARNING_DIALOG);
+        if (getFragmentManager() != null)
+            dialog.show(getFragmentManager(), WarningDialog.WARNING_DIALOG);
     }
 
 }
