@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.ProgressBar;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
@@ -41,6 +42,7 @@ public class DocumentsFragment extends Fragment {
 
     private TableLayout mFileExplorer;
     private LayoutInflater mLayoutInflater;
+    private ProgressBar mProgressBar;
 
     private BroadcastReceiver mFileActionDoneReceiver = new BroadcastReceiver() {
         @Override
@@ -49,6 +51,8 @@ public class DocumentsFragment extends Fragment {
             if (actionType == DOWNLOAD) {
                 getLocalFileList();
             }
+
+            stopProgressBar();
         }
     };
 
@@ -66,6 +70,7 @@ public class DocumentsFragment extends Fragment {
 
         mLayoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mFileExplorer = (TableLayout) view.findViewById(R.id.files_panel);
+        mProgressBar = (ProgressBar) view.findViewById(R.id.explorer_progressBar);
 
         getChildFragmentManager().beginTransaction().add(R.id.cloud_explorer_fragment_container, new CloudExplorerFragment()).commit();
 
@@ -171,6 +176,7 @@ public class DocumentsFragment extends Fragment {
                 public boolean onMenuItemClick(MenuItem item) {
                     switch (item.getItemId()) {
                         case R.id.file_local_upload:
+                            startProgressBar();
                             startExplorerService(filePath, UPLOAD);
                             return true;
 
@@ -198,6 +204,14 @@ public class DocumentsFragment extends Fragment {
 
         Intent intent = new Intent(getActivity(), FileExplorerService.class);
         getActivity().startService(intent.putExtras(bundle));
+    }
+
+    public void startProgressBar() {
+        mProgressBar.setVisibility(View.VISIBLE);
+    }
+
+    public void stopProgressBar() {
+        mProgressBar.setVisibility(View.GONE);
     }
 
 }

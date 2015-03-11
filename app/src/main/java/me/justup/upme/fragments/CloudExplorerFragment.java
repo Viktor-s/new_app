@@ -57,6 +57,7 @@ public class CloudExplorerFragment extends Fragment {
     private TableLayout mShareFileExplorer;
     private LayoutInflater mLayoutInflater;
     private FrameLayout mProgressBar;
+    private DocumentsFragment mParentFragment;
 
     private BroadcastReceiver mFileActionDoneReceiver = new BroadcastReceiver() {
         @Override
@@ -65,6 +66,8 @@ public class CloudExplorerFragment extends Fragment {
             if (actionType == UPLOAD || actionType == DELETE) {
                 fileQuery(ApiWrapper.FILE_GET_MY_FILES, mMyFileExplorer);
             }
+
+            mParentFragment.stopProgressBar();
         }
     };
 
@@ -80,6 +83,7 @@ public class CloudExplorerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_cloud_explorer, container, false);
         mLayoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mParentFragment = (DocumentsFragment) getParentFragment();
 
         TabHost tabHost = (TabHost) view.findViewById(android.R.id.tabhost);
         tabHost.setup();
@@ -231,10 +235,12 @@ public class CloudExplorerFragment extends Fragment {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.file_download:
+                        mParentFragment.startProgressBar();
                         startExplorerService(fileHash, fileName, DOWNLOAD);
                         return true;
 
                     case R.id.file_delete:
+                        mParentFragment.startProgressBar();
                         startExplorerService(fileHash, null, DELETE);
                         return true;
 
@@ -259,6 +265,7 @@ public class CloudExplorerFragment extends Fragment {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.file_share_download:
+                        mParentFragment.startProgressBar();
                         startExplorerService(fileHash, fileName, DOWNLOAD);
                         return true;
 

@@ -127,6 +127,8 @@ public class FileExplorerService extends IntentService {
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                 String content = ApiWrapper.responseBodyToString(responseBody);
                 LOGE(TAG, "deleteFileQuery onFailure(): " + content);
+
+                sendExplorerBroadcast(DELETE);
             }
         });
     }
