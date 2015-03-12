@@ -8,7 +8,7 @@ import android.provider.BaseColumns;
 
 public class DBHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "upme.db";
-    private static final int DATABASE_VERSION = 10;
+    private static final int DATABASE_VERSION = 11;
 
     public static final String BASE_TABLE_NAME = "base_table";
     public static final String BASE_ID = BaseColumns._ID;
@@ -71,8 +71,9 @@ public class DBHelper extends SQLiteOpenHelper {
     protected static final String STATUS_BAR_PUSH_USER_NAME = "user_name";
     protected static final String STATUS_BAR_PUSH_DATE = "date";
     protected static final String STATUS_BAR_PUSH_LINK = "link";
-    protected static final String STATUS_BAR_PUSH_TEXT = "text";
-    protected static final String STATUS_BAR_PUSH_ROOM = "room";
+    protected static final String STATUS_BAR_PUSH_JABBER = "jabber_id";
+    protected static final String STATUS_BAR_PUSH_FILE_NAME = "file_name";
+    protected static final String STATUS_BAR_PUSH_ROOM = "room_id";
 
 
     private static final String CREATE_TABLE_BASE = "CREATE TABLE "
@@ -147,8 +148,9 @@ public class DBHelper extends SQLiteOpenHelper {
             + STATUS_BAR_PUSH_USER_NAME + " TEXT, "
             + STATUS_BAR_PUSH_DATE + " TEXT, "
             + STATUS_BAR_PUSH_LINK + " TEXT, "
-            + STATUS_BAR_PUSH_TEXT + " TEXT, "
-            + STATUS_BAR_PUSH_ROOM + " INTEGER" + ")";
+            + STATUS_BAR_PUSH_JABBER + " TEXT, "
+            + STATUS_BAR_PUSH_FILE_NAME + " TEXT, "
+            + STATUS_BAR_PUSH_ROOM + " TEXT" + ")";
 
 
     public DBHelper(Context context) {

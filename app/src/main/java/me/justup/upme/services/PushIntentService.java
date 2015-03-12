@@ -9,7 +9,7 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.apache.http.Header;
 
-import me.justup.upme.entity.SendNotificationQuery;
+import me.justup.upme.entity.BaseHttpQueryEntity;
 import me.justup.upme.http.ApiWrapper;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
@@ -37,7 +37,7 @@ public class PushIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        SendNotificationQuery push = (SendNotificationQuery) intent.getSerializableExtra(PUSH_INTENT_QUERY_EXTRA);
+        BaseHttpQueryEntity push = (BaseHttpQueryEntity) intent.getSerializableExtra(PUSH_INTENT_QUERY_EXTRA);
         ApiWrapper.syncQuery(push, new OnQueryResponse());
     }
 

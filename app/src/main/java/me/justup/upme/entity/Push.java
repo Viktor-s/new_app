@@ -10,10 +10,28 @@ public class Push implements Serializable {
     private int type = 0;
     private int userId = 0;
     private String userName = "";
-    private int room = 0;
+    private String room = "";
     private String date = "";
     private String link = "";
-    private String text = "";
+    private String jabberId = "";
+    private String fileName = "";
+
+
+    public String getJabberId() {
+        return jabberId;
+    }
+
+    public void setJabberId(String jabberId) {
+        this.jabberId = jabberId;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
 
     public int getId() {
         return id;
@@ -39,11 +57,11 @@ public class Push implements Serializable {
         this.userId = userId;
     }
 
-    public int getRoom() {
+    public String getRoom() {
         return room;
     }
 
-    public void setRoom(int room) {
+    public void setRoom(String room) {
         this.room = room;
     }
 
@@ -71,14 +89,6 @@ public class Push implements Serializable {
         this.link = link;
     }
 
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
     @Override
     public String toString() {
         return "Push{" +
@@ -89,7 +99,8 @@ public class Push implements Serializable {
                 ", room=" + room +
                 ", date=" + date +
                 ", link=" + link +
-                ", text=" + text +
+                ", jabberId=" + jabberId +
+                ", fileName=" + fileName +
                 '}';
     }
 
