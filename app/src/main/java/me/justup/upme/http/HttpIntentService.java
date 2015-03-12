@@ -48,7 +48,7 @@ public class HttpIntentService extends IntentService {
     public static final int CALENDAR_ADD_EVENT = 10;
 
 
-    private DBAdapter mDBAdapter;
+    //private DBAdapter mDBAdapter;
     private int partNumber;
 
 
@@ -60,8 +60,9 @@ public class HttpIntentService extends IntentService {
     public void onCreate() {
         super.onCreate();
 
-        mDBAdapter = new DBAdapter(AppContext.getAppContext());
-        mDBAdapter.open();
+//        mDBAdapter = new DBAdapter(AppContext.getAppContext());
+//        mDBAdapter.open();
+         DBAdapter.getInstance().openDatabase();
     }
 
     @Override
@@ -76,7 +77,8 @@ public class HttpIntentService extends IntentService {
     public void onDestroy() {
         super.onDestroy();
 
-        mDBAdapter.close();
+        //mDBAdapter.close();
+        DBAdapter.getInstance().closeDatabase();
     }
 
     private class OnQueryResponse extends AsyncHttpResponseHandler {
@@ -105,7 +107,7 @@ public class HttpIntentService extends IntentService {
                     break;
 
                 case ADD_COMMENT:
-                    mDBAdapter.sendBroadcast(DBAdapter.NEWS_ITEM_SQL_BROADCAST_INTENT);
+                    DBAdapter.getInstance().sendBroadcast(DBAdapter.NEWS_ITEM_SQL_BROADCAST_INTENT);
                     break;
 
                 case GET_COMMENTS_FULL_ARTICLE:
@@ -136,7 +138,7 @@ public class HttpIntentService extends IntentService {
             //mDBAdapter.sendBroadcast(BROADCAST_INTENT_NEWS_FEED_SERVER_ERROR);
             switch (partNumber) {
                 case NEWS_PART_SHORT:
-                    mDBAdapter.sendBroadcast(BROADCAST_INTENT_NEWS_FEED_SERVER_ERROR);
+                    DBAdapter.getInstance().sendBroadcast(BROADCAST_INTENT_NEWS_FEED_SERVER_ERROR);
                     break;
                 default:
                     break;
@@ -163,9 +165,9 @@ public class HttpIntentService extends IntentService {
         }
 
         if (response != null && response.result != null) {
-            mDBAdapter.saveShortNews(response);
+            DBAdapter.getInstance().saveShortNews(response);
         } else {
-            mDBAdapter.sendBroadcast(BROADCAST_INTENT_NEWS_FEED_SERVER_ERROR);
+            DBAdapter.getInstance().sendBroadcast(BROADCAST_INTENT_NEWS_FEED_SERVER_ERROR);
         }
     }
 
@@ -178,7 +180,7 @@ public class HttpIntentService extends IntentService {
         }
 
         if (response != null && response.result != null) {
-            mDBAdapter.saveFullNews(response);
+            DBAdapter.getInstance().saveFullNews(response);
         }
     }
 
@@ -191,7 +193,7 @@ public class HttpIntentService extends IntentService {
         }
 
         if (response != null && response.result != null) {
-            mDBAdapter.saveArticleFullComments(response, article_id);
+            DBAdapter.getInstance().saveArticleFullComments(response, article_id);
         }
     }
 
@@ -326,7 +328,7 @@ public class HttpIntentService extends IntentService {
 
         if (response != null && response.result != null) {
             LOGI(TAG, response.toString());
-            mDBAdapter.saveMailContacts(response);
+            DBAdapter.getInstance().saveMailContacts(response);
         }
     }
 
@@ -341,7 +343,7 @@ public class HttpIntentService extends IntentService {
         }
 
         if (response != null && response.result != null) {
-            mDBAdapter.saveEventsCalendar(response);
+            DBAdapter.getInstance().saveEventsCalendar(response);
         }
     }
 }

@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
@@ -36,7 +37,6 @@ import me.justup.upme.MainActivity;
 import me.justup.upme.R;
 import me.justup.upme.adapter.NewsCommentsAdapter;
 import me.justup.upme.db.DBAdapter;
-import me.justup.upme.db.DBHelper;
 import me.justup.upme.dialogs.WarningDialog;
 import me.justup.upme.entity.ArticleFullEntity;
 import me.justup.upme.entity.ArticleShortCommentEntity;
@@ -73,8 +73,8 @@ public class NewsItemFragment extends Fragment {
     private Button mNewsItemAddCommentButton;
     private ListView mNewsItemCommentsListView;
     private Button mNewsItemCloseButton;
-    private DBHelper mDBHelper;
-    private DBAdapter mDBAdapter;
+    //private DBHelper mDBHelper;
+    // private DBAdapter mDBAdapter;
     private List<ArticleShortCommentEntity> articleCommentsList;
     private ArticleFullEntity mArticleFullEntity;
     private String selectQueryFullNews;
@@ -87,6 +87,7 @@ public class NewsItemFragment extends Fragment {
     private Button mShareButton;
     private BroadcastReceiver receiver;
     private Animation mFragmentSliderOut;
+    private SQLiteDatabase database;
 
 
     public static NewsItemFragment newInstance(ArticleShortEntity articleShortEntity) {
@@ -104,23 +105,23 @@ public class NewsItemFragment extends Fragment {
         if (bundle != null) {
             mNewsFeedEntity = (ArticleShortEntity) bundle.getSerializable(ARG_NEWS_FEED_ENTITY);
         }
-        mDBHelper = new DBHelper(AppContext.getAppContext());
-        mDBAdapter = new DBAdapter(AppContext.getAppContext());
-
+        // mDBHelper = new DBHelper(AppContext.getAppContext());
+        // mDBAdapter = new DBAdapter(AppContext.getAppContext());
+        database = DBAdapter.getInstance().openDatabase();
     }
 
 
     @Override
     public void onResume() {
         super.onResume();
-        mDBAdapter.open();
+        // mDBAdapter.open();
         LOGI(TAG, "RegisterRecNewsItem");
         receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (isBroadcastUpdateFullArticle) {
                     LOGI(TAG, "onReceive isBroadcastUpdateFullArticle");
-                    Cursor cursorNews = mDBHelper.getWritableDatabase().rawQuery(selectQueryFullNews, null);
+                    Cursor cursorNews = database.rawQuery(selectQueryFullNews, null);
                     mArticleFullEntity = fillFullNewsFromCursor(cursorNews);
                     fillViewsWithData();
 
@@ -158,7 +159,7 @@ public class NewsItemFragment extends Fragment {
         super.onPause();
         LocalBroadcastManager.getInstance(NewsItemFragment.this.getActivity()).unregisterReceiver(receiver);
         LOGI(TAG, "unregisterRecNewsItem");
-        mDBAdapter.close();
+        DBAdapter.getInstance().closeDatabase();
     }
 
 
@@ -243,13 +244,13 @@ public class NewsItemFragment extends Fragment {
 
     private void updateFullNewsCursor() {
         selectQueryFullNews = QUERY_FULL_ARTICLE_PATH + mNewsFeedEntity.getId();
-        Cursor cursorNews = mDBHelper.getWritableDatabase().rawQuery(selectQueryFullNews, null);
+        Cursor cursorNews = database.rawQuery(selectQueryFullNews, null);
         if (cursorNews != null && cursorNews.moveToFirst()) {
             mArticleFullEntity = fillFullNewsFromCursor(cursorNews);
-            if (cursorNews != null) {
-                cursorNews.close();
-            }
             fillViewsWithData();
+        }
+        if (cursorNews != null) {
+            cursorNews.close();
         }
     }
 
@@ -291,7 +292,7 @@ public class NewsItemFragment extends Fragment {
             articleFullEntity.setFull_descr(cursorNews.getString(cursorNews.getColumnIndex(FULL_NEWS_FULL_DESCR)));
             int news_id = cursorNews.getInt(cursorNews.getColumnIndex(FULL_NEWS_SERVER_ID));
             String selectQueryShortNewsComments = QUERY_COMMENTS_PATH + news_id;
-            Cursor cursorComments = mDBHelper.getWritableDatabase().rawQuery(selectQueryShortNewsComments, null);
+            Cursor cursorComments = database.rawQuery(selectQueryShortNewsComments, null);
             ArrayList<ArticleShortCommentEntity> commentsList = new ArrayList<>();
             if (cursorComments != null) {
                 for (cursorComments.moveToFirst(); !cursorComments.isAfterLast(); cursorComments.moveToNext()) {
@@ -314,7 +315,7 @@ public class NewsItemFragment extends Fragment {
 
     private List<ArticleShortCommentEntity> fillCommentsFromCursor(int newsId) {
         String selectQueryShortNewsComments = QUERY_COMMENTS_PATH + newsId;
-        Cursor cursorComments = mDBHelper.getWritableDatabase().rawQuery(selectQueryShortNewsComments, null);
+        Cursor cursorComments = database.rawQuery(selectQueryShortNewsComments, null);
         ArrayList<ArticleShortCommentEntity> commentsList = new ArrayList<>();
         if (cursorComments != null) {
             for (cursorComments.moveToFirst(); !cursorComments.isAfterLast(); cursorComments.moveToNext()) {

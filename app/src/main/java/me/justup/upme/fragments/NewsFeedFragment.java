@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,7 +27,6 @@ import me.justup.upme.MainActivity;
 import me.justup.upme.R;
 import me.justup.upme.adapter.NewsFeedAdapter;
 import me.justup.upme.db.DBAdapter;
-import me.justup.upme.db.DBHelper;
 import me.justup.upme.entity.ArticleFullQuery;
 import me.justup.upme.entity.ArticleShortCommentEntity;
 import me.justup.upme.entity.ArticleShortEntity;
@@ -56,7 +56,7 @@ public class NewsFeedFragment extends Fragment {
 
     private RecyclerView mNewsFeedView;
     private NewsFeedAdapter mNewsFeedAdapter;
-    private DBAdapter mDBAdapter;
+   // private DBAdapter mDBAdapter;
     private List<ArticleShortEntity> mNewsFeedEntityList;
     private List<ArticleShortEntity> mNewsFeedEntityPartOfList = new ArrayList<>();
     private FrameLayout mNewsItemContainer;
@@ -65,7 +65,7 @@ public class NewsFeedFragment extends Fragment {
     private int pastVisibleItems, visibleItemCount, totalItemCount;
     private LinearLayoutManager mLayoutManager;
     private String selectQueryShortNews;
-    private DBHelper mDBHelper;
+    // private DBHelper mDBHelper;
     private int from = 0;
     private int to = 10;
     //private FrameLayout mProgressBarLayout;
@@ -74,19 +74,18 @@ public class NewsFeedFragment extends Fragment {
     private boolean isFirstArticlesUpdate = true;
     private BroadcastReceiver mNewsFeedReceiver;
     private ArrayList<Integer> mReadNewsList;
-
+    private SQLiteDatabase database;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mDBHelper = new DBHelper(AppContext.getAppContext());
-        mDBAdapter = new DBAdapter(AppContext.getAppContext());
-        Cursor cursorReadNews = mDBHelper.getWritableDatabase().rawQuery("SELECT * FROM " + IS_SHORT_NEWS_READ_TABLE_NAME, null);
+        database = DBAdapter.getInstance().openDatabase();
+        Cursor cursorReadNews = database.rawQuery("SELECT * FROM " + IS_SHORT_NEWS_READ_TABLE_NAME, null);
         mReadNewsList = getAllReadNewsFromCursor(cursorReadNews);
         if (cursorReadNews != null)
             cursorReadNews.close();
         selectQueryShortNews = "SELECT * FROM " + SHORT_NEWS_TABLE_NAME;
-        Cursor cursorNews = mDBHelper.getWritableDatabase().rawQuery(selectQueryShortNews, null);
+        Cursor cursorNews = database.rawQuery(selectQueryShortNews, null);
         mNewsFeedEntityList = fillNewsFromCursor(cursorNews, mReadNewsList);
         if (mNewsFeedEntityList.size() >= 10) {
             mNewsFeedEntityPartOfList = getNextArticlesPack();
@@ -98,15 +97,14 @@ public class NewsFeedFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+        DBAdapter.getInstance().closeDatabase();
         LocalBroadcastManager.getInstance(NewsFeedFragment.this.getActivity()).unregisterReceiver(mNewsFeedReceiver);
         LOGI(TAG, "unregisterRecNewsFeed");
-        mDBAdapter.close();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mDBAdapter.open();
         LOGI(TAG, "RegisterRecNewsFeed");
         mNewsFeedReceiver = new BroadcastReceiver() {
             @Override
@@ -115,7 +113,7 @@ public class NewsFeedFragment extends Fragment {
                 if (DBAdapter.NEWS_FEED_SQL_BROADCAST_INTENT.equals(intent.getAction())) {
                     if (isFirstArticlesUpdate) {
                         LOGI(TAG, "onReceive, first update");
-                        Cursor cursorNews = mDBHelper.getWritableDatabase().rawQuery(selectQueryShortNews, null);
+                        Cursor cursorNews = database.rawQuery(selectQueryShortNews, null);
                         mNewsFeedEntityList = fillNewsFromCursor(cursorNews, mReadNewsList);
                         if (mNewsFeedEntityPartOfList.size() < 10) {
                             mNewsFeedEntityPartOfList.addAll(getNextArticlesPack());
@@ -130,8 +128,9 @@ public class NewsFeedFragment extends Fragment {
                         isFirstArticlesUpdate = false;
                     } else {
                         LOGI(TAG, "onReceive, second update");
-                        Cursor cursorNews = mDBHelper.getWritableDatabase().rawQuery(selectQueryShortNews, null);
+                        Cursor cursorNews = database.rawQuery(selectQueryShortNews, null);
                         mNewsFeedEntityList = fillNewsFromCursor(cursorNews, mReadNewsList);
+                        cursorNews.close();
                         isFirstArticlesUpdate = true;
                     }
                 }
@@ -214,7 +213,7 @@ public class NewsFeedFragment extends Fragment {
                 articlesResponse.setViewed(true);
             }
             String selectQueryShortNewsComments = "SELECT * FROM short_news_comments_table WHERE article_id=" + news_id;
-            Cursor cursorComments = mDBHelper.getWritableDatabase().rawQuery(selectQueryShortNewsComments, null);
+            Cursor cursorComments = database.rawQuery(selectQueryShortNewsComments, null);
             ArrayList<ArticleShortCommentEntity> commentsList = new ArrayList<>();
             if (cursorComments != null) {
                 for (cursorComments.moveToFirst(); !cursorComments.isAfterLast(); cursorComments.moveToNext()) {
@@ -254,7 +253,7 @@ public class NewsFeedFragment extends Fragment {
             public void onItemClick(View view, int position) {
                 if (lastChosenPosition != position) {
                     mNewsFeedEntityPartOfList.get(position).setViewed(true);
-                    mDBAdapter.saveNewsReadValue(mNewsFeedEntityPartOfList.get(position).getId());
+                    DBAdapter.getInstance().saveNewsReadValue(mNewsFeedEntityPartOfList.get(position).getId());
                     Animation mFragmentSliderFadeIn = AnimationUtils.loadAnimation(AppContext.getAppContext(), R.anim.fragment_item_slide_fade_in);
                     getChildFragmentManager().beginTransaction().replace(R.id.news_item_container_frameLayout, NewsItemFragment.newInstance(mNewsFeedEntityList.get(position))).commit();
                     mNewsItemContainer.startAnimation(mFragmentSliderFadeIn);
