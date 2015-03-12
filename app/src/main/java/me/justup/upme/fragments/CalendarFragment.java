@@ -14,6 +14,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,9 +24,11 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckedTextView;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -46,6 +49,7 @@ import java.util.Locale;
 import me.justup.upme.MainActivity;
 import me.justup.upme.R;
 import me.justup.upme.db.DBAdapter;
+import me.justup.upme.db.DBHelper;
 import me.justup.upme.entity.CalendarAddEventQuery;
 import me.justup.upme.http.HttpIntentService;
 import me.justup.upme.utils.AppContext;
@@ -101,6 +105,8 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
     private Spinner mCalendartypesSpinner;
     private SQLiteDatabase database;
 
+
+    ArrayList<Integer> mSelectedItems;
 
     private static String[] months = new String[]{"ЯНВАРЬ", "ФЕВРАЛЬ", "МАРТ", "АПРЕЛЬ", "МАЙ", "ИЮНЬ", "ИЮЛЬ", "АВГУСТ", "СЕНТЯБРЬ", "ОКТЯБРЬ", "НОЯБРЬ", "ДЕКАБРЬ"};
 
@@ -316,7 +322,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
         dialogInfoEvent.show();
     }
 
-    public void alertDatePicker(String strDate) {
+    public void DatePickerDialog(String strDate) {
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.dialog_date_picker, null, false);
         final DatePicker myDatePicker = (DatePicker) view.findViewById(R.id.myDatePicker);
@@ -339,40 +345,42 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
 
     public void alertMultipleChoiceReferals() {
 
-//        final ArrayList<String> mSelectedItems = new ArrayList<>();
-//        mSelectedItems.add("Вася");
-//        mSelectedItems.add("Петя");
-//        mSelectedItems.add("Рома");
-//
-//        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-//        builder.setTitle("Выберите исполнителей задачи").setMultiChoiceItems(R.array.choices, null, new DialogInterface.OnMultiChoiceClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-//                if (isChecked) {
-//                    mSelectedItems.add(which);
-//                } else if (mSelectedItems.contains(which)) {
-//                    mSelectedItems.remove(Integer.valueOf(which));
-//                }
-//            }
-//        })
-//                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int id) {
-//                        String selectedIndex = "";
-//                        for (String i : mSelectedItems) {
-//                            selectedIndex += i + ", ";
-//                        }
-//                        Toast.makeText(getActivity(), "Selected index: " + selectedIndex, Toast.LENGTH_SHORT);
-//                    }
-//                })
-//                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int id) {
-//                        // removes the AlertDialog in the screen
-//                    }
-//                })
-//                .show();
+        // массив обектов получитьтолько имена
+
+
+        boolean[] selectItem = {true, false, true, true, false};
+        mSelectedItems = new ArrayList<>();
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Выберите исполнителей задачи")
+                .setMultiChoiceItems(R.array.choices, selectItem, new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                        if (isChecked) {
+                            mSelectedItems.add(which);
+                        } else if (mSelectedItems.contains(which)) {
+                            mSelectedItems.remove(Integer.valueOf(which));
+                        }
+                    }
+                })
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        String selectedIndex = "";
+                        for (Integer i : mSelectedItems) {
+                            selectedIndex += i + ", ";
+                        }
+                        Toast.makeText(getActivity(), "Selected index: " + selectedIndex, Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) { }
+                })
+                .show();
+
     }
+
 
     public static String convertTimeToString(int hours, int minutes) {
         return String.format("%02d", hours) + ":" + String.format("%02d", minutes);
@@ -454,7 +462,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                 panelAddEvent.setVisibility(View.GONE);
                 break;
             case R.id.start_date_event:
-                alertDatePicker(startDateEvent.getText().toString());
+                DatePickerDialog(startDateEvent.getText().toString());
                 break;
             case R.id.start_time_event:
                 TimePickerDialog(START_TIME_EVENT);
