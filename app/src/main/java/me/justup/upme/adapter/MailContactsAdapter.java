@@ -7,13 +7,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CursorAdapter;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -22,11 +20,9 @@ import java.util.Random;
 
 import me.justup.upme.R;
 import me.justup.upme.db.DBHelper;
-import me.justup.upme.entity.SendNotificationQuery;
-import me.justup.upme.fragments.MailFragment;
+import me.justup.upme.entity.WebRtcStartCallQuery;
 import me.justup.upme.fragments.WebRtcFragment;
 import me.justup.upme.services.PushIntentService;
-import me.justup.upme.utils.AppPreferences;
 import me.justup.upme.utils.CircularImageView;
 
 
@@ -80,7 +76,9 @@ public class MailContactsAdapter extends CursorAdapter {
                 @Override
                 public void onClick(View v) {
                     final FragmentTransaction ft = parentActivity.getFragmentManager().beginTransaction();
-                    Random rand = new Random(); int min = 1000000000; int max = 2147483647;
+                    Random rand = new Random();
+                    int min = 1000000000;
+                    int max = 2147483647;
                     int roomId = rand.nextInt((max - min) + 1) + min;
                     ft.replace(R.id.container_video_chat, WebRtcFragment.newInstance(String.valueOf(roomId)));
                     ft.commit();
@@ -99,16 +97,9 @@ public class MailContactsAdapter extends CursorAdapter {
     }
 
     public void startNotificationIntent(int userId, int roomNumber) {
-        AppPreferences appPreferences = new AppPreferences(context);
-        int ownerId = appPreferences.getUserId();
-        String ownerName = appPreferences.getUserName();
-
-        SendNotificationQuery push = new SendNotificationQuery();
-        push.params.user_id = userId;
-        push.params.data.owner_id = ownerId;
-        push.params.data.owner_name = ownerName;
-        push.params.data.connection_type = MailFragment.WEBRTC;
-        push.params.data.room = roomNumber;
+        WebRtcStartCallQuery push = new WebRtcStartCallQuery();
+        push.params.setUserIds(userId);
+        push.params.room_id = String.valueOf(roomNumber);
 
         Bundle bundle = new Bundle();
         bundle.putSerializable(PushIntentService.PUSH_INTENT_QUERY_EXTRA, push);
