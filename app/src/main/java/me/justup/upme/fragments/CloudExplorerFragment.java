@@ -2,8 +2,10 @@ package me.justup.upme.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -23,6 +25,7 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import org.apache.http.Header;
 
 import me.justup.upme.R;
+import me.justup.upme.dialogs.FileShareDialog;
 import me.justup.upme.entity.FileGetAllQuery;
 import me.justup.upme.entity.FileGetAllResponse;
 import me.justup.upme.http.ApiWrapper;
@@ -32,11 +35,14 @@ import static me.justup.upme.fragments.DocumentsFragment.DOC;
 import static me.justup.upme.fragments.DocumentsFragment.IMAGE;
 import static me.justup.upme.fragments.DocumentsFragment.KB;
 import static me.justup.upme.fragments.DocumentsFragment.SIZE_VALUE;
+import static me.justup.upme.services.FileExplorerService.BROADCAST_EXTRA_ACTION_TYPE;
 import static me.justup.upme.services.FileExplorerService.DELETE;
 import static me.justup.upme.services.FileExplorerService.DOWNLOAD;
 import static me.justup.upme.services.FileExplorerService.EXPLORER_SERVICE_ACTION_TYPE;
 import static me.justup.upme.services.FileExplorerService.EXPLORER_SERVICE_FILE_HASH;
 import static me.justup.upme.services.FileExplorerService.EXPLORER_SERVICE_FILE_NAME;
+import static me.justup.upme.services.FileExplorerService.FILE_ACTION_DONE_BROADCAST;
+import static me.justup.upme.services.FileExplorerService.UPLOAD;
 import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.LOGE;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
@@ -52,12 +58,33 @@ public class CloudExplorerFragment extends Fragment {
     private TableLayout mShareFileExplorer;
     private LayoutInflater mLayoutInflater;
     private FrameLayout mProgressBar;
+    private DocumentsFragment mParentFragment;
 
+    private BroadcastReceiver mFileActionDoneReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int actionType = intent.getIntExtra(BROADCAST_EXTRA_ACTION_TYPE, 0);
+            if (actionType == UPLOAD || actionType == DELETE) {
+                fileQuery(ApiWrapper.FILE_GET_MY_FILES, mMyFileExplorer);
+            }
+
+            mParentFragment.stopProgressBar();
+        }
+    };
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        getActivity().registerReceiver(mFileActionDoneReceiver, new IntentFilter(FILE_ACTION_DONE_BROADCAST));
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_cloud_explorer, container, false);
         mLayoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mParentFragment = (DocumentsFragment) getParentFragment();
 
         TabHost tabHost = (TabHost) view.findViewById(android.R.id.tabhost);
         tabHost.setup();
@@ -93,6 +120,13 @@ public class CloudExplorerFragment extends Fragment {
         fileQuery(ApiWrapper.FILE_GET_MY_FILES, mMyFileExplorer);
 
         return view;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        getActivity().unregisterReceiver(mFileActionDoneReceiver);
     }
 
     private void fileQuery(String apiMethod, TableLayout parentLayout) {
@@ -202,15 +236,18 @@ public class CloudExplorerFragment extends Fragment {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.file_download:
+                        mParentFragment.startProgressBar();
                         startExplorerService(fileHash, fileName, DOWNLOAD);
                         return true;
 
                     case R.id.file_delete:
+                        mParentFragment.startProgressBar();
                         startExplorerService(fileHash, null, DELETE);
                         return true;
 
                     case R.id.file_share_for:
-                        //
+                        FileShareDialog dialog = FileShareDialog.newInstance();
+                        dialog.show(getChildFragmentManager(), FileShareDialog.FILE_SHARE_DIALOG);
                         return true;
 
                     default:
@@ -230,6 +267,7 @@ public class CloudExplorerFragment extends Fragment {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.file_share_download:
+                        mParentFragment.startProgressBar();
                         startExplorerService(fileHash, fileName, DOWNLOAD);
                         return true;
 

@@ -260,5 +260,7 @@
     <string name="file_share_for">Расшарить для…</string>
     <string name="file_copy">Скопировать</string>
     <string name="file_local_to_cloud">Загрузить в облако</string>
+    <string name="you_contacts">Ваши контакты</string>
+    <string name="share_for_all">Расшарить всем</string>
 
 </resources>

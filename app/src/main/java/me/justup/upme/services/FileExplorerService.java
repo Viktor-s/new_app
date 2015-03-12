@@ -27,6 +27,9 @@ import static me.justup.upme.utils.LogUtils.makeLogTag;
 public class FileExplorerService extends IntentService {
     private static final String TAG = makeLogTag(FileExplorerService.class);
 
+    public static final String FILE_ACTION_DONE_BROADCAST = "me.justup.upme.broadcast.explorer.file_action_done";
+    public static final String BROADCAST_EXTRA_ACTION_TYPE = "broadcast_extra_action_type";
+
     public static final String EXPLORER_SERVICE_FILE_NAME = "explorer_service_file_name";
     public static final String EXPLORER_SERVICE_FILE_HASH = "explorer_service_file_hash";
     public static final String EXPLORER_SERVICE_FILE_PATH = "explorer_service_file_path";
@@ -80,7 +83,9 @@ public class FileExplorerService extends IntentService {
             public void onSuccess(int statusCode, Header[] headers, File file) {
                 LOGI(TAG, "downloadFileQuery(): onSuccess");
 
-                saveFile(file, fileName);
+                if (saveFile(file, fileName)) {
+                    sendExplorerBroadcast(DOWNLOAD);
+                }
             }
         });
     }
@@ -93,6 +98,8 @@ public class FileExplorerService extends IntentService {
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 String content = ApiWrapper.responseBodyToString(responseBody);
                 LOGD(TAG, "syncSendFileToCloud onSuccess(): " + content);
+
+                sendExplorerBroadcast(UPLOAD);
             }
 
             @Override
@@ -112,14 +119,24 @@ public class FileExplorerService extends IntentService {
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 String content = ApiWrapper.responseBodyToString(responseBody);
                 LOGD(TAG, "deleteFileQuery onSuccess(): " + content);
+
+                sendExplorerBroadcast(DELETE);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                 String content = ApiWrapper.responseBodyToString(responseBody);
                 LOGE(TAG, "deleteFileQuery onFailure(): " + content);
+
+                sendExplorerBroadcast(DELETE);
             }
         });
+    }
+
+    private void sendExplorerBroadcast(int actionType) {
+        Intent intent = new Intent(FILE_ACTION_DONE_BROADCAST);
+        intent.putExtra(BROADCAST_EXTRA_ACTION_TYPE, actionType);
+        sendBroadcast(intent);
     }
 
     private Boolean saveFile(final File mFile, final String mFileName) {

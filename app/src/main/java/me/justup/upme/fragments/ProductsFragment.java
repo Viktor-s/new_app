@@ -3,6 +3,7 @@ package me.justup.upme.fragments;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,12 +19,9 @@ import java.util.List;
 import me.justup.upme.ProductItemActivity;
 import me.justup.upme.R;
 import me.justup.upme.db.DBAdapter;
-import me.justup.upme.db.DBHelper;
 import me.justup.upme.entity.CategoryProductEntityMock;
 import me.justup.upme.entity.GroupProductEntity;
 import me.justup.upme.entity.ListGroupProductMock;
-import me.justup.upme.entity.ProductEntityMock;
-import me.justup.upme.utils.AppContext;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
@@ -36,17 +34,16 @@ public class ProductsFragment extends Fragment implements View.OnClickListener {
     List<GroupProductEntity> listGroup;
     ListGroupProductMock listGroupProductMock;
 
-    private DBAdapter mDBAdapter;
-    private DBHelper mDBHelper;
+    // private DBAdapter mDBAdapter;
+    //private DBHelper mDBHelper;
     private BroadcastReceiver receiver;
+    private SQLiteDatabase database;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mDBHelper = new DBHelper(AppContext.getAppContext());
-        mDBAdapter = new DBAdapter(AppContext.getAppContext());
-
+        database = DBAdapter.getInstance().openDatabase();
 
         listGroupProductMock = ListGroupProductMock.getInstance(getActivity());
         listGroup = listGroupProductMock.getListGroupProduct();
@@ -64,6 +61,11 @@ public class ProductsFragment extends Fragment implements View.OnClickListener {
 
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        DBAdapter.getInstance().closeDatabase();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -121,7 +123,6 @@ public class ProductsFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-
 
 
     }

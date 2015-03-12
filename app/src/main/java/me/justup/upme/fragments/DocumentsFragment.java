@@ -2,8 +2,10 @@ package me.justup.upme.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.LayoutInflater;
@@ -13,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.ProgressBar;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
@@ -22,8 +25,11 @@ import me.justup.upme.R;
 import me.justup.upme.dialogs.ViewImageDialog;
 import me.justup.upme.services.FileExplorerService;
 
+import static me.justup.upme.services.FileExplorerService.BROADCAST_EXTRA_ACTION_TYPE;
+import static me.justup.upme.services.FileExplorerService.DOWNLOAD;
 import static me.justup.upme.services.FileExplorerService.EXPLORER_SERVICE_ACTION_TYPE;
 import static me.justup.upme.services.FileExplorerService.EXPLORER_SERVICE_FILE_PATH;
+import static me.justup.upme.services.FileExplorerService.FILE_ACTION_DONE_BROADCAST;
 import static me.justup.upme.services.FileExplorerService.UPLOAD;
 
 
@@ -36,7 +42,27 @@ public class DocumentsFragment extends Fragment {
 
     private TableLayout mFileExplorer;
     private LayoutInflater mLayoutInflater;
+    private ProgressBar mProgressBar;
 
+    private BroadcastReceiver mFileActionDoneReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int actionType = intent.getIntExtra(BROADCAST_EXTRA_ACTION_TYPE, 0);
+            if (actionType == DOWNLOAD) {
+                getLocalFileList();
+            }
+
+            stopProgressBar();
+        }
+    };
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        getActivity().registerReceiver(mFileActionDoneReceiver, new IntentFilter(FILE_ACTION_DONE_BROADCAST));
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -44,12 +70,20 @@ public class DocumentsFragment extends Fragment {
 
         mLayoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mFileExplorer = (TableLayout) view.findViewById(R.id.files_panel);
+        mProgressBar = (ProgressBar) view.findViewById(R.id.explorer_progressBar);
 
         getChildFragmentManager().beginTransaction().add(R.id.cloud_explorer_fragment_container, new CloudExplorerFragment()).commit();
 
         getLocalFileList();
 
         return view;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        getActivity().unregisterReceiver(mFileActionDoneReceiver);
     }
 
     private void getLocalFileList() {
@@ -142,6 +176,7 @@ public class DocumentsFragment extends Fragment {
                 public boolean onMenuItemClick(MenuItem item) {
                     switch (item.getItemId()) {
                         case R.id.file_local_upload:
+                            startProgressBar();
                             startExplorerService(filePath, UPLOAD);
                             return true;
 
@@ -169,6 +204,14 @@ public class DocumentsFragment extends Fragment {
 
         Intent intent = new Intent(getActivity(), FileExplorerService.class);
         getActivity().startService(intent.putExtras(bundle));
+    }
+
+    public void startProgressBar() {
+        mProgressBar.setVisibility(View.VISIBLE);
+    }
+
+    public void stopProgressBar() {
+        mProgressBar.setVisibility(View.GONE);
     }
 
 }

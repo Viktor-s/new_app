@@ -133,6 +133,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        startHttpIntent(new GetMailContactQuery(), HttpIntentService.MAIL_CONTACT_PART);
+
         mMainFragmentContainer = (FrameLayout) findViewById(R.id.main_fragment_container);
         ImageView mCornerButton = (ImageView) findViewById(R.id.upme_corner_button);
         mCornerButton.setOnClickListener(new OnCornerButtonListener());
@@ -197,7 +199,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
             case R.id.mail_menu_item:
                 if (currentlySelectedFragment != SELECTED_FRAGMENT_MAIL) {
-                    startHttpIntent(new GetMailContactQuery(), HttpIntentService.MAIL_CONTACT_PART);
+                    //startHttpIntent(new GetMailContactQuery(), HttpIntentService.MAIL_CONTACT_PART);
                     changeButtonState(mMailButton);
                     fragment = new MailFragment();
                     currentlySelectedFragment = SELECTED_FRAGMENT_MAIL;
@@ -225,7 +227,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
             case R.id.briefcase_menu_item:
                 if (currentlySelectedFragment != SELECTED_FRAGMENT_BRIEFCASE) {
-                    startHttpIntent(new GetMailContactQuery(), HttpIntentService.MAIL_CONTACT_PART);
+                    //startHttpIntent(new GetMailContactQuery(), HttpIntentService.MAIL_CONTACT_PART);
                     changeButtonState(mBriefcaseButton);
                     fragment = new BriefcaseFragment();
                     currentlySelectedFragment = SELECTED_FRAGMENT_BRIEFCASE;

@@ -9,6 +9,8 @@ import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
 
 import me.justup.upme.R;
+import me.justup.upme.db.DBAdapter;
+import me.justup.upme.db.DBHelper;
 
 
 @ReportsCrashes(formKey = "",
@@ -32,6 +34,7 @@ public class AppContext extends Application {
     public void onCreate() {
         super.onCreate();
         AppContext.context = getApplicationContext();
+        DBAdapter.initializeInstance(new DBHelper(context));
 
         ACRA.init(this);
     }

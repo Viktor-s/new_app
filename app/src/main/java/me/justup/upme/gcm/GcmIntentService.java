@@ -45,7 +45,7 @@ public class GcmIntentService extends IntentService {
     private static final String TIME_FORMAT = "HH:mm - dd MMMM yyyy";
 
     private Handler mHandler;
-    private DBAdapter mDBAdapter;
+    //private DBAdapter mDBAdapter;
 
 
     public GcmIntentService() {
@@ -58,8 +58,7 @@ public class GcmIntentService extends IntentService {
 
         mHandler = new Handler();
 
-        mDBAdapter = new DBAdapter(this);
-        mDBAdapter.open();
+        DBAdapter.getInstance().openDatabase();
     }
 
     @Override
@@ -118,7 +117,7 @@ public class GcmIntentService extends IntentService {
     public void onDestroy() {
         super.onDestroy();
 
-        mDBAdapter.close();
+        DBAdapter.getInstance().closeDatabase();
     }
 
     private void sendNotification(int userId, String userName, int connectionType, int room, String link, String text) {
@@ -155,7 +154,7 @@ public class GcmIntentService extends IntentService {
         SimpleDateFormat mTimeFormat = new SimpleDateFormat(TIME_FORMAT, AppLocale.getAppLocale());
         String pushTime = mTimeFormat.format(date);
 
-        mDBAdapter.savePush(connectionType, userId, userName, room, pushTime, link, text);
+        DBAdapter.getInstance().savePush(connectionType, userId, userName, room, pushTime, link, text);
     }
 
     private void makeToast(final String message) {
