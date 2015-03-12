@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
@@ -30,9 +31,9 @@ import static me.justup.upme.db.DBHelper.MAIL_CONTACT_TABLE_NAME;
 
 
 public class MailFragment extends Fragment {
-    private DBAdapter mDBAdapter;
+    // private DBAdapter mDBAdapter;
     private int lastChosenPosition = -1;
-    private DBHelper mDBHelper;
+    //private DBHelper mDBHelper;
     private MailContactsAdapter mMailContactsAdapter;
     private String selectQuery;
     private BroadcastReceiver receiver;
@@ -41,25 +42,29 @@ public class MailFragment extends Fragment {
     public static final int WEBRTC = 2;
     public static final int FILE = 3;
     public static final int BREAK_CALL = 4;
-
+    private SQLiteDatabase database;
+    private Cursor cursor;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mDBHelper = new DBHelper(AppContext.getAppContext());
-        mDBAdapter = new DBAdapter(AppContext.getAppContext());
-        mDBAdapter.open();
+//        mDBHelper = new DBHelper(AppContext.getAppContext());
+//        mDBAdapter = new DBAdapter(AppContext.getAppContext());
+//        mDBAdapter.open();
+        database = DBAdapter.getInstance().openDatabase();
         selectQuery = "SELECT * FROM " + MAIL_CONTACT_TABLE_NAME;
-        Cursor cursor = mDBHelper.getWritableDatabase().rawQuery(selectQuery, null);
+        cursor = database.rawQuery(selectQuery, null);
         mMailContactsAdapter = new MailContactsAdapter(this, AppContext.getAppContext(), cursor, 0);
+
     }
 
     @Override
     public void onPause() {
         super.onPause();
-
+        cursor.close();
+        DBAdapter.getInstance().closeDatabase();
         LocalBroadcastManager.getInstance(MailFragment.this.getActivity()).unregisterReceiver(receiver);
-        mDBAdapter.close();
+        //mDBAdapter.close();
     }
 
     @Override
@@ -68,9 +73,10 @@ public class MailFragment extends Fragment {
         receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                Cursor cursor = mDBHelper.getWritableDatabase().rawQuery(selectQuery, null);
+                cursor = database.rawQuery(selectQuery, null);
                 mMailContactsAdapter.changeCursor(cursor);
                 mMailContactsAdapter.notifyDataSetChanged();
+
             }
         };
         LocalBroadcastManager.getInstance(MailFragment.this.getActivity())

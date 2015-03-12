@@ -10,10 +10,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +30,6 @@ import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
@@ -41,19 +40,13 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 import me.justup.upme.MainActivity;
 import me.justup.upme.R;
 import me.justup.upme.db.DBAdapter;
-import me.justup.upme.db.DBHelper;
-import me.justup.upme.entity.ArticleShortCommentEntity;
 import me.justup.upme.entity.CalendarAddEventQuery;
-import me.justup.upme.entity.EventEntity;
-import me.justup.upme.http.ApiWrapper;
-import me.justup.upme.http.HttpIntentService;
 import me.justup.upme.http.HttpIntentService;
 import me.justup.upme.utils.AppContext;
 import me.justup.upme.weekview.WeekView;
@@ -68,7 +61,6 @@ import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_START_DATETIME;
 import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_TABLE_NAME;
 import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_TYPE;
 import static me.justup.upme.utils.LogUtils.LOGD;
-import static me.justup.upme.utils.LogUtils.LOGE;
 import static me.justup.upme.utils.LogUtils.LOGI;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
@@ -103,10 +95,12 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
     private int currentWeek;
     public static LocalDateTime firstDayCurrentWeek;
 
-    private DBAdapter mDBAdapter;
-    private DBHelper mDBHelper;
+    // private DBAdapter mDBAdapter;
+    // private DBHelper mDBHelper;
     private BroadcastReceiver receiver;
     private Spinner mCalendartypesSpinner;
+    private SQLiteDatabase database;
+
 
     private static String[] months = new String[]{"ЯНВАРЬ", "ФЕВРАЛЬ", "МАРТ", "АПРЕЛЬ", "МАЙ", "ИЮНЬ", "ИЮЛЬ", "АВГУСТ", "СЕНТЯБРЬ", "ОКТЯБРЬ", "НОЯБРЬ", "ДЕКАБРЬ"};
 
@@ -114,9 +108,10 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mDBHelper = new DBHelper(AppContext.getAppContext());
-        mDBAdapter = new DBAdapter(AppContext.getAppContext());
-        mDBAdapter.open();
+//        mDBHelper = new DBHelper(AppContext.getAppContext());
+//        mDBAdapter = new DBAdapter(AppContext.getAppContext());
+//        mDBAdapter.open();
+        database = DBAdapter.getInstance().openDatabase();
 
         firstDayCurrentWeek = new LocalDateTime().withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0).withDayOfWeek(DateTimeConstants.MONDAY);
         currentWeek = firstDayCurrentWeek.getWeekOfWeekyear();
@@ -135,6 +130,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
         };
         LocalBroadcastManager.getInstance(CalendarFragment.this.getActivity()).registerReceiver(receiver, new IntentFilter(DBAdapter.CALENDAR_SQL_BROADCAST_INTENT));
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -226,7 +222,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
 
         events.clear();
         String selectQueryEvents = "SELECT * FROM " + EVENT_CALENDAR_TABLE_NAME + " WHERE start_datetime <= " + endTime + " AND end_datetime >=" + startTime;
-        Cursor cursorEvents = mDBHelper.getWritableDatabase().rawQuery(selectQueryEvents, null);
+        Cursor cursorEvents = database.rawQuery(selectQueryEvents, null);
         for (cursorEvents.moveToFirst(); !cursorEvents.isAfterLast(); cursorEvents.moveToNext()) {
             long id = cursorEvents.getInt(cursorEvents.getColumnIndex(EVENT_CALENDAR_SERVER_ID));
             String name = cursorEvents.getString(cursorEvents.getColumnIndex(EVENT_CALENDAR_NAME));
@@ -513,9 +509,10 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
     @Override
     public void onPause() {
         super.onPause();
+        DBAdapter.getInstance().closeDatabase();
         LocalBroadcastManager.getInstance(CalendarFragment.this.getActivity()).unregisterReceiver(receiver);
         LOGI(TAG, "unregisterRecNewsFeed");
-        mDBAdapter.close();
+        //mDBAdapter.close();
     }
 }
 

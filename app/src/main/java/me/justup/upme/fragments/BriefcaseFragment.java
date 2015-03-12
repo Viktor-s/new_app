@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
@@ -30,7 +31,6 @@ import java.util.List;
 import me.justup.upme.MainActivity;
 import me.justup.upme.R;
 import me.justup.upme.db.DBAdapter;
-import me.justup.upme.db.DBHelper;
 import me.justup.upme.entity.GetAccountPanelInfoQuery;
 import me.justup.upme.entity.PersonBriefcaseEntity;
 import me.justup.upme.entity.ReferalAddQuery;
@@ -55,21 +55,23 @@ public class BriefcaseFragment extends Fragment {
     private LinearLayout containerLayout;
     private RelativeLayout photoLayout;
     private Button mCloseUserFragmentButton;
-    private DBAdapter mDBAdapter;
-    private DBHelper mDBHelper;
+    //  private DBAdapter mDBAdapter;
+    // private DBHelper mDBHelper;
     private BroadcastReceiver receiver;
     private String selectQuery;
     private TextView mUserContactsCountTextView;
     private FrameLayout mUserContainer;
     private Animation mFragmentSliderFadeIn;
     private Animation mFragmentSliderOut;
+    private SQLiteDatabase database;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mDBHelper = new DBHelper(AppContext.getAppContext());
-        mDBAdapter = new DBAdapter(AppContext.getAppContext());
-        mDBAdapter.open();
+//        mDBHelper = new DBHelper(AppContext.getAppContext());
+//        mDBAdapter = new DBAdapter(AppContext.getAppContext());
+//        mDBAdapter.open();
+        database = DBAdapter.getInstance().openDatabase();
         selectQuery = "SELECT * FROM " + MAIL_CONTACT_TABLE_NAME;
     }
 
@@ -85,8 +87,9 @@ public class BriefcaseFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+        DBAdapter.getInstance().closeDatabase();
         LocalBroadcastManager.getInstance(BriefcaseFragment.this.getActivity()).unregisterReceiver(receiver);
-        mDBAdapter.close();
+        //  mDBAdapter.close();
     }
 
     @Override
@@ -189,12 +192,11 @@ public class BriefcaseFragment extends Fragment {
 
 
     private void updatePersonsList() {
-        Cursor cursor = mDBHelper.getWritableDatabase().rawQuery(selectQuery, null);
+        Cursor cursor = database.rawQuery(selectQuery, null);
         listPerson = fillPersonsFromCursor(cursor);
         mUserContactsCountTextView.setText(listPerson.size() - 1 + " " + "people in your network");
         LOGI(TAG, listPerson.toString());
-        if (cursor != null)
-            cursor.close();
+        cursor.close();
     }
 
     private ImageView createDirection(int resId) {
