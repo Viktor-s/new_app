@@ -22,7 +22,7 @@ import me.justup.upme.adapter.MailContactsAdapter;
 import me.justup.upme.db.DBAdapter;
 import me.justup.upme.db.DBHelper;
 import me.justup.upme.entity.Push;
-import me.justup.upme.entity.SendNotificationQuery;
+import me.justup.upme.entity.StartChatQuery;
 import me.justup.upme.services.PushIntentService;
 import me.justup.upme.utils.AppContext;
 import me.justup.upme.utils.AppPreferences;
@@ -100,7 +100,7 @@ public class MailFragment extends Fragment {
             ((MainActivity) getActivity()).setPush(null);
 
             if (push.getType() == JABBER) {
-                String friendName = push.getUserName();
+                String friendName = push.getJabberId();
                 String yourName = appPreferences.getUserName();
 
                 getChildFragmentManager().beginTransaction().replace(R.id.mail_messages_container_frameLayout, MailMessagesFragment.newInstance(yourName, friendName, push.getUserId())).commit();
@@ -121,10 +121,7 @@ public class MailFragment extends Fragment {
                     String yourName = new AppPreferences(AppContext.getAppContext()).getUserName();
                     int userId = mMailContactsAdapter.getCursor().getInt(mMailContactsAdapter.getCursor().getColumnIndex(DBHelper.MAIL_CONTACT_SERVER_ID));
 
-                    int ownerId = appPreferences.getUserId();
-                    String ownerName = appPreferences.getUserName();
-
-                    startNotificationIntent(userId, ownerId, ownerName, JABBER);
+                    startNotificationIntent(userId);
 
                     final FragmentTransaction ft = getChildFragmentManager().beginTransaction();
                     ft.replace(R.id.mail_messages_container_frameLayout, MailMessagesFragment.newInstance(yourName, friendName, userId));
@@ -136,12 +133,9 @@ public class MailFragment extends Fragment {
         return view;
     }
 
-    public void startNotificationIntent(int userId, int ownerId, String ownerName, int connectionType) {
-        SendNotificationQuery push = new SendNotificationQuery();
-        push.params.user_id = userId;
-        push.params.data.owner_id = ownerId;
-        push.params.data.owner_name = ownerName;
-        push.params.data.connection_type = connectionType;
+    public void startNotificationIntent(int userId) {
+        StartChatQuery push = new StartChatQuery();
+        push.params.setUserIds(userId);
 
         Bundle bundle = new Bundle();
         bundle.putSerializable(PushIntentService.PUSH_INTENT_QUERY_EXTRA, push);

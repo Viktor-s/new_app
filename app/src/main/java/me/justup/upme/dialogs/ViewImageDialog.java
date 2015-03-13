@@ -61,7 +61,6 @@ public class ViewImageDialog extends DialogFragment {
         builder.setView(dialogView).setTitle(fileName).setPositiveButton(R.string.button_close, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
-                image.recycle();
                 image = null;
                 dialog.dismiss();
             }

@@ -13,6 +13,7 @@ public class AppPreferences {
     private static final String TAG_PIN_CODE = "pin_code";
     private static final String TAG_USER_NAME = "user_name";
     private static final String TAG_USER_ID = "user_id";
+    private static final String TAG_PHONE = "user_phone";
 
 
     public AppPreferences(final Context context) {
@@ -60,11 +61,22 @@ public class AppPreferences {
         return mSharedPreferences.getInt(TAG_USER_ID, 0);
     }
 
-
+    /*
     public void clearPreferences() {
         mEditor = mSharedPreferences.edit();
         mEditor.clear();
         mEditor.apply();
+    }
+    */
+
+    public void setPhoneNumber(String phoneNumber) {
+        mEditor = mSharedPreferences.edit();
+        mEditor.putString(TAG_PHONE, phoneNumber);
+        mEditor.apply();
+    }
+
+    public String getPhoneNumber() {
+        return mSharedPreferences.getString(TAG_PHONE, null);
     }
 
 }

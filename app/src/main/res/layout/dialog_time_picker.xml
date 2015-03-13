@@ -1,6 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="@dimen/base20dp720sw"
     android:background="@color/form_bg">
 
     <TextView
@@ -87,11 +88,11 @@
         android:layout_below="@+id/linearLayout"
         android:layout_centerHorizontal="true"
         android:background="@drawable/button_pink_bg"
-        android:text="Set time"
+        android:text="Установить время"
         android:textColor="@android:color/white"
         android:textSize="@dimen/base17sp720sw"
         android:layout_marginLeft="@dimen/base100dp720sw"
         android:layout_marginRight="@dimen/base100dp720sw"
-        android:layout_marginBottom="@dimen/base6dp720sw" />
+        android:layout_marginBottom="@dimen/base20dp720sw" />
 
 </RelativeLayout>

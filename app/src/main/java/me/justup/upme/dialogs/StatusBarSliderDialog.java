@@ -7,7 +7,6 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,12 +41,11 @@ public class StatusBarSliderDialog extends DialogFragment {
     private static final String LEFT_BRACERS = "[ ";
     private static final String RIGHT_BRACERS = " ]";
 
-    //private DBAdapter mDBAdapter;
     private LinearLayout mPushContainer;
     private StringBuilder mStringBuilder = new StringBuilder();
     private OnLoadMailFragment mOnLoadMailFragment;
     private OnDownloadCloudFile mOnDownloadCloudFile;
-    private SQLiteDatabase database;
+
 
     public static StatusBarSliderDialog newInstance() {
         return new StatusBarSliderDialog();
@@ -74,10 +72,7 @@ public class StatusBarSliderDialog extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        mDBAdapter = new DBAdapter(getActivity());
-//        mDBAdapter.open();
-
-        database = DBAdapter.getInstance().openDatabase();
+        DBAdapter.getInstance().openDatabase();
 
         Intent i = new Intent(StatusBarFragment.BROADCAST_ACTION_PUSH);
         i.putExtra(StatusBarFragment.BROADCAST_EXTRA_IS_NEW_MESSAGE, false);
@@ -149,7 +144,7 @@ public class StatusBarSliderDialog extends DialogFragment {
                 break;
 
             case MailFragment.FILE:
-                mStringBuilder.append(getString(R.string.submit_file)).append(LEFT_BRACERS).append(push.getText()).append(RIGHT_BRACERS);
+                mStringBuilder.append(getString(R.string.submit_file)).append(LEFT_BRACERS).append(push.getFileName()).append(RIGHT_BRACERS);
                 break;
 
             default:
@@ -166,7 +161,7 @@ public class StatusBarSliderDialog extends DialogFragment {
                     DBAdapter.getInstance().deletePush(push.getId());
                     mOnLoadMailFragment.onLoadMailFragment(push);
                 } else {
-                    mOnDownloadCloudFile.onDownloadCloudFile(push.getLink(), push.getText());
+                    mOnDownloadCloudFile.onDownloadCloudFile(push.getLink(), push.getFileName());
                 }
 
                 dismiss();

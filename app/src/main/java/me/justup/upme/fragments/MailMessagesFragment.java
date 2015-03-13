@@ -67,9 +67,7 @@ import me.justup.upme.R;
 import me.justup.upme.dialogs.WarningDialog;
 import me.justup.upme.entity.FileAddShareWithQuery;
 import me.justup.upme.entity.SendFileToCloudResponse;
-import me.justup.upme.entity.SendNotificationQuery;
 import me.justup.upme.http.ApiWrapper;
-import me.justup.upme.services.PushIntentService;
 import me.justup.upme.utils.AnimateButtonClose;
 import me.justup.upme.utils.AppContext;
 import me.justup.upme.utils.AppLocale;
@@ -444,6 +442,7 @@ public class MailMessagesFragment extends Fragment {
         });
     }
 
+    /*
     private void startNotificationIntent(int userId, String ownerName, int connectionType, String link, String fileName) {
         SendNotificationQuery push = new SendNotificationQuery();
         push.params.user_id = userId;
@@ -458,6 +457,7 @@ public class MailMessagesFragment extends Fragment {
         Intent intent = new Intent(getActivity(), PushIntentService.class);
         getActivity().startService(intent.putExtras(bundle));
     }
+    */
 
     private void addFileShareWith(final String fileHash, final String fileName) {
         FileAddShareWithQuery query = new FileAddShareWithQuery();
@@ -470,7 +470,7 @@ public class MailMessagesFragment extends Fragment {
                 String content = ApiWrapper.responseBodyToString(responseBody);
                 LOGD(TAG, "addFileShareWith onSuccess(): " + content);
 
-                startNotificationIntent(friendId, mYourName, MailFragment.FILE, fileHash, fileName);
+                // startNotificationIntent(friendId, mYourName, MailFragment.FILE, fileHash, fileName);
             }
 
             @Override
