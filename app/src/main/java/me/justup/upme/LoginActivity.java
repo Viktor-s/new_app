@@ -75,6 +75,9 @@ public class LoginActivity extends BaseActivity {
         Button mAppSettings = (Button) findViewById(R.id.login_settings_button);
         mAppSettings.setOnClickListener(new OnLoadSettings());
 
+        loadSavedPhoneNumber();
+
+
         // Delete! Only for debug!
         ImageView mLoginDebug = (ImageView) findViewById(R.id.upme_corner_button);
         mLoginDebug.setOnClickListener(new View.OnClickListener() {
@@ -230,6 +233,8 @@ public class LoginActivity extends BaseActivity {
 
                     mNumberString.setLength(0);
                     isPhoneVerification = false;
+
+                    mAppPreferences.setPhoneNumber(mPhoneNumber);
                 } else {
                     mAppPreferences.setToken(response.result.token);
 
@@ -260,6 +265,17 @@ public class LoginActivity extends BaseActivity {
         public void onClick(View v) {
             startActivity(new Intent(LoginActivity.this, SettingsActivity.class));
         }
+    }
+
+    private void loadSavedPhoneNumber() {
+        String number = mAppPreferences.getPhoneNumber();
+        if (number == null) {
+            return;
+        }
+
+        mNumberString.setLength(0);
+        mNumberString.append(number);
+        updateNumberField();
     }
 
 }

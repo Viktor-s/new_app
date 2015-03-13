@@ -55,10 +55,13 @@ public class ApiWrapper {
     public static final String ARTICLE_ADD_COMMENT = "ArticleComments.add";
 
     public static final String ACCOUNT_GET_PEOPLE_NETWORK = "Account.getPeopleNetwork";
-    public static final String ACCOUNT_SET_GOOGLE_PUSH_ID = "Account.setGooglePushId";
-    public static final String ACCOUNT_SEND_NOTIFICATION = "Account.sendNotification";
     public static final String ACCOUNT_ADD_REFERAL = "Account.addReferal";
     public static final String ACCOUNT_GET_USER_PANEL_INFO = "Account.getUserPanelInfo";
+
+    public static final String PUSH_SET_GOOGLE_PUSH_ID = "Push.setGooglePushId";
+    public static final String JABBER_START_CHAT = "Jabber.startChat";
+    public static final String WEBRTC_START_CALL = "WebRtc.startCall";
+    public static final String WEBRTC_STOP_CALL = "WebRtc.stopCall";
 
     public static final String CALENDAR_GET_EVENTS = "Calendar.getEvents";
     public static final String CALENDAR_ADD_EVENT = "Calendar.addEvent";
@@ -153,8 +156,10 @@ public class ApiWrapper {
     }
 
     public static void syncDownloadFileFromCloud(String fileHash, FileAsyncHttpResponseHandler fileResponseHandler) {
-        syncClient.addHeader(AUTHORIZATION_HEADER, getToken());
-        syncClient.get(CLOUD_STORAGE_URL + CALL_CLOUD_FILE + fileHash, fileResponseHandler);
+        // downloads bug
+        AsyncHttpClient localClient = new SyncHttpClient();
+        localClient.addHeader(AUTHORIZATION_HEADER, getToken());
+        localClient.get(CLOUD_STORAGE_URL + CALL_CLOUD_FILE + fileHash, fileResponseHandler);
     }
 
     public static void syncSendFileToCloud(final File file, AsyncHttpResponseHandler responseHandler) {

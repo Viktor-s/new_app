@@ -14,12 +14,9 @@ import android.widget.TextView;
 
 import me.justup.upme.R;
 import me.justup.upme.entity.Push;
-import me.justup.upme.entity.SendNotificationQuery;
-import me.justup.upme.fragments.MailFragment;
+import me.justup.upme.entity.WebRtcStopCallQuery;
 import me.justup.upme.interfaces.OnLoadMailFragment;
 import me.justup.upme.services.PushIntentService;
-import me.justup.upme.utils.AppContext;
-import me.justup.upme.utils.AppPreferences;
 
 
 public class CallDialog extends DialogFragment {
@@ -83,12 +80,8 @@ public class CallDialog extends DialogFragment {
     }
 
     public void breakCall(int userId) {
-        String ownerName = new AppPreferences(AppContext.getAppContext()).getUserName();
-
-        SendNotificationQuery push = new SendNotificationQuery();
-        push.params.user_id = userId;
-        push.params.data.owner_name = ownerName;
-        push.params.data.connection_type = MailFragment.BREAK_CALL;
+        WebRtcStopCallQuery push = new WebRtcStopCallQuery();
+        push.params.setUserIds(userId);
 
         Bundle bundle = new Bundle();
         bundle.putSerializable(PushIntentService.PUSH_INTENT_QUERY_EXTRA, push);

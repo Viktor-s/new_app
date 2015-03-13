@@ -8,6 +8,10 @@ import android.widget.Toast;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -35,17 +39,18 @@ import static me.justup.upme.utils.LogUtils.makeLogTag;
 public class GcmIntentService extends IntentService {
     private static final String TAG = makeLogTag(GcmIntentService.class);
 
-    private static final String USER_ID = "owner_id";
-    private static final String USER_NAME = "owner_name";
-    private static final String CONNECTION_TYPE = "connection_type";
-    private static final String ROOM = "room";
+    private static final String CONNECTIONS = "connections";
+    private static final String USER_ID = "user_id";
+    private static final String USER_NAME = "name";
+    private static final String CONNECTION_TYPE = "type";
+    private static final String ROOM_ID = "room_id";
     private static final String LINK = "link";
-    private static final String TEXT = "text";
+    private static final String JABBER_ID = "jabber_id";
+    private static final String FILE_NAME = "file_name";
 
     private static final String TIME_FORMAT = "HH:mm - dd MMMM yyyy";
 
     private Handler mHandler;
-    //private DBAdapter mDBAdapter;
 
 
     public GcmIntentService() {
@@ -82,25 +87,11 @@ public class GcmIntentService extends IntentService {
                 case GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE:
                     LOGI(TAG, "PUSH received: " + extras.toString());
 
-                    int userId = 0;
-                    int connectionType = 0;
-                    int room = 0;
-
-                    try {
-                        userId = Integer.parseInt((String) extras.get(USER_ID));
-                        connectionType = Integer.parseInt((String) extras.get(CONNECTION_TYPE));
-                        room = Integer.parseInt((String) extras.get(ROOM));
-                    } catch (Exception e) {
-                        LOGE(TAG, "Parse push extras", e);
-                    }
-
-                    String userName = (String) extras.get(USER_NAME);
-                    String link = (String) extras.get(LINK);
-                    String text = (String) extras.get(TEXT);
+                    final Push push = createPushObject((String) extras.get(CONNECTIONS));
 
                     // Post notification of received message.
-                    if (connectionType != 0 && userName != null) {
-                        sendNotification(userId, userName, connectionType, room, link, text);
+                    if (push != null && push.getType() != 0 && push.getUserName() != null) {
+                        sendNotification(push);
                     }
                     break;
 
@@ -120,13 +111,12 @@ public class GcmIntentService extends IntentService {
         DBAdapter.getInstance().closeDatabase();
     }
 
-    private void sendNotification(int userId, String userName, int connectionType, int room, String link, String text) {
-        LOGD(TAG, "sendNotification: userId:" + userId + " userName:" + userName + " connectionType:"
-                + connectionType + " room:" + room + " link:" + link + " text:" + text);
+    private void sendNotification(final Push push) {
+        LOGD(TAG, "sendNotification(): " + push.toString());
 
-        if (connectionType == MailFragment.BREAK_CALL) {
+        if (push.getType() == MailFragment.BREAK_CALL) {
             Intent i = new Intent(MainActivity.BROADCAST_ACTION_BREAK_CALL);
-            i.putExtra(MainActivity.BROADCAST_EXTRA_BREAK_CALL, userName);
+            i.putExtra(MainActivity.BROADCAST_EXTRA_BREAK_CALL, push.getUserName());
             sendBroadcast(i);
 
             return;
@@ -138,13 +128,7 @@ public class GcmIntentService extends IntentService {
         i.putExtra(StatusBarFragment.BROADCAST_EXTRA_IS_NEW_MESSAGE, true); // for clear image - send false
         sendBroadcast(i);
 
-        if (connectionType == MailFragment.WEBRTC) {
-            Push push = new Push();
-            push.setUserId(userId);
-            push.setUserName(userName);
-            push.setType(connectionType);
-            push.setRoom(room);
-
+        if (push.getType() == MailFragment.WEBRTC) {
             Intent webrtcIntent = new Intent(MainActivity.BROADCAST_ACTION_CALL);
             webrtcIntent.putExtra(MainActivity.BROADCAST_EXTRA_PUSH, push);
             sendBroadcast(webrtcIntent);
@@ -154,7 +138,7 @@ public class GcmIntentService extends IntentService {
         SimpleDateFormat mTimeFormat = new SimpleDateFormat(TIME_FORMAT, AppLocale.getAppLocale());
         String pushTime = mTimeFormat.format(date);
 
-        DBAdapter.getInstance().savePush(connectionType, userId, userName, room, pushTime, link, text);
+        DBAdapter.getInstance().savePush(push, pushTime);
     }
 
     private void makeToast(final String message) {
@@ -164,6 +148,36 @@ public class GcmIntentService extends IntentService {
                 Toast.makeText(GcmIntentService.this, message, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private Push createPushObject(String jsonString) {
+        Push push = new Push();
+
+        try {
+            JSONArray jsonArray = new JSONArray(jsonString);
+            JSONObject jsonObject = jsonArray.getJSONObject(0);
+
+            if (jsonObject.has(USER_ID))
+                push.setUserId(jsonObject.getInt(USER_ID));
+            if (jsonObject.has(USER_NAME))
+                push.setUserName(jsonObject.getString(USER_NAME));
+            if (jsonObject.has(CONNECTION_TYPE))
+                push.setType(jsonObject.getInt(CONNECTION_TYPE));
+            if (jsonObject.has(ROOM_ID))
+                push.setRoom(jsonObject.getString(ROOM_ID));
+            if (jsonObject.has(LINK))
+                push.setLink(jsonObject.getString(LINK));
+            if (jsonObject.has(JABBER_ID))
+                push.setJabberId(jsonObject.getString(JABBER_ID));
+            if (jsonObject.has(FILE_NAME))
+                push.setFileName(jsonObject.getString(FILE_NAME));
+
+        } catch (JSONException e) {
+            LOGE(TAG, "createPushObject()", e);
+            return null;
+        }
+
+        return push;
     }
 
 }
