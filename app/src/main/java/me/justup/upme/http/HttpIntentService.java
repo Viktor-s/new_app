@@ -18,6 +18,7 @@ import me.justup.upme.entity.CalendarGetEventsResponse;
 import me.justup.upme.entity.CommentsArticleFullResponse;
 import me.justup.upme.entity.GetMailContactQuery;
 import me.justup.upme.entity.GetMailContactResponse;
+import me.justup.upme.entity.ProductsGetAllCategoriesResponse;
 import me.justup.upme.fragments.CalendarFragment;
 import me.justup.upme.fragments.NewsItemFragment;
 import me.justup.upme.utils.AppContext;
@@ -46,6 +47,7 @@ public class HttpIntentService extends IntentService {
     public static final int ADD_REFERAL = 8;
     public static final int CALENDAR_PART = 9;
     public static final int CALENDAR_ADD_EVENT = 10;
+    public static final int PRODUCTS_GET_ALL_CATEGORIES = 11;
 
 
     //private DBAdapter mDBAdapter;
@@ -62,7 +64,7 @@ public class HttpIntentService extends IntentService {
 
 //        mDBAdapter = new DBAdapter(AppContext.getAppContext());
 //        mDBAdapter.open();
-         DBAdapter.getInstance().openDatabase();
+        DBAdapter.getInstance().openDatabase();
     }
 
     @Override
@@ -124,6 +126,11 @@ public class HttpIntentService extends IntentService {
 
                 case CALENDAR_ADD_EVENT:
                     startHttpIntent(MainActivity.getEventCalendarQuery(CalendarFragment.firstDayCurrentWeek), HttpIntentService.CALENDAR_PART);
+                    break;
+
+                case PRODUCTS_GET_ALL_CATEGORIES:
+                    // startHttpIntent(MainActivity.getEventCalendarQuery(CalendarFragment.firstDayCurrentWeek), HttpIntentService.CALENDAR_PART);
+                    fillProductsDB(content);
                     break;
 
                 default:
@@ -195,10 +202,6 @@ public class HttpIntentService extends IntentService {
         if (response != null && response.result != null) {
             DBAdapter.getInstance().saveArticleFullComments(response, article_id);
         }
-    }
-
-    private void fillProductsDB(String content) {
-        LOGI(TAG, "fillProductsDB");
     }
 
     private void fillBriefcaseDB(String content) {
@@ -346,4 +349,21 @@ public class HttpIntentService extends IntentService {
             DBAdapter.getInstance().saveEventsCalendar(response);
         }
     }
+
+
+    private void fillProductsDB(String content) {
+        LOGD("TAG_", content);
+        ProductsGetAllCategoriesResponse response = null;
+        try {
+            response = ApiWrapper.gson.fromJson(content, ProductsGetAllCategoriesResponse.class);
+        } catch (JsonSyntaxException e) {
+            LOGE(TAG, "gson.fromJson:\n" + content);
+        }
+
+        if (response != null && response.result != null) {
+            DBAdapter.getInstance().saveAllProducts(response);
+        }
+    }
+
+
 }

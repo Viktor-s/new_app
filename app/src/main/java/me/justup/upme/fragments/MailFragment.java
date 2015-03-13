@@ -55,21 +55,27 @@ public class MailFragment extends Fragment {
         selectQuery = "SELECT * FROM " + MAIL_CONTACT_TABLE_NAME;
         cursor = database.rawQuery(selectQuery, null);
         mMailContactsAdapter = new MailContactsAdapter(this, AppContext.getAppContext(), cursor, 0);
-
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        cursor.close();
-        DBAdapter.getInstance().closeDatabase();
         LocalBroadcastManager.getInstance(MailFragment.this.getActivity()).unregisterReceiver(receiver);
         //mDBAdapter.close();
     }
 
     @Override
+    public void onDestroy() {
+        cursor.close();
+        DBAdapter.getInstance().closeDatabase();
+        super.onDestroy();
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
+//        cursor = database.rawQuery(selectQuery, null);
+        //  mMailContactsAdapter = new MailContactsAdapter(this, AppContext.getAppContext(), cursor, 0);
         receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {

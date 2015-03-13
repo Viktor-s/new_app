@@ -64,6 +64,34 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String EVENT_CALENDAR_END_DATETIME = "end_datetime";
     public static final String EVENT_CALENDAR_LOCATION = "location";
 
+    public static final String PRODUCTS_CATEGORIES_TABLE_NAME = "products_categories_table";
+    public static final String PRODUCTS_CATEGORIES_ID = BaseColumns._ID;
+    public static final String PRODUCTS_CATEGORIES_SERVER_ID = "server_id";
+    public static final String PRODUCTS_CATEGORIES_NAME = "name";
+
+    public static final String PRODUCTS_BRAND_CATEGORIES_TABLE_NAME = "products_brand_table";
+    public static final String PRODUCTS_BRAND_CATEGORIES_ID = BaseColumns._ID;
+    public static final String PRODUCTS_BRAND_CATEGORIES_SERVER_ID = "server_id";
+    public static final String PRODUCTS_BRAND_CATEGORIES_NAME = "name";
+    public static final String PRODUCTS_BRAND_CATEGORIES_IMAGE = "image";
+    public static final String PRODUCTS_BRAND_CATEGORIES_SHORT_DESCRIPTION = "short_description";
+    public static final String PRODUCTS_BRAND_CATEGORIES_FULL_DESCRIPTION = "full_description";
+    public static final String PRODUCTS_BRAND_CATEGORIES_CATEGORY_ID = "category_id";
+    public static final String PRODUCTS_BRAND_CATEGORIES_BRAND_ID = "brand_id";
+    public static final String PRODUCTS_BRAND_CATEGORIES_BRAND_ITEM_ID = "brand_item_id";
+    public static final String PRODUCTS_BRAND_CATEGORIES_BRAND_ITEM_NAME = "brand_item_name";
+    public static final String PRODUCTS_BRAND_CATEGORIES_BRAND_ITEM_DESCRIPTION = "brand_item_description";
+
+
+    public static final String PRODUCTS_PRODUCT_TABLE_NAME = "products_product_table";
+    public static final String PRODUCTS_PRODUCT_ID = BaseColumns._ID;
+    public static final String PRODUCTS_PRODUCT_SERVER_ID = "server_id";
+    public static final String PRODUCTS_PRODUCT_NAME = "name";
+    public static final String PRODUCTS_PRODUCT_SHORT_DESCRIPTION = "short_description";
+    public static final String PRODUCTS_PRODUCT_DESCRIPTION = "description";
+    public static final String PRODUCTS_PRODUCT_IMAGE = "image";
+
+
     protected static final String STATUS_BAR_PUSH_TABLE_NAME = "status_bar_push_table";
     protected static final String STATUS_BAR_PUSH_ID = BaseColumns._ID;
     protected static final String STATUS_BAR_PUSH_TYPE = "type";
@@ -120,14 +148,47 @@ public class DBHelper extends SQLiteOpenHelper {
 
     protected static final String CREATE_TABLE_MAIL_CONTACT = "CREATE TABLE "
             + MAIL_CONTACT_TABLE_NAME + "("
-            + MAIL_CONTACT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + MAIL_CONTACT_SERVER_ID + " INTEGER, "
+            + MAIL_CONTACT_ID + " INTEGER, "
+            + MAIL_CONTACT_SERVER_ID + " INTEGER PRIMARY KEY, "
             + MAIL_CONTACT_PARENT_ID + " INTEGER, "
             + MAIL_CONTACT_NAME + " TEXT, "
             + MAIL_CONTACT_LOGIN + " TEXT, "
             + MAIL_CONTACT_DATE_ADD + " INTEGER, "
             + MAIL_CONTACT_PHONE + " TEXT, "
             + MAIL_CONTACT_IMG + " TEXT" + ")";
+
+
+    protected static final String CREATE_TABLE_PRODUCTS_CATEGORIES = "CREATE TABLE "
+            + PRODUCTS_CATEGORIES_TABLE_NAME + "("
+            + PRODUCTS_CATEGORIES_ID + " INTEGER, "
+            + PRODUCTS_CATEGORIES_SERVER_ID + " INTEGER PRIMARY KEY, "
+            + PRODUCTS_CATEGORIES_NAME + " TEXT" + ")";
+
+
+    protected static final String CREATE_TABLE_PRODUCTS_BRAND_CATEGORIES = "CREATE TABLE "
+            + PRODUCTS_BRAND_CATEGORIES_TABLE_NAME + "("
+            + PRODUCTS_BRAND_CATEGORIES_ID + " INTEGER, "
+            + PRODUCTS_BRAND_CATEGORIES_SERVER_ID + " INTEGER PRIMARY KEY, "
+            + PRODUCTS_BRAND_CATEGORIES_NAME + " TEXT, "
+            + PRODUCTS_BRAND_CATEGORIES_IMAGE + " TEXT, "
+            + PRODUCTS_BRAND_CATEGORIES_SHORT_DESCRIPTION + " TEXT, "
+            + PRODUCTS_BRAND_CATEGORIES_FULL_DESCRIPTION + " TEXT, "
+            + PRODUCTS_BRAND_CATEGORIES_CATEGORY_ID + " INTEGER, "
+            + PRODUCTS_BRAND_CATEGORIES_BRAND_ID + " INTEGER, "
+            + PRODUCTS_BRAND_CATEGORIES_BRAND_ITEM_ID + " INTEGER, "
+            + PRODUCTS_BRAND_CATEGORIES_BRAND_ITEM_NAME + " TEXT, "
+            + PRODUCTS_BRAND_CATEGORIES_BRAND_ITEM_DESCRIPTION + " TEXT" + ")";
+
+
+    protected static final String CREATE_TABLE_PRODUCTS_PRODUCT = "CREATE TABLE "
+            + PRODUCTS_PRODUCT_TABLE_NAME + "("
+            + PRODUCTS_PRODUCT_ID + " INTEGER, "
+            + PRODUCTS_PRODUCT_SERVER_ID + " INTEGER PRIMARY KEY, "
+            + PRODUCTS_PRODUCT_NAME + " TEXT, "
+            + PRODUCTS_PRODUCT_SHORT_DESCRIPTION + " TEXT, "
+            + PRODUCTS_PRODUCT_DESCRIPTION + " TEXT, "
+            + PRODUCTS_PRODUCT_IMAGE + " TEXT" + ")";
+
 
     protected static final String CREATE_TABLE_EVENT_CALENDAR = "CREATE TABLE "
             + EVENT_CALENDAR_TABLE_NAME + "("
@@ -139,6 +200,7 @@ public class DBHelper extends SQLiteOpenHelper {
             + EVENT_CALENDAR_START_DATETIME + " TEXT, "
             + EVENT_CALENDAR_END_DATETIME + " TEXT, "
             + EVENT_CALENDAR_LOCATION + " TEXT" + ")";
+
 
     protected static final String CREATE_TABLE_STATUS_BAR_PUSH = "CREATE TABLE "
             + STATUS_BAR_PUSH_TABLE_NAME + "("
@@ -166,6 +228,9 @@ public class DBHelper extends SQLiteOpenHelper {
         database.execSQL(CREATE_TABLE_MAIL_CONTACT);
         database.execSQL(CREATE_TABLE_SHORT_NEWS_COMMENTS);
         database.execSQL(CREATE_TABLE_EVENT_CALENDAR);
+        database.execSQL(CREATE_TABLE_PRODUCTS_CATEGORIES);
+        database.execSQL(CREATE_TABLE_PRODUCTS_BRAND_CATEGORIES);
+        database.execSQL(CREATE_TABLE_PRODUCTS_PRODUCT);
         database.execSQL(CREATE_TABLE_STATUS_BAR_PUSH);
     }
 
@@ -177,9 +242,11 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + MAIL_CONTACT_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + SHORT_NEWS_COMMENTS_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + FULL_NEWS_TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + FULL_NEWS_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + EVENT_CALENDAR_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + STATUS_BAR_PUSH_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + PRODUCTS_CATEGORIES_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + PRODUCTS_BRAND_CATEGORIES_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + PRODUCTS_PRODUCT_TABLE_NAME);
         onCreate(db);
     }
 

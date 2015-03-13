@@ -14,6 +14,7 @@ import me.justup.upme.entity.ArticlesGetShortDescriptionResponse;
 import me.justup.upme.entity.CalendarGetEventsResponse;
 import me.justup.upme.entity.CommentsArticleFullResponse;
 import me.justup.upme.entity.GetMailContactResponse;
+import me.justup.upme.entity.ProductsGetAllCategoriesResponse;
 import me.justup.upme.entity.Push;
 import me.justup.upme.utils.AppContext;
 
@@ -41,6 +42,25 @@ import static me.justup.upme.db.DBHelper.MAIL_CONTACT_PARENT_ID;
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_PHONE;
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_SERVER_ID;
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_TABLE_NAME;
+import static me.justup.upme.db.DBHelper.PRODUCTS_BRAND_CATEGORIES_BRAND_ID;
+import static me.justup.upme.db.DBHelper.PRODUCTS_BRAND_CATEGORIES_BRAND_ITEM_DESCRIPTION;
+import static me.justup.upme.db.DBHelper.PRODUCTS_BRAND_CATEGORIES_BRAND_ITEM_ID;
+import static me.justup.upme.db.DBHelper.PRODUCTS_BRAND_CATEGORIES_BRAND_ITEM_NAME;
+import static me.justup.upme.db.DBHelper.PRODUCTS_BRAND_CATEGORIES_CATEGORY_ID;
+import static me.justup.upme.db.DBHelper.PRODUCTS_BRAND_CATEGORIES_FULL_DESCRIPTION;
+import static me.justup.upme.db.DBHelper.PRODUCTS_BRAND_CATEGORIES_IMAGE;
+import static me.justup.upme.db.DBHelper.PRODUCTS_BRAND_CATEGORIES_NAME;
+import static me.justup.upme.db.DBHelper.PRODUCTS_BRAND_CATEGORIES_SERVER_ID;
+import static me.justup.upme.db.DBHelper.PRODUCTS_BRAND_CATEGORIES_SHORT_DESCRIPTION;
+import static me.justup.upme.db.DBHelper.PRODUCTS_BRAND_CATEGORIES_TABLE_NAME;
+import static me.justup.upme.db.DBHelper.PRODUCTS_CATEGORIES_NAME;
+import static me.justup.upme.db.DBHelper.PRODUCTS_CATEGORIES_SERVER_ID;
+import static me.justup.upme.db.DBHelper.PRODUCTS_CATEGORIES_TABLE_NAME;
+import static me.justup.upme.db.DBHelper.PRODUCTS_PRODUCT_IMAGE;
+import static me.justup.upme.db.DBHelper.PRODUCTS_PRODUCT_NAME;
+import static me.justup.upme.db.DBHelper.PRODUCTS_PRODUCT_SERVER_ID;
+import static me.justup.upme.db.DBHelper.PRODUCTS_PRODUCT_SHORT_DESCRIPTION;
+import static me.justup.upme.db.DBHelper.PRODUCTS_PRODUCT_TABLE_NAME;
 import static me.justup.upme.db.DBHelper.SHORT_NEWS_COMMENTS_ARTICLE_ID;
 import static me.justup.upme.db.DBHelper.SHORT_NEWS_COMMENTS_AUTHOR_ID;
 import static me.justup.upme.db.DBHelper.SHORT_NEWS_COMMENTS_AUTHOR_IMAGE;
@@ -86,6 +106,7 @@ public class DBAdapter {
     public static final String NEWS_ITEM_SQL_BROADCAST_INTENT = "sql_news_item_broadcast_intent";
     public static final String MAIL_SQL_BROADCAST_INTENT = "mail_sql_broadcast_intent";
     public static final String CALENDAR_SQL_BROADCAST_INTENT = "calendar_sql_broadcast_intent";
+    public static final String PRODUCTS_SQL_BROADCAST_INTENT = "products_sql_broadcast_intent";
 
     // private DBHelper dbHelper;
 
@@ -253,6 +274,39 @@ public class DBAdapter {
         }
         sendBroadcast(CALENDAR_SQL_BROADCAST_INTENT);
     }
+
+    public void saveAllProducts(ProductsGetAllCategoriesResponse entity) {
+        for (int i = 0; i < entity.result.size(); i++) {
+            ContentValues values = new ContentValues();
+            values.put(PRODUCTS_CATEGORIES_SERVER_ID, entity.result.get(i).id);
+            values.put(PRODUCTS_CATEGORIES_NAME, entity.result.get(i).name);
+            for (int j = 0; j < entity.result.get(i).brandCategories.size(); j++) {
+                ContentValues valuesBrand = new ContentValues();
+                valuesBrand.put(PRODUCTS_BRAND_CATEGORIES_SERVER_ID, entity.result.get(i).brandCategories.get(j).id);
+                valuesBrand.put(PRODUCTS_BRAND_CATEGORIES_NAME, entity.result.get(i).brandCategories.get(j).name);
+                valuesBrand.put(PRODUCTS_BRAND_CATEGORIES_IMAGE, entity.result.get(i).brandCategories.get(j).image);
+                valuesBrand.put(PRODUCTS_BRAND_CATEGORIES_SHORT_DESCRIPTION, entity.result.get(i).brandCategories.get(j).shortDescription);
+                valuesBrand.put(PRODUCTS_BRAND_CATEGORIES_FULL_DESCRIPTION, entity.result.get(i).brandCategories.get(j).fullDescription);
+                valuesBrand.put(PRODUCTS_BRAND_CATEGORIES_CATEGORY_ID, entity.result.get(i).brandCategories.get(j).categoryId);
+                valuesBrand.put(PRODUCTS_BRAND_CATEGORIES_BRAND_ID, entity.result.get(i).brandCategories.get(j).brandId);
+                valuesBrand.put(PRODUCTS_BRAND_CATEGORIES_BRAND_ITEM_ID, entity.result.get(i).brandCategories.get(j).brand.id);
+                valuesBrand.put(PRODUCTS_BRAND_CATEGORIES_BRAND_ITEM_NAME, entity.result.get(i).brandCategories.get(j).brand.name);
+                valuesBrand.put(PRODUCTS_BRAND_CATEGORIES_BRAND_ITEM_DESCRIPTION, entity.result.get(i).brandCategories.get(j).brand.description);
+                database.insertWithOnConflict(PRODUCTS_BRAND_CATEGORIES_TABLE_NAME, null, valuesBrand, SQLiteDatabase.CONFLICT_REPLACE);
+                for (int k = 0; k < entity.result.get(i).brandCategories.get(j).products.size(); k++) {
+                    ContentValues valuesProduct = new ContentValues();
+                    valuesProduct.put(PRODUCTS_PRODUCT_SERVER_ID, entity.result.get(i).brandCategories.get(j).products.get(k).id);
+                    valuesProduct.put(PRODUCTS_PRODUCT_NAME, entity.result.get(i).brandCategories.get(j).products.get(k).name);
+                    valuesProduct.put(PRODUCTS_PRODUCT_SHORT_DESCRIPTION, entity.result.get(i).brandCategories.get(j).products.get(k).short_description);
+                    valuesProduct.put(PRODUCTS_PRODUCT_IMAGE, entity.result.get(i).brandCategories.get(j).products.get(k).img);
+                    database.insertWithOnConflict(PRODUCTS_PRODUCT_TABLE_NAME, null, valuesProduct, SQLiteDatabase.CONFLICT_REPLACE);
+                }
+            }
+            database.insertWithOnConflict(PRODUCTS_CATEGORIES_TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+        }
+        sendBroadcast(PRODUCTS_SQL_BROADCAST_INTENT);
+    }
+
 
     public void sendBroadcast(String type) {
         Intent intent = new Intent(type);

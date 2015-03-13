@@ -201,11 +201,10 @@ public class NewsItemFragment extends Fragment {
             public void onClick(View v) {
                 hideKeyboard();
                 String comment = mNewsItemCommentEditText.getText().toString();
-                if (comment != null && comment.length() > 1) {
+                if (comment != null && comment.length() > 1 && comment.matches(".*\\w.*")) {
                     isBroadcastAddComment = true;
                     isBroadcastUpdateFullArticle = false;
                     isBroadcastUpdateComments = false;
-
                     mNewsItemAddCommentButton.setEnabled(false);
                     addComment(comment);
                 } else {
@@ -375,18 +374,27 @@ public class NewsItemFragment extends Fragment {
         @Override
         public void onError(SocialAuthError error) {
             LOGE(TAG, "Authentication Error: " + error.getMessage());
+            updateShareButton();
         }
 
         @Override
         public void onCancel() {
             LOGD(TAG, "Authentication Cancelled");
+            updateShareButton();
         }
 
         @Override
         public void onBack() {
             LOGD(TAG, "Dialog Closed by pressing Back Key");
+            updateShareButton();
         }
     }
+
+    private void updateShareButton() {
+        mShareButton.setEnabled(true);
+        mShareButton.setBackgroundResource(R.drawable.facebook);
+    }
+
 
     // To get status of message after authentication
     private final class MessageListener implements SocialAuthListener<Integer> {
