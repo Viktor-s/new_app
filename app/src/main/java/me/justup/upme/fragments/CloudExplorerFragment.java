@@ -36,6 +36,7 @@ import static me.justup.upme.fragments.DocumentsFragment.IMAGE;
 import static me.justup.upme.fragments.DocumentsFragment.KB;
 import static me.justup.upme.fragments.DocumentsFragment.SIZE_VALUE;
 import static me.justup.upme.services.FileExplorerService.BROADCAST_EXTRA_ACTION_TYPE;
+import static me.justup.upme.services.FileExplorerService.COPY;
 import static me.justup.upme.services.FileExplorerService.DELETE;
 import static me.justup.upme.services.FileExplorerService.DOWNLOAD;
 import static me.justup.upme.services.FileExplorerService.EXPLORER_SERVICE_ACTION_TYPE;
@@ -272,7 +273,8 @@ public class CloudExplorerFragment extends Fragment {
                         return true;
 
                     case R.id.file_share_copy:
-                        //
+                        mParentFragment.startProgressBar();
+                        startExplorerService(fileHash, null, COPY);
                         return true;
 
                     default:

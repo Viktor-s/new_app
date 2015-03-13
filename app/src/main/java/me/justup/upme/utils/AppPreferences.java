@@ -14,6 +14,7 @@ public class AppPreferences {
     private static final String TAG_USER_NAME = "user_name";
     private static final String TAG_USER_ID = "user_id";
     private static final String TAG_PHONE = "user_phone";
+    private static final String TAG_JABBER_ID = "jabber_id";
 
 
     public AppPreferences(final Context context) {
@@ -77,6 +78,16 @@ public class AppPreferences {
 
     public String getPhoneNumber() {
         return mSharedPreferences.getString(TAG_PHONE, null);
+    }
+
+    public void setJabberId(String jabberId) {
+        mEditor = mSharedPreferences.edit();
+        mEditor.putString(TAG_JABBER_ID, jabberId);
+        mEditor.apply();
+    }
+
+    public String getJabberId() {
+        return mSharedPreferences.getString(TAG_JABBER_ID, "jabber");
     }
 
 }

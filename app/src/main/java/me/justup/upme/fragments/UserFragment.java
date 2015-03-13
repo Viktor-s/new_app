@@ -51,7 +51,6 @@ public class UserFragment extends Fragment implements OnMapReadyCallback, OnClos
     private double userLatitude;
     private double userLongitude;
     private String mUserMapTitle;
-    private int mUserId;
     private String mUserMapSnippet;
     private boolean isOwner = false;
 
@@ -162,7 +161,7 @@ public class UserFragment extends Fragment implements OnMapReadyCallback, OnClos
 
             if (response != null && response.result != null) {
                 mUserMapTitle = (response.result.name != null) ? response.result.name : "";
-                mUserId = response.result.id;
+                int mUserId = response.result.id;
                 mUserMapSnippet = (response.result.name != null) ? response.result.name : "";
 
                 userLatitude = 50.4501000;
@@ -176,6 +175,7 @@ public class UserFragment extends Fragment implements OnMapReadyCallback, OnClos
                     AppPreferences appPreferences = new AppPreferences(AppContext.getAppContext());
                     appPreferences.setUserName(mUserMapTitle);
                     appPreferences.setUserId(mUserId);
+                    appPreferences.setJabberId(response.result.jabber_id);
                 }
             }
 

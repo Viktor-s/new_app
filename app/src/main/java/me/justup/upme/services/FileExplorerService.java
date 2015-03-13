@@ -15,6 +15,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import me.justup.upme.entity.FileCopySharedQuery;
 import me.justup.upme.entity.FileDeleteQuery;
 import me.justup.upme.http.ApiWrapper;
 
@@ -38,6 +39,7 @@ public class FileExplorerService extends IntentService {
     public static final int DOWNLOAD = 1;
     public static final int UPLOAD = 2;
     public static final int DELETE = 3;
+    public static final int COPY = 4;
 
 
     public FileExplorerService() {
@@ -63,6 +65,10 @@ public class FileExplorerService extends IntentService {
 
             case DELETE:
                 deleteFileQuery(fileHash);
+                break;
+
+            case COPY:
+                copyQuery(fileHash);
                 break;
 
             default:
@@ -127,8 +133,27 @@ public class FileExplorerService extends IntentService {
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                 String content = ApiWrapper.responseBodyToString(responseBody);
                 LOGE(TAG, "deleteFileQuery onFailure(): " + content);
+            }
+        });
+    }
 
-                sendExplorerBroadcast(DELETE);
+    private void copyQuery(final String fileHash) {
+        FileCopySharedQuery query = new FileCopySharedQuery();
+        query.params.file_hash = fileHash;
+
+        ApiWrapper.syncQuery(query, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                String content = ApiWrapper.responseBodyToString(responseBody);
+                LOGD(TAG, "deleteFileQuery onSuccess(): " + content);
+
+                sendExplorerBroadcast(0);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                String content = ApiWrapper.responseBodyToString(responseBody);
+                LOGE(TAG, "deleteFileQuery onFailure(): " + content);
             }
         });
     }

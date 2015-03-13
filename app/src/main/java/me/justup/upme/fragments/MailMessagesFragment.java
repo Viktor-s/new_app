@@ -241,12 +241,13 @@ public class MailMessagesFragment extends Fragment {
                 mTextMessage.setText("");
 
                 if (mFilePath != null) {
-                    sendFileToCloud(mFilePath);
+                    final File file = new File(mFilePath);
+                    sendFileToCloud(file);
 
                     if (text != null)
-                        text += getString(R.string.sent_file);
+                        text += (getString(R.string.sent_file) + file.getName() + "]");
                     else
-                        text = getString(R.string.sent_file);
+                        text = getString(R.string.sent_file) + file.getName() + "]";
 
                     mFilePath = null;
                     mImageAttachedImageView.setVisibility(View.GONE);
@@ -400,10 +401,8 @@ public class MailMessagesFragment extends Fragment {
         return Html.fromHtml(mChatLineBuilder.toString());
     }
 
-    private void sendFileToCloud(final String path) {
-        LOGD(TAG, "file path:" + path);
-
-        final File file = new File(path);
+    private void sendFileToCloud(final File file) {
+        LOGD(TAG, "file path:" + file.getAbsolutePath());
 
         ApiWrapper.sendFileToCloud(file, new AsyncHttpResponseHandler() {
             @Override
@@ -421,7 +420,7 @@ public class MailMessagesFragment extends Fragment {
                 if (response != null) {
                     if (response.status.equals(SendFileToCloudResponse.STATUS_OK)) {
                         Toast.makeText(getActivity(), getString(R.string.file_in_cloud), Toast.LENGTH_SHORT).show();
-                        addFileShareWith(response.file_hash, file.getName());
+                        addFileShareWith(response.file_hash);
 
                     } else {
                         showWarningDialog(response.reason);
@@ -459,7 +458,7 @@ public class MailMessagesFragment extends Fragment {
     }
     */
 
-    private void addFileShareWith(final String fileHash, final String fileName) {
+    private void addFileShareWith(final String fileHash) {
         FileAddShareWithQuery query = new FileAddShareWithQuery();
         query.params.file_hash = fileHash;
         query.params.member_ids = friendId;

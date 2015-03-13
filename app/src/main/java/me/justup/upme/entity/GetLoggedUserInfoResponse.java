@@ -11,6 +11,7 @@ public class GetLoggedUserInfoResponse extends BaseHttpResponseEntity {
         public int id;
         public int dateAdd = 0;
         public String login = "";
+        public String jabber_id = "";
         public int network = 0;
         public String phone = "";
     }
