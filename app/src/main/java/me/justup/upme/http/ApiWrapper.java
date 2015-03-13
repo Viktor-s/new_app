@@ -63,6 +63,8 @@ public class ApiWrapper {
     public static final String CALENDAR_GET_EVENTS = "Calendar.getEvents";
     public static final String CALENDAR_ADD_EVENT = "Calendar.addEvent";
 
+    public static final String PRODUCTS_GET_ALL_CATEGORIES = "Products.getProductCategories";
+
     private static final String CALL_CLOUD_UPLOAD = "/upload";
     private static final String CALL_CLOUD_FILE = "/file/";
 

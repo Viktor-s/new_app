@@ -44,6 +44,7 @@ import me.justup.upme.entity.BaseHttpQueryEntity;
 import me.justup.upme.entity.CalendarGetEventsQuery;
 import me.justup.upme.entity.GetLoggedUserInfoQuery;
 import me.justup.upme.entity.GetMailContactQuery;
+import me.justup.upme.entity.ProductsGetAllCategoriesQuery;
 import me.justup.upme.entity.Push;
 import me.justup.upme.entity.SetGooglePushIdQuery;
 import me.justup.upme.fragments.BriefcaseFragment;
@@ -218,7 +219,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
             case R.id.products_menu_item:
                 if (currentlySelectedFragment != SELECTED_FRAGMENT_PRODUCTS) {
-                    startHttpIntent(new ArticlesGetShortDescriptionQuery(), HttpIntentService.PRODUCTS_PART);
+                    startHttpIntent(new ProductsGetAllCategoriesQuery(), HttpIntentService.PRODUCTS_PART);
                     changeButtonState(mProductsButton);
                     fragment = new ProductsFragment();
                     currentlySelectedFragment = SELECTED_FRAGMENT_PRODUCTS;

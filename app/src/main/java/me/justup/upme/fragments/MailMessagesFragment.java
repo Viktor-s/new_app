@@ -439,7 +439,7 @@ public class MailMessagesFragment extends Fragment {
                 String content = ApiWrapper.responseBodyToString(responseBody);
                 LOGE(TAG, "sendFileToCloud onFailure(): " + content);
 
-                Toast.makeText(getActivity(), getString(R.string.sent_file_error), Toast.LENGTH_SHORT).show();
+                Toast.makeText(AppContext.getAppContext(), getString(R.string.sent_file_error), Toast.LENGTH_SHORT).show();
             }
         });
     }
