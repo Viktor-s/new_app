@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import java.io.File;
 
+import me.justup.upme.MainActivity;
 import me.justup.upme.R;
 import me.justup.upme.dialogs.ViewImageDialog;
 import me.justup.upme.services.FileExplorerService;
@@ -43,6 +44,7 @@ public class DocumentsFragment extends Fragment {
     private TableLayout mFileExplorer;
     private LayoutInflater mLayoutInflater;
     private ProgressBar mProgressBar;
+    private String mShareFileName;
 
     private BroadcastReceiver mFileActionDoneReceiver = new BroadcastReceiver() {
         @Override
@@ -67,6 +69,12 @@ public class DocumentsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_documents, container, false);
+
+        String shareFileName = ((MainActivity) getActivity()).getShareFileName();
+        if (shareFileName != null) {
+            setShareFileName(shareFileName);
+            ((MainActivity) getActivity()).setShareFileName(null);
+        }
 
         mLayoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mFileExplorer = (TableLayout) view.findViewById(R.id.files_panel);
@@ -212,6 +220,14 @@ public class DocumentsFragment extends Fragment {
 
     public void stopProgressBar() {
         mProgressBar.setVisibility(View.GONE);
+    }
+
+    public String getShareFileName() {
+        return mShareFileName;
+    }
+
+    public void setShareFileName(String shareFileName) {
+        mShareFileName = shareFileName;
     }
 
 }

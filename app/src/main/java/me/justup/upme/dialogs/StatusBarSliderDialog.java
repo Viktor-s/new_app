@@ -157,8 +157,9 @@ public class StatusBarSliderDialog extends DialogFragment {
         item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                DBAdapter.getInstance().deletePush(push.getId());
+
                 if (push.getType() != MailFragment.FILE) {
-                    DBAdapter.getInstance().deletePush(push.getId());
                     mOnLoadMailFragment.onLoadMailFragment(push);
                 } else {
                     mOnDownloadCloudFile.onDownloadCloudFile(push.getLink(), push.getFileName());

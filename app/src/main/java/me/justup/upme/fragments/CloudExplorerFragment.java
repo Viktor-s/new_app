@@ -17,12 +17,15 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TabHost;
 import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.google.gson.JsonSyntaxException;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.apache.http.Header;
+
+import java.util.Collections;
 
 import me.justup.upme.R;
 import me.justup.upme.dialogs.FileShareDialog;
@@ -71,7 +74,7 @@ public class CloudExplorerFragment extends Fragment {
             String error = intent.getStringExtra(BROADCAST_EXTRA_ERROR);
 
             if (actionType == UPLOAD || actionType == DELETE) {
-                fileQuery(ApiWrapper.FILE_GET_MY_FILES, mMyFileExplorer);
+                fileQuery(ApiWrapper.FILE_GET_MY_FILES, mMyFileExplorer, null);
             } else if (actionType == ERROR) {
                 showWarningDialog(error);
             }
@@ -94,6 +97,8 @@ public class CloudExplorerFragment extends Fragment {
         mLayoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mParentFragment = (DocumentsFragment) getParentFragment();
 
+        final String shareFileName = mParentFragment.getShareFileName();
+
         TabHost tabHost = (TabHost) view.findViewById(android.R.id.tabhost);
         tabHost.setup();
 
@@ -114,9 +119,9 @@ public class CloudExplorerFragment extends Fragment {
                 mProgressBar.setVisibility(View.VISIBLE);
 
                 if (tabId.equals(TAB_1)) {
-                    fileQuery(ApiWrapper.FILE_GET_MY_FILES, mMyFileExplorer);
+                    fileQuery(ApiWrapper.FILE_GET_MY_FILES, mMyFileExplorer, null);
                 } else {
-                    fileQuery(ApiWrapper.FILE_GET_ALL_SHARED_WITH_ME, mShareFileExplorer);
+                    fileQuery(ApiWrapper.FILE_GET_ALL_SHARED_WITH_ME, mShareFileExplorer, shareFileName);
                 }
             }
         });
@@ -125,7 +130,13 @@ public class CloudExplorerFragment extends Fragment {
         mShareFileExplorer = (TableLayout) view.findViewById(R.id.files_panel_share);
         mProgressBar = (FrameLayout) view.findViewById(R.id.base_progressBar);
 
-        fileQuery(ApiWrapper.FILE_GET_MY_FILES, mMyFileExplorer);
+        if (shareFileName != null) {
+            mParentFragment.setShareFileName(null);
+            tabHost.setCurrentTabByTag(TAB_2);
+        } else {
+            mProgressBar.setVisibility(View.VISIBLE);
+            fileQuery(ApiWrapper.FILE_GET_MY_FILES, mMyFileExplorer, null);
+        }
 
         return view;
     }
@@ -137,15 +148,15 @@ public class CloudExplorerFragment extends Fragment {
         getActivity().unregisterReceiver(mFileActionDoneReceiver);
     }
 
-    private void fileQuery(String apiMethod, TableLayout parentLayout) {
+    private void fileQuery(String apiMethod, TableLayout parentLayout, String shareFileName) {
         FileGetAllQuery query = new FileGetAllQuery();
         query.method = apiMethod;
 
-        ApiWrapper.query(query, new GetAllFilesResponse(parentLayout));
+        ApiWrapper.query(query, new GetAllFilesResponse(parentLayout, shareFileName));
     }
 
     @SuppressLint("InflateParams")
-    private void setFileItem(TableLayout parentLayout, final String fileHash, final String fileName, final int fileLength) {
+    private void setFileItem(TableLayout parentLayout, final String fileHash, final String fileName, final int fileLength, final String shareFileName) {
         final View item = mLayoutInflater.inflate(R.layout.item_documents_file, null);
 
         boolean isImage = false;
@@ -158,6 +169,11 @@ public class CloudExplorerFragment extends Fragment {
             type = IMAGE;
         } else {
             type = DOC;
+        }
+
+        if (shareFileName != null && shareFileName.equals(fileName)) {
+            TableRow mFileLayout = (TableRow) item.findViewById(R.id.explorer_file_item_layout);
+            mFileLayout.setBackgroundColor(getResources().getColor(R.color.blue_gray));
         }
 
         ImageView mFileImage = (ImageView) item.findViewById(R.id.file_image_imageView);
@@ -178,9 +194,11 @@ public class CloudExplorerFragment extends Fragment {
 
     private class GetAllFilesResponse extends AsyncHttpResponseHandler {
         private TableLayout parentLayout;
+        private final String shareFileName;
 
-        public GetAllFilesResponse(TableLayout parentLayout) {
+        public GetAllFilesResponse(TableLayout parentLayout, String shareFileName) {
             this.parentLayout = parentLayout;
+            this.shareFileName = shareFileName;
         }
 
         @Override
@@ -198,8 +216,10 @@ public class CloudExplorerFragment extends Fragment {
             parentLayout.removeAllViews();
 
             if (response != null && response.result != null) {
+                Collections.reverse(response.result);
+
                 for (FileGetAllResponse.Result file : response.result) {
-                    setFileItem(parentLayout, file.hash_name, file.origin_name, file.size);
+                    setFileItem(parentLayout, file.hash_name, file.origin_name, file.size, shareFileName);
                 }
             }
 

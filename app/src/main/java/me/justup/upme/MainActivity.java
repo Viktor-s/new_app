@@ -24,21 +24,18 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.FileAsyncHttpResponseHandler;
 
 import org.apache.http.Header;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
 import me.justup.upme.dialogs.BreakCallDialog;
 import me.justup.upme.dialogs.CallDialog;
 import me.justup.upme.dialogs.StatusBarSliderDialog;
-import me.justup.upme.dialogs.WarningDialog;
 import me.justup.upme.entity.ArticlesGetShortDescriptionQuery;
 import me.justup.upme.entity.BaseHttpQueryEntity;
 import me.justup.upme.entity.CalendarGetEventsQuery;
@@ -62,7 +59,6 @@ import me.justup.upme.interfaces.OnDownloadCloudFile;
 import me.justup.upme.interfaces.OnLoadMailFragment;
 import me.justup.upme.services.GPSTracker;
 import me.justup.upme.utils.AppContext;
-import me.justup.upme.utils.FileSaveThread;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.LOGE;
@@ -90,6 +86,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private ArrayList<Button> mButtonList = new ArrayList<>();
     private Button mNewsButton, mMailButton, mCalendarButton, mProductsButton, mBriefcaseButton, mDocsButton, mBrowserButton;
     private Push push;
+    private String shareFileName;
 
     //GCM
     private GoogleCloudMessaging gcm;
@@ -566,28 +563,22 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public void onDownloadCloudFile(final String fileHash, final String fileName) {
-        ApiWrapper.downloadFileFromCloud(fileHash, new FileAsyncHttpResponseHandler(this) {
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
-                LOGE(TAG, "onDownloadCloudFile(): onFailure", throwable);
-                if (throwable != null) {
-                    showWarningDialog(throwable.getMessage());
-                }
-            }
+        setShareFileName(fileName);
 
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, File file) {
-                LOGI(TAG, "onDownloadCloudFile(): onSuccess");
+        getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new DocumentsFragment()).commit();
 
-                new FileSaveThread(MainActivity.this, file, fileName).execute();
-            }
-        });
+        changeButtonState(mDocsButton);
+        if (!isShowMainFragmentContainer) {
+            showMainFragmentContainer();
+        }
     }
 
-    private void showWarningDialog(String message) {
-        WarningDialog dialog = WarningDialog.newInstance(getString(R.string.network_error), message);
-        if (getFragmentManager() != null)
-            dialog.show(getFragmentManager(), WarningDialog.WARNING_DIALOG);
+    public String getShareFileName() {
+        return shareFileName;
+    }
+
+    public void setShareFileName(String shareFileName) {
+        this.shareFileName = shareFileName;
     }
 
 }
