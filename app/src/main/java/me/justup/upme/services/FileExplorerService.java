@@ -30,6 +30,7 @@ public class FileExplorerService extends IntentService {
 
     public static final String FILE_ACTION_DONE_BROADCAST = "me.justup.upme.broadcast.explorer.file_action_done";
     public static final String BROADCAST_EXTRA_ACTION_TYPE = "broadcast_extra_action_type";
+    public static final String BROADCAST_EXTRA_ERROR = "broadcast_explorer_service_error";
 
     public static final String EXPLORER_SERVICE_FILE_NAME = "explorer_service_file_name";
     public static final String EXPLORER_SERVICE_FILE_HASH = "explorer_service_file_hash";
@@ -40,6 +41,7 @@ public class FileExplorerService extends IntentService {
     public static final int UPLOAD = 2;
     public static final int DELETE = 3;
     public static final int COPY = 4;
+    public static final int ERROR = 5;
 
 
     public FileExplorerService() {
@@ -73,7 +75,6 @@ public class FileExplorerService extends IntentService {
 
             default:
                 break;
-
         }
 
     }
@@ -83,6 +84,12 @@ public class FileExplorerService extends IntentService {
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
                 LOGE(TAG, "downloadFileQuery(): onFailure", throwable);
+
+                if (throwable != null) {
+                    sendExplorerBroadcast(ERROR, throwable.getMessage());
+                } else {
+                    sendExplorerBroadcast(ERROR, "Error downloading file!");
+                }
             }
 
             @Override
@@ -112,6 +119,12 @@ public class FileExplorerService extends IntentService {
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                 String content = ApiWrapper.responseBodyToString(responseBody);
                 LOGE(TAG, "syncSendFileToCloud onFailure(): " + content);
+
+                if (error != null) {
+                    sendExplorerBroadcast(ERROR, error.getMessage());
+                } else {
+                    sendExplorerBroadcast(ERROR, content);
+                }
             }
         });
     }
@@ -133,6 +146,12 @@ public class FileExplorerService extends IntentService {
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                 String content = ApiWrapper.responseBodyToString(responseBody);
                 LOGE(TAG, "deleteFileQuery onFailure(): " + content);
+
+                if (error != null) {
+                    sendExplorerBroadcast(ERROR, error.getMessage());
+                } else {
+                    sendExplorerBroadcast(ERROR, content);
+                }
             }
         });
     }
@@ -154,13 +173,26 @@ public class FileExplorerService extends IntentService {
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                 String content = ApiWrapper.responseBodyToString(responseBody);
                 LOGE(TAG, "deleteFileQuery onFailure(): " + content);
+
+                if (error != null) {
+                    sendExplorerBroadcast(ERROR, error.getMessage());
+                } else {
+                    sendExplorerBroadcast(ERROR, content);
+                }
             }
         });
     }
 
-    private void sendExplorerBroadcast(int actionType) {
+    private void sendExplorerBroadcast(final int actionType) {
         Intent intent = new Intent(FILE_ACTION_DONE_BROADCAST);
         intent.putExtra(BROADCAST_EXTRA_ACTION_TYPE, actionType);
+        sendBroadcast(intent);
+    }
+
+    private void sendExplorerBroadcast(final int actionType, final String error) {
+        Intent intent = new Intent(FILE_ACTION_DONE_BROADCAST);
+        intent.putExtra(BROADCAST_EXTRA_ACTION_TYPE, actionType);
+        intent.putExtra(BROADCAST_EXTRA_ERROR, error);
         sendBroadcast(intent);
     }
 

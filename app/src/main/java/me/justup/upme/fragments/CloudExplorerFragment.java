@@ -26,6 +26,7 @@ import org.apache.http.Header;
 
 import me.justup.upme.R;
 import me.justup.upme.dialogs.FileShareDialog;
+import me.justup.upme.dialogs.WarningDialog;
 import me.justup.upme.entity.FileGetAllQuery;
 import me.justup.upme.entity.FileGetAllResponse;
 import me.justup.upme.http.ApiWrapper;
@@ -36,9 +37,11 @@ import static me.justup.upme.fragments.DocumentsFragment.IMAGE;
 import static me.justup.upme.fragments.DocumentsFragment.KB;
 import static me.justup.upme.fragments.DocumentsFragment.SIZE_VALUE;
 import static me.justup.upme.services.FileExplorerService.BROADCAST_EXTRA_ACTION_TYPE;
+import static me.justup.upme.services.FileExplorerService.BROADCAST_EXTRA_ERROR;
 import static me.justup.upme.services.FileExplorerService.COPY;
 import static me.justup.upme.services.FileExplorerService.DELETE;
 import static me.justup.upme.services.FileExplorerService.DOWNLOAD;
+import static me.justup.upme.services.FileExplorerService.ERROR;
 import static me.justup.upme.services.FileExplorerService.EXPLORER_SERVICE_ACTION_TYPE;
 import static me.justup.upme.services.FileExplorerService.EXPLORER_SERVICE_FILE_HASH;
 import static me.justup.upme.services.FileExplorerService.EXPLORER_SERVICE_FILE_NAME;
@@ -65,8 +68,12 @@ public class CloudExplorerFragment extends Fragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             int actionType = intent.getIntExtra(BROADCAST_EXTRA_ACTION_TYPE, 0);
+            String error = intent.getStringExtra(BROADCAST_EXTRA_ERROR);
+
             if (actionType == UPLOAD || actionType == DELETE) {
                 fileQuery(ApiWrapper.FILE_GET_MY_FILES, mMyFileExplorer);
+            } else if (actionType == ERROR) {
+                showWarningDialog(error);
             }
 
             mParentFragment.stopProgressBar();
@@ -294,6 +301,11 @@ public class CloudExplorerFragment extends Fragment {
 
         Intent intent = new Intent(getActivity(), FileExplorerService.class);
         getActivity().startService(intent.putExtras(bundle));
+    }
+
+    private void showWarningDialog(String message) {
+        WarningDialog dialog = WarningDialog.newInstance(getString(R.string.network_error), message);
+        dialog.show(getChildFragmentManager(), WarningDialog.WARNING_DIALOG);
     }
 
 }
