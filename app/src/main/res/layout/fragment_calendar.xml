@@ -35,8 +35,8 @@
 
         <Button
             android:id="@+id/add_button"
-            android:layout_width="@dimen/base40dp720sw"
-            android:layout_height="@dimen/base40dp720sw"
+            android:layout_width="@dimen/base50dp720sw"
+            android:layout_height="@dimen/base50dp720sw"
             android:layout_alignParentRight="true"
             android:background="@color/button_back_pink"
             android:gravity="center"
@@ -45,26 +45,26 @@
 
         <Button
             android:id="@+id/next_week_button"
-            android:layout_width="@dimen/base40dp720sw"
-            android:layout_height="@dimen/base40dp720sw"
+            android:layout_width="@dimen/base50dp720sw"
+            android:layout_height="@dimen/base50dp720sw"
             android:layout_marginRight="@dimen/base10dp720sw"
             android:layout_toLeftOf="@+id/add_button"
             android:background="@color/blue_gray"
             android:drawableRight="@drawable/arrow_next"
             android:gravity="center"
-            android:paddingRight="@dimen/base10dp720sw"
+            android:paddingRight="@dimen/base15dp720sw"
             android:textStyle="bold" />
 
         <Button
             android:id="@+id/previous_week_button"
-            android:layout_width="@dimen/base40dp720sw"
-            android:layout_height="@dimen/base40dp720sw"
+            android:layout_width="@dimen/base50dp720sw"
+            android:layout_height="@dimen/base50dp720sw"
             android:layout_marginRight="@dimen/base10dp720sw"
             android:layout_toLeftOf="@+id/next_week_button"
             android:background="@color/blue_gray"
             android:drawableLeft="@drawable/arrow_previous"
             android:gravity="center"
-            android:paddingLeft="@dimen/base10dp720sw"
+            android:paddingLeft="@dimen/base15dp720sw"
             android:textStyle="bold" />
 
         <TextView
@@ -100,7 +100,7 @@
         android:layout_below="@id/top_panel"
         app:columnGap="@dimen/base10dp720sw"
         app:dayBackgroundColor="#05000000"
-        app:eventTextColor="@android:color/white"
+        app:eventTextColor="@android:color/black"
         app:headerColumnBackground="#ffffffff"
         app:headerColumnPadding="@dimen/base10dp720sw"
         app:headerColumnTextColor="#8f000000"
@@ -210,7 +210,6 @@
 
                     <EditText
                         android:id="@+id/new_event_description"
-                        android:singleLine="false"
                         style="@style/NewUserEditText"
                         android:layout_marginBottom="@dimen/base10dp720sw" />
 

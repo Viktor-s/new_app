@@ -14,6 +14,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +34,7 @@ import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
@@ -43,16 +45,20 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import me.justup.upme.MainActivity;
 import me.justup.upme.R;
 import me.justup.upme.db.DBAdapter;
 import me.justup.upme.db.DBHelper;
 import me.justup.upme.entity.CalendarAddEventQuery;
+import me.justup.upme.entity.PersonBriefcaseEntity;
 import me.justup.upme.http.HttpIntentService;
 import me.justup.upme.utils.AppContext;
+import me.justup.upme.utils.AppPreferences;
 import me.justup.upme.weekview.WeekView;
 import me.justup.upme.weekview.WeekViewEvent;
 
@@ -64,6 +70,11 @@ import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_SERVER_ID;
 import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_START_DATETIME;
 import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_TABLE_NAME;
 import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_TYPE;
+import static me.justup.upme.db.DBHelper.MAIL_CONTACT_IMG;
+import static me.justup.upme.db.DBHelper.MAIL_CONTACT_NAME;
+import static me.justup.upme.db.DBHelper.MAIL_CONTACT_PARENT_ID;
+import static me.justup.upme.db.DBHelper.MAIL_CONTACT_SERVER_ID;
+import static me.justup.upme.db.DBHelper.MAIL_CONTACT_TABLE_NAME;
 import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.LOGI;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
@@ -94,6 +105,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
     private int durationEventMin;
 
     private TextView selectWeekTextView;
+    private TextView selectMonthTextView;
 
     private final DateTime currentDate = new DateTime();
     private int currentWeek;
@@ -105,24 +117,46 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
     private Spinner mCalendartypesSpinner;
     private SQLiteDatabase database;
 
-
-    ArrayList<Integer> mSelectedItems;
+    private List<PersonBriefcaseEntity> listPerson;
+    private ArrayList<Integer> mSelectedItems;
 
     private static String[] months = new String[]{"ЯНВАРЬ", "ФЕВРАЛЬ", "МАРТ", "АПРЕЛЬ", "МАЙ", "ИЮНЬ", "ИЮЛЬ", "АВГУСТ", "СЕНТЯБРЬ", "ОКТЯБРЬ", "НОЯБРЬ", "ДЕКАБРЬ"};
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mSelectedItems = new ArrayList<>();
 
-//        mDBHelper = new DBHelper(AppContext.getAppContext());
-//        mDBAdapter = new DBAdapter(AppContext.getAppContext());
-//        mDBAdapter.open();
         database = DBAdapter.getInstance().openDatabase();
+        String selectQuery = "SELECT * FROM " + MAIL_CONTACT_TABLE_NAME;
+        Cursor mCursor = database.rawQuery(selectQuery, null);
+        listPerson = fillPersonsFromCursor(mCursor);
 
         firstDayCurrentWeek = new LocalDateTime().withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0).withDayOfWeek(DateTimeConstants.MONDAY);
         currentWeek = firstDayCurrentWeek.getWeekOfWeekyear();
-
     }
+
+    private List<PersonBriefcaseEntity> fillPersonsFromCursor(Cursor cursorPersons) {
+        ArrayList<PersonBriefcaseEntity> personsList = new ArrayList<>();
+        AppPreferences appPreferences = new AppPreferences(AppContext.getAppContext());
+        int userId = appPreferences.getUserId();
+        String userName = appPreferences.getUserName();
+        PersonBriefcaseEntity personBriefcaseEntityUser = new PersonBriefcaseEntity(userId, 0, userName, " ");
+        personsList.add(personBriefcaseEntityUser);
+        for (cursorPersons.moveToFirst(); !cursorPersons.isAfterLast(); cursorPersons.moveToNext()) {
+            PersonBriefcaseEntity personBriefcaseEntity = new PersonBriefcaseEntity();
+            personBriefcaseEntity.setId(cursorPersons.getInt(cursorPersons.getColumnIndex(MAIL_CONTACT_SERVER_ID)));
+            personBriefcaseEntity.setParentId(cursorPersons.getInt(cursorPersons.getColumnIndex(MAIL_CONTACT_PARENT_ID)));
+            personBriefcaseEntity.setName(cursorPersons.getString(cursorPersons.getColumnIndex(MAIL_CONTACT_NAME)));
+            personBriefcaseEntity.setPhoto(cursorPersons.getString(cursorPersons.getColumnIndex(MAIL_CONTACT_IMG)));
+            personsList.add(personBriefcaseEntity);
+        }
+        if (cursorPersons != null) {
+            cursorPersons.close();
+        }
+        return personsList;
+    }
+
 
     @Override
     public void onResume() {
@@ -146,7 +180,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
 
         TextView currentDateTextView = (TextView) v.findViewById(R.id.current_date_textView);
         currentDateTextView.setText(currentDate.toString("d MMMM yyyy", new Locale("ru")));
-        TextView selectMonthTextView = (TextView) v.findViewById(R.id.select_month_textView);
+        selectMonthTextView = (TextView) v.findViewById(R.id.select_month_textView);
         String strMonthYear = String.format("%s %d", months[currentDate.getMonthOfYear()], currentDate.getYear());
         selectMonthTextView.setText(strMonthYear);
         selectWeekTextView = (TextView) v.findViewById(R.id.select_week_textView);
@@ -259,6 +293,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
         dialogSteTimeCalendar.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         dialogSteTimeCalendar.setContentView(R.layout.dialog_time_picker);
         Button buttonOk = (Button) dialogSteTimeCalendar.findViewById(R.id.buttonDialogCalendarTimeOk);
+        final TextView textTitleDialogTime = (TextView) dialogSteTimeCalendar.findViewById(R.id.textTitleDialogTime);
         final NumberPicker numberPickerHours = (NumberPicker) dialogSteTimeCalendar.findViewById(R.id.numberPickerHours);
         final NumberPicker numberPickerMinutes = (NumberPicker) dialogSteTimeCalendar.findViewById(R.id.numberPickerMinutes);
         numberPickerHours.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
@@ -278,9 +313,11 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
         numberPickerHours.setMaxValue(23);
         numberPickerMinutes.setMaxValue(59);
         if (typeDialog == START_TIME_EVENT) {
+            textTitleDialogTime.setText("Установите начальное время события");
             numberPickerHours.setValue(startTimeEvent.get(Calendar.HOUR));
             numberPickerMinutes.setValue(startTimeEvent.get(Calendar.MINUTE));
         } else if (typeDialog == DURATION_EVENT) {
+            textTitleDialogTime.setText("Установите продолжительность события");
             int minute = durationEventMin % 60;
             int hour = (durationEventMin - minute) / 60;
             numberPickerHours.setValue(hour);
@@ -334,9 +371,12 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                 .setPositiveButton("Установить дату", new DialogInterface.OnClickListener() {
                     @TargetApi(11)
                     public void onClick(DialogInterface dialog, int id) {
-                        int month = myDatePicker.getMonth() + 1;
                         int day = myDatePicker.getDayOfMonth();
+                        int month = myDatePicker.getMonth() + 1;
                         int year = myDatePicker.getYear();
+                        startTimeEvent.set(Calendar.DAY_OF_MONTH, day);
+                        startTimeEvent.set(Calendar.MONTH, month);
+                        startTimeEvent.set(Calendar.YEAR, year);
                         startDateEvent.setText(String.format("%02d/%02d/%d", day, month, year));
                         dialog.cancel();
                     }
@@ -345,15 +385,17 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
 
     public void alertMultipleChoiceReferals() {
 
-        // массив обектов получитьтолько имена
+        CharSequence[] namePerson = new CharSequence[listPerson.size()];
+        boolean[] choosePerson = new boolean[listPerson.size()];
 
-
-        boolean[] selectItem = {true, false, true, true, false};
-        mSelectedItems = new ArrayList<>();
+        for (int i = 0; i < listPerson.size(); i++)
+            namePerson[i] = listPerson.get(i).getName();
+        for (Integer selectNumber : mSelectedItems)
+            choosePerson[selectNumber] = true;
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Выберите исполнителей задачи")
-                .setMultiChoiceItems(R.array.choices, selectItem, new DialogInterface.OnMultiChoiceClickListener() {
+                .setMultiChoiceItems(namePerson, choosePerson, new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which, boolean isChecked) {
                         if (isChecked) {
@@ -373,10 +415,10 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                         Toast.makeText(getActivity(), "Selected index: " + selectedIndex, Toast.LENGTH_SHORT).show();
                     }
                 })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) { }
-                })
+//                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int id) { }
+//                })
                 .show();
 
     }
@@ -420,13 +462,14 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
         Animation mFragmentSliderFadeIn = AnimationUtils.loadAnimation(AppContext.getAppContext(), R.anim.fragment_item_slide_fade_in);
         panelAddEvent.setVisibility(View.VISIBLE);
         panelAddEvent.startAnimation(mFragmentSliderFadeIn);
-        startDateEvent.setText(String.format("%02d/%02d/%d", time.get(Calendar.DAY_OF_MONTH), time.get(Calendar.MONTH), time.get(Calendar.YEAR)));
+        startDateEvent.setText(String.format("%02d/%02d/%d", time.get(Calendar.DAY_OF_MONTH), time.get(Calendar.MONTH) + 1, time.get(Calendar.YEAR)));
         tvStartTimeEvent.setText(String.format("%02d:%02d", time.get(Calendar.HOUR_OF_DAY), time.get(Calendar.MINUTE)));
         durationEventMin = 0;
         tvDurationEvent.setText("00:00");
         etNewEventName.setText("");
         etNewEventDescription.setText("");
         etNewEventLocation.setText("");
+        mSelectedItems.clear();
     }
 
     @Override
@@ -447,6 +490,8 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                 LOGD("TAG_", "firstDayCurrentWeek: " + firstDayCurrentWeek);
                 mWeekView.goToDate(firstDayCurrentWeek.toDateTime(DateTimeZone.UTC).toGregorianCalendar());
                 selectWeekTextView.setText(Integer.toString(currentWeek == 1 ? currentWeek = 52 : --currentWeek) + getResources().getString(R.string.week));
+                String strMonthYearPrev = String.format("%s %d", months[firstDayCurrentWeek.getMonthOfYear()], currentDate.getYear());
+                selectMonthTextView.setText(strMonthYearPrev);
                 listEventsForWeek(firstDayCurrentWeek);
                 ((MainActivity) getActivity()).startHttpIntent(MainActivity.getEventCalendarQuery(firstDayCurrentWeek), HttpIntentService.CALENDAR_PART);
                 break;
@@ -455,6 +500,8 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                 LOGD("TAG_", "firstDayCurrentWeek: " + firstDayCurrentWeek);
                 mWeekView.goToDate(firstDayCurrentWeek.toDateTime(DateTimeZone.UTC).toGregorianCalendar());
                 selectWeekTextView.setText(Integer.toString(currentWeek == 52 ? currentWeek = 1 : ++currentWeek) + getResources().getString(R.string.week));
+                String strMonthYearNext = String.format("%s %d", months[firstDayCurrentWeek.getMonthOfYear()], currentDate.getYear());
+                selectMonthTextView.setText(strMonthYearNext);
                 listEventsForWeek(firstDayCurrentWeek);
                 ((MainActivity) getActivity()).startHttpIntent(MainActivity.getEventCalendarQuery(firstDayCurrentWeek), HttpIntentService.CALENDAR_PART);
                 break;
@@ -479,6 +526,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                 Calendar endTimeEvent = (Calendar) startTimeEvent.clone();
                 int minute = durationEventMin % 60;
                 int hour = (durationEventMin - minute) / 60;
+                if (hour == 0 && minute < 5) minute = 5;  // MIN 5 Minute
                 endTimeEvent.add(Calendar.HOUR, hour);
                 endTimeEvent.add(Calendar.MINUTE, minute);
                 String eventName = etNewEventName.getText().toString();
