@@ -33,6 +33,7 @@ import me.justup.upme.entity.ArticleShortEntity;
 import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.http.HttpIntentService;
 import me.justup.upme.utils.AppContext;
+import me.justup.upme.utils.CommonUtils;
 
 import static me.justup.upme.db.DBHelper.IS_SHORT_NEWS_READ_ARTICLE_ID;
 import static me.justup.upme.db.DBHelper.IS_SHORT_NEWS_READ_TABLE_NAME;
@@ -56,7 +57,6 @@ public class NewsFeedFragment extends Fragment {
 
     private RecyclerView mNewsFeedView;
     private NewsFeedAdapter mNewsFeedAdapter;
-   // private DBAdapter mDBAdapter;
     private List<ArticleShortEntity> mNewsFeedEntityList;
     private List<ArticleShortEntity> mNewsFeedEntityPartOfList = new ArrayList<>();
     private FrameLayout mNewsItemContainer;
@@ -65,12 +65,9 @@ public class NewsFeedFragment extends Fragment {
     private int pastVisibleItems, visibleItemCount, totalItemCount;
     private LinearLayoutManager mLayoutManager;
     private String selectQueryShortNews;
-    // private DBHelper mDBHelper;
     private int from = 0;
     private int to = 10;
-    //private FrameLayout mProgressBarLayout;
     private ProgressBar mProgressBar;
-
     private boolean isFirstArticlesUpdate = true;
     private BroadcastReceiver mNewsFeedReceiver;
     private ArrayList<Integer> mReadNewsList;
@@ -97,9 +94,14 @@ public class NewsFeedFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        DBAdapter.getInstance().closeDatabase();
         LocalBroadcastManager.getInstance(NewsFeedFragment.this.getActivity()).unregisterReceiver(mNewsFeedReceiver);
         LOGI(TAG, "unregisterRecNewsFeed");
+    }
+
+    @Override
+    public void onDestroy() {
+        DBAdapter.getInstance().closeDatabase();
+        super.onDestroy();
     }
 
     @Override
@@ -193,7 +195,7 @@ public class NewsFeedFragment extends Fragment {
         return view;
     }
 
-    public void updateLastChousenPosition() {
+    public void updateLastChosenPosition() {
         lastChosenPosition = -1;
     }
 
@@ -251,6 +253,7 @@ public class NewsFeedFragment extends Fragment {
         mNewsFeedAdapter.setOnItemClickListener(new NewsFeedAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
+                CommonUtils.hideKeyboard(getActivity());
                 if (lastChosenPosition != position) {
                     mNewsFeedEntityPartOfList.get(position).setViewed(true);
                     DBAdapter.getInstance().saveNewsReadValue(mNewsFeedEntityPartOfList.get(position).getId());
@@ -284,6 +287,23 @@ public class NewsFeedFragment extends Fragment {
             to = to + 10;
         }
         return shortEntityList;
+    }
+
+    public void updateNewsComments() {
+        Cursor cursorReadNews = database.rawQuery("SELECT * FROM " + IS_SHORT_NEWS_READ_TABLE_NAME, null);
+        mReadNewsList = getAllReadNewsFromCursor(cursorReadNews);
+        if (cursorReadNews != null)
+            cursorReadNews.close();
+        Cursor cursorNews = database.rawQuery(selectQueryShortNews, null);
+        mNewsFeedEntityList = fillNewsFromCursor(cursorNews, mReadNewsList);
+        if (cursorNews != null) {
+            cursorNews.close();
+        }
+        int oldSizeValue = mNewsFeedEntityPartOfList.size();
+        mNewsFeedEntityPartOfList.clear();
+        mNewsFeedEntityPartOfList.addAll(mNewsFeedEntityList.subList(0, oldSizeValue));
+        mNewsFeedAdapter.notifyDataSetChanged();
+
     }
 
 }
