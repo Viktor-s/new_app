@@ -13,6 +13,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.RectF;
 import android.os.Bundle;
+import android.support.annotation.IntegerRes;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.util.SparseBooleanArray;
@@ -122,6 +123,8 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
 
     private static String[] months = new String[]{"ЯНВАРЬ", "ФЕВРАЛЬ", "МАРТ", "АПРЕЛЬ", "МАЙ", "ИЮНЬ", "ИЮЛЬ", "АВГУСТ", "СЕНТЯБРЬ", "ОКТЯБРЬ", "НОЯБРЬ", "ДЕКАБРЬ"};
 
+    private AppPreferences mAppPreferences = new AppPreferences(AppContext.getAppContext());
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -196,6 +199,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                 switch (position) { // ПЕРЕДЕЛАТЬ НА ПЕРЕЧИСЛЕНИЯ
                     case 0:
                         chooseReferralButton.setVisibility(View.GONE);
+                        mSelectedItems.clear();
                         break;
                     case 1:
                         chooseReferralButton.setVisibility(View.VISIBLE);
@@ -356,7 +360,45 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                 dialogInfoEvent.dismiss();
             }
         });
+        final Button editButton = (Button) dialogInfoEvent.findViewById(R.id.edit_button);
+        editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // вылазит боковое меню и редактируем
+            }
+        });
+        final Button deleteButton = (Button) dialogInfoEvent.findViewById(R.id.delete_button);
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DeleteConfirmation();
+            }
+        });
         dialogInfoEvent.show();
+    }
+
+
+    public void DeleteConfirmation() {
+        AlertDialog.Builder ad = new AlertDialog.Builder(getActivity());
+        ad.setTitle("заголовок");
+        ad.setMessage("сообщение");
+        ad.setPositiveButton("Да", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int arg1) {
+                Toast.makeText(getActivity(), "Удалено", Toast.LENGTH_LONG).show();
+            }
+        });
+        ad.setNegativeButton("Нет", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int arg1) {
+                Toast.makeText(getActivity(), "Отмена удаления", Toast.LENGTH_LONG).show();
+            }
+        });
+        ad.setCancelable(true);
+        ad.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            public void onCancel(DialogInterface dialog) {
+                // ничего не выбрано
+            }
+        });
+        ad.show();
     }
 
     public void DatePickerDialog(String strDate) {
@@ -388,8 +430,13 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
         CharSequence[] namePerson = new CharSequence[listPerson.size()];
         boolean[] choosePerson = new boolean[listPerson.size()];
 
-        for (int i = 0; i < listPerson.size(); i++)
+        int currentUserId = mAppPreferences.getUserId();
+
+        for (int i = 0; i < listPerson.size(); i++) {
             namePerson[i] = listPerson.get(i).getName();
+//            if (listPerson.get(i).getId() == currentUserId) ;
+//                mSelectedItems.add(i);
+        }
         for (Integer selectNumber : mSelectedItems)
             choosePerson[selectNumber] = true;
 
@@ -537,9 +584,16 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                 calendarAddEventsQuery.params.description = "description";
                 calendarAddEventsQuery.params.type = mCalendartypesSpinner.getSelectedItem().toString();
                 calendarAddEventsQuery.params.location = eventLocation;
-                calendarAddEventsQuery.params.start_date_time = String.valueOf(startTimeEvent.getTimeInMillis() / 1000);
-                calendarAddEventsQuery.params.end_date_time = String.valueOf(endTimeEvent.getTimeInMillis() / 1000);
-                ((MainActivity) CalendarFragment.this.getActivity()).startHttpIntent(calendarAddEventsQuery, HttpIntentService.CALENDAR_ADD_EVENT);
+                calendarAddEventsQuery.params.start = String.valueOf(startTimeEvent.getTimeInMillis() / 1000);
+                calendarAddEventsQuery.params.end = String.valueOf(endTimeEvent.getTimeInMillis() / 1000);
+
+                String sharedWith = "";
+                for (Integer selectNumber : mSelectedItems) {
+                    sharedWith = sharedWith + listPerson.get(selectNumber).getId() + ",";  /// ЗАПЯТАЯ
+                }
+                calendarAddEventsQuery.params.shared_with = (sharedWith != "") ? sharedWith : Integer.toString(mAppPreferences.getUserId());
+                Log.d("TAG_", calendarAddEventsQuery.toString());
+                ((MainActivity) getActivity()).startHttpIntent(calendarAddEventsQuery, HttpIntentService.CALENDAR_ADD_EVENT);
                 break;
         }
 
