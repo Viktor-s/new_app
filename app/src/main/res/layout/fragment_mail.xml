@@ -28,8 +28,9 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/base70dp720sw"
-                android:id="@+id/editText2"
-                android:background="@color/white" />
+                android:id="@+id/mail_fragment_search_editText"
+                android:textColor="@android:color/black"
+                android:background="#00000000"/>
         </LinearLayout>
 
         <ListView

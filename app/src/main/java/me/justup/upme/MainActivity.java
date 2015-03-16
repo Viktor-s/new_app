@@ -59,6 +59,7 @@ import me.justup.upme.interfaces.OnDownloadCloudFile;
 import me.justup.upme.interfaces.OnLoadMailFragment;
 import me.justup.upme.services.GPSTracker;
 import me.justup.upme.utils.AppContext;
+import me.justup.upme.utils.CommonUtils;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.LOGE;
@@ -182,7 +183,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public void onClick(View view) {
         Fragment fragment = null;
-
+        CommonUtils.hideKeyboard(this);
         switch (view.getId()) {
             case R.id.news_menu_item:
                 if (currentlySelectedFragment != SELECTED_FRAGMENT_NEWS) {

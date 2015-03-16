@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
@@ -46,6 +45,7 @@ import me.justup.upme.entity.CommentsArticleFullQuery;
 import me.justup.upme.http.HttpIntentService;
 import me.justup.upme.utils.AnimateButtonClose;
 import me.justup.upme.utils.AppContext;
+import me.justup.upme.utils.CommonUtils;
 
 import static me.justup.upme.db.DBHelper.FULL_NEWS_FULL_DESCR;
 import static me.justup.upme.db.DBHelper.FULL_NEWS_SERVER_ID;
@@ -135,7 +135,9 @@ public class NewsItemFragment extends Fragment {
                     isBroadcastUpdateComments = true;
                     ((MainActivity) NewsItemFragment.this.getActivity()).startHttpIntent(getCommentsFullArticleQuery(mArticleFullEntity.getId(), 100, 0), HttpIntentService.GET_COMMENTS_FULL_ARTICLE);
 
+
                 } else if (isBroadcastUpdateComments) {
+                    ((NewsFeedFragment) getParentFragment()).updateNewsComments();
                     isBroadcastUpdateFullArticle = true;
                     isBroadcastAddComment = false;
                     isBroadcastUpdateComments = false;
@@ -199,7 +201,7 @@ public class NewsItemFragment extends Fragment {
         mNewsItemAddCommentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hideKeyboard();
+                CommonUtils.hideKeyboard(getActivity());
                 String comment = mNewsItemCommentEditText.getText().toString();
                 if (comment != null && comment.length() > 1 && comment.matches(".*\\w.*")) {
                     isBroadcastAddComment = true;
@@ -219,7 +221,7 @@ public class NewsItemFragment extends Fragment {
             @SuppressWarnings("ConstantConditions")
             @Override
             public void onClick(View view) {
-                ((NewsFeedFragment) getParentFragment()).updateLastChousenPosition();
+                ((NewsFeedFragment) getParentFragment()).updateLastChosenPosition();
                 LocalBroadcastManager.getInstance(NewsItemFragment.this.getActivity()).unregisterReceiver(receiver);
                 NewsItemFragment.this.getView().startAnimation(mFragmentSliderOut);
             }
@@ -416,14 +418,6 @@ public class NewsItemFragment extends Fragment {
     private void showWarningDialog(String message) {
         WarningDialog dialog = WarningDialog.newInstance(getString(R.string.warning), message);
         dialog.show(getChildFragmentManager(), WarningDialog.WARNING_DIALOG);
-    }
-
-    private void hideKeyboard() {
-        View view = getActivity().getCurrentFocus();
-        if (view != null) {
-            InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            inputManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-        }
     }
 
 
