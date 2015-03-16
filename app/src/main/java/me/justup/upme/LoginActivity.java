@@ -91,8 +91,8 @@ public class LoginActivity extends BaseActivity {
                         ServerSwitcher.getInstance().setCloudStorageUrl("http://test.justup.me/CloudStorage");
                         break;
                     case R.id.server2_radioButton:
-                        ServerSwitcher.getInstance().setUrl("http://test.justup.me/uptabinterface/jsonrpc/");
-                        ServerSwitcher.getInstance().setCloudStorageUrl("http://test.justup.me/CloudStorage");
+                        ServerSwitcher.getInstance().setUrl("http://justup.me/");
+                        ServerSwitcher.getInstance().setCloudStorageUrl("http://justup.me/");
                         break;
                     default:
                         break;

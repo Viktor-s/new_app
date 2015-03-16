@@ -40,8 +40,6 @@ public class ApiWrapper {
     // private static final String URL = "http://test.justup.me/uptabinterface/jsonrpc/";
     // private static final String CLOUD_STORAGE_URL = "http://test.justup.me/CloudStorage";
     private static ServerSwitcher serverSwitcher = ServerSwitcher.getInstance();
-    private static String URL = serverSwitcher.getUrl();
-    private static String CLOUD_STORAGE_URL = serverSwitcher.getCloudStorageUrl();
 
     private static AsyncHttpClient client = new AsyncHttpClient();
     private static AsyncHttpClient syncClient = new SyncHttpClient();
@@ -84,17 +82,20 @@ public class ApiWrapper {
 
     private static void post(final StringEntity se, AsyncHttpResponseHandler responseHandler) {
         addClientHeader();
-        client.post(null, URL, se, null, responseHandler);
+        // client.post(null, URL, se, null, responseHandler);
+        client.post(null, serverSwitcher.getUrl(), se, null, responseHandler);
     }
 
     private static void syncPost(final StringEntity se, AsyncHttpResponseHandler responseHandler) {
         syncClient.addHeader(AUTHORIZATION_HEADER, getToken());
-        syncClient.post(null, URL, se, null, responseHandler);
+        // syncClient.post(null, URL, se, null, responseHandler);
+        syncClient.post(null, serverSwitcher.getUrl(), se, null, responseHandler);
     }
 
     private static void loginPost(final StringEntity se, AsyncHttpResponseHandler responseHandler) {
         client.removeAllHeaders();
-        client.post(null, URL, se, null, responseHandler);
+        // client.post(null, URL, se, null, responseHandler);
+        client.post(null, serverSwitcher.getUrl(), se, null, responseHandler);
     }
 
     private static String getToken() {
@@ -154,14 +155,16 @@ public class ApiWrapper {
         }
 
         addClientHeader();
-        client.post(CLOUD_STORAGE_URL + CALL_CLOUD_UPLOAD, params, responseHandler);
+        // client.post(CLOUD_STORAGE_URL + CALL_CLOUD_UPLOAD, params, responseHandler);
+        client.post(serverSwitcher.getCloudStorageUrl() + CALL_CLOUD_UPLOAD, params, responseHandler);
     }
 
     public static void syncDownloadFileFromCloud(String fileHash, FileAsyncHttpResponseHandler fileResponseHandler) {
         // downloads bug
         AsyncHttpClient localClient = new SyncHttpClient();
         localClient.addHeader(AUTHORIZATION_HEADER, getToken());
-        localClient.get(CLOUD_STORAGE_URL + CALL_CLOUD_FILE + fileHash, fileResponseHandler);
+        // localClient.get(CLOUD_STORAGE_URL + CALL_CLOUD_FILE + fileHash, fileResponseHandler);
+        localClient.get(serverSwitcher.getCloudStorageUrl() + CALL_CLOUD_FILE + fileHash, fileResponseHandler);
     }
 
     public static void syncSendFileToCloud(final File file, AsyncHttpResponseHandler responseHandler) {
@@ -175,7 +178,8 @@ public class ApiWrapper {
         }
 
         syncClient.addHeader(AUTHORIZATION_HEADER, getToken());
-        syncClient.post(CLOUD_STORAGE_URL + CALL_CLOUD_UPLOAD, params, responseHandler);
+        // syncClient.post(CLOUD_STORAGE_URL + CALL_CLOUD_UPLOAD, params, responseHandler);
+        syncClient.post(serverSwitcher.getCloudStorageUrl() + CALL_CLOUD_UPLOAD, params, responseHandler);
     }
 
     private static void addClientHeader() {
