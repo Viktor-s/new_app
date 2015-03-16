@@ -10,10 +10,14 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.FilterQueryProvider;
 import android.widget.ListView;
 
 import me.justup.upme.MainActivity;
@@ -26,18 +30,16 @@ import me.justup.upme.entity.StartChatQuery;
 import me.justup.upme.services.PushIntentService;
 import me.justup.upme.utils.AppContext;
 import me.justup.upme.utils.AppPreferences;
+import me.justup.upme.utils.CommonUtils;
 
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_TABLE_NAME;
 
 
 public class MailFragment extends Fragment {
-    // private DBAdapter mDBAdapter;
     private int lastChosenPosition = -1;
-    //private DBHelper mDBHelper;
     private MailContactsAdapter mMailContactsAdapter;
     private String selectQuery;
     private BroadcastReceiver receiver;
-
     public static final int JABBER = 1;
     public static final int WEBRTC = 2;
     public static final int FILE = 3;
@@ -48,20 +50,22 @@ public class MailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        mDBHelper = new DBHelper(AppContext.getAppContext());
-//        mDBAdapter = new DBAdapter(AppContext.getAppContext());
-//        mDBAdapter.open();
         database = DBAdapter.getInstance().openDatabase();
         selectQuery = "SELECT * FROM " + MAIL_CONTACT_TABLE_NAME;
         cursor = database.rawQuery(selectQuery, null);
         mMailContactsAdapter = new MailContactsAdapter(this, AppContext.getAppContext(), cursor, 0);
+        mMailContactsAdapter.setFilterQueryProvider(new FilterQueryProvider() {
+            @Override
+            public Cursor runQuery(CharSequence constraint) {
+                return fetchContactsByName(constraint.toString());
+            }
+        });
     }
 
     @Override
     public void onPause() {
         super.onPause();
         LocalBroadcastManager.getInstance(MailFragment.this.getActivity()).unregisterReceiver(receiver);
-        //mDBAdapter.close();
     }
 
     @Override
@@ -74,8 +78,6 @@ public class MailFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-//        cursor = database.rawQuery(selectQuery, null);
-        //  mMailContactsAdapter = new MailContactsAdapter(this, AppContext.getAppContext(), cursor, 0);
         receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -116,13 +118,12 @@ public class MailFragment extends Fragment {
         contactsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                CommonUtils.hideKeyboard(getActivity());
                 if (lastChosenPosition != position) {
                     String friendJabberId = mMailContactsAdapter.getCursor().getString(mMailContactsAdapter.getCursor().getColumnIndex(DBHelper.MAIL_CONTACT_NAME));
                     String yourJabberId = appPreferences.getJabberId();
                     int userId = mMailContactsAdapter.getCursor().getInt(mMailContactsAdapter.getCursor().getColumnIndex(DBHelper.MAIL_CONTACT_SERVER_ID));
-
                     startNotificationIntent(userId);
-
                     final FragmentTransaction ft = getChildFragmentManager().beginTransaction();
                     ft.replace(R.id.mail_messages_container_frameLayout, MailMessagesFragment.newInstance(yourJabberId, friendJabberId, userId));
                     ft.commit();
@@ -130,6 +131,22 @@ public class MailFragment extends Fragment {
                 }
             }
         });
+        EditText mSearchFieldEditText = (EditText) view.findViewById(R.id.mail_fragment_search_editText);
+        mSearchFieldEditText.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+            }
+
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+                mMailContactsAdapter.getFilter().filter(s.toString());
+            }
+        });
+
         return view;
     }
 
@@ -144,4 +161,18 @@ public class MailFragment extends Fragment {
         getActivity().startService(intent.putExtras(bundle));
     }
 
+    private Cursor fetchContactsByName(String search) {
+        Cursor mCursor;
+        if (search == null || search.length() == 0) {
+            mCursor = database.rawQuery(selectQuery, null);
+        } else {
+            mCursor = database.rawQuery("SELECT * FROM "
+                    + DBHelper.MAIL_CONTACT_TABLE_NAME + " where " + DBHelper.MAIL_CONTACT_NAME + " like '%" + search
+                    + "%'", null);
+        }
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+    }
 }
