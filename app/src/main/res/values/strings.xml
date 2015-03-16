@@ -239,7 +239,7 @@
     <string name="pref_displayhud_dlg">Отображать статистику</string>
     <string name="pref_displayhud_default" translatable="false">false</string>
 
-    <string name="sent_file">" [Вам открыт доступ к файлу: "</string>
+    <string name="sent_file">" открыл доступ к файлу: "</string>
     <string name="file_in_cloud">Файл в облаке</string>
     <string name="file_from_cloud_ok">Файл загружен</string>
     <string name="file_from_cloud_error">Ошибка записи!</string>

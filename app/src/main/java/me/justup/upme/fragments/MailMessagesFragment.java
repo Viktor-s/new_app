@@ -117,6 +117,9 @@ public class MailMessagesFragment extends Fragment {
     private static final String START_HTML_OWNER = "<b><font color=gray>";
     private static final String END_HTML = "</font></b>";
 
+    private static final String START_HTML_FILE = "<br><font color=blue>[";
+    private static final String END_HTML_FILE = "]</font>";
+
     private XMPPConnection mXMPPConnection;
     private ArrayList<Spanned> mMessages = new ArrayList<>();
     private Handler mHandler = new Handler();
@@ -245,13 +248,15 @@ public class MailMessagesFragment extends Fragment {
                     sendFileToCloud(file);
 
                     if (text != null)
-                        text += (getString(R.string.sent_file) + file.getName() + "]");
+                        text += (START_HTML_FILE + mYourName + getString(R.string.sent_file) + file.getName() + END_HTML_FILE);
                     else
-                        text = getString(R.string.sent_file) + file.getName() + "]";
+                        text = START_HTML_FILE + mYourName + getString(R.string.sent_file) + file.getName() + END_HTML_FILE;
 
                     mFilePath = null;
                     mImageAttachedImageView.setVisibility(View.GONE);
                 }
+
+                text = text.replace("\n", "<br>");
 
                 LOGI(TAG, "Sending text " + text + " to " + to);
                 Message msg = new Message(to, Message.Type.chat);
@@ -418,7 +423,7 @@ public class MailMessagesFragment extends Fragment {
                 }
 
                 if (response != null) {
-                    if (response.status.equals(SendFileToCloudResponse.STATUS_OK)) {
+                    if (response.status.equals(SendFileToCloudResponse.STATUS_OK) || response.status.equals(SendFileToCloudResponse.STATUS_UPDATED)) {
                         Toast.makeText(getActivity(), getString(R.string.file_in_cloud), Toast.LENGTH_SHORT).show();
                         addFileShareWith(response.file_hash);
 

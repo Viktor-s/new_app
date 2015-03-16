@@ -57,6 +57,8 @@
                 android:layout_width="@dimen/base250dp720sw"
                 android:layout_height="@dimen/base40dp720sw"
                 android:id="@+id/chatET"
+                android:inputType="textMultiLine"
+                android:singleLine="false"
                 android:layout_centerVertical="true"
                 android:layout_toEndOf="@+id/button12"
                 android:textColor="@color/black"
@@ -83,6 +85,14 @@
                 android:text="@string/mail_messages_send"
                 android:textAllCaps="true"
                 android:gravity="center" />
+
+            <ImageButton
+                android:layout_width="@dimen/base50dp720sw"
+                android:layout_height="@dimen/base50dp720sw"
+                android:id="@+id/mail_messages_image_attach_imageView"
+                android:clickable="true"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/chatET" />
 
         </RelativeLayout>
 
@@ -153,13 +163,5 @@
         android:layout_above="@+id/linearLayout3"
         android:layout_marginEnd="@dimen/base60dp720sw"
         android:src="@android:drawable/dark_header" />
-
-    <ImageButton
-        android:layout_width="@dimen/base50dp720sw"
-        android:layout_height="@dimen/base50dp720sw"
-        android:id="@+id/mail_messages_image_attach_imageView"
-        android:layout_alignBottom="@+id/jabber_listMessages"
-        android:layout_alignParentStart="true"
-        android:clickable="true" />
 
 </RelativeLayout>
