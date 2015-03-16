@@ -24,6 +24,7 @@ import me.justup.upme.entity.BaseHttpQueryEntity;
 import me.justup.upme.entity.OnHttpFailureResponse;
 import me.justup.upme.utils.AppContext;
 import me.justup.upme.utils.AppPreferences;
+import me.justup.upme.utils.ServerSwitcher;
 
 import static me.justup.upme.utils.LogUtils.LOGE;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
@@ -36,8 +37,11 @@ public class ApiWrapper {
     private static final String AUTHORIZATION_HEADER = "X-AUTH-UPMETOKEN";
     private static final String UTF_8 = "UTF-8";
 
-    private static final String URL = "http://test.justup.me/uptabinterface/jsonrpc/";
-    private static final String CLOUD_STORAGE_URL = "http://test.justup.me/CloudStorage";
+    // private static final String URL = "http://test.justup.me/uptabinterface/jsonrpc/";
+    // private static final String CLOUD_STORAGE_URL = "http://test.justup.me/CloudStorage";
+    private static ServerSwitcher serverSwitcher = ServerSwitcher.getInstance();
+    private static String URL = serverSwitcher.getUrl();
+    private static String CLOUD_STORAGE_URL = serverSwitcher.getCloudStorageUrl();
 
     private static AsyncHttpClient client = new AsyncHttpClient();
     private static AsyncHttpClient syncClient = new SyncHttpClient();
@@ -151,11 +155,6 @@ public class ApiWrapper {
 
         addClientHeader();
         client.post(CLOUD_STORAGE_URL + CALL_CLOUD_UPLOAD, params, responseHandler);
-    }
-
-    public static void downloadFileFromCloud(String fileHash, FileAsyncHttpResponseHandler fileResponseHandler) {
-        addClientHeader();
-        client.get(CLOUD_STORAGE_URL + CALL_CLOUD_FILE + fileHash, fileResponseHandler);
     }
 
     public static void syncDownloadFileFromCloud(String fileHash, FileAsyncHttpResponseHandler fileResponseHandler) {

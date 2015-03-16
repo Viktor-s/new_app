@@ -8,6 +8,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.google.gson.JsonSyntaxException;
@@ -23,6 +24,7 @@ import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.services.StatusBarService;
 import me.justup.upme.utils.AppContext;
 import me.justup.upme.utils.AppPreferences;
+import me.justup.upme.utils.ServerSwitcher;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.LOGE;
@@ -79,6 +81,25 @@ public class LoginActivity extends BaseActivity {
 
 
         // Delete! Only for debug!
+        RadioGroup radiogroup = (RadioGroup) findViewById(R.id.server_radioGroup);
+        radiogroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId) {
+                    case R.id.server1_radioButton:
+                        ServerSwitcher.getInstance().setUrl("http://test.justup.me/uptabinterface/jsonrpc/");
+                        ServerSwitcher.getInstance().setCloudStorageUrl("http://test.justup.me/CloudStorage");
+                        break;
+                    case R.id.server2_radioButton:
+                        ServerSwitcher.getInstance().setUrl("http://test.justup.me/uptabinterface/jsonrpc/");
+                        ServerSwitcher.getInstance().setCloudStorageUrl("http://test.justup.me/CloudStorage");
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+
         ImageView mLoginDebug = (ImageView) findViewById(R.id.upme_corner_button);
         mLoginDebug.setOnClickListener(new View.OnClickListener() {
             @Override
