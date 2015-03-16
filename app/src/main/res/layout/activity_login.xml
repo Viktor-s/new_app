@@ -190,16 +190,15 @@
             android:id="@+id/server_radioGroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
+            android:layout_marginStart="@dimen/base20dp720sw"
             android:layout_marginTop="5dp"
             android:orientation="vertical">
 
             <RadioButton
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
+                android:padding="@dimen/base10dp720sw"
                 android:textColor="@color/black"
-                android:checked="true"
                 android:text="test.justup.me"
                 android:id="@+id/server1_radioButton" />
 
@@ -208,9 +207,19 @@
                 android:layout_height="wrap_content"
                 android:text="другой"
                 android:textColor="@color/black"
-                android:padding="10dp"
+                android:padding="@dimen/base10dp720sw"
                 android:id="@+id/server2_radioButton" />
         </RadioGroup>
     </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        tools:text="UPME v0.2"
+        android:id="@+id/app_version_textView"
+        android:layout_marginBottom="@dimen/base10dp720sw"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

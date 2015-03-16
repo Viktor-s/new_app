@@ -1,6 +1,7 @@
 package me.justup.upme;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
@@ -81,6 +82,14 @@ public class LoginActivity extends BaseActivity {
 
 
         // Delete! Only for debug!
+        TextView appVersion = (TextView) findViewById(R.id.app_version_textView);
+        String versionName = "";
+        try {
+            versionName = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+        } catch (PackageManager.NameNotFoundException ignored) {
+        }
+        appVersion.setText("UPME v" + versionName);
+
         RadioGroup radiogroup = (RadioGroup) findViewById(R.id.server_radioGroup);
         radiogroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
