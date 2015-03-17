@@ -13,10 +13,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.RectF;
 import android.os.Bundle;
-import android.support.annotation.IntegerRes;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,11 +24,9 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckedTextView;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -46,15 +42,13 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 import me.justup.upme.MainActivity;
 import me.justup.upme.R;
 import me.justup.upme.db.DBAdapter;
-import me.justup.upme.db.DBHelper;
+import me.justup.upme.dialogs.ChooseReferralDialog;
 import me.justup.upme.entity.CalendarAddEventQuery;
 import me.justup.upme.entity.PersonBriefcaseEntity;
 import me.justup.upme.http.HttpIntentService;
@@ -164,14 +158,15 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
     @Override
     public void onResume() {
         super.onResume();
-        LOGI(TAG, "RegisterRecNewsFeed");
+        LOGI(TAG, "RegisterRecNewsFeed 111");
         receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
+                LOGI(TAG, "RegisterRecNewsFeed 222 in onReceive");
                 listEventsForWeek(firstDayCurrentWeek);
             }
         };
-        LocalBroadcastManager.getInstance(CalendarFragment.this.getActivity()).registerReceiver(receiver, new IntentFilter(DBAdapter.CALENDAR_SQL_BROADCAST_INTENT));
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver, new IntentFilter(DBAdapter.CALENDAR_SQL_BROADCAST_INTENT));
     }
 
 
@@ -284,6 +279,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
             WeekViewEvent eventElement = new WeekViewEvent(id, name, startTimeCalendar, endTimeCalendar);
             LOGD("TAG_listEventsForWeek", "eventElement: " + eventElement.toString());
             events.add(eventElement);
+            Log.d("TAG1_events", "events " + events.toString());
             mWeekView.notifyDatasetChanged();
         }
         cursorEvents.close();
@@ -470,6 +466,10 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
 
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
     public static String convertTimeToString(int hours, int minutes) {
         return String.format("%02d", hours) + ":" + String.format("%02d", minutes);
@@ -537,7 +537,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                 LOGD("TAG_", "firstDayCurrentWeek: " + firstDayCurrentWeek);
                 mWeekView.goToDate(firstDayCurrentWeek.toDateTime(DateTimeZone.UTC).toGregorianCalendar());
                 selectWeekTextView.setText(Integer.toString(currentWeek == 1 ? currentWeek = 52 : --currentWeek) + getResources().getString(R.string.week));
-                String strMonthYearPrev = String.format("%s %d", months[firstDayCurrentWeek.getMonthOfYear()], currentDate.getYear());
+                String strMonthYearPrev = String.format("%s %d", months[firstDayCurrentWeek.getMonthOfYear()-1], currentDate.getYear());
                 selectMonthTextView.setText(strMonthYearPrev);
                 listEventsForWeek(firstDayCurrentWeek);
                 ((MainActivity) getActivity()).startHttpIntent(MainActivity.getEventCalendarQuery(firstDayCurrentWeek), HttpIntentService.CALENDAR_PART);
@@ -547,7 +547,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                 LOGD("TAG_", "firstDayCurrentWeek: " + firstDayCurrentWeek);
                 mWeekView.goToDate(firstDayCurrentWeek.toDateTime(DateTimeZone.UTC).toGregorianCalendar());
                 selectWeekTextView.setText(Integer.toString(currentWeek == 52 ? currentWeek = 1 : ++currentWeek) + getResources().getString(R.string.week));
-                String strMonthYearNext = String.format("%s %d", months[firstDayCurrentWeek.getMonthOfYear()], currentDate.getYear());
+                String strMonthYearNext = String.format("%s %d", months[firstDayCurrentWeek.getMonthOfYear()-1], currentDate.getYear());
                 selectMonthTextView.setText(strMonthYearNext);
                 listEventsForWeek(firstDayCurrentWeek);
                 ((MainActivity) getActivity()).startHttpIntent(MainActivity.getEventCalendarQuery(firstDayCurrentWeek), HttpIntentService.CALENDAR_PART);
@@ -566,6 +566,8 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                 break;
             case R.id.choose_referral_button:
                 alertMultipleChoiceReferals();
+
+//                ChooseReferralDialog.newInstance(listID); 111
                 break;
             case R.id.add_new_event_button:
                 panelAddEvent.setVisibility(View.GONE);
