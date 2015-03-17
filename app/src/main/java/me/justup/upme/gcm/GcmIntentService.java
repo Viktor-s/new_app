@@ -21,8 +21,12 @@ import me.justup.upme.db.DBAdapter;
 import me.justup.upme.entity.Push;
 import me.justup.upme.fragments.MailFragment;
 import me.justup.upme.fragments.StatusBarFragment;
+import me.justup.upme.services.SoundNotifyService;
 import me.justup.upme.utils.AppLocale;
 
+import static me.justup.upme.services.SoundNotifyService.SOUND_NOTIFY_TYPE_EXTRA;
+import static me.justup.upme.services.SoundNotifyService.TYPE_CALL;
+import static me.justup.upme.services.SoundNotifyService.TYPE_CHAT;
 import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.LOGE;
 import static me.justup.upme.utils.LogUtils.LOGI;
@@ -132,6 +136,10 @@ public class GcmIntentService extends IntentService {
             Intent webrtcIntent = new Intent(MainActivity.BROADCAST_ACTION_CALL);
             webrtcIntent.putExtra(MainActivity.BROADCAST_EXTRA_PUSH, push);
             sendBroadcast(webrtcIntent);
+
+            playNotify(TYPE_CALL);
+        } else {
+            playNotify(TYPE_CHAT);
         }
 
         Date date = new Date();
@@ -139,6 +147,12 @@ public class GcmIntentService extends IntentService {
         String pushTime = mTimeFormat.format(date);
 
         DBAdapter.getInstance().savePush(push, pushTime);
+    }
+
+    private void playNotify(int type) {
+        Intent sound = new Intent(new Intent(this, SoundNotifyService.class));
+        sound.putExtra(SOUND_NOTIFY_TYPE_EXTRA, type);
+        startService(sound);
     }
 
     private void makeToast(final String message) {

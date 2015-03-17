@@ -45,6 +45,7 @@
         <service android:name=".services.StatusBarService" />
         <service android:name=".services.PushIntentService" />
         <service android:name=".services.FileExplorerService" />
+        <service android:name=".services.SoundNotifyService" />
 
         <receiver
             android:name=".gcm.GcmBroadcastReceiver"
