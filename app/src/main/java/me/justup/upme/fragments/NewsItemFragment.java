@@ -45,6 +45,7 @@ import me.justup.upme.entity.CommentsArticleFullQuery;
 import me.justup.upme.http.HttpIntentService;
 import me.justup.upme.utils.AnimateButtonClose;
 import me.justup.upme.utils.AppContext;
+import me.justup.upme.utils.AppPreferences;
 import me.justup.upme.utils.CommonUtils;
 
 import static me.justup.upme.db.DBHelper.FULL_NEWS_FULL_DESCR;
@@ -88,6 +89,7 @@ public class NewsItemFragment extends Fragment {
     private BroadcastReceiver receiver;
     private Animation mFragmentSliderOut;
     private SQLiteDatabase database;
+    private ArticleShortCommentEntity mLastShortComment;
 
 
     public static NewsItemFragment newInstance(ArticleShortEntity articleShortEntity) {
@@ -105,8 +107,6 @@ public class NewsItemFragment extends Fragment {
         if (bundle != null) {
             mNewsFeedEntity = (ArticleShortEntity) bundle.getSerializable(ARG_NEWS_FEED_ENTITY);
         }
-        // mDBHelper = new DBHelper(AppContext.getAppContext());
-        // mDBAdapter = new DBAdapter(AppContext.getAppContext());
         database = DBAdapter.getInstance().openDatabase();
     }
 
@@ -133,21 +133,23 @@ public class NewsItemFragment extends Fragment {
                     isBroadcastUpdateFullArticle = false;
                     isBroadcastAddComment = false;
                     isBroadcastUpdateComments = true;
+                    articleCommentsList.add(mLastShortComment);
+                    mNewsItemCommentsListView.setAdapter(new NewsCommentsAdapter(AppContext.getAppContext(), articleCommentsList));
+                    setListViewHeightBasedOnChildren(mNewsItemCommentsListView);
+                    mNewsItemCommentEditText.setText("");
                     ((MainActivity) NewsItemFragment.this.getActivity()).startHttpIntent(getCommentsFullArticleQuery(mArticleFullEntity.getId(), 100, 0), HttpIntentService.GET_COMMENTS_FULL_ARTICLE);
-
-
                 } else if (isBroadcastUpdateComments) {
                     ((NewsFeedFragment) getParentFragment()).updateNewsComments();
                     isBroadcastUpdateFullArticle = true;
                     isBroadcastAddComment = false;
                     isBroadcastUpdateComments = false;
-                    articleCommentsList = fillCommentsFromCursor(mArticleFullEntity.getId());
-                    NewsCommentsAdapter newsCommentsAdapter = new NewsCommentsAdapter(AppContext.getAppContext(), articleCommentsList);
-                    mNewsItemCommentsListView.setAdapter(newsCommentsAdapter);
-                    newsCommentsAdapter.notifyDataSetChanged();
-                    setListViewHeightBasedOnChildren(mNewsItemCommentsListView);
+//                    articleCommentsList = fillCommentsFromCursor(mArticleFullEntity.getId());
+//                    NewsCommentsAdapter newsCommentsAdapter = new NewsCommentsAdapter(AppContext.getAppContext(), articleCommentsList);
+//                    mNewsItemCommentsListView.setAdapter(newsCommentsAdapter);
+//                    newsCommentsAdapter.notifyDataSetChanged();
+//                    setListViewHeightBasedOnChildren(mNewsItemCommentsListView);
                     mNewsItemAddCommentButton.setEnabled(true);
-                    mNewsItemCommentEditText.setText("");
+
                 }
             }
         };
@@ -161,9 +163,14 @@ public class NewsItemFragment extends Fragment {
         super.onPause();
         LocalBroadcastManager.getInstance(NewsItemFragment.this.getActivity()).unregisterReceiver(receiver);
         LOGI(TAG, "unregisterRecNewsItem");
-        DBAdapter.getInstance().closeDatabase();
+
     }
 
+    @Override
+    public void onDestroy() {
+        DBAdapter.getInstance().closeDatabase();
+        super.onDestroy();
+    }
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -208,7 +215,10 @@ public class NewsItemFragment extends Fragment {
                     isBroadcastUpdateFullArticle = false;
                     isBroadcastUpdateComments = false;
                     mNewsItemAddCommentButton.setEnabled(false);
-                    addComment(comment);
+                    if (mArticleFullEntity != null) {
+                        addComment(comment);
+                    }
+
                 } else {
                     showWarningDialog(getString(R.string.warning_short_comment));
                 }
@@ -336,6 +346,11 @@ public class NewsItemFragment extends Fragment {
     }
 
     private void addComment(String message) {
+        mLastShortComment = new ArticleShortCommentEntity();
+        mLastShortComment.setAuthor_name(new AppPreferences(getActivity()).getUserName());
+        mLastShortComment.setAuthor_id(new AppPreferences(getActivity()).getUserId());
+        mLastShortComment.setAuthor_img("http://droidtune.com/12535/luchshie-android-igry-2013-po-versii-hardcoredroid.html");
+        mLastShortComment.setContent(message);
         ((MainActivity) NewsItemFragment.this.getActivity()).startHttpIntent(getAddCommentQuery(mArticleFullEntity.getId(), message), HttpIntentService.ADD_COMMENT);
     }
 
