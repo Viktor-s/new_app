@@ -8,7 +8,7 @@ import android.provider.BaseColumns;
 
 public class DBHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "upme.db";
-    private static final int DATABASE_VERSION = 12;
+    private static final int DATABASE_VERSION = 14;
 
     public static final String BASE_TABLE_NAME = "base_table";
     public static final String BASE_ID = BaseColumns._ID;
@@ -60,9 +60,11 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String EVENT_CALENDAR_NAME = "name";
     public static final String EVENT_CALENDAR_DESCRIPTION = "description";
     public static final String EVENT_CALENDAR_TYPE = "type";
+    public static final String EVENT_CALENDAR_OWNER_ID = "owner_id";
     public static final String EVENT_CALENDAR_START_DATETIME = "start_datetime";
     public static final String EVENT_CALENDAR_END_DATETIME = "end_datetime";
     public static final String EVENT_CALENDAR_LOCATION = "location";
+    public static final String EVENT_CALENDAR_SHARED_WITH = "shared_with";
 
     public static final String PRODUCTS_CATEGORIES_TABLE_NAME = "products_categories_table";
     public static final String PRODUCTS_CATEGORIES_ID = BaseColumns._ID;
@@ -197,9 +199,11 @@ public class DBHelper extends SQLiteOpenHelper {
             + EVENT_CALENDAR_NAME + " TEXT, "
             + EVENT_CALENDAR_DESCRIPTION + " TEXT, "
             + EVENT_CALENDAR_TYPE + " TEXT, "
+            + EVENT_CALENDAR_OWNER_ID + " INTEGER, "
             + EVENT_CALENDAR_START_DATETIME + " TEXT, "
             + EVENT_CALENDAR_END_DATETIME + " TEXT, "
-            + EVENT_CALENDAR_LOCATION + " TEXT" + ")";
+            + EVENT_CALENDAR_LOCATION + " TEXT, "
+            + EVENT_CALENDAR_SHARED_WITH + " TEXT" + ")";
 
 
     protected static final String CREATE_TABLE_STATUS_BAR_PUSH = "CREATE TABLE "

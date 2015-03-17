@@ -360,10 +360,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         String startTime = Long.toString(startWeek.toDateTime(DateTimeZone.UTC).getMillis() / 1000);
         LocalDateTime lastDayCurrentWeek = startWeek.withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59).withDayOfWeek(DateTimeConstants.SUNDAY);
         String endTime = Long.toString(lastDayCurrentWeek.toDateTime(DateTimeZone.UTC).getMillis() / 1000);
-        LOGD("TAG_CalendarGetEventsQuery", "startTime " + startTime + " --- endTime " + endTime);
         CalendarGetEventsQuery query = new CalendarGetEventsQuery();
-        query.params.start_date_time = startTime;
-        query.params.end_date_time = endTime;
+        query.params.start = startTime;
+        query.params.end = endTime;
         return query;
     }
 

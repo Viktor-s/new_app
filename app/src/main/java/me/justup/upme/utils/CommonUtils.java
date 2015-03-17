@@ -5,6 +5,8 @@ import android.content.Context;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import java.util.List;
+
 
 public class CommonUtils {
 
@@ -20,6 +22,15 @@ public class CommonUtils {
             InputMethodManager inputManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
             inputManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
+    }
+
+    public static String fromListToString(List<Integer> listSource, String separator) {
+        if (listSource.size() == 0)
+            return "";
+        StringBuilder result = new StringBuilder();
+        for (Integer item : listSource)
+            result.append(item).append(separator);
+        return result.substring(0, result.length()-1);
     }
 
 }

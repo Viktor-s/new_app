@@ -14,8 +14,8 @@ public class CalendarGetEventsQuery extends BaseHttpQueryEntity {
 
     public class Params implements Serializable {
 
-        public String start_date_time;
-        public String end_date_time;
+        public String start;
+        public String end;
 
     }
 

@@ -5,8 +5,10 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import me.justup.upme.entity.ArticleFullResponse;
@@ -17,6 +19,7 @@ import me.justup.upme.entity.GetMailContactResponse;
 import me.justup.upme.entity.ProductsGetAllCategoriesResponse;
 import me.justup.upme.entity.Push;
 import me.justup.upme.utils.AppContext;
+import me.justup.upme.utils.CommonUtils;
 
 import static me.justup.upme.db.DBHelper.CREATE_TABLE_MAIL_CONTACT;
 import static me.justup.upme.db.DBHelper.CREATE_TABLE_STATUS_BAR_PUSH;
@@ -24,7 +27,9 @@ import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_DESCRIPTION;
 import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_END_DATETIME;
 import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_LOCATION;
 import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_NAME;
+import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_OWNER_ID;
 import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_SERVER_ID;
+import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_SHARED_WITH;
 import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_START_DATETIME;
 import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_TABLE_NAME;
 import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_TYPE;
@@ -84,6 +89,7 @@ import static me.justup.upme.db.DBHelper.STATUS_BAR_PUSH_TABLE_NAME;
 import static me.justup.upme.db.DBHelper.STATUS_BAR_PUSH_TYPE;
 import static me.justup.upme.db.DBHelper.STATUS_BAR_PUSH_USER_ID;
 import static me.justup.upme.db.DBHelper.STATUS_BAR_PUSH_USER_NAME;
+import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 /**
@@ -267,9 +273,12 @@ public class DBAdapter {
             values.put(EVENT_CALENDAR_NAME, entity.result.get(i).name);
             values.put(EVENT_CALENDAR_DESCRIPTION, entity.result.get(i).description);
             values.put(EVENT_CALENDAR_TYPE, entity.result.get(i).type);
+            values.put(EVENT_CALENDAR_OWNER_ID, entity.result.get(i).owner_id);
             values.put(EVENT_CALENDAR_START_DATETIME, entity.result.get(i).start_datetime);
             values.put(EVENT_CALENDAR_END_DATETIME, entity.result.get(i).end_datetime);
             values.put(EVENT_CALENDAR_LOCATION, entity.result.get(i).location);
+                String strSharedWith = CommonUtils.fromListToString(entity.result.get(i).shared_with, ",");
+            values.put(EVENT_CALENDAR_SHARED_WITH, strSharedWith);
             database.insertWithOnConflict(EVENT_CALENDAR_TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
         }
         sendBroadcast(CALENDAR_SQL_BROADCAST_INTENT);
