@@ -399,4 +399,11 @@
         <item name="android:background">@color/cloud_drive_background</item>
     </style>
 
+    <style name="FilePropertiesText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/base18sp720sw</item>
+        <item name="android:layout_marginEnd">@dimen/base10dp720sw</item>
+    </style>
+
 </resources>

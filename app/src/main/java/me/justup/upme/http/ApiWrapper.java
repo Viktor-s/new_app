@@ -56,8 +56,8 @@ public class ApiWrapper {
     public static final String ARTICLE_FULL_GET_COMMENTS = "ArticleComments.getByArticleId";
     public static final String ARTICLE_ADD_COMMENT = "ArticleComments.add";
 
-    public static final String ACCOUNT_GET_PEOPLE_NETWORK = "Account.getPeopleNetwork";
-    public static final String ACCOUNT_ADD_REFERAL = "Account.addReferal";
+    public static final String ACCOUNT_GET_REFERRALS_BY_ID = "Account.getReferralsById";
+    public static final String ACCOUNT_ADD_REFERAL = "Account.addReferral";
     public static final String ACCOUNT_GET_USER_PANEL_INFO = "Account.getUserPanelInfo";
 
     public static final String PUSH_SET_GOOGLE_PUSH_ID = "Push.setGooglePushId";
@@ -78,6 +78,9 @@ public class ApiWrapper {
     public static final String FILE_GET_ALL_SHARED_WITH_ME = "File.getAllSharedWithMe";
     public static final String FILE_DELETE = "File.delete";
     public static final String FILE_COPY_SHARED_TO_ME = "File.copySharedToMe";
+    public static final String FILE_GET_PROPERTIES_BY_HASH = "File.getByHash";
+    public static final String FILE_GET_SHARE_WITH = "File.getShareWith";
+    public static final String FILE_UNLINK_SHARED_FILE = "File.unlinkSharedFile";
 
 
     private static void post(final StringEntity se, AsyncHttpResponseHandler responseHandler) {

@@ -28,6 +28,8 @@ import org.apache.http.Header;
 import java.util.Collections;
 
 import me.justup.upme.R;
+import me.justup.upme.dialogs.FilePropertiesDialog;
+import me.justup.upme.dialogs.FileRemoveShareDialog;
 import me.justup.upme.dialogs.FileShareDialog;
 import me.justup.upme.dialogs.WarningDialog;
 import me.justup.upme.entity.FileGetAllQuery;
@@ -274,8 +276,13 @@ public class CloudExplorerFragment extends Fragment {
                         return true;
 
                     case R.id.file_share_for:
-                        FileShareDialog dialog = FileShareDialog.newInstance();
-                        dialog.show(getChildFragmentManager(), FileShareDialog.FILE_SHARE_DIALOG);
+                        FileShareDialog shareDialog = FileShareDialog.newInstance();
+                        shareDialog.show(getChildFragmentManager(), FileShareDialog.FILE_SHARE_DIALOG);
+                        return true;
+
+                    case R.id.file_remove_share_for:
+                        FileRemoveShareDialog removeShareDialog = FileRemoveShareDialog.newInstance();
+                        removeShareDialog.show(getChildFragmentManager(), FileRemoveShareDialog.FILE_REMOVE_SHARE_DIALOG);
                         return true;
 
                     default:
@@ -304,6 +311,11 @@ public class CloudExplorerFragment extends Fragment {
                         startExplorerService(fileHash, null, COPY);
                         return true;
 
+                    case R.id.file_share_properties:
+                        FilePropertiesDialog dialog = FilePropertiesDialog.newInstance(fileHash);
+                        dialog.show(getChildFragmentManager(), FilePropertiesDialog.FILE_PROPERTIES_DIALOG);
+                        return true;
+
                     default:
                         return false;
                 }
@@ -323,7 +335,7 @@ public class CloudExplorerFragment extends Fragment {
         getActivity().startService(intent.putExtras(bundle));
     }
 
-    private void showWarningDialog(String message) {
+    private void showWarningDialog(final String message) {
         WarningDialog dialog = WarningDialog.newInstance(getString(R.string.network_error), message);
         dialog.show(getChildFragmentManager(), WarningDialog.WARNING_DIALOG);
     }

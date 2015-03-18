@@ -21,8 +21,6 @@ import me.justup.upme.entity.GetMailContactResponse;
 import me.justup.upme.entity.ProductsGetAllCategoriesResponse;
 import me.justup.upme.fragments.CalendarFragment;
 import me.justup.upme.fragments.NewsItemFragment;
-import me.justup.upme.utils.AppContext;
-import me.justup.upme.utils.AppPreferences;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.LOGE;
@@ -212,10 +210,11 @@ public class HttpIntentService extends IntentService {
     private void fillMailContactDB(String content) {
         LOGI(TAG, "fillMailContactDB");
         GetMailContactResponse response = null;
-        int userId = new AppPreferences(AppContext.getAppContext()).getUserId();
 
+        // int userId = new AppPreferences(AppContext.getAppContext()).getUserId();
 
         // fake
+        /*
         String contents = "{\n" +
                 "    \"jsonrpc\": \"2.0\",\n" +
                 "    \"result\": [\n" +
@@ -321,10 +320,10 @@ public class HttpIntentService extends IntentService {
                 "    ],\n" +
                 "    \"id\": \"123\"\n" +
                 "}";
-
+    */
 
         try {
-            response = ApiWrapper.gson.fromJson(contents, GetMailContactResponse.class);
+            response = ApiWrapper.gson.fromJson(content, GetMailContactResponse.class);
         } catch (JsonSyntaxException e) {
             LOGE(TAG, "gson.fromJson:\n" + content);
         }

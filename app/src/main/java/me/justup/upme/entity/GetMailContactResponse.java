@@ -1,30 +1,32 @@
 package me.justup.upme.entity;
 
-import java.io.Serializable;
-import java.util.List;
+import java.util.ArrayList;
+
 
 public class GetMailContactResponse extends BaseHttpResponseEntity {
-    public List<Result> result;
+    public ArrayList<Result> result = new ArrayList<>();
 
-    public class Result implements Serializable {
+    public class Result extends BaseHttpParams {
         public int id = 0;
-        public int parentId;
         public String name = "";
-        public String login = "";
+        public String jabber_id = "";
         public int dateAdd = 0;
+        public String login = "";
         public String phone = "";
         public String img = "";
+        public int parentId;
 
         @Override
         public String toString() {
             return "Result{" +
                     "id=" + id +
-                    "parentId=" + parentId +
-                    ", name='" + name + '\'' +
-                    ", login='" + login + '\'' +
+                    ", name=" + name +
+                    ", jabber_id=" + jabber_id +
                     ", dateAdd=" + dateAdd +
-                    ", phone='" + phone + '\'' +
-                    ", img='" + img + '\'' +
+                    ", login=" + login +
+                    ", phone=" + phone +
+                    ", img=" + img +
+                    ", parentId=" + parentId +
                     '}';
         }
     }
@@ -35,4 +37,5 @@ public class GetMailContactResponse extends BaseHttpResponseEntity {
                 "results=" + result +
                 '}';
     }
+
 }

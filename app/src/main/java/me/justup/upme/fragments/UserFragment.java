@@ -23,11 +23,14 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.apache.http.Header;
 
+import me.justup.upme.MainActivity;
 import me.justup.upme.R;
 import me.justup.upme.dialogs.WarningDialog;
 import me.justup.upme.entity.BaseHttpQueryEntity;
 import me.justup.upme.entity.GetLoggedUserInfoResponse;
+import me.justup.upme.entity.GetMailContactQuery;
 import me.justup.upme.http.ApiWrapper;
+import me.justup.upme.http.HttpIntentService;
 import me.justup.upme.interfaces.OnCloseFragment;
 import me.justup.upme.utils.AppContext;
 import me.justup.upme.utils.AppPreferences;
@@ -176,6 +179,10 @@ public class UserFragment extends Fragment implements OnMapReadyCallback, OnClos
                     appPreferences.setUserName(mUserMapTitle);
                     appPreferences.setUserId(mUserId);
                     appPreferences.setJabberId(response.result.jabber_id);
+
+                    GetMailContactQuery query = new GetMailContactQuery();
+                    query.params.user_id = mUserId;
+                    ((MainActivity) getActivity()).startHttpIntent(query, HttpIntentService.MAIL_CONTACT_PART);
                 }
             }
 

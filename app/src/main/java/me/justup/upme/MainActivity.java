@@ -132,8 +132,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        startHttpIntent(new GetMailContactQuery(), HttpIntentService.MAIL_CONTACT_PART);
-
         mMainFragmentContainer = (FrameLayout) findViewById(R.id.main_fragment_container);
         ImageView mCornerButton = (ImageView) findViewById(R.id.upme_corner_button);
         mCornerButton.setOnClickListener(new OnCornerButtonListener());
