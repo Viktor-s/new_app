@@ -3,17 +3,23 @@ package me.justup.upme;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.util.List;
 
-import me.justup.upme.entity.GroupProductEntity;
-import me.justup.upme.entity.ListGroupProductMock;
+import me.justup.upme.adapter.ProductsAdapter;
+import me.justup.upme.entity.ProductsCategoryBrandEntity;
+
+import static me.justup.upme.utils.LogUtils.LOGE;
 
 
 public class ProductItemActivity extends BaseActivity implements View.OnClickListener {
@@ -21,14 +27,16 @@ public class ProductItemActivity extends BaseActivity implements View.OnClickLis
     public static final String ID_CURRENT_GROUP = "ID_CURRENT_GROUP";
 
     private int positionGroupProductInList;
-    List<GroupProductEntity> listGroup;
+    //  List<GroupProductEntity> listGroup;
 
     LinearLayout lockPanel;
     RelativeLayout rl;
     private TextView previousProductGroup;
     private TextView nextProductGroup;
+    private List<ProductsCategoryBrandEntity> mProductsCategoryBrandEntities;
 
 
+    @SuppressWarnings("unchecked")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,18 +45,20 @@ public class ProductItemActivity extends BaseActivity implements View.OnClickLis
         lockPanel = (LinearLayout) findViewById(R.id.lock_panel);
 
         int idCurrentGroup = getIntent().getIntExtra(ID_CURRENT_GROUP, 0);
-
-        ListGroupProductMock listGroupProductMock = ListGroupProductMock.getInstance(this);
-        listGroup = listGroupProductMock.getListGroupProduct();
-        GroupProductEntity currentGroupProduct = listGroupProductMock.getGroupProductById(idCurrentGroup);
+        mProductsCategoryBrandEntities = (List<ProductsCategoryBrandEntity>) getIntent().getSerializableExtra("AllBrandsList");
+        // ListGroupProductMock listGroupProductMock = ListGroupProductMock.getInstance(this);
+        // listGroup = listGroupProductMock.getListGroupProduct();
+        //GroupProductEntity currentGroupProduct = listGroupProductMock.getGroupProductById(idCurrentGroup);
+        ProductsCategoryBrandEntity currentProductBrand = getCurrentBrand(mProductsCategoryBrandEntities, idCurrentGroup);
+        LOGE("pavel", currentProductBrand.toString());
 
         rl = (RelativeLayout) findViewById(R.id.container_group_product_item);
-        rl.addView(generateGroupProduct(currentGroupProduct));
+        rl.addView(generateGroupProduct(currentProductBrand));
 
         previousProductGroup = (TextView) findViewById(R.id.previous_product_group);
         nextProductGroup = (TextView) findViewById(R.id.next_product_group);
 
-        positionGroupProductInList = listGroup.indexOf(currentGroupProduct);
+        positionGroupProductInList = mProductsCategoryBrandEntities.indexOf(currentProductBrand);
         ReferenceNextPrevious(positionGroupProductInList);
 
         previousProductGroup.setOnClickListener(new View.OnClickListener() {
@@ -56,7 +66,7 @@ public class ProductItemActivity extends BaseActivity implements View.OnClickLis
             public void onClick(View view) {
                 ReferenceNextPrevious(--positionGroupProductInList);
                 rl.removeAllViews();
-                rl.addView(generateGroupProduct(listGroup.get(positionGroupProductInList)));
+                rl.addView(generateGroupProduct(mProductsCategoryBrandEntities.get(positionGroupProductInList)));
             }
         });
 
@@ -65,7 +75,7 @@ public class ProductItemActivity extends BaseActivity implements View.OnClickLis
             public void onClick(View view) {
                 ReferenceNextPrevious(++positionGroupProductInList);
                 rl.removeAllViews();
-                rl.addView(generateGroupProduct(listGroup.get(positionGroupProductInList)));
+                rl.addView(generateGroupProduct(mProductsCategoryBrandEntities.get(positionGroupProductInList)));
             }
         });
 
@@ -90,15 +100,25 @@ public class ProductItemActivity extends BaseActivity implements View.OnClickLis
     }
 
 
-    private LinearLayout generateGroupProduct(GroupProductEntity currentGroupProduct) {
+    private LinearLayout generateGroupProduct(ProductsCategoryBrandEntity currentGroupProduct) {
         LayoutInflater inflater = LayoutInflater.from(this);
         LinearLayout groupProductExtendedLayout = (LinearLayout) inflater.inflate(R.layout.group_product_extended_layout, null, false);
+
 
         TextView groupProductExtendedTitle = (TextView) groupProductExtendedLayout.findViewById(R.id.group_product_extended_title);
         groupProductExtendedTitle.setText(currentGroupProduct.getName());
 
         TextView groupProductExtendedDescription = (TextView) groupProductExtendedLayout.findViewById(R.id.group_product_extended_description);
         groupProductExtendedDescription.setText(currentGroupProduct.getDescription());
+
+        ListView productsListView = (ListView) groupProductExtendedLayout.findViewById(R.id.listViewProducts);
+        ProductsAdapter productsAdapter = new ProductsAdapter(this, currentGroupProduct.getProductEntityList());
+        productsListView.setAdapter(productsAdapter);
+        setListViewHeightBasedOnChildren(productsListView);
+
+        ScrollView scrollView = (ScrollView) groupProductExtendedLayout.findViewById(R.id.group_product_scroll_view);
+        scrollView.smoothScrollTo(0,0);
+
         return groupProductExtendedLayout;
     }
 
@@ -107,20 +127,47 @@ public class ProductItemActivity extends BaseActivity implements View.OnClickLis
             previousProductGroup.setVisibility(View.GONE);
         else {
             previousProductGroup.setVisibility(View.VISIBLE);
-            previousProductGroup.setText(listGroup.get(i - 1).getName());
+            previousProductGroup.setText(mProductsCategoryBrandEntities.get(i - 1).getName());
         }
 
-        if (i == listGroup.size() - 1)
+        if (i == mProductsCategoryBrandEntities.size() - 1)
             nextProductGroup.setVisibility(View.GONE);
         else {
             nextProductGroup.setVisibility(View.VISIBLE);
-            nextProductGroup.setText(listGroup.get(i + 1).getName());
+            nextProductGroup.setText(mProductsCategoryBrandEntities.get(i + 1).getName());
         }
     }
 
     @Override
     public void onClick(View v) {
 
+    }
+
+    public ProductsCategoryBrandEntity getCurrentBrand(List<ProductsCategoryBrandEntity> list, long id) {
+        ProductsCategoryBrandEntity productsCategoryBrandEntity = new ProductsCategoryBrandEntity();
+        for (ProductsCategoryBrandEntity object : list) {
+            if (object.getId() == id) {
+                productsCategoryBrandEntity = object;
+            }
+        }
+        return productsCategoryBrandEntity;
+    }
+
+
+    private void setListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        int listViewElementsHeight = 0;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            View mView = listAdapter.getView(i, null, listView);
+            mView.measure(
+                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+            listViewElementsHeight += mView.getMeasuredHeight() + 1;
+        }
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = listViewElementsHeight + 1;
+        listView.setLayoutParams(params);
+        listView.requestLayout();
     }
 }
 
