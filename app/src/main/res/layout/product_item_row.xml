@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/base20dp720sw"
+    android:background="@drawable/product_item_bg"
+    android:orientation="horizontal"
+    android:descendantFocusability="blocksDescendants">
+
+
+    <ImageView
+        android:layout_width="@dimen/base240dp720sw"
+        android:layout_height="@dimen/base160dp720sw"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/purse"
+        android:id="@+id/product_item_image" />
+
+    <TextView
+        android:id="@+id/product_item_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ДЕНЬГИ В КОШЕЛЕК"
+        android:textColor="@color/gray"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/product_item_image"
+        android:layout_margin="@dimen/base10dp720sw"
+        android:textSize="@dimen/base17sp720sw" />
+
+    <TextView
+        android:id="@+id/product_item_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/base10dp720sw"
+        android:textColor="@color/gray"
+        android:layout_marginRight="@dimen/base10dp720sw"
+        android:layout_below="@+id/product_item_name"
+        android:layout_toEndOf="@+id/product_item_image"
+        android:textSize="@dimen/base14sp720sw" />
+
+    <Button
+        android:id="@+id/product_item_details_button"
+        style="@style/ButtonGray"
+        android:text="ПОДРОБНЕЕ"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:layout_below="@+id/product_item_description"
+        android:layout_marginTop="@dimen/base20dp720sw"
+        android:layout_alignParentEnd="true" />
+
+</RelativeLayout>

@@ -249,6 +249,7 @@
     <string name="dialog_cancel_call">Сброс</string>
     <string name="button_clear">Очистить</string>
     <string name="button_close">Закрыть</string>
+    <string name="button_select">Выбрать</string>
     <string name="user_break_call">отбил звонок</string>
     <string name="inner_error">Внутренняя ошибка!</string>
     <string name="local_drive">Локальный диск</string>
@@ -267,5 +268,7 @@
     <string name="file_owner">Владелец:</string>
     <string name="file_added">Добавлен:</string>
     <string name="file_changed">Изменен:</string>
+
+    <string name="select_people">Выберите рефералов</string>
 
 </resources>
