@@ -8,7 +8,7 @@ import android.provider.BaseColumns;
 
 public class DBHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "upme.db";
-    private static final int DATABASE_VERSION = 12;
+    private static final int DATABASE_VERSION = 13;
 
     public static final String BASE_TABLE_NAME = "base_table";
     public static final String BASE_ID = BaseColumns._ID;
@@ -86,6 +86,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String PRODUCTS_PRODUCT_TABLE_NAME = "products_product_table";
     public static final String PRODUCTS_PRODUCT_ID = BaseColumns._ID;
     public static final String PRODUCTS_PRODUCT_SERVER_ID = "server_id";
+    public static final String PRODUCTS_PRODUCT_BRAND_ID = "product_brand_id";
     public static final String PRODUCTS_PRODUCT_NAME = "name";
     public static final String PRODUCTS_PRODUCT_SHORT_DESCRIPTION = "short_description";
     public static final String PRODUCTS_PRODUCT_DESCRIPTION = "description";
@@ -184,6 +185,7 @@ public class DBHelper extends SQLiteOpenHelper {
             + PRODUCTS_PRODUCT_TABLE_NAME + "("
             + PRODUCTS_PRODUCT_ID + " INTEGER, "
             + PRODUCTS_PRODUCT_SERVER_ID + " INTEGER PRIMARY KEY, "
+            + PRODUCTS_PRODUCT_BRAND_ID + " TEXT, "
             + PRODUCTS_PRODUCT_NAME + " TEXT, "
             + PRODUCTS_PRODUCT_SHORT_DESCRIPTION + " TEXT, "
             + PRODUCTS_PRODUCT_DESCRIPTION + " TEXT, "

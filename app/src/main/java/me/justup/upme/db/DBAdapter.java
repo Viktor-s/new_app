@@ -56,6 +56,7 @@ import static me.justup.upme.db.DBHelper.PRODUCTS_BRAND_CATEGORIES_TABLE_NAME;
 import static me.justup.upme.db.DBHelper.PRODUCTS_CATEGORIES_NAME;
 import static me.justup.upme.db.DBHelper.PRODUCTS_CATEGORIES_SERVER_ID;
 import static me.justup.upme.db.DBHelper.PRODUCTS_CATEGORIES_TABLE_NAME;
+import static me.justup.upme.db.DBHelper.PRODUCTS_PRODUCT_BRAND_ID;
 import static me.justup.upme.db.DBHelper.PRODUCTS_PRODUCT_IMAGE;
 import static me.justup.upme.db.DBHelper.PRODUCTS_PRODUCT_NAME;
 import static me.justup.upme.db.DBHelper.PRODUCTS_PRODUCT_SERVER_ID;
@@ -296,6 +297,7 @@ public class DBAdapter {
                 for (int k = 0; k < entity.result.get(i).brandCategories.get(j).products.size(); k++) {
                     ContentValues valuesProduct = new ContentValues();
                     valuesProduct.put(PRODUCTS_PRODUCT_SERVER_ID, entity.result.get(i).brandCategories.get(j).products.get(k).id);
+                    valuesProduct.put(PRODUCTS_PRODUCT_BRAND_ID, entity.result.get(i).brandCategories.get(j).brandId);
                     valuesProduct.put(PRODUCTS_PRODUCT_NAME, entity.result.get(i).brandCategories.get(j).products.get(k).name);
                     valuesProduct.put(PRODUCTS_PRODUCT_SHORT_DESCRIPTION, entity.result.get(i).brandCategories.get(j).products.get(k).short_description);
                     valuesProduct.put(PRODUCTS_PRODUCT_IMAGE, entity.result.get(i).brandCategories.get(j).products.get(k).img);

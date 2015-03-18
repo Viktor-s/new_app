@@ -17,6 +17,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +27,10 @@ import me.justup.upme.R;
 import me.justup.upme.db.DBAdapter;
 import me.justup.upme.entity.ProductCategoryEntity;
 import me.justup.upme.entity.ProductsCategoryBrandEntity;
+import me.justup.upme.entity.ProductsProductEntity;
 
+import static me.justup.upme.db.DBHelper.*;
+import static me.justup.upme.db.DBHelper.PRODUCTS_BRAND_CATEGORIES_IMAGE;
 import static me.justup.upme.db.DBHelper.PRODUCTS_BRAND_CATEGORIES_NAME;
 import static me.justup.upme.db.DBHelper.PRODUCTS_BRAND_CATEGORIES_SERVER_ID;
 import static me.justup.upme.db.DBHelper.PRODUCTS_BRAND_CATEGORIES_SHORT_DESCRIPTION;
@@ -33,6 +38,7 @@ import static me.justup.upme.db.DBHelper.PRODUCTS_CATEGORIES_NAME;
 import static me.justup.upme.db.DBHelper.PRODUCTS_CATEGORIES_SERVER_ID;
 import static me.justup.upme.db.DBHelper.PRODUCTS_CATEGORIES_TABLE_NAME;
 import static me.justup.upme.utils.LogUtils.LOGD;
+import static me.justup.upme.utils.LogUtils.LOGE;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 
@@ -51,6 +57,7 @@ public class ProductsFragment extends Fragment implements View.OnClickListener {
     private View view;
     private LayoutInflater layoutInflater;
     private LinearLayout containerProductMain;
+    private ArrayList<ProductsCategoryBrandEntity> mAllBrandsList = new ArrayList<>();
 
 
     @Override
@@ -70,7 +77,9 @@ public class ProductsFragment extends Fragment implements View.OnClickListener {
         mProductsReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                containerProductMain.removeAllViews();
+                if (containerProductMain != null) {
+                    containerProductMain.removeAllViews();
+                }
                 updateView();
             }
         };
@@ -81,8 +90,13 @@ public class ProductsFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onPause() {
         super.onPause();
-        DBAdapter.getInstance().closeDatabase();
         LocalBroadcastManager.getInstance(ProductsFragment.this.getActivity()).unregisterReceiver(mProductsReceiver);
+    }
+
+    @Override
+    public void onDestroy() {
+        DBAdapter.getInstance().closeDatabase();
+        super.onDestroy();
     }
 
     @Override
@@ -148,7 +162,9 @@ public class ProductsFragment extends Fragment implements View.OnClickListener {
                 TextView idGroupProduct = (TextView) groupProductLayout.findViewById(R.id.id_group_product);
                 idGroupProduct.setText(Integer.toString(listCategory.get(i).getBrandList().get(j).getId()));
                 ImageView groupProductPhoto = (ImageView) groupProductLayout.findViewById(R.id.group_product_photo);
-                groupProductPhoto.setImageResource(R.drawable.risk_insurance);
+                String imagePath = (listCategory.get(i).getBrandList().get(j).getImage() != null && listCategory.get(i).getBrandList().get(j).getImage().length() > 1) ? listCategory.get(i).getBrandList().get(j).getImage() : "fake";
+                Picasso.with(getActivity()).load(imagePath).placeholder(R.drawable.ic_launcher).into(groupProductPhoto);
+                // groupProductPhoto.setImageResource(R.drawable.risk_insurance);
                 TextView groupProductTitle = (TextView) groupProductLayout.findViewById(R.id.group_product_title);
                 groupProductTitle.setText(listCategory.get(i).getBrandList().get(j).getName());
                 TextView groupProductDescription = (TextView) groupProductLayout.findViewById(R.id.group_product_description);
@@ -158,8 +174,11 @@ public class ProductsFragment extends Fragment implements View.OnClickListener {
                     public void onClick(View view) {
                         LOGD("TAG", "-------onClick");
                         int idCurrentGroup = Integer.parseInt(((TextView) view.findViewById(R.id.id_group_product)).getText().toString());
+                        // ProductsCategoryBrandEntity productsCategoryBrandEntity = listCategory.
+
                         Intent intent = new Intent(getActivity(), ProductItemActivity.class);
                         intent.putExtra(ProductItemActivity.ID_CURRENT_GROUP, idCurrentGroup);
+                        intent.putExtra("AllBrandsList", mAllBrandsList);
                         startActivity(intent);
                     }
                 });
@@ -182,23 +201,40 @@ public class ProductsFragment extends Fragment implements View.OnClickListener {
             productCategoryEntity.setId(cursorProducts.getInt(cursorProducts.getColumnIndex(PRODUCTS_CATEGORIES_SERVER_ID)));
             productCategoryEntity.setName(cursorProducts.getString(cursorProducts.getColumnIndex(PRODUCTS_CATEGORIES_NAME)));
             int category_id = cursorProducts.getInt(cursorProducts.getColumnIndex(PRODUCTS_CATEGORIES_SERVER_ID));
-            String selectQueryShortNewsComments = "SELECT * FROM products_brand_table WHERE category_id=" + category_id;
-            Cursor cursorComments = database.rawQuery(selectQueryShortNewsComments, null);
+            String selectQueryBrands = "SELECT * FROM products_brand_table WHERE category_id=" + category_id;
+            Cursor cursorBrands = database.rawQuery(selectQueryBrands, null);
             ArrayList<ProductsCategoryBrandEntity> brandsList = new ArrayList<>();
-            if (cursorComments != null) {
-                for (cursorComments.moveToFirst(); !cursorComments.isAfterLast(); cursorComments.moveToNext()) {
+            if (cursorBrands != null) {
+                for (cursorBrands.moveToFirst(); !cursorBrands.isAfterLast(); cursorBrands.moveToNext()) {
+                    int brand_id = cursorBrands.getInt(cursorBrands.getColumnIndex(PRODUCTS_BRAND_CATEGORIES_BRAND_ID));
                     ProductsCategoryBrandEntity productsCategoryBrandEntity = new ProductsCategoryBrandEntity();
-                    productsCategoryBrandEntity.setId(cursorComments.getInt(cursorComments.getColumnIndex(PRODUCTS_BRAND_CATEGORIES_SERVER_ID)));
-                    productsCategoryBrandEntity.setName(cursorComments.getString(cursorComments.getColumnIndex(PRODUCTS_BRAND_CATEGORIES_NAME)));
-                    productsCategoryBrandEntity.setDescription(cursorComments.getString(cursorComments.getColumnIndex(PRODUCTS_BRAND_CATEGORIES_SHORT_DESCRIPTION)));
+                    productsCategoryBrandEntity.setId(cursorBrands.getInt(cursorBrands.getColumnIndex(PRODUCTS_BRAND_CATEGORIES_SERVER_ID)));
+                    productsCategoryBrandEntity.setName(cursorBrands.getString(cursorBrands.getColumnIndex(PRODUCTS_BRAND_CATEGORIES_NAME)));
+                    productsCategoryBrandEntity.setDescription(cursorBrands.getString(cursorBrands.getColumnIndex(PRODUCTS_BRAND_CATEGORIES_SHORT_DESCRIPTION)));
+                    productsCategoryBrandEntity.setImage(cursorBrands.getString(cursorBrands.getColumnIndex(PRODUCTS_BRAND_CATEGORIES_IMAGE)));
+                    String selectQueryProduct = "SELECT * FROM products_product_table WHERE product_brand_id=" + brand_id;
+                    Cursor cursorBrandProduct = database.rawQuery(selectQueryProduct, null);
+                    ArrayList<ProductsProductEntity> productsList = new ArrayList<>();
+                    for (cursorBrandProduct.moveToFirst(); !cursorBrandProduct.isAfterLast(); cursorBrandProduct.moveToNext()) {
+                        ProductsProductEntity productsProductEntity = new ProductsProductEntity();
+                        productsProductEntity.setId(cursorBrandProduct.getInt(cursorBrandProduct.getColumnIndex(PRODUCTS_PRODUCT_SERVER_ID)));
+                        productsProductEntity.setName(cursorBrandProduct.getString(cursorBrandProduct.getColumnIndex(PRODUCTS_PRODUCT_NAME)));
+                        productsProductEntity.setDescription(cursorBrandProduct.getString(cursorBrandProduct.getColumnIndex(PRODUCTS_PRODUCT_DESCRIPTION)));
+                        productsProductEntity.setImage(cursorBrandProduct.getString(cursorBrandProduct.getColumnIndex(PRODUCTS_PRODUCT_IMAGE)));
+                        productsList.add(productsProductEntity);
+                    }
+                    productsCategoryBrandEntity.setProductEntityList(productsList);
+                    LOGE("pavel", productsList.toString());
                     brandsList.add(productsCategoryBrandEntity);
+                    cursorBrandProduct.close();
                 }
                 productCategoryEntity.setBrandList(brandsList);
+                mAllBrandsList.addAll(brandsList);
             }
             categoryEntities.add(productCategoryEntity);
 
-            if (cursorComments != null) {
-                cursorComments.close();
+            if (cursorBrands != null) {
+                cursorBrands.close();
             }
         }
         return categoryEntities;

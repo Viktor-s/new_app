@@ -78,7 +78,7 @@ public class StatusBarFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        getActivity().registerReceiver(this.mStatusBarAccumReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+        getActivity().registerReceiver(mStatusBarAccumReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
         getActivity().registerReceiver(mStatusBarServiceReceiver, new IntentFilter(BROADCAST_ACTION));
         getActivity().registerReceiver(mStatusBarPushReceiver, new IntentFilter(BROADCAST_ACTION_PUSH));
     }
@@ -99,7 +99,7 @@ public class StatusBarFragment extends Fragment {
     public void onStop() {
         super.onStop();
 
-        getActivity().unregisterReceiver(this.mStatusBarAccumReceiver);
+        getActivity().unregisterReceiver(mStatusBarAccumReceiver);
         getActivity().unregisterReceiver(mStatusBarServiceReceiver);
         getActivity().unregisterReceiver(mStatusBarPushReceiver);
     }

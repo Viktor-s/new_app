@@ -1,14 +1,13 @@
 package me.justup.upme.entity;
 
 import java.io.Serializable;
-import java.util.List;
 
-public class ProductsCategoryBrandEntity implements Serializable {
+public class ProductsProductEntity implements Serializable {
     private int id;
     private String name;
     private String description;
     private String image;
-    private List<ProductsProductEntity> productEntityList;
+
 
     public String getImage() {
         return image;
@@ -16,14 +15,6 @@ public class ProductsCategoryBrandEntity implements Serializable {
 
     public void setImage(String image) {
         this.image = image;
-    }
-
-    public List<ProductsProductEntity> getProductEntityList() {
-        return productEntityList;
-    }
-
-    public void setProductEntityList(List<ProductsProductEntity> productEntityList) {
-        this.productEntityList = productEntityList;
     }
 
     public int getId() {
@@ -52,12 +43,11 @@ public class ProductsCategoryBrandEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "ProductsCategoryBrandEntity{" +
+        return "ProductsProductEntity{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", image='" + image + '\'' +
-                ", productEntityList=" + productEntityList +
                 '}';
     }
 }
