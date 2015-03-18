@@ -42,12 +42,15 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import me.justup.upme.MainActivity;
 import me.justup.upme.R;
 import me.justup.upme.db.DBAdapter;
+import me.justup.upme.dialogs.BreakCallDialog;
 import me.justup.upme.dialogs.ChooseReferralDialog;
 import me.justup.upme.entity.CalendarAddEventQuery;
 import me.justup.upme.entity.PersonBriefcaseEntity;
@@ -565,9 +568,11 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                 TimePickerDialog(DURATION_EVENT);
                 break;
             case R.id.choose_referral_button:
-                alertMultipleChoiceReferals();
+//                alertMultipleChoiceReferals();
 
-//                ChooseReferralDialog.newInstance(listID); 111
+                ArrayList<Integer> listIdPerson = new ArrayList<>();
+                ChooseReferralDialog chooseReferralDialog = ChooseReferralDialog.newInstance(listIdPerson);
+                chooseReferralDialog.show(getFragmentManager(), "choose_referral_dialog");
                 break;
             case R.id.add_new_event_button:
                 panelAddEvent.setVisibility(View.GONE);
