@@ -48,6 +48,7 @@ import java.util.Locale;
 import me.justup.upme.MainActivity;
 import me.justup.upme.R;
 import me.justup.upme.db.DBAdapter;
+import me.justup.upme.dialogs.ChooseReferralDialog;
 import me.justup.upme.entity.CalendarAddEventQuery;
 import me.justup.upme.entity.PersonBriefcaseEntity;
 import me.justup.upme.http.HttpIntentService;
@@ -157,14 +158,15 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
     @Override
     public void onResume() {
         super.onResume();
-        LOGI(TAG, "RegisterRecNewsFeed");
+        LOGI(TAG, "RegisterRecNewsFeed 111");
         receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
+                LOGI(TAG, "RegisterRecNewsFeed 222 in onReceive");
                 listEventsForWeek(firstDayCurrentWeek);
             }
         };
-        LocalBroadcastManager.getInstance(CalendarFragment.this.getActivity()).registerReceiver(receiver, new IntentFilter(DBAdapter.CALENDAR_SQL_BROADCAST_INTENT));
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver, new IntentFilter(DBAdapter.CALENDAR_SQL_BROADCAST_INTENT));
     }
 
 
@@ -277,6 +279,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
             WeekViewEvent eventElement = new WeekViewEvent(id, name, startTimeCalendar, endTimeCalendar);
             LOGD("TAG_listEventsForWeek", "eventElement: " + eventElement.toString());
             events.add(eventElement);
+            Log.d("TAG1_events", "events " + events.toString());
             mWeekView.notifyDatasetChanged();
         }
         cursorEvents.close();
@@ -463,6 +466,10 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
 
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
     public static String convertTimeToString(int hours, int minutes) {
         return String.format("%02d", hours) + ":" + String.format("%02d", minutes);
@@ -559,6 +566,8 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                 break;
             case R.id.choose_referral_button:
                 alertMultipleChoiceReferals();
+
+//                ChooseReferralDialog.newInstance(listID); 111
                 break;
             case R.id.add_new_event_button:
                 panelAddEvent.setVisibility(View.GONE);

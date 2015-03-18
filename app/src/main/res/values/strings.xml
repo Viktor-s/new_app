@@ -247,7 +247,7 @@
     <string name="dialog_video_call">Входящий видео-звонок</string>
     <string name="dialog_answer_call">Ответить</string>
     <string name="dialog_cancel_call">Сброс</string>
-    <string name="button_clear">Отчистить</string>
+    <string name="button_clear">Очистить</string>
     <string name="button_close">Закрыть</string>
     <string name="user_break_call">отбил звонок</string>
     <string name="inner_error">Внутренняя ошибка!</string>

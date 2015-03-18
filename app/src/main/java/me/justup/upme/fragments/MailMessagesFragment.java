@@ -544,7 +544,7 @@ public class MailMessagesFragment extends Fragment {
                     try {
                         mAttachImageBitmap = decodeUri(selectedImageUri);
                     } catch (FileNotFoundException e) {
-                        e.printStackTrace();
+                        LOGE(TAG, "REQUEST_TAKE_IMAGE_FILE", e);
                     }
                     mAttachFileType = AttachFileType.IMAGE;
                     mImageAttachedImageView.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_menu_camera));
@@ -554,7 +554,16 @@ public class MailMessagesFragment extends Fragment {
                     Uri uriFile = data.getData();
                     mFilePath = getPath(uriFile, AppContext.getAppContext());
 
-                    mAttachFileType = AttachFileType.DOC;
+                    if (mFilePath.contains(".jpg") || mFilePath.contains(".png")) {
+                        try {
+                            mAttachImageBitmap = decodeUri(uriFile);
+                        } catch (FileNotFoundException e) {
+                            LOGE(TAG, "REQUEST_TAKE_FILE", e);
+                        }
+                        mAttachFileType = AttachFileType.IMAGE;
+                    } else
+                        mAttachFileType = AttachFileType.DOC;
+
                     mImageAttachedImageView.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_input_get));
                     break;
 
@@ -813,7 +822,7 @@ public class MailMessagesFragment extends Fragment {
         final Dialog dialog = new Dialog(MailMessagesFragment.this.getActivity());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_attach_image_preview);
-        dialog.setCancelable(false);
+
         ImageView mImagePreviewImageView = (ImageView) dialog.findViewById(R.id.dialog_image_preview_imageView);
         Button mImagePreviewCloseButton = (Button) dialog.findViewById(R.id.dialog_image_preview_close_button);
         mImagePreviewImageView.setImageBitmap(mAttachImageBitmap);

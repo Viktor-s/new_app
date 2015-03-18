@@ -337,7 +337,7 @@ public class HttpIntentService extends IntentService {
 
 
     private void fillEventsCalendarDB(String content) {
-        LOGD("TAG_", content);
+        LOGD("TAG_content", content);
         CalendarGetEventsResponse response = null;
         try {
             response = ApiWrapper.gson.fromJson(content, CalendarGetEventsResponse.class);
