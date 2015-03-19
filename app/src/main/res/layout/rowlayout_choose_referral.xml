@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/base60dp720sw"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/base10dp720sw"
     android:orientation="horizontal"
     android:gravity="center_vertical">
 
     <ImageView
         android:id="@+id/referral_item_image"
-        android:layout_width="@dimen/base50dp720sw"
-        android:layout_height="@dimen/base50dp720sw"
-        android:src="@drawable/ic_browser_back"/>
+        android:layout_width="@dimen/base40dp720sw"
+        android:layout_height="@dimen/base40dp720sw"
+        android:src="@drawable/ic_person"/>
 
     <TextView
         android:id="@+id/referral_item_text_view"
@@ -18,7 +19,8 @@
         android:layout_weight="1"
         android:layout_marginLeft="@dimen/base20dp720sw"
         android:layout_marginRight="@dimen/base20dp720sw"
-        android:text="New Text"/>
+        android:text="New Text"
+        android:textSize="@dimen/base18sp720sw"/>
 
     <CheckBox
         android:id="@+id/referral_checkbox"
