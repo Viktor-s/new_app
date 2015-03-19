@@ -17,6 +17,7 @@ import java.io.InputStream;
 
 import me.justup.upme.entity.FileCopySharedQuery;
 import me.justup.upme.entity.FileDeleteQuery;
+import me.justup.upme.entity.FileUnlinkSharedQuery;
 import me.justup.upme.http.ApiWrapper;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
@@ -42,6 +43,7 @@ public class FileExplorerService extends IntentService {
     public static final int DELETE = 3;
     public static final int COPY = 4;
     public static final int ERROR = 5;
+    public static final int UNSUBSCRIBE = 6;
 
 
     public FileExplorerService() {
@@ -71,6 +73,10 @@ public class FileExplorerService extends IntentService {
 
             case COPY:
                 copyQuery(fileHash);
+                break;
+
+            case UNSUBSCRIBE:
+                unsubscribeQuery(fileHash);
                 break;
 
             default:
@@ -164,7 +170,7 @@ public class FileExplorerService extends IntentService {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 String content = ApiWrapper.responseBodyToString(responseBody);
-                LOGD(TAG, "deleteFileQuery onSuccess(): " + content);
+                LOGD(TAG, "copyQuery onSuccess(): " + content);
 
                 sendExplorerBroadcast(0);
             }
@@ -172,7 +178,34 @@ public class FileExplorerService extends IntentService {
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                 String content = ApiWrapper.responseBodyToString(responseBody);
-                LOGE(TAG, "deleteFileQuery onFailure(): " + content);
+                LOGE(TAG, "copyQuery onFailure(): " + content);
+
+                if (error != null) {
+                    sendExplorerBroadcast(ERROR, error.getMessage());
+                } else {
+                    sendExplorerBroadcast(ERROR, content);
+                }
+            }
+        });
+    }
+
+    private void unsubscribeQuery(final String fileHash) {
+        FileUnlinkSharedQuery query = new FileUnlinkSharedQuery();
+        query.params.file_hash = fileHash;
+
+        ApiWrapper.syncQuery(query, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                String content = ApiWrapper.responseBodyToString(responseBody);
+                LOGD(TAG, "unsubscribeQuery onSuccess(): " + content);
+
+                sendExplorerBroadcast(UNSUBSCRIBE);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                String content = ApiWrapper.responseBodyToString(responseBody);
+                LOGE(TAG, "unsubscribeQuery onFailure(): " + content);
 
                 if (error != null) {
                     sendExplorerBroadcast(ERROR, error.getMessage());

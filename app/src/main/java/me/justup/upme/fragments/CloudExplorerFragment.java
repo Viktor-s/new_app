@@ -41,6 +41,7 @@ import static me.justup.upme.fragments.DocumentsFragment.DOC;
 import static me.justup.upme.fragments.DocumentsFragment.IMAGE;
 import static me.justup.upme.fragments.DocumentsFragment.KB;
 import static me.justup.upme.fragments.DocumentsFragment.SIZE_VALUE;
+import static me.justup.upme.services.FileExplorerService.*;
 import static me.justup.upme.services.FileExplorerService.BROADCAST_EXTRA_ACTION_TYPE;
 import static me.justup.upme.services.FileExplorerService.BROADCAST_EXTRA_ERROR;
 import static me.justup.upme.services.FileExplorerService.COPY;
@@ -77,6 +78,8 @@ public class CloudExplorerFragment extends Fragment {
 
             if (actionType == UPLOAD || actionType == DELETE) {
                 fileQuery(ApiWrapper.FILE_GET_MY_FILES, mMyFileExplorer, null);
+            } else if (actionType == UNSUBSCRIBE) {
+                fileQuery(ApiWrapper.FILE_GET_ALL_SHARED_WITH_ME, mShareFileExplorer, null);
             } else if (actionType == ERROR) {
                 showWarningDialog(error);
             }
@@ -276,12 +279,12 @@ public class CloudExplorerFragment extends Fragment {
                         return true;
 
                     case R.id.file_share_for:
-                        FileShareDialog shareDialog = FileShareDialog.newInstance();
+                        FileShareDialog shareDialog = FileShareDialog.newInstance(fileHash);
                         shareDialog.show(getChildFragmentManager(), FileShareDialog.FILE_SHARE_DIALOG);
                         return true;
 
                     case R.id.file_remove_share_for:
-                        FileRemoveShareDialog removeShareDialog = FileRemoveShareDialog.newInstance();
+                        FileRemoveShareDialog removeShareDialog = FileRemoveShareDialog.newInstance(fileHash);
                         removeShareDialog.show(getChildFragmentManager(), FileRemoveShareDialog.FILE_REMOVE_SHARE_DIALOG);
                         return true;
 
@@ -309,6 +312,11 @@ public class CloudExplorerFragment extends Fragment {
                     case R.id.file_share_copy:
                         mParentFragment.startProgressBar();
                         startExplorerService(fileHash, null, COPY);
+                        return true;
+
+                    case R.id.file_remove_share:
+                        mParentFragment.startProgressBar();
+                        startExplorerService(fileHash, null, UNSUBSCRIBE);
                         return true;
 
                     case R.id.file_share_properties:

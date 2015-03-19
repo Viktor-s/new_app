@@ -19,19 +19,28 @@ public class FileRemoveShareDialog extends DialogFragment {
     private static final String TAG = makeLogTag(FileRemoveShareDialog.class);
 
     public static final String FILE_REMOVE_SHARE_DIALOG = "file_remove_share_dialog";
+    private static final String FILE_HASH = "file_hash";
 
     private LayoutInflater mLayoutInflater;
     // private LinearLayout mUserShareLayout;
 
 
-    public static FileRemoveShareDialog newInstance() {
-        return new FileRemoveShareDialog();
+    public static FileRemoveShareDialog newInstance(final String fileHash) {
+        Bundle args = new Bundle();
+        args.putString(FILE_HASH, fileHash);
+
+        FileRemoveShareDialog fragment = new FileRemoveShareDialog();
+        fragment.setArguments(args);
+
+        return fragment;
     }
 
     @SuppressLint("InflateParams")
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         mLayoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        final String fileHash = (String) getArguments().getSerializable(FILE_HASH);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();

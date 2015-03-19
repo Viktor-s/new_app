@@ -9,6 +9,10 @@
         android:title="@string/file_copy" />
 
     <item
+        android:id="@+id/file_remove_share"
+        android:title="@string/file_remove_share" />
+
+    <item
         android:id="@+id/file_share_properties"
         android:title="@string/file_properties" />
 </menu>
