@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +14,7 @@ import me.justup.upme.entity.ArticleFullResponse;
 import me.justup.upme.entity.ArticlesGetShortDescriptionResponse;
 import me.justup.upme.entity.CalendarGetEventsResponse;
 import me.justup.upme.entity.CommentsArticleFullResponse;
-import me.justup.upme.entity.GetMailContactResponse;
+import me.justup.upme.entity.GetAllContactsResponse;
 import me.justup.upme.entity.ProductsGetAllCategoriesResponse;
 import me.justup.upme.entity.Push;
 import me.justup.upme.utils.AppContext;
@@ -41,12 +40,18 @@ import static me.justup.upme.db.DBHelper.IS_SHORT_NEWS_READ_TABLE_NAME;
 import static me.justup.upme.db.DBHelper.IS_SHORT_NEWS_READ_VALUE;
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_DATE_ADD;
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_IMG;
+import static me.justup.upme.db.DBHelper.MAIL_CONTACT_IN_SYSTEM;
+import static me.justup.upme.db.DBHelper.MAIL_CONTACT_JABBER_ID;
+import static me.justup.upme.db.DBHelper.MAIL_CONTACT_LATITUDE;
+import static me.justup.upme.db.DBHelper.MAIL_CONTACT_LEVEL;
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_LOGIN;
+import static me.justup.upme.db.DBHelper.MAIL_CONTACT_LONGITUDE;
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_NAME;
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_PARENT_ID;
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_PHONE;
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_SERVER_ID;
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_TABLE_NAME;
+import static me.justup.upme.db.DBHelper.MAIL_CONTACT_TOTAL_SUM;
 import static me.justup.upme.db.DBHelper.PRODUCTS_BRAND_CATEGORIES_BRAND_ID;
 import static me.justup.upme.db.DBHelper.PRODUCTS_BRAND_CATEGORIES_BRAND_ITEM_DESCRIPTION;
 import static me.justup.upme.db.DBHelper.PRODUCTS_BRAND_CATEGORIES_BRAND_ITEM_ID;
@@ -90,8 +95,6 @@ import static me.justup.upme.db.DBHelper.STATUS_BAR_PUSH_TABLE_NAME;
 import static me.justup.upme.db.DBHelper.STATUS_BAR_PUSH_TYPE;
 import static me.justup.upme.db.DBHelper.STATUS_BAR_PUSH_USER_ID;
 import static me.justup.upme.db.DBHelper.STATUS_BAR_PUSH_USER_NAME;
-import static me.justup.upme.utils.LogUtils.LOGD;
-import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 /**
  * <b>Use:</b>:
@@ -108,7 +111,7 @@ import static me.justup.upme.utils.LogUtils.makeLogTag;
  * mDBAdapter.close();
  */
 public class DBAdapter {
-    private static final String TAG = makeLogTag(DBAdapter.class);
+    // private static final String TAG = makeLogTag(DBAdapter.class);
     public static final String NEWS_FEED_SQL_BROADCAST_INTENT = "sql_news_feed_broadcast_intent";
     public static final String NEWS_ITEM_SQL_BROADCAST_INTENT = "sql_news_item_broadcast_intent";
     public static final String MAIL_SQL_BROADCAST_INTENT = "mail_sql_broadcast_intent";
@@ -249,7 +252,7 @@ public class DBAdapter {
         sendBroadcast(NEWS_ITEM_SQL_BROADCAST_INTENT);
     }
 
-
+    /*
     public void saveMailContacts(GetMailContactResponse entity) {
         dropAndCreateTable(MAIL_CONTACT_TABLE_NAME, CREATE_TABLE_MAIL_CONTACT);
 
@@ -266,6 +269,32 @@ public class DBAdapter {
         }
         sendBroadcast(MAIL_SQL_BROADCAST_INTENT);
     }
+    */
+
+    public void saveContactsArray(List<GetAllContactsResponse.Result.Parents> userArray) {
+        dropAndCreateTable(MAIL_CONTACT_TABLE_NAME, CREATE_TABLE_MAIL_CONTACT);
+
+        for (GetAllContactsResponse.Result.Parents user : userArray) {
+            ContentValues values = new ContentValues();
+            values.put(MAIL_CONTACT_SERVER_ID, user.id);
+            values.put(MAIL_CONTACT_PARENT_ID, user.parent_id);
+            values.put(MAIL_CONTACT_NAME, user.name);
+            values.put(MAIL_CONTACT_JABBER_ID, user.jabber_id);
+            values.put(MAIL_CONTACT_LOGIN, user.login);
+            values.put(MAIL_CONTACT_DATE_ADD, user.dateAdd);
+            values.put(MAIL_CONTACT_PHONE, user.phone);
+            values.put(MAIL_CONTACT_IMG, user.img);
+            values.put(MAIL_CONTACT_LATITUDE, user.latitude);
+            values.put(MAIL_CONTACT_LONGITUDE, user.longitude);
+            values.put(MAIL_CONTACT_LEVEL, user.level);
+            values.put(MAIL_CONTACT_IN_SYSTEM, user.in_system);
+            values.put(MAIL_CONTACT_TOTAL_SUM, user.total_sum);
+
+            database.insert(MAIL_CONTACT_TABLE_NAME, null, values);
+        }
+
+        sendBroadcast(MAIL_SQL_BROADCAST_INTENT);
+    }
 
     public void saveEventsCalendar(CalendarGetEventsResponse entity) {
         for (int i = 0; i < entity.result.size(); i++) {
@@ -278,7 +307,7 @@ public class DBAdapter {
             values.put(EVENT_CALENDAR_START_DATETIME, entity.result.get(i).start_datetime);
             values.put(EVENT_CALENDAR_END_DATETIME, entity.result.get(i).end_datetime);
             values.put(EVENT_CALENDAR_LOCATION, entity.result.get(i).location);
-                String strSharedWith = CommonUtils.fromListToString(entity.result.get(i).shared_with, ",");
+            String strSharedWith = CommonUtils.fromListToString(entity.result.get(i).shared_with, ",");
             values.put(EVENT_CALENDAR_SHARED_WITH, strSharedWith);
             database.insertWithOnConflict(EVENT_CALENDAR_TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
         }

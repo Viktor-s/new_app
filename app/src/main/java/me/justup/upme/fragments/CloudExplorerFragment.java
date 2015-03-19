@@ -32,7 +32,7 @@ import me.justup.upme.dialogs.FilePropertiesDialog;
 import me.justup.upme.dialogs.FileRemoveShareDialog;
 import me.justup.upme.dialogs.FileShareDialog;
 import me.justup.upme.dialogs.WarningDialog;
-import me.justup.upme.entity.FileGetAllQuery;
+import me.justup.upme.entity.BaseMethodEmptyQuery;
 import me.justup.upme.entity.FileGetAllResponse;
 import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.services.FileExplorerService;
@@ -151,7 +151,7 @@ public class CloudExplorerFragment extends Fragment {
     }
 
     private void fileQuery(String apiMethod, TableLayout parentLayout, String shareFileName) {
-        FileGetAllQuery query = new FileGetAllQuery();
+        BaseMethodEmptyQuery query = new BaseMethodEmptyQuery();
         query.method = apiMethod;
 
         ApiWrapper.query(query, new GetAllFilesResponse(parentLayout, shareFileName));

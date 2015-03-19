@@ -75,7 +75,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/base28sp720sw"
                     android:textColor="@color/user_fragment_red_money_color"
-                    android:text="$ 2 500"
+                    tools:text="$ 2 500"
                     android:textStyle="bold"
                     android:id="@+id/amount_transactions_textView" />
             </LinearLayout>
@@ -94,7 +94,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/base28sp720sw"
-                    android:text="$ 2 500"
+                    tools:text="$ 2 500"
                     android:id="@+id/your_commission_textView" />
             </LinearLayout>
 
@@ -130,9 +130,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="6 месяцев"
+                tools:text="6 месяцев"
                 android:textSize="@dimen/base20sp720sw"
-                android:id="@+id/in_system_textView" />
+                android:id="@+id/user_in_system_textView" />
         </LinearLayout>
 
         <LinearLayout
@@ -149,8 +149,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/base20sp720sw"
-                android:text="3"
-                android:id="@+id/level_textView" />
+                tools:text="3"
+                android:id="@+id/user_level_textView" />
         </LinearLayout>
     </LinearLayout>
 

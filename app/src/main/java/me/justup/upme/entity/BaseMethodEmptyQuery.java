@@ -1,7 +1,7 @@
 package me.justup.upme.entity;
 
 
-public class FileGetAllQuery extends BaseHttpQueryEntity {
+public class BaseMethodEmptyQuery extends BaseHttpQueryEntity {
     public String method;
 
     public Params params = new Params();

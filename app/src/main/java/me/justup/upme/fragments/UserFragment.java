@@ -27,8 +27,8 @@ import me.justup.upme.MainActivity;
 import me.justup.upme.R;
 import me.justup.upme.dialogs.WarningDialog;
 import me.justup.upme.entity.BaseHttpQueryEntity;
+import me.justup.upme.entity.BaseMethodEmptyQuery;
 import me.justup.upme.entity.GetLoggedUserInfoResponse;
-import me.justup.upme.entity.GetMailContactQuery;
 import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.http.HttpIntentService;
 import me.justup.upme.interfaces.OnCloseFragment;
@@ -45,11 +45,15 @@ public class UserFragment extends Fragment implements OnMapReadyCallback, OnClos
     private static final String ENTITY_KEY = "user_fragment_entity_key";
     private static final String OWNER_KEY = "user_fragment_is_owner_key";
 
+    private static final String DOLLAR_SIGN = "$ ";
+
     private FrameLayout mOrderingFragmentContainer;
     private Animation mFragmentSliderOut;
     private Animation mFragmentSliderIn;
     private Fragment mUserOrderingFragment;
     private TextView mUserName;
+    private TextView mUserTotalAmount;
+    private TextView mUserInSystem;
 
     private double userLatitude;
     private double userLongitude;
@@ -80,6 +84,8 @@ public class UserFragment extends Fragment implements OnMapReadyCallback, OnClos
         ApiWrapper.query(mEntity, new OnGetUserInfoResponse());
 
         mUserName = (TextView) view.findViewById(R.id.user_name_textView);
+        mUserInSystem = (TextView) view.findViewById(R.id.user_in_system_textView);
+        mUserTotalAmount = (TextView) view.findViewById(R.id.amount_transactions_textView);
 
         Button mGetOrder = (Button) view.findViewById(R.id.ordering_button);
         mGetOrder.setOnClickListener(new OnGetOrderListener());
@@ -171,6 +177,8 @@ public class UserFragment extends Fragment implements OnMapReadyCallback, OnClos
                 userLongitude = 30.523400;
 
                 mUserName.setText(mUserMapTitle);
+                mUserTotalAmount.setText(DOLLAR_SIGN + response.result.total_sum);
+                mUserInSystem.setText(response.result.in_system);
 
                 loadMap();
 
@@ -180,8 +188,8 @@ public class UserFragment extends Fragment implements OnMapReadyCallback, OnClos
                     appPreferences.setUserId(mUserId);
                     appPreferences.setJabberId(response.result.jabber_id);
 
-                    GetMailContactQuery query = new GetMailContactQuery();
-                    query.params.user_id = mUserId;
+                    BaseMethodEmptyQuery query = new BaseMethodEmptyQuery();
+                    query.method = ApiWrapper.ACCOUNT_GET_ALL_CONTACTS;
                     ((MainActivity) getActivity()).startHttpIntent(query, HttpIntentService.MAIL_CONTACT_PART);
                 }
             }
