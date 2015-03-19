@@ -532,7 +532,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                 break;
             case R.id.choose_referral_button:
                 ChooseReferralDialog chooseReferralDialog = ChooseReferralDialog.newInstance(listSharedId);
-                chooseReferralDialog.show(getFragmentManager(), "choose_referral_dialog");
+                chooseReferralDialog.show(getChildFragmentManager(), "choose_referral_dialog");
                 break;
             case R.id.add_new_event_button:
                 panelAddEvent.setVisibility(View.GONE);

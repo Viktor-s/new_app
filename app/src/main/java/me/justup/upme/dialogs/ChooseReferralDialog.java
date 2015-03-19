@@ -6,14 +6,17 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.TouchDelegate;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -23,6 +26,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,11 +78,14 @@ public class ChooseReferralDialog extends DialogFragment { // ChooseReferralDial
         String selectQuery = "SELECT * FROM " + MAIL_CONTACT_TABLE_NAME;
         Cursor mCursor = database.rawQuery(selectQuery, null);
         listPerson = fillPersonsFromCursor(mCursor);
-        searchListPerson = new ArrayList<>(listPerson);
 
-        listChooseReferralId  = getArguments().getIntegerArrayList(CHOOSE_REFERRAL);
-        for (Integer i : listChooseReferralId)
-            listPerson.get(i).setSelect(true);
+        listChooseReferralId = getArguments().getIntegerArrayList(CHOOSE_REFERRAL);
+        for (Integer i : listChooseReferralId) {
+            for (PersonBriefcaseEntityExtend person : listPerson)
+                if (person.getId() == i)
+                    person.setSelect(true);
+        }
+        searchListPerson = new ArrayList<>(listPerson);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -92,47 +100,46 @@ public class ChooseReferralDialog extends DialogFragment { // ChooseReferralDial
 
         final TextView mUserName = (TextView) dialogView.findViewById(R.id.search_people_by_name);
         mUserName.addTextChangedListener(new TextWatcher() {
-                                                  @Override
-                                                  public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                                                  }
-                                                  @Override
-                                                  public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
-                                                      String searchString = mUserName.getText().toString();
-                                                      int textLength = searchString.length();
-                                                      if (searchListPerson != null) {
-                                                          searchListPerson.clear();
-                                                          for (int i = 0; i < listPerson.size(); i++) {
-                                                              String teamName = listPerson.get(i).getName();
-                                                              if (textLength <= teamName.length()) {
-                                                                  if (teamName.toLowerCase().contains(searchString.toLowerCase())) {
-                                                                      searchListPerson.add(listPerson.get(i));
-                                                                  }
-                                                              }
-                                                          }
-                                                          chooseReferralAdapter.notifyDataSetChanged();
-                                                      }
-                                                  }
-                                                  @Override
-                                                  public void afterTextChanged(Editable s) {
-                                                  }
-                                              }
+                                             @Override
+                                             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+                                             @Override
+                                             public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
+                                                 String searchString = mUserName.getText().toString();
+                                                 int textLength = searchString.length();
+                                                 if (searchListPerson != null) {
+                                                     searchListPerson.clear();
+                                                     for (int i = 0; i < listPerson.size(); i++) {
+                                                         String teamName = listPerson.get(i).getName();
+                                                         if (textLength <= teamName.length()) {
+                                                             if (teamName.toLowerCase().contains(searchString.toLowerCase())) {
+                                                                 searchListPerson.add(listPerson.get(i));
+                                                             }
+                                                         }
+                                                     }
+                                                     chooseReferralAdapter.notifyDataSetChanged();
+                                                 }
+                                             }
+
+                                             @Override
+                                             public void afterTextChanged(Editable s) {}
+                                         }
         );
 
         builder.setPositiveButton(R.string.button_select, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-
-                        for (PersonBriefcaseEntityExtend person : listPerson)
-                        if (person.isSelect())
-                            listChooseReferralId.add(person.getId());
-                        Log.d("TAG_listlId", listChooseReferralId.toString());
-                        Log.d("TAG_listPerson", listPerson.toString());
-                        Log.d("TAG_searchListPerson", searchListPerson.toString());
-                        ((CalendarFragment) getParentFragment()).setPersonIdForNewEvent(listChooseReferralId);
-                        dialog.dismiss();
-
-                    }
-                });
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                for (PersonBriefcaseEntityExtend person : listPerson)
+                    if (person.isSelect())
+                        listChooseReferralId.add(person.getId());
+                Log.d("TAG1_", "-------------------------------------------");
+                Log.d("TAG1_listPerson", listPerson.toString());
+                Log.d("TAG1_searchListPerson", searchListPerson.toString());
+                Log.d("TAG1_listChoose", listChooseReferralId.toString());
+                ((CalendarFragment) getParentFragment()).setPersonIdForNewEvent(listChooseReferralId);
+                dialog.dismiss();
+            }
+        });
         return builder.create();
     }
 
@@ -161,6 +168,8 @@ public class ChooseReferralDialog extends DialogFragment { // ChooseReferralDial
         private final Activity context;
         private final List<PersonBriefcaseEntityExtend> listReferrals;
 
+        CompoundButton buttonViewGlobal;
+
         class ViewHolder {
             public TextView text;
             public CheckBox checkbox;
@@ -173,34 +182,47 @@ public class ChooseReferralDialog extends DialogFragment { // ChooseReferralDial
             this.listReferrals = listReferrals;
         }
 
+        PersonBriefcaseEntityExtend personBriefcaseEntityExtend;
+
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            View rowView = convertView;
-            if (rowView == null) {
-                LayoutInflater inflater = context.getLayoutInflater();
+            View rowView;
+            if (convertView == null) {
+                LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 rowView = inflater.inflate(R.layout.rowlayout_choose_referral, null);
-                ViewHolder viewHolder = new ViewHolder();
+                final ViewHolder viewHolder = new ViewHolder();
                 viewHolder.text = (TextView) rowView.findViewById(R.id.referral_item_text_view);
-                viewHolder.checkbox = (CheckBox) rowView.findViewById(R.id.referral_checkbox);
                 viewHolder.image = (ImageView) rowView.findViewById(R.id.referral_item_image);
+
+                viewHolder.checkbox = (CheckBox) rowView.findViewById(R.id.referral_checkbox);
+                viewHolder.checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        personBriefcaseEntityExtend = (PersonBriefcaseEntityExtend) viewHolder.checkbox.getTag();
+                        buttonViewGlobal = buttonView;
+                        personBriefcaseEntityExtend.setSelect(buttonViewGlobal.isChecked());
+                    }
+                });
                 rowView.setTag(viewHolder);
+                viewHolder.checkbox.setTag(listReferrals.get(position));
+            } else {
+                rowView = convertView;
+                ((ViewHolder) rowView.getTag()).checkbox.setTag(listReferrals.get(position));
             }
 
             ViewHolder holder = (ViewHolder) rowView.getTag();
-            final PersonBriefcaseEntityExtend obj = listReferrals.get(position);
-            holder.text.setText(obj.getName());
-            holder.checkbox.setChecked(obj.isSelect());
-            holder.image.setImageResource(R.drawable.ic_browser_back);
+            PersonBriefcaseEntityExtend personB = listReferrals.get(position);
 
-            holder.checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    obj.setSelect(isChecked);
-                }
-            });
+            holder.text.setText(personB.getName());
+            holder.checkbox.setChecked(personB.isSelect());
+
+//            String LOGO_URL = (UserSyncInfo.getsUserSyncInfo() != null) ? UserSyncInfo.getsUserSyncInfo().getLogoUrl() : "";
+//            Picasso.with(context).load(LOGO_URL + game.getTeamLogo1()).placeholder(R.drawable.no_logo).into(holder.gameListItemImageViewTeam1Logo);
+//            Picasso.with(context).load(LOGO_URL + game.getTeamLogo2()).placeholder(R.drawable.no_logo).into(holder.gameListItemImageViewTeam2Logo);
 
             return rowView;
         }
+
     }
 
     private class PersonBriefcaseEntityExtend extends PersonBriefcaseEntity {
@@ -221,6 +243,13 @@ public class ChooseReferralDialog extends DialogFragment { // ChooseReferralDial
 
         public void setSelect(boolean select) {
             this.select = select;
+        }
+
+        @Override
+        public String toString() {
+            return "PersonBriefcaseEntityExtend{" + super.toString() +
+                    "select=" + select +
+                    '}';
         }
     }
 
