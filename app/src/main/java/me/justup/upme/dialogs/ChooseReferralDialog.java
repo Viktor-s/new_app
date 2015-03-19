@@ -30,6 +30,7 @@ import java.util.List;
 import me.justup.upme.R;
 import me.justup.upme.db.DBAdapter;
 import me.justup.upme.entity.PersonBriefcaseEntity;
+import me.justup.upme.fragments.CalendarFragment;
 import me.justup.upme.utils.AppContext;
 import me.justup.upme.utils.AppPreferences;
 
@@ -52,6 +53,9 @@ public class ChooseReferralDialog extends DialogFragment { // ChooseReferralDial
     List<PersonBriefcaseEntityExtend> listPerson;
     List<PersonBriefcaseEntityExtend> searchListPerson;
 
+
+    ArrayList<Integer> listChooseReferralId;
+
     public static ChooseReferralDialog newInstance(ArrayList<Integer> listIdPerson) {
 
         Bundle args = new Bundle();
@@ -71,9 +75,7 @@ public class ChooseReferralDialog extends DialogFragment { // ChooseReferralDial
         listPerson = fillPersonsFromCursor(mCursor);
         searchListPerson = new ArrayList<>(listPerson);
 
-        ArrayList<Integer> listChooseReferralId  = getArguments().getIntegerArrayList(CHOOSE_REFERRAL);
-        listChooseReferralId.add(3);
-        listChooseReferralId.add(5);
+        listChooseReferralId  = getArguments().getIntegerArrayList(CHOOSE_REFERRAL);
         for (Integer i : listChooseReferralId)
             listPerson.get(i).setSelect(true);
 
@@ -85,7 +87,6 @@ public class ChooseReferralDialog extends DialogFragment { // ChooseReferralDial
         builder.setCancelable(false);
 
         final ListView mListviewReferrals = (ListView) dialogView.findViewById(R.id.listview_referrals);
-
         chooseReferralAdapter = new ChooseReferralAdapter(getActivity(), searchListPerson);
         mListviewReferrals.setAdapter(chooseReferralAdapter);
 
@@ -111,20 +112,25 @@ public class ChooseReferralDialog extends DialogFragment { // ChooseReferralDial
                                                           chooseReferralAdapter.notifyDataSetChanged();
                                                       }
                                                   }
-
                                                   @Override
                                                   public void afterTextChanged(Editable s) {
                                                   }
-
                                               }
         );
-
 
         builder.setPositiveButton(R.string.button_select, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        getParentFragment();
+
+                        for (PersonBriefcaseEntityExtend person : listPerson)
+                        if (person.isSelect())
+                            listChooseReferralId.add(person.getId());
+                        Log.d("TAG_listlId", listChooseReferralId.toString());
+                        Log.d("TAG_listPerson", listPerson.toString());
+                        Log.d("TAG_searchListPerson", searchListPerson.toString());
+                        ((CalendarFragment) getParentFragment()).setPersonIdForNewEvent(listChooseReferralId);
                         dialog.dismiss();
+
                     }
                 });
         return builder.create();
@@ -150,7 +156,6 @@ public class ChooseReferralDialog extends DialogFragment { // ChooseReferralDial
         }
         return personsList;
     }
-
 
     public class ChooseReferralAdapter extends ArrayAdapter<PersonBriefcaseEntityExtend> {
         private final Activity context;
@@ -182,7 +187,7 @@ public class ChooseReferralDialog extends DialogFragment { // ChooseReferralDial
             }
 
             ViewHolder holder = (ViewHolder) rowView.getTag();
-            PersonBriefcaseEntityExtend obj = listReferrals.get(position);
+            final PersonBriefcaseEntityExtend obj = listReferrals.get(position);
             holder.text.setText(obj.getName());
             holder.checkbox.setChecked(obj.isSelect());
             holder.image.setImageResource(R.drawable.ic_browser_back);
@@ -190,21 +195,7 @@ public class ChooseReferralDialog extends DialogFragment { // ChooseReferralDial
             holder.checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                    game = (Game) holder.checkbox.getTag();
-//                    Log.d(TAG, "onCheckedChanged - gameID - " + game.getId() + " - gameFavorite - " + game.getIsFavorite());
-//                    buttonViewGlobal = buttonView;
-//                    if (Utils.CheckInternetConnection(getContext())) {
-//                        if (isChecked) {
-//                            ApiWrapper.setFavorite(MainActivity.mUserToken, game.getId(), asyncHttpResponseHandler);
-//                            viewHolder.titleTextViewFavourite.setText("Remove");
-//                        } else {
-//                            ApiWrapper.delFavorite(MainActivity.mUserToken, game.getId(), asyncHttpResponseHandler);
-//                            viewHolder.titleTextViewFavourite.setText("Favourites");
-//                        }
-//
-//                    } else {
-//                        Toast.makeText(getContext(), R.string.no_internet, Toast.LENGTH_SHORT).show();
-//                    }
+                    obj.setSelect(isChecked);
                 }
             });
 
@@ -231,7 +222,6 @@ public class ChooseReferralDialog extends DialogFragment { // ChooseReferralDial
         public void setSelect(boolean select) {
             this.select = select;
         }
-
     }
 
 }
