@@ -7,15 +7,15 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.content.LocalBroadcastManager;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import me.justup.upme.entity.ArticleFullResponse;
 import me.justup.upme.entity.ArticlesGetShortDescriptionResponse;
 import me.justup.upme.entity.CalendarGetEventsResponse;
 import me.justup.upme.entity.CommentsArticleFullResponse;
-import me.justup.upme.entity.GetMailContactResponse;
-import me.justup.upme.entity.GetProductHtmlByIdResponse;
 import me.justup.upme.entity.GetAllContactsResponse;
+import me.justup.upme.entity.GetProductHtmlByIdResponse;
 import me.justup.upme.entity.ProductsGetAllCategoriesResponse;
 import me.justup.upme.entity.Push;
 import me.justup.upme.utils.AppContext;
@@ -99,7 +99,6 @@ import static me.justup.upme.db.DBHelper.STATUS_BAR_PUSH_TABLE_NAME;
 import static me.justup.upme.db.DBHelper.STATUS_BAR_PUSH_TYPE;
 import static me.justup.upme.db.DBHelper.STATUS_BAR_PUSH_USER_ID;
 import static me.justup.upme.db.DBHelper.STATUS_BAR_PUSH_USER_NAME;
-import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 /**
  * <b>Use:</b>:

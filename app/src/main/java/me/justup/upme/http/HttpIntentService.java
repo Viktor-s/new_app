@@ -20,7 +20,6 @@ import me.justup.upme.entity.CalendarGetEventsResponse;
 import me.justup.upme.entity.CommentsArticleFullResponse;
 import me.justup.upme.entity.GetAllContactsResponse;
 import me.justup.upme.entity.GetMailContactQuery;
-import me.justup.upme.entity.GetMailContactResponse;
 import me.justup.upme.entity.GetProductHtmlByIdResponse;
 import me.justup.upme.entity.ProductsGetAllCategoriesResponse;
 import me.justup.upme.fragments.CalendarFragment;
