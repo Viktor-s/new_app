@@ -121,6 +121,11 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
     private static String[] months = new String[]{"ЯНВАРЬ", "ФЕВРАЛЬ", "МАРТ", "АПРЕЛЬ", "МАЙ", "ИЮНЬ", "ИЮЛЬ", "АВГУСТ", "СЕНТЯБРЬ", "ОКТЯБРЬ", "НОЯБРЬ", "ДЕКАБРЬ"};
 
     private AppPreferences mAppPreferences = new AppPreferences(AppContext.getAppContext());
+    private final int currentUserId = mAppPreferences.getUserId();
+
+    private ArrayList<Integer> listSharedId = new ArrayList<>();
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -424,51 +429,6 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                 }).show();
     }
 
-    public void alertMultipleChoiceReferals() {
-
-        CharSequence[] namePerson = new CharSequence[listPerson.size()];
-        boolean[] choosePerson = new boolean[listPerson.size()];
-
-        int currentUserId = mAppPreferences.getUserId();
-
-        for (int i = 0; i < listPerson.size(); i++) {
-            namePerson[i] = listPerson.get(i).getName();
-//            if (listPerson.get(i).getId() == currentUserId) ;
-//                mSelectedItems.add(i);
-        }
-        for (Integer selectNumber : mSelectedItems)
-            choosePerson[selectNumber] = true;
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Выберите исполнителей задачи")
-                .setMultiChoiceItems(namePerson, choosePerson, new DialogInterface.OnMultiChoiceClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                        if (isChecked) {
-                            mSelectedItems.add(which);
-                        } else if (mSelectedItems.contains(which)) {
-                            mSelectedItems.remove(Integer.valueOf(which));
-                        }
-                    }
-                })
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        String selectedIndex = "";
-                        for (Integer i : mSelectedItems) {
-                            selectedIndex += i + ", ";
-                        }
-                        Toast.makeText(getActivity(), "Selected index: " + selectedIndex, Toast.LENGTH_SHORT).show();
-                    }
-                })
-//                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int id) { }
-//                })
-                .show();
-
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -520,6 +480,9 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
         etNewEventDescription.setText("");
         etNewEventLocation.setText("");
         mSelectedItems.clear();
+
+        listSharedId.clear();
+        listSharedId.add(currentUserId);
     }
 
     @Override
@@ -568,11 +531,8 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                 TimePickerDialog(DURATION_EVENT);
                 break;
             case R.id.choose_referral_button:
-//                alertMultipleChoiceReferals();
-
-                ArrayList<Integer> listIdPerson = new ArrayList<>();
-                ChooseReferralDialog chooseReferralDialog = ChooseReferralDialog.newInstance(listIdPerson);
-                chooseReferralDialog.show(getFragmentManager(), "choose_referral_dialog");
+                ChooseReferralDialog chooseReferralDialog = ChooseReferralDialog.newInstance(listSharedId);
+                chooseReferralDialog.show(getChildFragmentManager(), "choose_referral_dialog");
                 break;
             case R.id.add_new_event_button:
                 panelAddEvent.setVisibility(View.GONE);
@@ -630,6 +590,10 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
         LocalBroadcastManager.getInstance(CalendarFragment.this.getActivity()).unregisterReceiver(receiver);
         LOGI(TAG, "unregisterRecNewsFeed");
         //mDBAdapter.close();
+    }
+
+    public void setPersonIdForNewEvent(ArrayList<Integer> listId) {
+        listSharedId = listId;
     }
 }
 

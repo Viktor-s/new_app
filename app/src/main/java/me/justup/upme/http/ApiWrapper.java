@@ -56,6 +56,7 @@ public class ApiWrapper {
     public static final String ARTICLE_FULL_GET_COMMENTS = "ArticleComments.getByArticleId";
     public static final String ARTICLE_ADD_COMMENT = "ArticleComments.add";
 
+    public static final String ACCOUNT_GET_ALL_CONTACTS = "Account.getAllAllowedContacts";
     public static final String ACCOUNT_GET_REFERRALS_BY_ID = "Account.getReferralsById";
     public static final String ACCOUNT_ADD_REFERAL = "Account.addReferral";
     public static final String ACCOUNT_GET_USER_PANEL_INFO = "Account.getUserPanelInfo";

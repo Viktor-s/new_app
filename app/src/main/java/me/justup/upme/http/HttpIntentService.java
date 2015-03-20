@@ -9,6 +9,8 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.apache.http.Header;
 
+import java.util.List;
+
 import me.justup.upme.MainActivity;
 import me.justup.upme.db.DBAdapter;
 import me.justup.upme.entity.ArticleFullResponse;
@@ -16,6 +18,7 @@ import me.justup.upme.entity.ArticlesGetShortDescriptionResponse;
 import me.justup.upme.entity.BaseHttpQueryEntity;
 import me.justup.upme.entity.CalendarGetEventsResponse;
 import me.justup.upme.entity.CommentsArticleFullResponse;
+import me.justup.upme.entity.GetAllContactsResponse;
 import me.justup.upme.entity.GetMailContactQuery;
 import me.justup.upme.entity.GetMailContactResponse;
 import me.justup.upme.entity.GetProductHtmlByIdResponse;
@@ -215,7 +218,7 @@ public class HttpIntentService extends IntentService {
 
     private void fillMailContactDB(String content) {
         LOGI(TAG, "fillMailContactDB");
-        GetMailContactResponse response = null;
+        GetAllContactsResponse response = null;
 
         // int userId = new AppPreferences(AppContext.getAppContext()).getUserId();
 
@@ -329,14 +332,18 @@ public class HttpIntentService extends IntentService {
     */
 
         try {
-            response = ApiWrapper.gson.fromJson(content, GetMailContactResponse.class);
+            response = ApiWrapper.gson.fromJson(content, GetAllContactsResponse.class);
         } catch (JsonSyntaxException e) {
             LOGE(TAG, "gson.fromJson:\n" + content);
         }
 
         if (response != null && response.result != null) {
             LOGI(TAG, response.toString());
-            DBAdapter.getInstance().saveMailContacts(response);
+
+            final List<GetAllContactsResponse.Result.Parents> allUsers = response.result.getAllUsers();
+            if (allUsers != null) {
+                DBAdapter.getInstance().saveContactsArray(allUsers);
+            }
         }
     }
 

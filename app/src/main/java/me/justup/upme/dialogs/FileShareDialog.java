@@ -9,18 +9,23 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.JsonSyntaxException;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.apache.http.Header;
 
+import java.util.List;
+
 import me.justup.upme.R;
-import me.justup.upme.entity.GetMailContactQuery;
-import me.justup.upme.entity.GetMailContactResponse;
+import me.justup.upme.entity.BaseMethodEmptyQuery;
+import me.justup.upme.entity.FileAddShareWithQuery;
+import me.justup.upme.entity.GetAllContactsResponse;
 import me.justup.upme.http.ApiWrapper;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
@@ -32,14 +37,21 @@ public class FileShareDialog extends DialogFragment {
     private static final String TAG = makeLogTag(FileShareDialog.class);
 
     public static final String FILE_SHARE_DIALOG = "file_share_dialog";
+    private static final String FILE_HASH = "file_hash";
 
     private LayoutInflater mLayoutInflater;
     private LinearLayout mUserShareLayout;
-    private Button mShareForAll;
+    private String mFileHash;
 
 
-    public static FileShareDialog newInstance() {
-        return new FileShareDialog();
+    public static FileShareDialog newInstance(final String fileHash) {
+        Bundle args = new Bundle();
+        args.putString(FILE_HASH, fileHash);
+
+        FileShareDialog fragment = new FileShareDialog();
+        fragment.setArguments(args);
+
+        return fragment;
     }
 
     @SuppressLint("InflateParams")
@@ -47,20 +59,22 @@ public class FileShareDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         mLayoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
+        mFileHash = (String) getArguments().getSerializable(FILE_HASH);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_file_share, null);
 
-        mShareForAll = (Button) dialogView.findViewById(R.id.share_for_all_button);
         mUserShareLayout = (LinearLayout) dialogView.findViewById(R.id.user_share_items_layout);
 
-        ApiWrapper.query(new GetMailContactQuery(), new GetContactList());
+        BaseMethodEmptyQuery query = new BaseMethodEmptyQuery();
+        query.method = ApiWrapper.ACCOUNT_GET_ALL_CONTACTS;
+        ApiWrapper.query(query, new GetContactList());
 
-        builder.setView(dialogView).setTitle(R.string.you_contacts)
+        builder.setView(dialogView).setTitle(R.string.file_share_for)
                 .setPositiveButton(R.string.button_close, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        // to FileExplorerService for query
                         dialog.dismiss();
                     }
                 });
@@ -74,19 +88,23 @@ public class FileShareDialog extends DialogFragment {
             String content = ApiWrapper.responseBodyToString(responseBody);
             LOGD(TAG, "onSuccess(): " + content);
 
-            GetMailContactResponse response = null;
+            GetAllContactsResponse response = null;
             try {
-                response = ApiWrapper.gson.fromJson(content, GetMailContactResponse.class);
+                response = ApiWrapper.gson.fromJson(content, GetAllContactsResponse.class);
             } catch (JsonSyntaxException e) {
                 LOGE(TAG, "gson.fromJson:\n" + content);
             }
 
             if (response != null && response.result != null) {
-                for (GetMailContactResponse.Result user : response.result) {
-                    setUserItem(user);
+                final List<GetAllContactsResponse.Result.Parents> allUsers = response.result.getAllUsers();
+                if (allUsers != null) {
+                    for (GetAllContactsResponse.Result.Parents user : allUsers) {
+                        setUserItem(user.id, user.name, false);
+                    }
                 }
+
             } else if (response != null && response.error != null) {
-                setError(response.error.data);
+                setUserItem(0, response.error.data, true);
             }
         }
 
@@ -96,32 +114,56 @@ public class FileShareDialog extends DialogFragment {
             LOGE(TAG, "onFailure(): " + content);
 
             if (error != null) {
-                setError(error.getMessage());
+                setUserItem(0, error.getMessage(), true);
             } else {
-                setError(content);
+                setUserItem(0, content, true);
             }
         }
     }
 
     @SuppressLint("InflateParams")
-    private void setUserItem(final GetMailContactResponse.Result user) {
+    private void setUserItem(final int userId, final String userName, boolean isErrorMessage) {
         final View item = mLayoutInflater.inflate(R.layout.item_file_share, null);
 
         TextView mUserName = (TextView) item.findViewById(R.id.share_user_name_TextView);
-        mUserName.setText(user.name);
+        mUserName.setText(userName);
+
+        CheckBox setShareCheckBox = (CheckBox) item.findViewById(R.id.file_share_checkBox);
+        setShareCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                    addFileShareWith(mFileHash, userId);
+            }
+        });
+
+        if (isErrorMessage) {
+            setShareCheckBox.setVisibility(View.GONE);
+        }
 
         mUserShareLayout.addView(item);
     }
 
-    @SuppressLint("InflateParams")
-    private void setError(final String error) {
-        final View item = mLayoutInflater.inflate(R.layout.item_file_share, null);
+    private void addFileShareWith(final String fileHash, final int friendId) {
+        FileAddShareWithQuery query = new FileAddShareWithQuery();
+        query.params.file_hash = fileHash;
+        query.params.member_ids = friendId;
 
-        mShareForAll.setVisibility(View.GONE);
-        TextView mUserName = (TextView) item.findViewById(R.id.share_user_name_TextView);
-        mUserName.setText(error);
+        ApiWrapper.query(query, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                String content = ApiWrapper.responseBodyToString(responseBody);
+                LOGD(TAG, "addFileShareWith onSuccess(): " + content);
 
-        mUserShareLayout.addView(item);
+                Toast.makeText(getActivity(), getString(R.string.share_access_grant), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                String content = ApiWrapper.responseBodyToString(responseBody);
+                LOGE(TAG, "addFileShareWith onFailure(): " + content);
+            }
+        });
     }
 
 }

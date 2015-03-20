@@ -47,12 +47,18 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String MAIL_CONTACT_TABLE_NAME = "mail_contact_table";
     public static final String MAIL_CONTACT_ID = BaseColumns._ID;
     public static final String MAIL_CONTACT_SERVER_ID = "server_id";
-    public static final String MAIL_CONTACT_PARENT_ID = "parentId";
+    public static final String MAIL_CONTACT_PARENT_ID = "parent_id";
+    public static final String MAIL_CONTACT_JABBER_ID = "jabber_id";
     public static final String MAIL_CONTACT_NAME = "name";
     public static final String MAIL_CONTACT_LOGIN = "login";
     public static final String MAIL_CONTACT_DATE_ADD = "date_add";
     public static final String MAIL_CONTACT_PHONE = "phone";
     public static final String MAIL_CONTACT_IMG = "img";
+    public static final String MAIL_CONTACT_LATITUDE = "latitude";
+    public static final String MAIL_CONTACT_LONGITUDE = "longitude";
+    public static final String MAIL_CONTACT_LEVEL = "level";
+    public static final String MAIL_CONTACT_IN_SYSTEM = "in_system";
+    public static final String MAIL_CONTACT_TOTAL_SUM = "total_sum";
 
     public static final String EVENT_CALENDAR_TABLE_NAME = "event_calendar_table";
     public static final String EVENT_CALENDAR_ID = BaseColumns._ID;
@@ -161,9 +167,15 @@ public class DBHelper extends SQLiteOpenHelper {
             + MAIL_CONTACT_SERVER_ID + " INTEGER PRIMARY KEY, "
             + MAIL_CONTACT_PARENT_ID + " INTEGER, "
             + MAIL_CONTACT_NAME + " TEXT, "
+            + MAIL_CONTACT_JABBER_ID + " TEXT, "
             + MAIL_CONTACT_LOGIN + " TEXT, "
             + MAIL_CONTACT_DATE_ADD + " INTEGER, "
             + MAIL_CONTACT_PHONE + " TEXT, "
+            + MAIL_CONTACT_LATITUDE + " REAL, "
+            + MAIL_CONTACT_LONGITUDE + " REAL, "
+            + MAIL_CONTACT_LEVEL + " INTEGER, "
+            + MAIL_CONTACT_IN_SYSTEM + " TEXT, "
+            + MAIL_CONTACT_TOTAL_SUM + " INTEGER, "
             + MAIL_CONTACT_IMG + " TEXT" + ")";
 
 
