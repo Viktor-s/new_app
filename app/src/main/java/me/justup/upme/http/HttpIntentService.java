@@ -18,6 +18,7 @@ import me.justup.upme.entity.CalendarGetEventsResponse;
 import me.justup.upme.entity.CommentsArticleFullResponse;
 import me.justup.upme.entity.GetMailContactQuery;
 import me.justup.upme.entity.GetMailContactResponse;
+import me.justup.upme.entity.GetProductHtmlByIdResponse;
 import me.justup.upme.entity.ProductsGetAllCategoriesResponse;
 import me.justup.upme.fragments.CalendarFragment;
 import me.justup.upme.fragments.NewsItemFragment;
@@ -46,6 +47,7 @@ public class HttpIntentService extends IntentService {
     public static final int CALENDAR_PART = 9;
     public static final int CALENDAR_ADD_EVENT = 10;
     public static final int PRODUCTS_GET_ALL_CATEGORIES = 11;
+    public static final int PRODUCTS_GET_HTML_BY_ID = 12;
 
 
     //private DBAdapter mDBAdapter;
@@ -129,6 +131,10 @@ public class HttpIntentService extends IntentService {
                 case PRODUCTS_GET_ALL_CATEGORIES:
                     // startHttpIntent(MainActivity.getEventCalendarQuery(CalendarFragment.firstDayCurrentWeek), HttpIntentService.CALENDAR_PART);
                     fillProductsDB(content);
+                    break;
+
+                case PRODUCTS_GET_HTML_BY_ID:
+                    fillProductHtmlDB(content);
                     break;
 
                 default:
@@ -361,6 +367,20 @@ public class HttpIntentService extends IntentService {
 
         if (response != null && response.result != null) {
             DBAdapter.getInstance().saveAllProducts(response);
+        }
+    }
+
+    private void fillProductHtmlDB(String content) {
+        LOGD("TAG_html", content);
+        GetProductHtmlByIdResponse response = null;
+        try {
+            response = ApiWrapper.gson.fromJson(content, GetProductHtmlByIdResponse.class);
+        } catch (JsonSyntaxException e) {
+            LOGE(TAG, "gson.fromJson:\n" + content);
+        }
+
+        if (response != null && response.result != null) {
+            DBAdapter.getInstance().saveProductHtml(response);
         }
     }
 

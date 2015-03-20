@@ -1,5 +1,6 @@
 package me.justup.upme;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -17,9 +19,11 @@ import android.widget.TextView;
 import java.util.List;
 
 import me.justup.upme.adapter.ProductsAdapter;
+import me.justup.upme.entity.BaseHttpQueryEntity;
+import me.justup.upme.entity.GetProductHtmlByIdQuery;
 import me.justup.upme.entity.ProductsCategoryBrandEntity;
-
-import static me.justup.upme.utils.LogUtils.LOGE;
+import me.justup.upme.fragments.ProductHTMLFragment;
+import me.justup.upme.http.HttpIntentService;
 
 
 public class ProductItemActivity extends BaseActivity implements View.OnClickListener {
@@ -34,6 +38,7 @@ public class ProductItemActivity extends BaseActivity implements View.OnClickLis
     private TextView previousProductGroup;
     private TextView nextProductGroup;
     private List<ProductsCategoryBrandEntity> mProductsCategoryBrandEntities;
+    private FrameLayout productHtmlContainer;
 
 
     @SuppressWarnings("unchecked")
@@ -44,13 +49,14 @@ public class ProductItemActivity extends BaseActivity implements View.OnClickLis
 
         lockPanel = (LinearLayout) findViewById(R.id.lock_panel);
 
+        productHtmlContainer = (FrameLayout) findViewById(R.id.products_fragment_html_container);
         int idCurrentGroup = getIntent().getIntExtra(ID_CURRENT_GROUP, 0);
         mProductsCategoryBrandEntities = (List<ProductsCategoryBrandEntity>) getIntent().getSerializableExtra("AllBrandsList");
         // ListGroupProductMock listGroupProductMock = ListGroupProductMock.getInstance(this);
         // listGroup = listGroupProductMock.getListGroupProduct();
         //GroupProductEntity currentGroupProduct = listGroupProductMock.getGroupProductById(idCurrentGroup);
         ProductsCategoryBrandEntity currentProductBrand = getCurrentBrand(mProductsCategoryBrandEntities, idCurrentGroup);
-        LOGE("pavel", currentProductBrand.toString());
+        //LOGE("pavel", currentProductBrand.toString());
 
         rl = (RelativeLayout) findViewById(R.id.container_group_product_item);
         rl.addView(generateGroupProduct(currentProductBrand));
@@ -112,12 +118,12 @@ public class ProductItemActivity extends BaseActivity implements View.OnClickLis
         groupProductExtendedDescription.setText(currentGroupProduct.getDescription());
 
         ListView productsListView = (ListView) groupProductExtendedLayout.findViewById(R.id.listViewProducts);
-        ProductsAdapter productsAdapter = new ProductsAdapter(this, currentGroupProduct.getProductEntityList());
+        ProductsAdapter productsAdapter = new ProductsAdapter(this, currentGroupProduct.getProductEntityList(), this);
         productsListView.setAdapter(productsAdapter);
         setListViewHeightBasedOnChildren(productsListView);
 
         ScrollView scrollView = (ScrollView) groupProductExtendedLayout.findViewById(R.id.group_product_scroll_view);
-        scrollView.smoothScrollTo(0,0);
+        scrollView.smoothScrollTo(0, 0);
 
         return groupProductExtendedLayout;
     }
@@ -168,6 +174,28 @@ public class ProductItemActivity extends BaseActivity implements View.OnClickLis
         params.height = listViewElementsHeight + 1;
         listView.setLayoutParams(params);
         listView.requestLayout();
+    }
+
+    public void showProductHtmlFragment(int id) {
+        startHttpIntent(getProductHtml(id), HttpIntentService.PRODUCTS_GET_HTML_BY_ID);
+        getFragmentManager().beginTransaction().replace(R.id.products_fragment_html_container, ProductHTMLFragment.newInstance(id)).commit();
+
+    }
+
+
+    public void startHttpIntent(BaseHttpQueryEntity entity, int dbTable) {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(HttpIntentService.HTTP_INTENT_QUERY_EXTRA, entity);
+        bundle.putInt(HttpIntentService.HTTP_INTENT_PART_EXTRA, dbTable);
+
+        Intent intent = new Intent(this, HttpIntentService.class);
+        startService(intent.putExtras(bundle));
+    }
+
+    public static GetProductHtmlByIdQuery getProductHtml(int id) {
+        GetProductHtmlByIdQuery query = new GetProductHtmlByIdQuery();
+        query.params.id = id;
+        return query;
     }
 }
 

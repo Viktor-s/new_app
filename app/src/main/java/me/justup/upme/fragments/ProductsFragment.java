@@ -29,7 +29,7 @@ import me.justup.upme.entity.ProductCategoryEntity;
 import me.justup.upme.entity.ProductsCategoryBrandEntity;
 import me.justup.upme.entity.ProductsProductEntity;
 
-import static me.justup.upme.db.DBHelper.*;
+import static me.justup.upme.db.DBHelper.PRODUCTS_BRAND_CATEGORIES_BRAND_ID;
 import static me.justup.upme.db.DBHelper.PRODUCTS_BRAND_CATEGORIES_IMAGE;
 import static me.justup.upme.db.DBHelper.PRODUCTS_BRAND_CATEGORIES_NAME;
 import static me.justup.upme.db.DBHelper.PRODUCTS_BRAND_CATEGORIES_SERVER_ID;
@@ -37,8 +37,11 @@ import static me.justup.upme.db.DBHelper.PRODUCTS_BRAND_CATEGORIES_SHORT_DESCRIP
 import static me.justup.upme.db.DBHelper.PRODUCTS_CATEGORIES_NAME;
 import static me.justup.upme.db.DBHelper.PRODUCTS_CATEGORIES_SERVER_ID;
 import static me.justup.upme.db.DBHelper.PRODUCTS_CATEGORIES_TABLE_NAME;
+import static me.justup.upme.db.DBHelper.PRODUCTS_PRODUCT_DESCRIPTION;
+import static me.justup.upme.db.DBHelper.PRODUCTS_PRODUCT_IMAGE;
+import static me.justup.upme.db.DBHelper.PRODUCTS_PRODUCT_NAME;
+import static me.justup.upme.db.DBHelper.PRODUCTS_PRODUCT_SERVER_ID;
 import static me.justup.upme.utils.LogUtils.LOGD;
-import static me.justup.upme.utils.LogUtils.LOGE;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 
@@ -77,9 +80,13 @@ public class ProductsFragment extends Fragment implements View.OnClickListener {
         mProductsReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (containerProductMain != null) {
+                if (listCategory.size() > 1) {
                     containerProductMain.removeAllViews();
                 }
+                cursorProducts = database.rawQuery("SELECT * FROM " + PRODUCTS_CATEGORIES_TABLE_NAME, null);
+                listCategory = fillProductsFromCursor(cursorProducts);
+                if (cursorProducts != null)
+                    cursorProducts.close();
                 updateView();
             }
         };
@@ -146,7 +153,10 @@ public class ProductsFragment extends Fragment implements View.OnClickListener {
 //
 //            LinearLayout containerProductMain = (LinearLayout) view.findViewById(R.id.container_product_main);
 //            containerProductMain.addView(categoryProductLayout);
-        updateView();
+        if (listCategory.size() > 1) {
+            updateView();
+        }
+
 
         return view;
     }
@@ -224,7 +234,7 @@ public class ProductsFragment extends Fragment implements View.OnClickListener {
                         productsList.add(productsProductEntity);
                     }
                     productsCategoryBrandEntity.setProductEntityList(productsList);
-                    LOGE("pavel", productsList.toString());
+                  //  LOGE("pavel", productsList.toString());
                     brandsList.add(productsCategoryBrandEntity);
                     cursorBrandProduct.close();
                 }
