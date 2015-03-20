@@ -15,10 +15,13 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.apache.http.Header;
 
+import java.text.SimpleDateFormat;
+
 import me.justup.upme.R;
 import me.justup.upme.entity.FileGetPropertiesQuery;
 import me.justup.upme.entity.FileGetPropertiesResponse;
 import me.justup.upme.http.ApiWrapper;
+import me.justup.upme.utils.AppLocale;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.LOGE;
@@ -31,9 +34,12 @@ public class FilePropertiesDialog extends DialogFragment {
     public static final String FILE_PROPERTIES_DIALOG = "file_properties_dialog";
     private static final String FILE_PROPERTIES_FILE_HASH = "file_properties_file_hash";
 
+    private static final String DATE_FORMAT = "E dd MMMM yyyy HH:mm";
+
     private TextView ownerName;
     private TextView dateAdded;
     private TextView dateChanged;
+    private SimpleDateFormat mDateFormat;
 
 
     public static FilePropertiesDialog newInstance(final String fileHash) {
@@ -67,6 +73,8 @@ public class FilePropertiesDialog extends DialogFragment {
             }
         });
 
+        mDateFormat = new SimpleDateFormat(DATE_FORMAT, AppLocale.getAppLocale());
+
         ownerName = (TextView) dialogView.findViewById(R.id.file_owner_textView);
         dateAdded = (TextView) dialogView.findViewById(R.id.file_added_textView);
         dateChanged = (TextView) dialogView.findViewById(R.id.file_changed_textView);
@@ -92,8 +100,8 @@ public class FilePropertiesDialog extends DialogFragment {
 
             if (response != null && response.result != null) {
                 ownerName.setText(response.result.owner.name);
-                dateAdded.setText(response.result.create_date);
-                dateChanged.setText(response.result.update_date);
+                dateAdded.setText(formatDate(response.result.create_date));
+                dateChanged.setText(formatDate(response.result.update_date));
             }
         }
 
@@ -102,6 +110,12 @@ public class FilePropertiesDialog extends DialogFragment {
             String content = ApiWrapper.responseBodyToString(responseBody);
             LOGE(TAG, "GetFileProperties onFailure(): " + content);
         }
+    }
+
+    private String formatDate(long unixTimeStamp) {
+        long millis = unixTimeStamp * 1000;
+
+        return mDateFormat.format(millis);
     }
 
 }

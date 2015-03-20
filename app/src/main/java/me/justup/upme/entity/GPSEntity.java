@@ -6,23 +6,24 @@ import java.io.Serializable;
 public class GPSEntity implements Serializable {
     private static final long serialVersionUID = 0L;
 
-    public long date;
-    public double latitude;
-    public double longitude;
+    public String latitude;
+    public String longitude;
+    public long ts;
 
-    public GPSEntity(long date, double latitude, double longitude) {
-        this.date = date;
-        this.latitude = latitude;
-        this.longitude = longitude;
+
+    public GPSEntity(long timeStamp, double latitude, double longitude) {
+        this.ts = timeStamp;
+        this.latitude = String.valueOf(latitude);
+        this.longitude = String.valueOf(longitude);
     }
 
     @Override
     public String toString() {
-        return "GPSEntity{" +
-                "date=" + date +
-                ", latitude=" + latitude +
+        return "{" +
+                "latitude=" + latitude +
                 ", longitude=" + longitude +
-                '}';
+                ", ts=" + ts +
+                "}";
     }
 
 }

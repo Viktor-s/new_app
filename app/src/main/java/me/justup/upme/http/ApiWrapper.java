@@ -50,7 +50,6 @@ public class ApiWrapper {
     public static final String AUTH_CHECK_VERIFICATION = "Auth.checkVerificationPhoneCode";
     public static final String AUTH_GET_LOGGED_USER_INFO = "Auth.getLoggedUserInfo";
 
-    public static final String ARTICLES_GET = "Articles.get";
     public static final String ARTICLES_GET_SHORT_DESCRIPTION = "Articles.getShortDescription";
     public static final String ARTICLE_GET_FULL_DESCRIPTION = "Articles.find";
     public static final String ARTICLE_FULL_GET_COMMENTS = "ArticleComments.getByArticleId";
@@ -58,8 +57,9 @@ public class ApiWrapper {
 
     public static final String ACCOUNT_GET_ALL_CONTACTS = "Account.getAllAllowedContacts";
     public static final String ACCOUNT_GET_REFERRALS_BY_ID = "Account.getReferralsById";
-    public static final String ACCOUNT_ADD_REFERAL = "Account.addReferral";
+    public static final String ACCOUNT_ADD_REFERRAL = "Account.addReferral";
     public static final String ACCOUNT_GET_USER_PANEL_INFO = "Account.getUserPanelInfo";
+    public static final String ACCOUNT_ADD_USER_LOCATION = "Account.addUserLocation";
 
     public static final String PUSH_SET_GOOGLE_PUSH_ID = "Push.setGooglePushId";
     public static final String JABBER_START_CHAT = "Jabber.startChat";
@@ -82,6 +82,7 @@ public class ApiWrapper {
     public static final String FILE_GET_PROPERTIES_BY_HASH = "File.getByHash";
     public static final String FILE_GET_SHARE_WITH = "File.getShareWith";
     public static final String FILE_UNLINK_SHARED_FILE = "File.unlinkSharedFile";
+    public static final String FILE_DROP_SHARE_WITH = "File.dropShareWith";
 
 
     private static void post(final StringEntity se, AsyncHttpResponseHandler responseHandler) {

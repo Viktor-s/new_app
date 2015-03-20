@@ -169,7 +169,7 @@ public class GPSTracker extends Service implements LocationListener {
                     LOGD(TAG, "Send to server: " + mGPSEntityArray.toString());
 
                     SendGPSQuery query = new SendGPSQuery();
-                    query.params = mGPSEntityArray;
+                    query.params.data = mGPSEntityArray;
 
                     ApiWrapper.syncQuery(query, new OnSendGPSResponse());
 
