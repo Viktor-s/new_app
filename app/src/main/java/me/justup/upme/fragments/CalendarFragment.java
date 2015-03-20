@@ -33,6 +33,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.jivesoftware.smack.util.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.DateTimeZone;
@@ -116,21 +117,18 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
     private SQLiteDatabase database;
 
     private List<PersonBriefcaseEntity> listPerson;
-    private ArrayList<Integer> mSelectedItems;
 
     private static String[] months = new String[]{"ЯНВАРЬ", "ФЕВРАЛЬ", "МАРТ", "АПРЕЛЬ", "МАЙ", "ИЮНЬ", "ИЮЛЬ", "АВГУСТ", "СЕНТЯБРЬ", "ОКТЯБРЬ", "НОЯБРЬ", "ДЕКАБРЬ"};
 
-    private AppPreferences mAppPreferences = new AppPreferences(AppContext.getAppContext());
-    private final int currentUserId = mAppPreferences.getUserId();
+//    private AppPreferences mAppPreferences = new AppPreferences(AppContext.getAppContext());
+//    private final int currentUserId = mAppPreferences.getUserId();
 
     private ArrayList<Integer> listSharedId = new ArrayList<>();
-
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mSelectedItems = new ArrayList<>();
 
         database = DBAdapter.getInstance().openDatabase();
         String selectQuery = "SELECT * FROM " + MAIL_CONTACT_TABLE_NAME;
@@ -199,12 +197,13 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
         mCalendartypesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                switch (position) { // ПЕРЕДЕЛАТЬ НА ПЕРЕЧИСЛЕНИЯ
-                    case 0:
+                switch (CalendarEventTypes.values()[position]) { // ПЕРЕДЕЛАТЬ НА ПЕРЕЧИСЛЕНИЯ
+                    case REMINDER:
                         chooseReferralButton.setVisibility(View.GONE);
-                        mSelectedItems.clear();
+                        listSharedId.clear();
+//                        listSharedId.add(currentUserId);
                         break;
-                    case 1:
+                    case TASK:
                         chooseReferralButton.setVisibility(View.VISIBLE);
                         break;
                     default:
@@ -375,7 +374,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DeleteConfirmation();
+//                DeleteConfirmation();
             }
         });
         dialogInfoEvent.show();
@@ -479,10 +478,9 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
         etNewEventName.setText("");
         etNewEventDescription.setText("");
         etNewEventLocation.setText("");
-        mSelectedItems.clear();
 
         listSharedId.clear();
-        listSharedId.add(currentUserId);
+//        listSharedId.add(currentUserId);
     }
 
     @Override
@@ -503,7 +501,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                 LOGD("TAG_", "firstDayCurrentWeek: " + firstDayCurrentWeek);
                 mWeekView.goToDate(firstDayCurrentWeek.toDateTime(DateTimeZone.UTC).toGregorianCalendar());
                 selectWeekTextView.setText(Integer.toString(currentWeek == 1 ? currentWeek = 52 : --currentWeek) + getResources().getString(R.string.week));
-                String strMonthYearPrev = String.format("%s %d", months[firstDayCurrentWeek.getMonthOfYear()-1], currentDate.getYear());
+                String strMonthYearPrev = String.format("%s %d", months[firstDayCurrentWeek.getMonthOfYear() - 1], currentDate.getYear());
                 selectMonthTextView.setText(strMonthYearPrev);
                 listEventsForWeek(firstDayCurrentWeek);
                 ((MainActivity) getActivity()).startHttpIntent(MainActivity.getEventCalendarQuery(firstDayCurrentWeek), HttpIntentService.CALENDAR_PART);
@@ -513,7 +511,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                 LOGD("TAG_", "firstDayCurrentWeek: " + firstDayCurrentWeek);
                 mWeekView.goToDate(firstDayCurrentWeek.toDateTime(DateTimeZone.UTC).toGregorianCalendar());
                 selectWeekTextView.setText(Integer.toString(currentWeek == 52 ? currentWeek = 1 : ++currentWeek) + getResources().getString(R.string.week));
-                String strMonthYearNext = String.format("%s %d", months[firstDayCurrentWeek.getMonthOfYear()-1], currentDate.getYear());
+                String strMonthYearNext = String.format("%s %d", months[firstDayCurrentWeek.getMonthOfYear() - 1], currentDate.getYear());
                 selectMonthTextView.setText(strMonthYearNext);
                 listEventsForWeek(firstDayCurrentWeek);
                 ((MainActivity) getActivity()).startHttpIntent(MainActivity.getEventCalendarQuery(firstDayCurrentWeek), HttpIntentService.CALENDAR_PART);
@@ -535,12 +533,19 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                 chooseReferralDialog.show(getChildFragmentManager(), "choose_referral_dialog");
                 break;
             case R.id.add_new_event_button:
-                panelAddEvent.setVisibility(View.GONE);
+
+//                if (listSharedId.size() == 0) {
+//                    Toast.makeText(getActivity(), "Не выбран ни один", Toast.LENGTH_SHORT).show();
+//                    break;
+//                }
 
                 Calendar endTimeEvent = (Calendar) startTimeEvent.clone();
                 int minute = durationEventMin % 60;
                 int hour = (durationEventMin - minute) / 60;
-                if (hour == 0 && minute < 5) minute = 5;  // MIN 5 Minute
+                if (hour == 0 && minute == 0) {
+                    Toast.makeText(getActivity(), "Не установленна продолжительность события", Toast.LENGTH_SHORT).show();
+                    break;
+                }
                 endTimeEvent.add(Calendar.HOUR, hour);
                 endTimeEvent.add(Calendar.MINUTE, minute);
                 String eventName = etNewEventName.getText().toString();
@@ -554,13 +559,17 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                 calendarAddEventsQuery.params.start = String.valueOf(startTimeEvent.getTimeInMillis() / 1000);
                 calendarAddEventsQuery.params.end = String.valueOf(endTimeEvent.getTimeInMillis() / 1000);
 
-                String sharedWith = "";
-                for (Integer selectNumber : mSelectedItems) {
-                    sharedWith = sharedWith + listPerson.get(selectNumber).getId() + ",";  /// ЗАПЯТАЯ
+                if (listSharedId.size() == 0)
+                    calendarAddEventsQuery.params.shared_with = "";
+                else {
+                    String sharedWith = listSharedId.toString().replaceAll("(^\\[|\\]$)", "").replace(", ", ",");
+                    calendarAddEventsQuery.params.shared_with = sharedWith;
                 }
-                calendarAddEventsQuery.params.shared_with = (sharedWith != "") ? sharedWith : Integer.toString(mAppPreferences.getUserId());
-                Log.d("TAG_", calendarAddEventsQuery.toString());
+
+                Log.d("TAG1", calendarAddEventsQuery.toString());
                 ((MainActivity) getActivity()).startHttpIntent(calendarAddEventsQuery, HttpIntentService.CALENDAR_ADD_EVENT);
+                panelAddEvent.setVisibility(View.GONE);
+
                 break;
         }
 

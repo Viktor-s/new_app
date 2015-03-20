@@ -1,5 +1,6 @@
 package me.justup.upme.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,18 +9,18 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import me.justup.upme.ProductItemActivity;
 import me.justup.upme.R;
 import me.justup.upme.entity.ProductsProductEntity;
-import me.justup.upme.utils.AppContext;
 
 public class ProductsAdapter extends ArrayAdapter<ProductsProductEntity> {
     private final Context context;
+    private Activity activity;
 
     private static class ViewHolder {
         private ImageView mImageView;
@@ -28,9 +29,10 @@ public class ProductsAdapter extends ArrayAdapter<ProductsProductEntity> {
         private Button mInfoButton;
     }
 
-    public ProductsAdapter(Context context, List<ProductsProductEntity> users) {
+    public ProductsAdapter(Context context, List<ProductsProductEntity> users, Activity activity) {
         super(context, R.layout.product_item_row, users);
         this.context = context;
+        this.activity = activity;
     }
 
     @Override
@@ -56,9 +58,14 @@ public class ProductsAdapter extends ArrayAdapter<ProductsProductEntity> {
         viewHolder.mInfoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(AppContext.getAppContext(), "Product id = " + " " + getItem(position).getId(), Toast.LENGTH_SHORT).show();
+               // Toast.makeText(AppContext.getAppContext(), "Product id = " + " " + getItem(position).getId(), Toast.LENGTH_SHORT).show();
+                ((ProductItemActivity) activity).showProductHtmlFragment(getItem(position).getId());
+
             }
         });
         return convertView;
     }
+
+
+
 }

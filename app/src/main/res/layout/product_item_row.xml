@@ -14,7 +14,8 @@
         android:layout_height="@dimen/base160dp720sw"
         android:layout_alignParentLeft="true"
         android:src="@drawable/purse"
-        android:id="@+id/product_item_image" />
+        android:id="@+id/product_item_image"
+        android:layout_margin="@dimen/base5dp720sw" />
 
     <TextView
         android:id="@+id/product_item_name"
@@ -46,6 +47,7 @@
         android:focusableInTouchMode="false"
         android:layout_below="@+id/product_item_description"
         android:layout_marginTop="@dimen/base20dp720sw"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="@dimen/base10dp720sw" />
 
 </RelativeLayout>

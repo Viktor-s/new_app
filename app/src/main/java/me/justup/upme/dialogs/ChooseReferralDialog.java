@@ -74,17 +74,23 @@ public class ChooseReferralDialog extends DialogFragment { // ChooseReferralDial
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
+        int currentUserId = new AppPreferences(AppContext.getAppContext()).getUserId();
+
         SQLiteDatabase database = DBAdapter.getInstance().openDatabase();
         String selectQuery = "SELECT * FROM " + MAIL_CONTACT_TABLE_NAME;
         Cursor mCursor = database.rawQuery(selectQuery, null);
         listPerson = fillPersonsFromCursor(mCursor);
 
+        Log.d("TAG2", listPerson.toString());
+
         listChooseReferralId = getArguments().getIntegerArrayList(CHOOSE_REFERRAL);
+        Log.d("TAG1", listChooseReferralId.toString());
         for (Integer i : listChooseReferralId) {
             for (PersonBriefcaseEntityExtend person : listPerson)
                 if (person.getId() == i)
                     person.setSelect(true);
         }
+        listChooseReferralId.clear();
         searchListPerson = new ArrayList<>(listPerson);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -145,11 +151,6 @@ public class ChooseReferralDialog extends DialogFragment { // ChooseReferralDial
 
     private List<PersonBriefcaseEntityExtend> fillPersonsFromCursor(Cursor cursorPersons) {
         ArrayList<PersonBriefcaseEntityExtend> personsList = new ArrayList<>();
-        AppPreferences appPreferences = new AppPreferences(AppContext.getAppContext());
-        int userId = appPreferences.getUserId();
-        String userName = appPreferences.getUserName();
-        PersonBriefcaseEntityExtend personBriefcaseEntityUser = new PersonBriefcaseEntityExtend(userId, 0, userName, " ", false);
-        personsList.add(personBriefcaseEntityUser);
         for (cursorPersons.moveToFirst(); !cursorPersons.isAfterLast(); cursorPersons.moveToNext()) {
             PersonBriefcaseEntityExtend personBriefcaseEntity = new PersonBriefcaseEntityExtend();
             personBriefcaseEntity.setId(cursorPersons.getInt(cursorPersons.getColumnIndex(MAIL_CONTACT_SERVER_ID)));

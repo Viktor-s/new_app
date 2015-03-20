@@ -15,6 +15,7 @@ import me.justup.upme.entity.ArticlesGetShortDescriptionResponse;
 import me.justup.upme.entity.CalendarGetEventsResponse;
 import me.justup.upme.entity.CommentsArticleFullResponse;
 import me.justup.upme.entity.GetAllContactsResponse;
+import me.justup.upme.entity.GetProductHtmlByIdResponse;
 import me.justup.upme.entity.ProductsGetAllCategoriesResponse;
 import me.justup.upme.entity.Push;
 import me.justup.upme.utils.AppContext;
@@ -66,6 +67,9 @@ import static me.justup.upme.db.DBHelper.PRODUCTS_BRAND_CATEGORIES_TABLE_NAME;
 import static me.justup.upme.db.DBHelper.PRODUCTS_CATEGORIES_NAME;
 import static me.justup.upme.db.DBHelper.PRODUCTS_CATEGORIES_SERVER_ID;
 import static me.justup.upme.db.DBHelper.PRODUCTS_CATEGORIES_TABLE_NAME;
+import static me.justup.upme.db.DBHelper.PRODUCTS_HTML_CONTENT;
+import static me.justup.upme.db.DBHelper.PRODUCTS_HTML_SERVER_ID;
+import static me.justup.upme.db.DBHelper.PRODUCTS_HTML_TABLE_NAME;
 import static me.justup.upme.db.DBHelper.PRODUCTS_PRODUCT_BRAND_ID;
 import static me.justup.upme.db.DBHelper.PRODUCTS_PRODUCT_IMAGE;
 import static me.justup.upme.db.DBHelper.PRODUCTS_PRODUCT_NAME;
@@ -117,6 +121,7 @@ public class DBAdapter {
     public static final String MAIL_SQL_BROADCAST_INTENT = "mail_sql_broadcast_intent";
     public static final String CALENDAR_SQL_BROADCAST_INTENT = "calendar_sql_broadcast_intent";
     public static final String PRODUCTS_SQL_BROADCAST_INTENT = "products_sql_broadcast_intent";
+    public static final String PRODUCT_HTML_SQL_BROADCAST_INTENT = "products_html_sql_broadcast_intent";
 
     // private DBHelper dbHelper;
 
@@ -347,6 +352,15 @@ public class DBAdapter {
         sendBroadcast(PRODUCTS_SQL_BROADCAST_INTENT);
     }
 
+
+    public void saveProductHtml(GetProductHtmlByIdResponse entity) {
+        ContentValues values = new ContentValues();
+        values.put(PRODUCTS_HTML_SERVER_ID, entity.result.id);
+        // values.put(PRODUCTS_HTML_VERSION, entity.result.);
+        values.put(PRODUCTS_HTML_CONTENT, entity.result.html);
+        database.insertWithOnConflict(PRODUCTS_HTML_TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+        sendBroadcast(PRODUCT_HTML_SQL_BROADCAST_INTENT);
+    }
 
     public void sendBroadcast(String type) {
         Intent intent = new Intent(type);
