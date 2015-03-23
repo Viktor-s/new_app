@@ -6,8 +6,12 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:text="@string/settings_lang_title"
-        style="@style/SettingsTitle"
-        android:layout_weight="1" />
+        android:text="@string/settings_monitor"
+        style="@style/SettingsTitle" />
 
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/settings_on_off_monitoring"
+        android:id="@+id/monitoring_checkBox" />
 </LinearLayout>

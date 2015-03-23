@@ -22,6 +22,7 @@ import me.justup.upme.entity.LoginPhoneQueryEntity;
 import me.justup.upme.entity.LoginPinCodeQueryEntity;
 import me.justup.upme.entity.LoginResponseEntity;
 import me.justup.upme.http.ApiWrapper;
+import me.justup.upme.services.ApplicationSupervisorService;
 import me.justup.upme.services.StatusBarService;
 import me.justup.upme.utils.AppContext;
 import me.justup.upme.utils.AppPreferences;
@@ -79,6 +80,10 @@ public class LoginActivity extends BaseActivity {
         mAppSettings.setOnClickListener(new OnLoadSettings());
 
         loadSavedPhoneNumber();
+
+        if (mAppPreferences.isMonitoring()) {
+            startService(new Intent(AppContext.getAppContext(), ApplicationSupervisorService.class));
+        }
 
 
         // Delete! Only for debug!

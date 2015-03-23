@@ -15,6 +15,7 @@ public class AppPreferences {
     private static final String TAG_USER_ID = "user_id";
     private static final String TAG_PHONE = "user_phone";
     private static final String TAG_JABBER_ID = "jabber_id";
+    private static final String TAG_MONITORING = "is_monitoring";
 
 
     public AppPreferences(final Context context) {
@@ -88,6 +89,16 @@ public class AppPreferences {
 
     public String getJabberId() {
         return mSharedPreferences.getString(TAG_JABBER_ID, "jabber");
+    }
+
+    public void setMonitoring(boolean isMonitoring) {
+        mEditor = mSharedPreferences.edit();
+        mEditor.putBoolean(TAG_MONITORING, isMonitoring);
+        mEditor.apply();
+    }
+
+    public boolean isMonitoring() {
+        return mSharedPreferences.getBoolean(TAG_MONITORING, true);
     }
 
 }
