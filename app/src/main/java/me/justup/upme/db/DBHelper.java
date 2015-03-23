@@ -8,7 +8,7 @@ import android.provider.BaseColumns;
 
 public class DBHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "upme.db";
-    private static final int DATABASE_VERSION = 16;
+    private static final int DATABASE_VERSION = 17;
 
     public static final String BASE_TABLE_NAME = "base_table";
     public static final String BASE_ID = BaseColumns._ID;
@@ -50,6 +50,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String MAIL_CONTACT_PARENT_ID = "parent_id";
     public static final String MAIL_CONTACT_JABBER_ID = "jabber_id";
     public static final String MAIL_CONTACT_NAME = "name";
+    public static final String MAIL_CONTACT_NAME_LOWER_CASE = "name_lc";
     public static final String MAIL_CONTACT_LOGIN = "login";
     public static final String MAIL_CONTACT_DATE_ADD = "date_add";
     public static final String MAIL_CONTACT_PHONE = "phone";
@@ -167,6 +168,7 @@ public class DBHelper extends SQLiteOpenHelper {
             + MAIL_CONTACT_SERVER_ID + " INTEGER PRIMARY KEY, "
             + MAIL_CONTACT_PARENT_ID + " INTEGER, "
             + MAIL_CONTACT_NAME + " TEXT, "
+            + MAIL_CONTACT_NAME_LOWER_CASE + " TEXT, "
             + MAIL_CONTACT_JABBER_ID + " TEXT, "
             + MAIL_CONTACT_LOGIN + " TEXT, "
             + MAIL_CONTACT_DATE_ADD + " INTEGER, "

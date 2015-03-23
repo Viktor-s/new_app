@@ -48,6 +48,7 @@ import static me.justup.upme.db.DBHelper.MAIL_CONTACT_LEVEL;
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_LOGIN;
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_LONGITUDE;
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_NAME;
+import static me.justup.upme.db.DBHelper.MAIL_CONTACT_NAME_LOWER_CASE;
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_PARENT_ID;
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_PHONE;
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_SERVER_ID;
@@ -284,6 +285,7 @@ public class DBAdapter {
             values.put(MAIL_CONTACT_SERVER_ID, user.id);
             values.put(MAIL_CONTACT_PARENT_ID, user.parent_id);
             values.put(MAIL_CONTACT_NAME, user.name);
+            values.put(MAIL_CONTACT_NAME_LOWER_CASE, user.name.toLowerCase());
             values.put(MAIL_CONTACT_JABBER_ID, user.jabber_id);
             values.put(MAIL_CONTACT_LOGIN, user.login);
             values.put(MAIL_CONTACT_DATE_ADD, user.dateAdd);
