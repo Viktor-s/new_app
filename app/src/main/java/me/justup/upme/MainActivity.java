@@ -11,6 +11,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -361,6 +362,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         CalendarGetEventsQuery query = new CalendarGetEventsQuery();
         query.params.start = startTime;
         query.params.end = endTime;
+        Log.d("TAG_query", query.toString());
         return query;
     }
 

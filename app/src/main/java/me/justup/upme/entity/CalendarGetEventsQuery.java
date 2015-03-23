@@ -17,6 +17,21 @@ public class CalendarGetEventsQuery extends BaseHttpQueryEntity {
         public String start;
         public String end;
 
+        @Override
+        public String toString() {
+            return "Params{" +
+                    "start='" + start + '\'' +
+                    ", end='" + end + '\'' +
+                    '}';
+        }
     }
 
+    @Override
+    public String toString() {
+        return "CalendarGetEventsQuery{" +
+                "method='" + method + '\'' +
+                ", params=" + params +
+                ", id=" + id +
+                '}';
+    }
 }

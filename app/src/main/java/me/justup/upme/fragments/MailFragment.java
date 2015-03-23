@@ -33,6 +33,7 @@ import me.justup.upme.utils.AppPreferences;
 import me.justup.upme.utils.CommonUtils;
 
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_TABLE_NAME;
+import static me.justup.upme.utils.LogUtils.LOGE;
 
 
 public class MailFragment extends Fragment {
@@ -44,6 +45,7 @@ public class MailFragment extends Fragment {
     public static final int WEBRTC = 2;
     public static final int FILE = 3;
     public static final int BREAK_CALL = 4;
+    public static final int CALENDAR_NEW_EVENT = 5;
     private SQLiteDatabase database;
     private Cursor cursor;
 
@@ -57,10 +59,11 @@ public class MailFragment extends Fragment {
         mMailContactsAdapter.setFilterQueryProvider(new FilterQueryProvider() {
             @Override
             public Cursor runQuery(CharSequence constraint) {
-                return fetchContactsByName(constraint.toString());
+                return fetchContactsByName(constraint.toString().toLowerCase());
             }
         });
     }
+
 
     @Override
     public void onPause() {
@@ -166,13 +169,30 @@ public class MailFragment extends Fragment {
         if (search == null || search.length() == 0) {
             mCursor = database.rawQuery(selectQuery, null);
         } else {
+            LOGE("pavel", search);
             mCursor = database.rawQuery("SELECT * FROM "
-                    + DBHelper.MAIL_CONTACT_TABLE_NAME + " where " + DBHelper.MAIL_CONTACT_NAME + " like '%" + search
+                    + DBHelper.MAIL_CONTACT_TABLE_NAME + " where " + "name_lc" + " like '%" + search
                     + "%'", null);
+
+//            ArrayList<String> strings = new ArrayList<String>();
+//            StringBuilder stringBuilder = new StringBuilder("SELECT * FROM " +
+//                    DBHelper.MAIL_CONTACT_TABLE_NAME + " WHERE ");
+//            LOGE("pavel", search);
+//            StringTokenizer token = new StringTokenizer(search);
+//            while (token.hasMoreTokens()) {
+//                strings.add("%" + token.nextToken().replaceAll("'", "\'")
+//                        .toLowerCase(Locale.getDefault()) + "%");
+//                stringBuilder.append("LOWER(" + DBHelper.MAIL_CONTACT_NAME + ") LIKE ?");
+//                if (token.countTokens() > 1)
+//                    stringBuilder.append(" AND ");
+//            }
+//            mCursor = database.rawQuery(stringBuilder.toString(), strings.toArray(new String[strings.size()]));
+
         }
         if (mCursor != null) {
             mCursor.moveToFirst();
         }
+        //mCursor = new FilterCursorWrapper(mCursor, search, mCursor.getColumnIndex(DBHelper.MAIL_CONTACT_NAME));
         return mCursor;
     }
 }
