@@ -55,7 +55,9 @@ import me.justup.upme.dialogs.BreakCallDialog;
 import me.justup.upme.dialogs.ChooseReferralDialog;
 import me.justup.upme.entity.CalendarAddEventQuery;
 import me.justup.upme.entity.PersonBriefcaseEntity;
+import me.justup.upme.entity.WebRtcStartCallQuery;
 import me.justup.upme.http.HttpIntentService;
+import me.justup.upme.services.PushIntentService;
 import me.justup.upme.utils.AppContext;
 import me.justup.upme.utils.AppPreferences;
 import me.justup.upme.weekview.WeekView;
@@ -141,11 +143,6 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
 
     private List<PersonBriefcaseEntity> fillPersonsFromCursor(Cursor cursorPersons) {
         ArrayList<PersonBriefcaseEntity> personsList = new ArrayList<>();
-        AppPreferences appPreferences = new AppPreferences(AppContext.getAppContext());
-        int userId = appPreferences.getUserId();
-        String userName = appPreferences.getUserName();
-        PersonBriefcaseEntity personBriefcaseEntityUser = new PersonBriefcaseEntity(userId, 0, userName, " ");
-        personsList.add(personBriefcaseEntityUser);
         for (cursorPersons.moveToFirst(); !cursorPersons.isAfterLast(); cursorPersons.moveToNext()) {
             PersonBriefcaseEntity personBriefcaseEntity = new PersonBriefcaseEntity();
             personBriefcaseEntity.setId(cursorPersons.getInt(cursorPersons.getColumnIndex(MAIL_CONTACT_SERVER_ID)));
@@ -154,21 +151,16 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
             personBriefcaseEntity.setPhoto(cursorPersons.getString(cursorPersons.getColumnIndex(MAIL_CONTACT_IMG)));
             personsList.add(personBriefcaseEntity);
         }
-        if (cursorPersons != null) {
-            cursorPersons.close();
-        }
+        cursorPersons.close();
         return personsList;
     }
-
 
     @Override
     public void onResume() {
         super.onResume();
-        LOGI(TAG, "RegisterRecNewsFeed 111");
         receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                LOGI(TAG, "RegisterRecNewsFeed 222 in onReceive");
                 listEventsForWeek(firstDayCurrentWeek);
             }
         };
@@ -197,11 +189,10 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
         mCalendartypesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                switch (CalendarEventTypes.values()[position]) { // ПЕРЕДЕЛАТЬ НА ПЕРЕЧИСЛЕНИЯ
+                switch (CalendarEventTypes.values()[position]) {
                     case REMINDER:
                         chooseReferralButton.setVisibility(View.GONE);
                         listSharedId.clear();
-//                        listSharedId.add(currentUserId);
                         break;
                     case TASK:
                         chooseReferralButton.setVisibility(View.VISIBLE);
@@ -260,13 +251,12 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
     }
 
     private void listEventsForWeek(LocalDateTime startWeek) {
-
         String startTime = Long.toString(startWeek.toDateTime(DateTimeZone.UTC).getMillis() / 1000);
         LocalDateTime lastDayCurrentWeek = startWeek.withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59).withDayOfWeek(DateTimeConstants.SUNDAY);
         String endTime = Long.toString(lastDayCurrentWeek.toDateTime(DateTimeZone.UTC).getMillis() / 1000);
-        LOGD("TAG_listEventsForWeek", "startTime: " + startTime + " endTime: " + endTime);
 
         events.clear();
+
         String selectQueryEvents = "SELECT * FROM " + EVENT_CALENDAR_TABLE_NAME + " WHERE start_datetime <= " + endTime + " AND end_datetime >=" + startTime;
         Cursor cursorEvents = database.rawQuery(selectQueryEvents, null);
         for (cursorEvents.moveToFirst(); !cursorEvents.isAfterLast(); cursorEvents.moveToNext()) {
@@ -277,16 +267,14 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
             String startDatetime = cursorEvents.getString(cursorEvents.getColumnIndex(EVENT_CALENDAR_START_DATETIME)) + "000";
             String endDatetime = cursorEvents.getString(cursorEvents.getColumnIndex(EVENT_CALENDAR_END_DATETIME)) + "000";
             String location = cursorEvents.getString(cursorEvents.getColumnIndex(EVENT_CALENDAR_LOCATION));
-            LOGD("TAG_listEventsForWeek", "startDatetime: " + startDatetime + " endDatetime: " + endDatetime);
+
             Calendar startTimeCalendar = Calendar.getInstance();
             startTimeCalendar.setTimeInMillis(Long.parseLong(startDatetime));
             Calendar endTimeCalendar = Calendar.getInstance();
             endTimeCalendar.setTimeInMillis(Long.parseLong(endDatetime));
-            LOGD("TAG_listEventsForWeek", "startTimeCalendar: " + startTimeCalendar.toString() + " endTimeCalendar: " + endTimeCalendar.toString());
+
             WeekViewEvent eventElement = new WeekViewEvent(id, name, startTimeCalendar, endTimeCalendar);
-            LOGD("TAG_listEventsForWeek", "eventElement: " + eventElement.toString());
             events.add(eventElement);
-            Log.d("TAG1_events", "events " + events.toString());
             mWeekView.notifyDatasetChanged();
         }
         cursorEvents.close();
@@ -468,19 +456,23 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
 
     private void CreateLayoutForNewEvent(Calendar time) {
         startTimeEvent = time;
+
         Animation mFragmentSliderFadeIn = AnimationUtils.loadAnimation(AppContext.getAppContext(), R.anim.fragment_item_slide_fade_in);
         panelAddEvent.setVisibility(View.VISIBLE);
         panelAddEvent.startAnimation(mFragmentSliderFadeIn);
+
         startDateEvent.setText(String.format("%02d/%02d/%d", time.get(Calendar.DAY_OF_MONTH), time.get(Calendar.MONTH) + 1, time.get(Calendar.YEAR)));
         tvStartTimeEvent.setText(String.format("%02d:%02d", time.get(Calendar.HOUR_OF_DAY), time.get(Calendar.MINUTE)));
+
         durationEventMin = 0;
         tvDurationEvent.setText("00:00");
+
         etNewEventName.setText("");
         etNewEventDescription.setText("");
         etNewEventLocation.setText("");
 
+        mCalendartypesSpinner.setSelection(0);
         listSharedId.clear();
-//        listSharedId.add(currentUserId);
     }
 
     @Override
@@ -508,7 +500,6 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                 break;
             case R.id.next_week_button:
                 firstDayCurrentWeek = firstDayCurrentWeek.plusDays(Calendar.DAY_OF_WEEK);
-                LOGD("TAG_", "firstDayCurrentWeek: " + firstDayCurrentWeek);
                 mWeekView.goToDate(firstDayCurrentWeek.toDateTime(DateTimeZone.UTC).toGregorianCalendar());
                 selectWeekTextView.setText(Integer.toString(currentWeek == 52 ? currentWeek = 1 : ++currentWeek) + getResources().getString(R.string.week));
                 String strMonthYearNext = String.format("%s %d", months[firstDayCurrentWeek.getMonthOfYear() - 1], currentDate.getYear());
@@ -533,11 +524,6 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                 chooseReferralDialog.show(getChildFragmentManager(), "choose_referral_dialog");
                 break;
             case R.id.add_new_event_button:
-
-//                if (listSharedId.size() == 0) {
-//                    Toast.makeText(getActivity(), "Не выбран ни один", Toast.LENGTH_SHORT).show();
-//                    break;
-//                }
 
                 Calendar endTimeEvent = (Calendar) startTimeEvent.clone();
                 int minute = durationEventMin % 60;
@@ -566,13 +552,12 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                     calendarAddEventsQuery.params.shared_with = sharedWith;
                 }
 
-                Log.d("TAG1", calendarAddEventsQuery.toString());
+                Log.d("TAG_query", calendarAddEventsQuery.toString());
                 ((MainActivity) getActivity()).startHttpIntent(calendarAddEventsQuery, HttpIntentService.CALENDAR_ADD_EVENT);
                 panelAddEvent.setVisibility(View.GONE);
 
                 break;
         }
-
     }
 
     private enum CalendarEventTypes {
@@ -595,10 +580,13 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
     @Override
     public void onPause() {
         super.onPause();
-        DBAdapter.getInstance().closeDatabase();
         LocalBroadcastManager.getInstance(CalendarFragment.this.getActivity()).unregisterReceiver(receiver);
-        LOGI(TAG, "unregisterRecNewsFeed");
-        //mDBAdapter.close();
+    }
+
+    @Override
+    public void onDestroy() {
+        DBAdapter.getInstance().closeDatabase();
+        super.onDestroy();
     }
 
     public void setPersonIdForNewEvent(ArrayList<Integer> listId) {

@@ -44,6 +44,7 @@ public class MailFragment extends Fragment {
     public static final int WEBRTC = 2;
     public static final int FILE = 3;
     public static final int BREAK_CALL = 4;
+    public static final int CALENDAR_NEW_EVENT = 5;
     private SQLiteDatabase database;
     private Cursor cursor;
 
