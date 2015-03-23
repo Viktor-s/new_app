@@ -210,7 +210,7 @@ public class NewsItemFragment extends Fragment {
             public void onClick(View v) {
                 CommonUtils.hideKeyboard(getActivity());
                 String comment = mNewsItemCommentEditText.getText().toString();
-                if (comment != null && comment.length() > 1 && comment.matches(".*\\w.*")) {
+                if (comment != null && comment.length() > 1 && comment.trim().length() > 0) {
                     isBroadcastAddComment = true;
                     isBroadcastUpdateFullArticle = false;
                     isBroadcastUpdateComments = false;
