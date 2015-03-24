@@ -362,7 +362,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         CalendarGetEventsQuery query = new CalendarGetEventsQuery();
         query.params.start = startTime;
         query.params.end = endTime;
-        Log.d("TAG_query", query.toString());
+        Log.d("TAG333_query", query.toString());
         return query;
     }
 

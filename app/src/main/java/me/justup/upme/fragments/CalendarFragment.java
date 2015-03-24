@@ -273,10 +273,14 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
             Calendar endTimeCalendar = Calendar.getInstance();
             endTimeCalendar.setTimeInMillis(Long.parseLong(endDatetime));
 
+            Log.d("TAG333_selectQuery", "name - " + name + " description - " + description + " type - " + type + " startDatetime - " + startDatetime +
+            " endDatetime - " + endDatetime + " location - " + location);
+
             WeekViewEvent eventElement = new WeekViewEvent(id, name, startTimeCalendar, endTimeCalendar);
             events.add(eventElement);
-            mWeekView.notifyDatasetChanged();
         }
+        mWeekView.notifyDatasetChanged();
+        Log.d("TAG333_selectQuery", "---------------------------");
         cursorEvents.close();
     }
 

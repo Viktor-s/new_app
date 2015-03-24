@@ -3,6 +3,7 @@ package me.justup.upme.http;
 import android.app.IntentService;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.gson.JsonSyntaxException;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -123,6 +124,7 @@ public class HttpIntentService extends IntentService {
                     break;
 
                 case CALENDAR_PART:
+                    Log.d("TAG333_selectQuery", " OnQueryResponse ---------------------------");
                     fillEventsCalendarDB(content);
                     break;
 
