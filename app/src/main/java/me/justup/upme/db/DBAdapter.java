@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -314,8 +315,10 @@ public class DBAdapter {
             values.put(EVENT_CALENDAR_START_DATETIME, entity.result.get(i).start_datetime);
             values.put(EVENT_CALENDAR_END_DATETIME, entity.result.get(i).end_datetime);
             values.put(EVENT_CALENDAR_LOCATION, entity.result.get(i).location);
-            String strSharedWith = CommonUtils.fromListToString(entity.result.get(i).shared_with, ",");
-            values.put(EVENT_CALENDAR_SHARED_WITH, strSharedWith);
+            if (entity.result.get(i).shared_with != null) {
+                String strSharedWith = entity.result.get(i).shared_with.toString().replaceAll("(^\\[|\\]$)", "").replace(", ", ",");
+                values.put(EVENT_CALENDAR_SHARED_WITH, strSharedWith);
+            }
             database.insertWithOnConflict(EVENT_CALENDAR_TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
         }
         sendBroadcast(CALENDAR_SQL_BROADCAST_INTENT);

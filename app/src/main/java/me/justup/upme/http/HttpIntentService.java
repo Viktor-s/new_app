@@ -10,6 +10,7 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.apache.http.Header;
 
+import java.util.Arrays;
 import java.util.List;
 
 import me.justup.upme.MainActivity;
@@ -74,7 +75,7 @@ public class HttpIntentService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         BaseHttpQueryEntity mQueryEntity = (BaseHttpQueryEntity) intent.getSerializableExtra(HTTP_INTENT_QUERY_EXTRA);
         partNumber = intent.getIntExtra(HTTP_INTENT_PART_EXTRA, 0);
-
+        LOGD("TAG_mQueryEntity", "mQueryEntity " + mQueryEntity);
         ApiWrapper.syncQuery(mQueryEntity, new OnQueryResponse());
     }
 
@@ -91,6 +92,7 @@ public class HttpIntentService extends IntentService {
         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
             String content = ApiWrapper.responseBodyToString(responseBody);
             LOGD(TAG, "onSuccess(): " + content);
+            LOGI(TAG, "onSuccess(): headers:" + Arrays.toString(headers) + " status code:" + statusCode);
 
             switch (partNumber) {
                 case NEWS_PART_SHORT:
@@ -149,7 +151,7 @@ public class HttpIntentService extends IntentService {
         @Override
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
             String content = ApiWrapper.responseBodyToString(responseBody);
-            LOGE(TAG, "onFailure(): " + content);
+            LOGE(TAG, "onFailure(): " + "statusCode - " + statusCode + "; headers - " + headers + "; responseBody - " + content + "; error - " + error);
             //mDBAdapter.sendBroadcast(BROADCAST_INTENT_NEWS_FEED_SERVER_ERROR);
             switch (partNumber) {
                 case NEWS_PART_SHORT:

@@ -27,6 +27,7 @@ import me.justup.upme.utils.AppPreferences;
 import me.justup.upme.utils.ServerSwitcher;
 
 import static me.justup.upme.utils.LogUtils.LOGE;
+import static me.justup.upme.utils.LogUtils.LOGI;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 
@@ -120,7 +121,7 @@ public class ApiWrapper {
         }
 
         mStringEntity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, JSON));
-
+        LOGI("TAG_queryBuilder", "mStringEntity ---" + mStringEntity.toString());
         return mStringEntity;
     }
 

@@ -24,13 +24,5 @@ public class CommonUtils {
         }
     }
 
-    public static String fromListToString(List<Integer> listSource, String separator) {
-        if (listSource.size() == 0)
-            return "";
-        StringBuilder result = new StringBuilder();
-        for (Integer item : listSource)
-            result.append(item).append(separator);
-        return result.substring(0, result.length()-1);
-    }
 
 }
