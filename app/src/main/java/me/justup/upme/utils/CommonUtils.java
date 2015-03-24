@@ -30,7 +30,27 @@ public class CommonUtils {
         StringBuilder result = new StringBuilder();
         for (Integer item : listSource)
             result.append(item).append(separator);
-        return result.substring(0, result.length()-1);
+        return result.substring(0, result.length() - 1);
     }
 
+
+    public static String convertToUTF8(String s) {
+        String out;
+        try {
+            out = new String(s.getBytes("UTF-8"), "ISO-8859-1");
+        } catch (java.io.UnsupportedEncodingException e) {
+            return null;
+        }
+        return out;
+    }
+
+    public static String convertFromUTF8(String s) {
+        String out;
+        try {
+            out = new String(s.getBytes("ISO-8859-1"), "UTF-8");
+        } catch (java.io.UnsupportedEncodingException e) {
+            return null;
+        }
+        return out;
+    }
 }

@@ -33,7 +33,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.jivesoftware.smack.util.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.DateTimeZone;
@@ -43,23 +42,18 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 import me.justup.upme.MainActivity;
 import me.justup.upme.R;
 import me.justup.upme.db.DBAdapter;
-import me.justup.upme.dialogs.BreakCallDialog;
 import me.justup.upme.dialogs.ChooseReferralDialog;
 import me.justup.upme.entity.CalendarAddEventQuery;
 import me.justup.upme.entity.PersonBriefcaseEntity;
-import me.justup.upme.entity.WebRtcStartCallQuery;
 import me.justup.upme.http.HttpIntentService;
-import me.justup.upme.services.PushIntentService;
 import me.justup.upme.utils.AppContext;
-import me.justup.upme.utils.AppPreferences;
+import me.justup.upme.utils.CommonUtils;
 import me.justup.upme.weekview.WeekView;
 import me.justup.upme.weekview.WeekViewEvent;
 
@@ -77,7 +71,6 @@ import static me.justup.upme.db.DBHelper.MAIL_CONTACT_PARENT_ID;
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_SERVER_ID;
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_TABLE_NAME;
 import static me.justup.upme.utils.LogUtils.LOGD;
-import static me.justup.upme.utils.LogUtils.LOGI;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 
@@ -137,8 +130,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
         Cursor mCursor = database.rawQuery(selectQuery, null);
         listPerson = fillPersonsFromCursor(mCursor);
 
-        firstDayCurrentWeek = new LocalDateTime().withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0).withDayOfWeek(DateTimeConstants.MONDAY);
-        currentWeek = firstDayCurrentWeek.getWeekOfWeekyear();
+
     }
 
     private List<PersonBriefcaseEntity> fillPersonsFromCursor(Cursor cursorPersons) {
@@ -158,6 +150,8 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
     @Override
     public void onResume() {
         super.onResume();
+        firstDayCurrentWeek = new LocalDateTime().withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0).withDayOfWeek(DateTimeConstants.MONDAY);
+        currentWeek = firstDayCurrentWeek.getWeekOfWeekyear();
         receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -247,6 +241,8 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        firstDayCurrentWeek = new LocalDateTime().withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0).withDayOfWeek(DateTimeConstants.MONDAY);
+        currentWeek = firstDayCurrentWeek.getWeekOfWeekyear();
         listEventsForWeek(firstDayCurrentWeek);
     }
 
@@ -274,7 +270,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
             endTimeCalendar.setTimeInMillis(Long.parseLong(endDatetime));
 
             Log.d("TAG333_selectQuery", "name - " + name + " description - " + description + " type - " + type + " startDatetime - " + startDatetime +
-            " endDatetime - " + endDatetime + " location - " + location);
+                    " endDatetime - " + endDatetime + " location - " + location);
 
             WeekViewEvent eventElement = new WeekViewEvent(id, name, startTimeCalendar, endTimeCalendar);
             events.add(eventElement);
@@ -542,10 +538,10 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                 String eventLocation = etNewEventLocation.getText().toString();
 
                 CalendarAddEventQuery calendarAddEventsQuery = new CalendarAddEventQuery();
-                calendarAddEventsQuery.params.name = eventName;
+                calendarAddEventsQuery.params.name = CommonUtils.convertToUTF8(eventName);
                 calendarAddEventsQuery.params.description = "description";
                 calendarAddEventsQuery.params.type = mCalendartypesSpinner.getSelectedItem().toString();
-                calendarAddEventsQuery.params.location = eventLocation;
+                calendarAddEventsQuery.params.location = CommonUtils.convertToUTF8(eventLocation);
                 calendarAddEventsQuery.params.start = String.valueOf(startTimeEvent.getTimeInMillis() / 1000);
                 calendarAddEventsQuery.params.end = String.valueOf(endTimeEvent.getTimeInMillis() / 1000);
 
