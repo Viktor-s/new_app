@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import me.justup.upme.fragments.SettingsLangFragment;
+import me.justup.upme.fragments.SettingsMonitoringFragment;
 import me.justup.upme.fragments.SettingsScreenFragment;
 import me.justup.upme.fragments.SettingsSocialFragment;
 import me.justup.upme.fragments.SettingsWebRtcFragment;
@@ -19,7 +19,7 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
     private TextView mWiFiMenu;
     private TextView mScreenSoundMenu;
     private TextView mSocialMenu;
-    private TextView mLangMenu;
+    private TextView mMonitoringMenu;
     private TextView mWebRTCMenu;
     private ArrayList<TextView> mButtonList = new ArrayList<>();
 
@@ -31,14 +31,14 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
         mWiFiMenu = (TextView) findViewById(R.id.settings_wifi_menu_textView);
         mScreenSoundMenu = (TextView) findViewById(R.id.settings_screen_menu_textView);
         mSocialMenu = (TextView) findViewById(R.id.settings_social_menu_textView);
-        mLangMenu = (TextView) findViewById(R.id.settings_lang_menu_textView);
+        mMonitoringMenu = (TextView) findViewById(R.id.settings_monitoring_textView);
         mWebRTCMenu = (TextView) findViewById(R.id.settings_webrtc_menu_textView);
         ImageView mCloseSettings = (ImageView) findViewById(R.id.close_settings_activity_imageView);
 
         mWiFiMenu.setOnClickListener(this);
         mScreenSoundMenu.setOnClickListener(this);
         mSocialMenu.setOnClickListener(this);
-        mLangMenu.setOnClickListener(this);
+        mMonitoringMenu.setOnClickListener(this);
         mWebRTCMenu.setOnClickListener(this);
         mCloseSettings.setOnClickListener(this);
 
@@ -46,7 +46,7 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
         mButtonList.add(mScreenSoundMenu);
         mButtonList.add(mWebRTCMenu);
         mButtonList.add(mSocialMenu);
-        mButtonList.add(mLangMenu);
+        mButtonList.add(mMonitoringMenu);
 
         getFragmentManager().beginTransaction().add(R.id.settings_fragment_container, new SettingsWifiFragment()).commit();
     }
@@ -71,9 +71,9 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
                 fragment = new SettingsSocialFragment();
                 break;
 
-            case R.id.settings_lang_menu_textView:
-                changeButtonState(mLangMenu);
-                fragment = new SettingsLangFragment();
+            case R.id.settings_monitoring_textView:
+                changeButtonState(mMonitoringMenu);
+                fragment = new SettingsMonitoringFragment();
                 break;
 
             case R.id.settings_webrtc_menu_textView:

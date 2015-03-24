@@ -27,6 +27,7 @@ import me.justup.upme.entity.BaseMethodEmptyQuery;
 import me.justup.upme.entity.FileAddShareWithQuery;
 import me.justup.upme.entity.GetAllContactsResponse;
 import me.justup.upme.http.ApiWrapper;
+import me.justup.upme.utils.AppContext;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.LOGE;
@@ -155,7 +156,9 @@ public class FileShareDialog extends DialogFragment {
                 String content = ApiWrapper.responseBodyToString(responseBody);
                 LOGD(TAG, "addFileShareWith onSuccess(): " + content);
 
-                Toast.makeText(getActivity(), getString(R.string.share_access_grant), Toast.LENGTH_SHORT).show();
+                if (FileShareDialog.this.isAdded()) {
+                    Toast.makeText(AppContext.getAppContext(), getString(R.string.share_access_grant), Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override

@@ -2,9 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
-    android:padding="@dimen/base10dp720sw"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:padding="@dimen/base5dp720sw"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="end">
 
     <ImageView
         android:layout_width="@dimen/base20dp720sw"
@@ -14,6 +15,7 @@
         android:layout_marginEnd="@dimen/base10dp720sw"
         android:contentDescription="@string/app_name"
         tools:visibility="visible"
+        android:gravity="center_horizontal"
         android:visibility="gone" />
 
     <ImageView
@@ -21,6 +23,7 @@
         android:layout_height="@dimen/base18dp720sw"
         tools:src="@drawable/wifi_3"
         android:id="@+id/status_bar_wifi_imageView"
+        android:gravity="center_horizontal"
         android:layout_marginEnd="@dimen/base10dp720sw"
         android:contentDescription="@string/app_name" />
 
@@ -29,7 +32,7 @@
         android:layout_height="wrap_content"
         tools:text="98%"
         android:background="@drawable/battery"
-        android:gravity="center"
+        android:gravity="center_horizontal"
         android:textColor="@color/white"
         android:id="@+id/status_bar_accum_textView"
         android:layout_marginEnd="@dimen/base10dp720sw" />
@@ -38,7 +41,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="19:45"
-        android:gravity="center"
+        android:gravity="center_horizontal"
         android:textColor="@color/white"
         android:id="@+id/status_bar_clock_textView" />
 </LinearLayout>

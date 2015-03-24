@@ -116,9 +116,11 @@
     <string name="settings_social">Соц. сети</string>
     <string name="settings_webrtc">Настройки WebRTC</string>
     <string name="settings_lang">Выбор языка</string>
+    <string name="settings_monitor">Мониторинг приложения</string>
     <string name="settings_wifi_title">Доступные Wi-Fi сети</string>
     <string name="settings_lang_title">Смена языка</string>
     <string name="settings_on_off_wifi">Wi-Fi вкл/выкл</string>
+    <string name="settings_on_off_monitoring">Мониторинг вкл/выкл</string>
     <string name="settings_wifi_dialog_connect">Подключить</string>
     <string name="settings_wifi_dialog_cancel">Отмена</string>
     <string name="settings_wifi_dialog_pass">Введите пароль:</string>

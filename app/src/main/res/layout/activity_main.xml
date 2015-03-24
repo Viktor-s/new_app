@@ -11,6 +11,7 @@
         android:layout_height="match_parent"
         android:layout_toEndOf="@+id/left_main_menu"
         android:orientation="horizontal"
+        android:layout_below="@+id/status_bar_fragment"
         android:baselineAligned="false">
 
         <fragment
@@ -33,13 +34,6 @@
             android:layout_height="match_parent"
             tools:background="@color/blue_gray" />
     </LinearLayout>
-
-    <FrameLayout
-        android:id="@+id/main_fragment_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_toEndOf="@+id/left_main_menu"
-        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/left_main_menu"
@@ -99,6 +93,23 @@
             android:text="Выход" />
     </LinearLayout>
 
+    <FrameLayout
+        android:id="@+id/main_fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toEndOf="@+id/settings_button"
+        android:visibility="gone"
+        android:layout_below="@+id/status_bar_fragment" />
+
+    <fragment
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:name="me.justup.upme.fragments.StatusBarFragment"
+        android:id="@+id/status_bar_fragment"
+        tools:layout="@layout/fragment_status_bar"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true" />
+
     <include
         layout="@layout/upme_corner"
         android:id="@+id/include_corner" />
@@ -108,20 +119,11 @@
         android:layout_above="@+id/left_main_menu"
         style="@style/CornerSettingsButton" />
 
-    <fragment
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:name="me.justup.upme.fragments.StatusBarFragment"
-        android:id="@+id/status_bar_fragment"
-        tools:layout="@layout/fragment_status_bar"
-        android:layout_alignParentTop="true"
-        android:layout_toStartOf="@+id/main_content_container" />
-
     <RelativeLayout
         android:id="@+id/container_video_chat"
         android:layout_alignParentEnd="true"
         android:layout_width="@dimen/base250dp720sw"
-        android:layout_height="@dimen/base250dp720sw">
-    </RelativeLayout>
+        android:layout_height="@dimen/base250dp720sw"
+        android:layout_below="@+id/status_bar_fragment" />
 
 </RelativeLayout>
