@@ -1,6 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="@dimen/base300dp720sw"
+    android:layout_width="@dimen/base420dp720sw"
     android:layout_height="wrap_content"
     android:padding="@dimen/base50dp720sw"
     android:background="@color/form_bg"
@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:textSize="@dimen/base25sp720sw"
         android:layout_marginBottom="@dimen/base20dp720sw"
-        tools:text="Hello John"/>
+        android:text="Hello John"/>
 
     <TextView
         android:id="@+id/event_description_textView"
@@ -23,7 +23,39 @@
         android:layout_height="wrap_content"
         android:textSize="@dimen/base25sp720sw"
         android:layout_marginBottom="@dimen/base20dp720sw"
-        tools:text="Description"/>
+        android:text="Description"/>
+
+    <TextView
+        android:id="@+id/event_owner_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/base20sp720sw"
+        android:layout_marginBottom="@dimen/base20dp720sw"
+        tools:text="моя задача / мне задача"/>
+
+    <TextView
+        android:id="@+id/event_time_start_end_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/base20sp720sw"
+        android:layout_marginBottom="@dimen/base20dp720sw"
+        android:text="c 8:00 до 9:00"/>
+
+    <TextView
+        android:id="@+id/event_location_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/base20sp720sw"
+        android:layout_marginBottom="@dimen/base20dp720sw"
+        android:text="Место события: Москва"/>
+
+    <TextView
+        android:id="@+id/event_sharedwith_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/base20sp720sw"
+        android:layout_marginBottom="@dimen/base20dp720sw"
+        android:text="Событие назначено: "/>
 
 
     <LinearLayout
