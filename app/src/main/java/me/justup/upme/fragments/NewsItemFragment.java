@@ -133,7 +133,9 @@ public class NewsItemFragment extends Fragment {
                     isBroadcastUpdateFullArticle = false;
                     isBroadcastAddComment = false;
                     isBroadcastUpdateComments = true;
-                    articleCommentsList.add(mLastShortComment);
+                    ArticleShortCommentEntity articleShortCommentEntity = mLastShortComment;
+                    articleShortCommentEntity.setContent(CommonUtils.convertFromUTF8(mLastShortComment.getContent()));
+                    articleCommentsList.add(articleShortCommentEntity);
                     mNewsItemCommentsListView.setAdapter(new NewsCommentsAdapter(AppContext.getAppContext(), articleCommentsList));
                     setListViewHeightBasedOnChildren(mNewsItemCommentsListView);
                     mNewsItemCommentEditText.setText("");
@@ -216,9 +218,9 @@ public class NewsItemFragment extends Fragment {
                     isBroadcastUpdateComments = false;
                     mNewsItemAddCommentButton.setEnabled(false);
                     if (mArticleFullEntity != null) {
-                        addComment(comment);
-                    }
 
+                        addComment(CommonUtils.convertToUTF8(comment));
+                    }
                 } else {
                     showWarningDialog(getString(R.string.warning_short_comment));
                 }
