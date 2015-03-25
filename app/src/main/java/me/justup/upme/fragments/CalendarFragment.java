@@ -41,9 +41,12 @@ import org.joda.time.LocalDateTime;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import me.justup.upme.MainActivity;
 import me.justup.upme.R;
@@ -53,6 +56,7 @@ import me.justup.upme.entity.CalendarAddEventQuery;
 import me.justup.upme.entity.PersonBriefcaseEntity;
 import me.justup.upme.http.HttpIntentService;
 import me.justup.upme.utils.AppContext;
+import me.justup.upme.utils.AppPreferences;
 import me.justup.upme.utils.CommonUtils;
 import me.justup.upme.weekview.WeekView;
 import me.justup.upme.weekview.WeekViewEvent;
@@ -117,8 +121,8 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
 
     private static String[] months = new String[]{"ЯНВАРЬ", "ФЕВРАЛЬ", "МАРТ", "АПРЕЛЬ", "МАЙ", "ИЮНЬ", "ИЮЛЬ", "АВГУСТ", "СЕНТЯБРЬ", "ОКТЯБРЬ", "НОЯБРЬ", "ДЕКАБРЬ"};
 
-//    private AppPreferences mAppPreferences = new AppPreferences(AppContext.getAppContext());
-//    private final int currentUserId = mAppPreferences.getUserId();
+    private AppPreferences mAppPreferences = new AppPreferences(AppContext.getAppContext());
+    private final int currentUserId = mAppPreferences.getUserId();
 
     private ArrayList<Integer> listSharedId = new ArrayList<>();
 
@@ -274,7 +278,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
             endTimeCalendar.setTimeInMillis(Long.parseLong(endDatetime));
 
 //            WeekViewEvent eventElement = new WeekViewEvent(id, name, startTimeCalendar, endTimeCalendar);
-            WeekViewEvent eventElement = new WeekViewEvent(id, name, description, type, ownerId, startTimeCalendar, endTimeCalendar, location, sharedWith);
+            WeekViewEvent eventElement = new WeekViewEvent(id, name, description, type, Integer.parseInt(ownerId), startTimeCalendar, endTimeCalendar, location, sharedWith);
             events.add(eventElement);
         }
         mWeekView.notifyDatasetChanged();
@@ -343,8 +347,47 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
         dialogInfoEvent.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialogInfoEvent.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         dialogInfoEvent.setContentView(R.layout.dialog_info_event);
-        final TextView userNameTextView = (TextView) dialogInfoEvent.findViewById(R.id.user_name_textView);
-        userNameTextView.setText(event.getName());
+        final TextView eventNameTextView = (TextView) dialogInfoEvent.findViewById(R.id.event_name_textView);
+        eventNameTextView.setText(event.getName());
+
+        final TextView eventDescriptionTextView = (TextView) dialogInfoEvent.findViewById(R.id.event_description_textView);
+        eventDescriptionTextView.setText(event.getDescription());
+
+
+        String textOwner = "";
+        if (currentUserId == event.getOwnerId()) {
+            textOwner = "мое событие";
+
+            String nameSharedWith = "";
+            String[] array = event.getmSharedWith().split(",");
+            Set<String> mySet = new HashSet<>(Arrays.asList(array));
+            for (PersonBriefcaseEntity itemPerson : listPerson) {
+                if (mySet.contains(String.valueOf(itemPerson.getId())))
+                    nameSharedWith += itemPerson.getName() + " ";
+            }
+            final TextView eventSharedwithTextView = (TextView) dialogInfoEvent.findViewById(R.id.event_sharedwith_textView);
+            eventSharedwithTextView.setVisibility(View.VISIBLE);
+            eventSharedwithTextView.setText("Расшаренно: \n" + nameSharedWith);
+        } else
+            for (PersonBriefcaseEntity itemPerson : listPerson)
+                if (itemPerson.getId() == currentUserId) {
+                    textOwner = "событие назначенно " + itemPerson.getName();
+                    break;
+                }
+        final TextView eventOwnerTextView = (TextView) dialogInfoEvent.findViewById(R.id.event_owner_textView);
+        eventOwnerTextView.setText("Владелец: " + textOwner);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm", new Locale("ru"));
+        String strStartTime = sdf.format(event.getStartTime().getTime());
+        String strEndTime = sdf.format(event.getEndTime().getTime());
+
+
+        final TextView eventTimeStartEndTextView = (TextView) dialogInfoEvent.findViewById(R.id.event_time_start_end_textView);
+        eventTimeStartEndTextView.setText(strStartTime + " - " + strEndTime);
+
+        final TextView eventLocationTextView = (TextView) dialogInfoEvent.findViewById(R.id.event_location_textView);
+        eventLocationTextView.setText("Место события: " + event.getLocation());
+
         final Button cancelButton = (Button) dialogInfoEvent.findViewById(R.id.cancel_button);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -353,10 +396,41 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
             }
         });
         final Button editButton = (Button) dialogInfoEvent.findViewById(R.id.edit_button);
+
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // вылазит боковое меню и редактируем
+
+                Calendar time = event.getStartTime();
+                startTimeEvent = time;
+
+                Animation mFragmentSliderFadeIn = AnimationUtils.loadAnimation(AppContext.getAppContext(), R.anim.fragment_item_slide_fade_in);
+                panelAddEvent.setVisibility(View.VISIBLE);
+                panelAddEvent.startAnimation(mFragmentSliderFadeIn);
+                chooseDateLayout.setVisibility(View.VISIBLE);
+
+                startDateEvent.setText(String.format("%02d/%02d/%d", time.get(Calendar.DAY_OF_MONTH), time.get(Calendar.MONTH) + 1, time.get(Calendar.YEAR)));
+                tvStartTimeEvent.setText(String.format("%02d:%02d", time.get(Calendar.HOUR_OF_DAY), time.get(Calendar.MINUTE)));
+
+                durationEventMin = (int) (event.getEndTime().getTimeInMillis() - time.getTimeInMillis()) / 1000;
+                int minute = durationEventMin % 60;
+                int hour = (durationEventMin - minute) / 60;
+                tvDurationEvent.setText(convertTimeToString(hour, minute));
+
+                etNewEventName.setText(event.getName());
+                etNewEventDescription.setText(event.getDescription());
+                etNewEventLocation.setText(event.getLocation());
+
+                listSharedId.clear();
+                if (event.getmSharedWith().equals(""))
+                    mCalendartypesSpinner.setSelection(0);
+                else {
+                    mCalendartypesSpinner.setSelection(1);
+                    String[] array = event.getmSharedWith().split(",");
+                    for (String i : array)
+                        listSharedId.add(Integer.parseInt(i));
+                }
+                dialogInfoEvent.dismiss();
             }
         });
         final Button deleteButton = (Button) dialogInfoEvent.findViewById(R.id.delete_button);
@@ -366,6 +440,11 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
 //                DeleteConfirmation();
             }
         });
+
+        if (event.getOwnerId() != currentUserId) {
+            deleteButton.setVisibility(View.GONE);
+            editButton.setVisibility(View.GONE);
+        }
         dialogInfoEvent.show();
     }
 
@@ -536,11 +615,12 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                 endTimeEvent.add(Calendar.HOUR, hour);
                 endTimeEvent.add(Calendar.MINUTE, minute);
                 String eventName = etNewEventName.getText().toString();
+                String eventDescription = etNewEventDescription.getText().toString();
                 String eventLocation = etNewEventLocation.getText().toString();
 
                 CalendarAddEventQuery calendarAddEventsQuery = new CalendarAddEventQuery();
                 calendarAddEventsQuery.params.name = CommonUtils.convertToUTF8(eventName);
-                calendarAddEventsQuery.params.description = "description";
+                calendarAddEventsQuery.params.description = CommonUtils.convertToUTF8(eventDescription);
                 calendarAddEventsQuery.params.type = mCalendartypesSpinner.getSelectedItem().toString();
                 calendarAddEventsQuery.params.location = CommonUtils.convertToUTF8(eventLocation);
                 calendarAddEventsQuery.params.start = String.valueOf(startTimeEvent.getTimeInMillis() / 1000);
