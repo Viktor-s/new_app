@@ -224,8 +224,8 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
 
 
         Log.d("TAG", "roomUrl - " + roomUrl + " videoCodec - " + videoCodec + " hwCodecAcceleration - " + hwCodecAcceleration +
-        " resolution - " + resolution + " fps - " + fps + " bitrateType - " + bitrateType + " bitrateValue - " + startBitrate +
-        " cpuOveruseDetection - " + cpuOveruseDetection + " displayHud - " + displayHud);
+                " resolution - " + resolution + " fps - " + fps + " bitrateType - " + bitrateType + " bitrateValue - " + startBitrate +
+                " cpuOveruseDetection - " + cpuOveruseDetection + " displayHud - " + displayHud);
         ////////////////////////////////////////////////////////////////////////////////////////////
 
         Uri roomUri;
@@ -252,7 +252,7 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
         callFragment.setArguments(bundle);
 
         // Activate call fragment and start the call.
-        getFragmentManager().beginTransaction().add(R.id.call_fragment_container, callFragment).commit();
+        getActivity().getFragmentManager().beginTransaction().add(R.id.call_fragment_container, callFragment).commit();
 
         startCall();
 
@@ -322,7 +322,7 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
         else {
             int dpValue = 250;
             float d = getActivity().getResources().getDisplayMetrics().density;
-            int size = (int)(dpValue * d);
+            int size = (int) (dpValue * d);
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(size, size);
             params.addRule(RelativeLayout.ALIGN_PARENT_END, 1);
             containerVideoChat.setLayoutParams(params);
@@ -430,7 +430,8 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
         } else {
             Toast.makeText(getActivity(), "RESULT_CANCELED", Toast.LENGTH_SHORT).show();
         }
-        getFragmentManager().beginTransaction().remove(this).commit();
+
+        getActivity().getFragmentManager().beginTransaction().remove(WebRtcFragment.this).commit();
     }
 
     private void disconnectWithErrorMessage(final String errorMessage) {

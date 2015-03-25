@@ -27,7 +27,6 @@ import me.justup.upme.utils.AppPreferences;
 import me.justup.upme.utils.ServerSwitcher;
 
 import static me.justup.upme.utils.LogUtils.LOGE;
-import static me.justup.upme.utils.LogUtils.LOGI;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 
@@ -72,7 +71,6 @@ public class ApiWrapper {
 
     public static final String PRODUCTS_GET_ALL_CATEGORIES = "Products.getProductCategories";
     public static final String PRODUCTS_GET_HTML_BY_ID = "Products.getProductById";
-
 
     private static final String CALL_CLOUD_UPLOAD = "/upload";
     private static final String CALL_CLOUD_FILE = "/file/";
@@ -121,7 +119,6 @@ public class ApiWrapper {
         }
 
         mStringEntity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, JSON));
-        LOGI("TAG_queryBuilder", "mStringEntity ---" + mStringEntity.toString());
         return mStringEntity;
     }
 

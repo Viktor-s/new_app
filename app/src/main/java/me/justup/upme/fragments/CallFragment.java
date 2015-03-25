@@ -29,9 +29,7 @@ package me.justup.upme.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,6 +45,8 @@ import java.util.Map;
 
 import me.justup.upme.R;
 import me.justup.upme.apprtc.PeerConnectionClient;
+
+import static me.justup.upme.utils.LogUtils.LOGE;
 
 /**
  * Fragment for call control.
@@ -151,7 +151,8 @@ public class CallFragment extends Fragment {
             roomIdView.setText(roomId);
             displayHud = args.getBoolean(WebRtcFragment.EXTRA_DISPLAY_HUD, false);
         }
-        int visibility = displayHud ? View.VISIBLE : View.INVISIBLE; encoderStatView.setVisibility(visibility);
+        int visibility = displayHud ? View.VISIBLE : View.INVISIBLE;
+        encoderStatView.setVisibility(visibility);
         toggleDebugButton.setVisibility(visibility);
         hudView.setVisibility(View.INVISIBLE);
         hudView.setTextSize(TypedValue.COMPLEX_UNIT_PT, 5);
@@ -167,7 +168,12 @@ public class CallFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        callEvents = (OnCallEvents) getFragmentManager().findFragmentById(R.id.container_video_chat);
+
+        try {
+            callEvents = (OnCallEvents) getActivity().getFragmentManager().findFragmentById(R.id.container_video_chat);
+        } catch (ClassCastException e) {
+            LOGE("upme_", "must implement OnCallEvents", e);
+        }
     }
 
     private Map<String, String> getReportMap(StatsReport report) {

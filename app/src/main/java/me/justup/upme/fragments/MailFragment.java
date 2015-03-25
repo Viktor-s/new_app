@@ -140,12 +140,10 @@ public class MailFragment extends Fragment {
             public void afterTextChanged(Editable s) {
             }
 
-            public void beforeTextChanged(CharSequence s, int start,
-                                          int count, int after) {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
 
-            public void onTextChanged(CharSequence s, int start,
-                                      int before, int count) {
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
                 mMailContactsAdapter.getFilter().filter(s.toString());
             }
         });
@@ -174,20 +172,6 @@ public class MailFragment extends Fragment {
                     + DBHelper.MAIL_CONTACT_TABLE_NAME + " where " + "name_lc" + " like '%" + search
                     + "%'", null);
 
-//            ArrayList<String> strings = new ArrayList<String>();
-//            StringBuilder stringBuilder = new StringBuilder("SELECT * FROM " +
-//                    DBHelper.MAIL_CONTACT_TABLE_NAME + " WHERE ");
-//            LOGE("pavel", search);
-//            StringTokenizer token = new StringTokenizer(search);
-//            while (token.hasMoreTokens()) {
-//                strings.add("%" + token.nextToken().replaceAll("'", "\'")
-//                        .toLowerCase(Locale.getDefault()) + "%");
-//                stringBuilder.append("LOWER(" + DBHelper.MAIL_CONTACT_NAME + ") LIKE ?");
-//                if (token.countTokens() > 1)
-//                    stringBuilder.append(" AND ");
-//            }
-//            mCursor = database.rawQuery(stringBuilder.toString(), strings.toArray(new String[strings.size()]));
-
         }
         if (mCursor != null) {
             mCursor.moveToFirst();
@@ -195,4 +179,5 @@ public class MailFragment extends Fragment {
         //mCursor = new FilterCursorWrapper(mCursor, search, mCursor.getColumnIndex(DBHelper.MAIL_CONTACT_NAME));
         return mCursor;
     }
+
 }

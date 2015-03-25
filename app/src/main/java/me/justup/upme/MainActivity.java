@@ -526,10 +526,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     public void onLoadMailFragment(final Push push) {
         setPush(push);
 
-        if (push.getType() == MailFragment.WEBRTC) {
+        if (push != null && push.getType() == MailFragment.WEBRTC) {
             final FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.replace(R.id.container_video_chat, WebRtcFragment.newInstance(String.valueOf(push.getRoom())));
             ft.commit();
+
+            setPush(null);
             return;
         }
 

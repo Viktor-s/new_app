@@ -160,7 +160,11 @@ public class StatusBarSliderDialog extends DialogFragment {
                 DBAdapter.getInstance().deletePush(push.getId());
 
                 if (push.getType() != MailFragment.FILE) {
-                    mOnLoadMailFragment.onLoadMailFragment(push);
+                    if (push.getType() == MailFragment.WEBRTC) {
+                        mOnLoadMailFragment.onLoadMailFragment(null);
+                    } else {
+                        mOnLoadMailFragment.onLoadMailFragment(push);
+                    }
                 } else {
                     mOnDownloadCloudFile.onDownloadCloudFile(push.getLink(), push.getFileName());
                 }

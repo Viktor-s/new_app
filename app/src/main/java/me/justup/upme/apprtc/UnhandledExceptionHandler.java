@@ -59,7 +59,7 @@ public class UnhandledExceptionHandler
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                String title = "Fatal error: " + getTopLevelCauseMessage(e);
+                String title = "Stack trace: " + getTopLevelCauseMessage(e);
                 String msg = getRecursiveStackTrace(e);
                 TextView errorView = new TextView(activity);
                 errorView.setText(msg);
@@ -71,7 +71,7 @@ public class UnhandledExceptionHandler
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        System.exit(1);
+                        // System.exit(1);
                     }
                 };
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
