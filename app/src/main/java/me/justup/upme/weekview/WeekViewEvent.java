@@ -12,7 +12,7 @@ public class WeekViewEvent {
 
     private String mDescription;
     private String mType;
-    private String mOwnerId;
+    private int mOwnerId;
     private String mLocation;
     private String mSharedWith;
 
@@ -67,7 +67,7 @@ public class WeekViewEvent {
         this.mEndTime = endTime;
     }
 
-    public WeekViewEvent(long id, String name, String description, String type, String ownerId,
+    public WeekViewEvent(long id, String name, String description, String type, int ownerId,
                          Calendar startTime, Calendar endTime, String location, String sharedWith) {
         this.mId = id;
         this.mName = name;
@@ -148,5 +148,30 @@ public class WeekViewEvent {
 
     public void setDayOfWeek(int dayOfWeek) {
         this.mDayOfWeek = dayOfWeek;
+    }
+
+    public long getmId() {
+        return mId;
+    }
+
+
+    public String getDescription() {
+        return mDescription;
+    }
+
+    public String getType() {
+        return mType;
+    }
+
+    public int getOwnerId() {
+        return mOwnerId;
+    }
+
+    public String getLocation() {
+        return mLocation;
+    }
+
+    public String getmSharedWith() {
+        return mSharedWith;
     }
 }
