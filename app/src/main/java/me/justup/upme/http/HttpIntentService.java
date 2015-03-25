@@ -50,8 +50,10 @@ public class HttpIntentService extends IntentService {
     public static final int ADD_REFERAL = 8;
     public static final int CALENDAR_PART = 9;
     public static final int CALENDAR_ADD_EVENT = 10;
-    public static final int PRODUCTS_GET_ALL_CATEGORIES = 11;
-    public static final int PRODUCTS_GET_HTML_BY_ID = 12;
+    public static final int CALENDAR_REMOVE_EVENT = 11;
+    public static final int CALENDAR_UPDATE_EVENT = 12;
+    public static final int PRODUCTS_GET_ALL_CATEGORIES = 13;
+    public static final int PRODUCTS_GET_HTML_BY_ID = 14;
 
 
     //private DBAdapter mDBAdapter;
@@ -134,8 +136,15 @@ public class HttpIntentService extends IntentService {
                     startHttpIntent(MainActivity.getEventCalendarQuery(CalendarFragment.firstDayCurrentWeek), HttpIntentService.CALENDAR_PART);
                     break;
 
+                case CALENDAR_REMOVE_EVENT:
+                    startHttpIntent(MainActivity.getEventCalendarQuery(CalendarFragment.firstDayCurrentWeek), HttpIntentService.CALENDAR_PART);
+                    break;
+
+                case CALENDAR_UPDATE_EVENT:
+                    startHttpIntent(MainActivity.getEventCalendarQuery(CalendarFragment.firstDayCurrentWeek), HttpIntentService.CALENDAR_PART);
+                    break;
+
                 case PRODUCTS_GET_ALL_CATEGORIES:
-                    // startHttpIntent(MainActivity.getEventCalendarQuery(CalendarFragment.firstDayCurrentWeek), HttpIntentService.CALENDAR_PART);
                     fillProductsDB(content);
                     break;
 

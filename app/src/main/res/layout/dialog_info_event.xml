@@ -2,82 +2,99 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="@dimen/base420dp720sw"
     android:layout_height="wrap_content"
-    android:padding="@dimen/base50dp720sw"
+    android:padding="@dimen/base10dp720sw"
     android:background="@color/form_bg"
     android:orientation="vertical"
     android:gravity="center">
 
 
-
-    <TextView
-        android:id="@+id/user_name_textView"
-        android:layout_width="wrap_content"
+    <ScrollView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/base25sp720sw"
-        android:layout_marginBottom="@dimen/base20dp720sw"
-        android:text="Hello John"/>
+        android:id="@+id/scrollView2" >
 
-    <TextView
-        android:id="@+id/event_description_textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/base25sp720sw"
-        android:layout_marginBottom="@dimen/base20dp720sw"
-        android:text="Description"/>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal">
 
-    <TextView
-        android:id="@+id/event_owner_textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/base20sp720sw"
-        android:layout_marginBottom="@dimen/base20dp720sw"
-        tools:text="моя задача / мне задача"/>
+            <TextView
+                android:id="@+id/event_name_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/base20sp720sw"
+                android:layout_marginBottom="@dimen/base10dp720sw"
+                android:text="Наименование события"/>
 
-    <TextView
-        android:id="@+id/event_time_start_end_textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/base20sp720sw"
-        android:layout_marginBottom="@dimen/base20dp720sw"
-        android:text="c 8:00 до 9:00"/>
+            <TextView
+                android:id="@+id/event_description_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/base18sp720sw"
+                android:layout_marginBottom="@dimen/base10dp720sw"
+                android:text="Описание события"/>
 
-    <TextView
-        android:id="@+id/event_location_textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/base20sp720sw"
-        android:layout_marginBottom="@dimen/base20dp720sw"
-        android:text="Место события: Москва"/>
+            <TextView
+                android:id="@+id/event_owner_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/base18sp720sw"
+                android:layout_marginBottom="@dimen/base10dp720sw"
+                tools:text="моя задача / мне задача"/>
 
-    <TextView
-        android:id="@+id/event_sharedwith_textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/base20sp720sw"
-        android:layout_marginBottom="@dimen/base20dp720sw"
-        android:text="Событие назначено: "/>
+            <TextView
+                android:id="@+id/event_time_start_end_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/base18sp720sw"
+                android:layout_marginBottom="@dimen/base10dp720sw"
+                android:text="c 8:00 до 9:00"/>
+
+            <TextView
+                android:id="@+id/event_location_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/base18sp720sw"
+                android:layout_marginBottom="@dimen/base10dp720sw"
+                android:text="Место события: Москва"/>
+
+            <TextView
+                android:id="@+id/event_sharedwith_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/base18sp720sw"
+                android:layout_marginBottom="@dimen/base10dp720sw"
+                android:text="Событие назначено: "
+                android:visibility="gone"/>
+
+
+
+        </LinearLayout>
+    </ScrollView>
+
 
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginBottom="@dimen/base20dp720sw">
+        android:layout_marginBottom="@dimen/base10dp720sw">
 
         <Button
             android:id="@+id/edit_button"
-            android:layout_width="@dimen/base100dp720sw"
+            android:layout_width="@dimen/base110dp720sw"
             android:layout_height="wrap_content"
             android:textColor="@android:color/white"
-            android:textSize="@dimen/base12sp720sw"
+            android:textSize="@dimen/base14sp720sw"
             android:text="Изменить"/>
 
         <Button
             android:id="@+id/delete_button"
-            android:layout_width="@dimen/base100dp720sw"
+            android:layout_width="@dimen/base110dp720sw"
             android:layout_height="wrap_content"
             android:textColor="@android:color/white"
-            android:textSize="@dimen/base12sp720sw"
+            android:textSize="@dimen/base14sp720sw"
             android:text="УДАЛИТЬ"/>
 
         </LinearLayout>
