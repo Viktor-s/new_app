@@ -64,7 +64,9 @@ import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_DESCRIPTION;
 import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_END_DATETIME;
 import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_LOCATION;
 import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_NAME;
+import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_OWNER_ID;
 import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_SERVER_ID;
+import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_SHARED_WITH;
 import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_START_DATETIME;
 import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_TABLE_NAME;
 import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_TYPE;
@@ -266,23 +268,22 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
             String name = cursorEvents.getString(cursorEvents.getColumnIndex(EVENT_CALENDAR_NAME));
             String description = cursorEvents.getString(cursorEvents.getColumnIndex(EVENT_CALENDAR_DESCRIPTION));
             String type = cursorEvents.getString(cursorEvents.getColumnIndex(EVENT_CALENDAR_TYPE));
+            String ownerId = cursorEvents.getString(cursorEvents.getColumnIndex(EVENT_CALENDAR_OWNER_ID));
             String startDatetime = cursorEvents.getString(cursorEvents.getColumnIndex(EVENT_CALENDAR_START_DATETIME)) + "000";
             String endDatetime = cursorEvents.getString(cursorEvents.getColumnIndex(EVENT_CALENDAR_END_DATETIME)) + "000";
             String location = cursorEvents.getString(cursorEvents.getColumnIndex(EVENT_CALENDAR_LOCATION));
+            String sharedWith = cursorEvents.getString(cursorEvents.getColumnIndex(EVENT_CALENDAR_SHARED_WITH));
 
             Calendar startTimeCalendar = Calendar.getInstance();
             startTimeCalendar.setTimeInMillis(Long.parseLong(startDatetime));
             Calendar endTimeCalendar = Calendar.getInstance();
             endTimeCalendar.setTimeInMillis(Long.parseLong(endDatetime));
 
-            Log.d("TAG333_selectQuery", "name - " + name + " description - " + description + " type - " + type + " startDatetime - " + startDatetime +
-                    " endDatetime - " + endDatetime + " location - " + location);
-
-            WeekViewEvent eventElement = new WeekViewEvent(id, name, startTimeCalendar, endTimeCalendar);
+//            WeekViewEvent eventElement = new WeekViewEvent(id, name, startTimeCalendar, endTimeCalendar);
+            WeekViewEvent eventElement = new WeekViewEvent(id, name, description, type, ownerId, startTimeCalendar, endTimeCalendar, location, sharedWith);
             events.add(eventElement);
         }
         mWeekView.notifyDatasetChanged();
-        Log.d("TAG333_selectQuery", "---------------------------");
         cursorEvents.close();
     }
 
@@ -349,7 +350,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
         dialogInfoEvent.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         dialogInfoEvent.setContentView(R.layout.dialog_info_event);
         final TextView userNameTextView = (TextView) dialogInfoEvent.findViewById(R.id.user_name_textView);
-        userNameTextView.setText(Object);
+        userNameTextView.setText(event.getName());
         final Button cancelButton = (Button) dialogInfoEvent.findViewById(R.id.cancel_button);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -10,6 +10,12 @@ public class WeekViewEvent {
     private String mName;
     private int mColor;
 
+    private String mDescription;
+    private String mType;
+    private String mOwnerId;
+    private String mLocation;
+    private String mSharedWith;
+
     public WeekViewEvent(){
 
     }
@@ -59,6 +65,19 @@ public class WeekViewEvent {
         this.mName = name;
         this.mStartTime = startTime;
         this.mEndTime = endTime;
+    }
+
+    public WeekViewEvent(long id, String name, String description, String type, String ownerId,
+                         Calendar startTime, Calendar endTime, String location, String sharedWith) {
+        this.mId = id;
+        this.mName = name;
+        this.mDescription = description;
+        this.mType = type;
+        this.mOwnerId = ownerId;
+        this.mStartTime = startTime;
+        this.mEndTime = endTime;
+        this.mLocation = location;
+        this.mSharedWith = sharedWith;
     }
 
     public WeekViewEvent(long id, String name, int dayOfWeek, int startHour, int startMinute, int endHour, int endMinute) {
