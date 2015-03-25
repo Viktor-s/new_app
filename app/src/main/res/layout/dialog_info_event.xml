@@ -34,18 +34,18 @@
 
         <Button
             android:id="@+id/edit_button"
-            android:layout_width="@dimen/base100dp720sw"
+            android:layout_width="@dimen/base110dp720sw"
             android:layout_height="wrap_content"
             android:textColor="@android:color/white"
-            android:textSize="@dimen/base12sp720sw"
+            android:textSize="@dimen/base14sp720sw"
             android:text="Изменить"/>
 
         <Button
             android:id="@+id/delete_button"
-            android:layout_width="@dimen/base100dp720sw"
+            android:layout_width="@dimen/base110dp720sw"
             android:layout_height="wrap_content"
             android:textColor="@android:color/white"
-            android:textSize="@dimen/base12sp720sw"
+            android:textSize="@dimen/base14sp720sw"
             android:text="УДАЛИТЬ"/>
 
         </LinearLayout>

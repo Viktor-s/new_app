@@ -69,6 +69,8 @@ public class ApiWrapper {
 
     public static final String CALENDAR_GET_EVENTS = "Calendar.getEvents";
     public static final String CALENDAR_ADD_EVENT = "Calendar.addEvent";
+    public static final String CALENDAR_REMOVE_EVENT = "Calendar.removeEvent";
+    public static final String CALENDAR_UPDATE_EVENT = "Calendar.updateEvent";
 
     public static final String PRODUCTS_GET_ALL_CATEGORIES = "Products.getProductCategories";
     public static final String PRODUCTS_GET_HTML_BY_ID = "Products.getProductById";

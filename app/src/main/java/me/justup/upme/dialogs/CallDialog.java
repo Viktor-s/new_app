@@ -68,7 +68,7 @@ public class CallDialog extends DialogFragment {
         TextView mUserName = (TextView) dialogView.findViewById(R.id.call_user_name_textView);
         mUserName.setText(push.getUserName());
 
-        builder.setView(dialogView).setTitle(R.string.dialog_video_call)
+        builder.setView(dialogView).setTitle( R.string.dialog_video_call)
                 .setPositiveButton(R.string.dialog_answer_call, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
