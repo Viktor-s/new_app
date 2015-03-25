@@ -80,6 +80,7 @@ import static me.justup.upme.db.DBHelper.MAIL_CONTACT_PARENT_ID;
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_SERVER_ID;
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_TABLE_NAME;
 import static me.justup.upme.utils.LogUtils.LOGD;
+import static me.justup.upme.utils.LogUtils.LOGE;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 
@@ -411,7 +412,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
             public void onClick(View v) {
                 isEventNeedUpdate = true;
                 //if (!isEventNeedUpdate) {
-                    addNewEventButton.setText("Изменить");
+                addNewEventButton.setText("Изменить");
                 currentEventId = event.getId();
                 Calendar time = event.getStartTime();
                 startTimeEvent = time;
@@ -661,14 +662,15 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                     addNewEventButton.setText("Обновить");
 
                     CalendarUpdateEventQuery calendarUpdateEventQuery = new CalendarUpdateEventQuery();
-                    calendarUpdateEventQuery.id = currentUserId;
+                    calendarUpdateEventQuery.params.id = currentEventId;
                     calendarUpdateEventQuery.params.name = CommonUtils.convertToUTF8(eventName);
                     calendarUpdateEventQuery.params.description = CommonUtils.convertToUTF8(eventDescription);
                     calendarUpdateEventQuery.params.type = mCalendartypesSpinner.getSelectedItem().toString();
                     calendarUpdateEventQuery.params.location = CommonUtils.convertToUTF8(eventLocation);
                     calendarUpdateEventQuery.params.start = String.valueOf(startTimeEvent.getTimeInMillis() / 1000);
                     calendarUpdateEventQuery.params.end = String.valueOf(endTimeEvent.getTimeInMillis() / 1000);
-                    ((MainActivity) getActivity()).startHttpIntent(calendarUpdateEventQuery, HttpIntentService.CALENDAR_ADD_EVENT);
+                    LOGE("pavel", calendarUpdateEventQuery.toString());
+                    ((MainActivity) getActivity()).startHttpIntent(calendarUpdateEventQuery, HttpIntentService.CALENDAR_UPDATE_EVENT);
                     isEventNeedUpdate = false;
                     panelAddEvent.setVisibility(View.GONE);
                 }

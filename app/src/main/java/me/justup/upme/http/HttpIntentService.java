@@ -141,6 +141,7 @@ public class HttpIntentService extends IntentService {
                     break;
 
                 case CALENDAR_UPDATE_EVENT:
+
                     startHttpIntent(MainActivity.getEventCalendarQuery(CalendarFragment.firstDayCurrentWeek), HttpIntentService.CALENDAR_PART);
                     break;
 
