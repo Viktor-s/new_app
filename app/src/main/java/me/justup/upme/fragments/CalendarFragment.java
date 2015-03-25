@@ -344,7 +344,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
         dialogSteTimeCalendar.show();
     }
 
-    public void InfoDialog(final String Object, final long id) {
+    public void InfoDialog(final WeekViewEvent event, final long id) {
         dialogInfoEvent = new Dialog(getActivity());
         dialogInfoEvent.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialogInfoEvent.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
@@ -459,7 +459,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
 
     @Override
     public void onEventClick(WeekViewEvent event, RectF eventRect) {
-        InfoDialog(event.getName(), event.getId());
+        InfoDialog(event, event.getId());
     }
 
     @Override
