@@ -126,8 +126,9 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
     private static String[] months = new String[]{"ЯНВАРЬ", "ФЕВРАЛЬ", "МАРТ", "АПРЕЛЬ", "МАЙ", "ИЮНЬ", "ИЮЛЬ", "АВГУСТ", "СЕНТЯБРЬ", "ОКТЯБРЬ", "НОЯБРЬ", "ДЕКАБРЬ"};
 
     private boolean isEventNeedUpdate = false;
+    private long currentEventId;
 
-//    private AppPreferences mAppPreferences = new AppPreferences(AppContext.getAppContext());
+    //    private AppPreferences mAppPreferences = new AppPreferences(AppContext.getAppContext());
 //    private final int currentUserId = mAppPreferences.getUserId();
     private AppPreferences mAppPreferences = new AppPreferences(AppContext.getAppContext());
     private final int currentUserId = mAppPreferences.getUserId();
@@ -408,7 +409,10 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                isEventNeedUpdate = true;
+                //if (!isEventNeedUpdate) {
+                    addNewEventButton.setText("Изменить");
+                currentEventId = event.getId();
                 Calendar time = event.getStartTime();
                 startTimeEvent = time;
 
@@ -445,7 +449,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DeleteConfirmation(id);
+                DeleteConfirmation(event.getId());
 
             }
         });
@@ -618,40 +622,30 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                 chooseReferralDialog.show(getChildFragmentManager(), "choose_referral_dialog");
                 break;
             case R.id.add_new_event_button:
+                Calendar endTimeEvent = (Calendar) startTimeEvent.clone();
+                String eventName = etNewEventName.getText().toString();
+                String eventDescription = etNewEventDescription.getText().toString();
+                String eventLocation = etNewEventLocation.getText().toString();
                 if (!isEventNeedUpdate) {
                     addNewEventButton.setText("Добавить");
-                    Calendar endTimeEvent = (Calendar) startTimeEvent.clone();
                     int minute = durationEventMin % 60;
                     int hour = (durationEventMin - minute) / 60;
                     if (hour == 0 && minute == 0) {
                         Toast.makeText(getActivity(), "Не установленна продолжительность события", Toast.LENGTH_SHORT).show();
                         break;
                     }
+
                     endTimeEvent.add(Calendar.HOUR, hour);
                     endTimeEvent.add(Calendar.MINUTE, minute);
-                    String eventName = etNewEventName.getText().toString();
-                    String eventLocation = etNewEventLocation.getText().toString();
 
-                Calendar endTimeEvent = (Calendar) startTimeEvent.clone();
-                int minute = durationEventMin % 60;
-                int hour = (durationEventMin - minute) / 60;
-                if (hour == 0 && minute == 0) {
-                    Toast.makeText(getActivity(), "Не установленна продолжительность события", Toast.LENGTH_SHORT).show();
-                    break;
-                }
-                endTimeEvent.add(Calendar.HOUR, hour);
-                endTimeEvent.add(Calendar.MINUTE, minute);
-                String eventName = etNewEventName.getText().toString();
-                String eventDescription = etNewEventDescription.getText().toString();
-                String eventLocation = etNewEventLocation.getText().toString();
 
-                CalendarAddEventQuery calendarAddEventsQuery = new CalendarAddEventQuery();
-                calendarAddEventsQuery.params.name = CommonUtils.convertToUTF8(eventName);
-                calendarAddEventsQuery.params.description = CommonUtils.convertToUTF8(eventDescription);
-                calendarAddEventsQuery.params.type = mCalendartypesSpinner.getSelectedItem().toString();
-                calendarAddEventsQuery.params.location = CommonUtils.convertToUTF8(eventLocation);
-                calendarAddEventsQuery.params.start = String.valueOf(startTimeEvent.getTimeInMillis() / 1000);
-                calendarAddEventsQuery.params.end = String.valueOf(endTimeEvent.getTimeInMillis() / 1000);
+                    CalendarAddEventQuery calendarAddEventsQuery = new CalendarAddEventQuery();
+                    calendarAddEventsQuery.params.name = CommonUtils.convertToUTF8(eventName);
+                    calendarAddEventsQuery.params.description = CommonUtils.convertToUTF8(eventDescription);
+                    calendarAddEventsQuery.params.type = mCalendartypesSpinner.getSelectedItem().toString();
+                    calendarAddEventsQuery.params.location = CommonUtils.convertToUTF8(eventLocation);
+                    calendarAddEventsQuery.params.start = String.valueOf(startTimeEvent.getTimeInMillis() / 1000);
+                    calendarAddEventsQuery.params.end = String.valueOf(endTimeEvent.getTimeInMillis() / 1000);
                     if (listSharedId.size() == 0)
                         calendarAddEventsQuery.params.shared_with = "";
                     else {
@@ -662,13 +656,21 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                     Log.d("TAG_query", calendarAddEventsQuery.toString());
                     ((MainActivity) getActivity()).startHttpIntent(calendarAddEventsQuery, HttpIntentService.CALENDAR_ADD_EVENT);
                     panelAddEvent.setVisibility(View.GONE);
+
                 } else {
                     addNewEventButton.setText("Обновить");
 
                     CalendarUpdateEventQuery calendarUpdateEventQuery = new CalendarUpdateEventQuery();
-                    //calendarUpdateEventQuery.id = 1 ;
-                    //fill with data
+                    calendarUpdateEventQuery.id = currentUserId;
+                    calendarUpdateEventQuery.params.name = CommonUtils.convertToUTF8(eventName);
+                    calendarUpdateEventQuery.params.description = CommonUtils.convertToUTF8(eventDescription);
+                    calendarUpdateEventQuery.params.type = mCalendartypesSpinner.getSelectedItem().toString();
+                    calendarUpdateEventQuery.params.location = CommonUtils.convertToUTF8(eventLocation);
+                    calendarUpdateEventQuery.params.start = String.valueOf(startTimeEvent.getTimeInMillis() / 1000);
+                    calendarUpdateEventQuery.params.end = String.valueOf(endTimeEvent.getTimeInMillis() / 1000);
                     ((MainActivity) getActivity()).startHttpIntent(calendarUpdateEventQuery, HttpIntentService.CALENDAR_ADD_EVENT);
+                    isEventNeedUpdate = false;
+                    panelAddEvent.setVisibility(View.GONE);
                 }
 
 
