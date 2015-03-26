@@ -17,7 +17,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -136,7 +135,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         setContentView(R.layout.activity_main);
 
         mMainFragmentContainer = (FrameLayout) findViewById(R.id.main_fragment_container);
-        ImageView mCornerButton = (ImageView) findViewById(R.id.upme_corner_button);
+        FrameLayout mCornerButton = (FrameLayout) findViewById(R.id.include_corner);
         mCornerButton.setOnClickListener(new OnCornerButtonListener());
 
         mFragmentSliderOut = AnimationUtils.loadAnimation(this, R.anim.fragment_slider_out);

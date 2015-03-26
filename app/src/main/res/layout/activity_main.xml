@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/base_background">
+    android:background="@color/black">
 
     <LinearLayout
         android:id="@+id/main_content_container"
@@ -101,6 +101,21 @@
     </LinearLayout>
 
     <FrameLayout
+        android:id="@+id/include_corner"
+        android:layout_below="@+id/status_bar_fragment"
+        android:layout_width="@dimen/base210dp720sw"
+        android:layout_height="@dimen/base90dp720sw"
+        android:background="@drawable/upme_main_logo_background">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/upme_main_logo"
+            android:layout_gravity="center"
+            android:contentDescription="@string/app_name" />
+    </FrameLayout>
+
+    <FrameLayout
         android:id="@+id/main_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -117,10 +132,6 @@
         tools:layout="@layout/fragment_status_bar"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true" />
-
-    <include
-        layout="@layout/upme_corner"
-        android:id="@+id/include_corner" />
 
     <RelativeLayout
         android:id="@+id/container_video_chat"
