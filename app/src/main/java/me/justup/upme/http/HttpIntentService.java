@@ -10,7 +10,6 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.apache.http.Header;
 
-import java.util.Arrays;
 import java.util.List;
 
 import me.justup.upme.MainActivity;
@@ -93,7 +92,7 @@ public class HttpIntentService extends IntentService {
         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
             String content = ApiWrapper.responseBodyToString(responseBody);
             LOGD(TAG, "onSuccess(): " + content);
-            LOGI(TAG, "onSuccess(): headers:" + Arrays.toString(headers) + " status code:" + statusCode);
+            // LOGI(TAG, "onSuccess(): headers:" + Arrays.toString(headers) + " status code:" + statusCode);
 
             switch (partNumber) {
                 case NEWS_PART_SHORT:
@@ -160,7 +159,7 @@ public class HttpIntentService extends IntentService {
         @Override
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
             String content = ApiWrapper.responseBodyToString(responseBody);
-            LOGE(TAG, "onFailure(): " + "statusCode - " + statusCode + "; headers - " + headers + "; responseBody - " + content + "; error - " + error);
+            LOGE(TAG, "onFailure(): " + content);
             //mDBAdapter.sendBroadcast(BROADCAST_INTENT_NEWS_FEED_SERVER_ERROR);
             switch (partNumber) {
                 case NEWS_PART_SHORT:
