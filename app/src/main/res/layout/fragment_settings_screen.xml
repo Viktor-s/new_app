@@ -14,6 +14,23 @@
         android:text="@string/change_the_brightness"
         style="@style/SettingsItemTitle" />
 
+    <TextView
+        style="@style/SettingsItemTitle"
+        android:text="Автоматический уровень яркости"
+        android:id="@+id/textView6"
+        android:layout_gravity="center_horizontal" />
+
+    <ToggleButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New ToggleButton"
+        android:id="@+id/settings_brightness_auto_button"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="@dimen/base5dp720sw"
+        android:checked="false"
+        android:textOff="OFF"
+        android:textOn="ON" />
+
     <SeekBar
         android:id="@+id/settings_bright_bar"
         style="@style/SettingsSeekBar"
