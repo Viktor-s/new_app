@@ -119,7 +119,7 @@
         android:layout_alignParentRight="true"
         android:background="@color/user_fragment_block_border"
         android:clickable="true"
-        android:visibility="invisible">
+        android:visibility="visible">
 
 
         <LinearLayout

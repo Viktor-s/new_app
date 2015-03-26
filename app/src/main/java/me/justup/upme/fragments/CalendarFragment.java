@@ -580,8 +580,8 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
         startDateEvent.setText(String.format("%02d/%02d/%d", time.get(Calendar.DAY_OF_MONTH), time.get(Calendar.MONTH) + 1, time.get(Calendar.YEAR)));
         tvStartTimeEvent.setText(String.format("%02d:%02d", time.get(Calendar.HOUR_OF_DAY), time.get(Calendar.MINUTE)));
 
-        durationEventMin = 0;
-        tvDurationEvent.setText("00:00");
+        durationEventMin = 30;
+        tvDurationEvent.setText("00:30");
 
         remindEventMin = 0;
         tvRemindEvent.setText("00:00");
@@ -637,11 +637,19 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
             case R.id.duration_event:
                 TimePickerDialog(DURATION_EVENT);
                 break;
+            case R.id.remind_event:
+                TimePickerDialog(REMIND_EVENT);
+                break;
             case R.id.choose_referral_button:
                 ChooseReferralDialog chooseReferralDialog = ChooseReferralDialog.newInstance(listSharedId);
                 chooseReferralDialog.show(getChildFragmentManager(), "choose_referral_dialog");
                 break;
             case R.id.add_new_event_button:
+                if (startTimeEvent.getTimeInMillis() < Calendar.getInstance().getTimeInMillis()) {
+                    Toast.makeText(getActivity(), "Событие не может быть установллено в прошлом", Toast.LENGTH_SHORT).show();
+                    break;
+                }
+
                 Calendar endTimeEvent = (Calendar) startTimeEvent.clone();
                 String eventName = etNewEventName.getText().toString();
                 String eventDescription = etNewEventDescription.getText().toString();
