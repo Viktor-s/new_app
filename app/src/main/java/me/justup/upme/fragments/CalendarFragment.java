@@ -90,6 +90,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
 
     private static final int START_TIME_EVENT = 1;
     private static final int DURATION_EVENT = 2;
+    private static final int REMIND_EVENT = 3;
 
     private WeekView mWeekView;
     private Dialog dialogSteTimeCalendar;
@@ -101,12 +102,14 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
     private TextView startDateEvent;
     private TextView tvStartTimeEvent;
     private TextView tvDurationEvent;
+    private TextView tvRemindEvent;
     private EditText etNewEventName;
     private EditText etNewEventLocation;
     private EditText etNewEventDescription;
 
     private Calendar startTimeEvent;
     private int durationEventMin;
+    private int remindEventMin;
 
     private TextView selectWeekTextView;
     private TextView selectMonthTextView;
@@ -239,6 +242,8 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
         tvStartTimeEvent.setOnClickListener(this);
         tvDurationEvent = (TextView) v.findViewById(R.id.duration_event);
         tvDurationEvent.setOnClickListener(this);
+        tvRemindEvent = (TextView) v.findViewById(R.id.remind_event);
+        tvRemindEvent.setOnClickListener(this);
         etNewEventName = (EditText) v.findViewById(R.id.new_event_name);
         etNewEventLocation = (EditText) v.findViewById(R.id.new_event_location);
         etNewEventDescription = (EditText) v.findViewById(R.id.new_event_description);
@@ -332,6 +337,12 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
             int hour = (durationEventMin - minute) / 60;
             numberPickerHours.setValue(hour);
             numberPickerMinutes.setValue(minute);
+        } else if (typeDialog == REMIND_EVENT) {
+            textTitleDialogTime.setText("Установите интервал");
+            int minute = remindEventMin % 60;
+            int hour = (remindEventMin - minute) / 60;
+            numberPickerHours.setValue(hour);
+            numberPickerMinutes.setValue(minute);
         }
         buttonOk.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -345,6 +356,10 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                 } else if (typeDialog == DURATION_EVENT) {
                     durationEventMin = numberPickerHours.getValue() * 60 + numberPickerMinutes.getValue();
                     tvDurationEvent.setText(convertedTime);
+                    dialogSteTimeCalendar.dismiss();
+                } else if (typeDialog == REMIND_EVENT) {
+                    remindEventMin = numberPickerHours.getValue() * 60 + numberPickerMinutes.getValue();
+                    tvRemindEvent.setText(convertedTime);
                     dialogSteTimeCalendar.dismiss();
                 }
             }
@@ -566,6 +581,9 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
         durationEventMin = 0;
         tvDurationEvent.setText("00:00");
 
+        remindEventMin = 0;
+        tvRemindEvent.setText("00:00");
+
         etNewEventName.setText("");
         etNewEventDescription.setText("");
         etNewEventLocation.setText("");
@@ -589,7 +607,6 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                 break;
             case R.id.previous_week_button:
                 firstDayCurrentWeek = firstDayCurrentWeek.minusDays(Calendar.DAY_OF_WEEK);
-                LOGD("TAG_", "firstDayCurrentWeek: " + firstDayCurrentWeek);
                 mWeekView.goToDate(firstDayCurrentWeek.toDateTime(DateTimeZone.UTC).toGregorianCalendar());
                 selectWeekTextView.setText(Integer.toString(currentWeek == 1 ? currentWeek = 52 : --currentWeek) + getResources().getString(R.string.week));
                 String strMonthYearPrev = String.format("%s %d", months[firstDayCurrentWeek.getMonthOfYear() - 1], currentDate.getYear());
@@ -647,6 +664,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                     calendarAddEventsQuery.params.location = CommonUtils.convertToUTF8(eventLocation);
                     calendarAddEventsQuery.params.start = String.valueOf(startTimeEvent.getTimeInMillis() / 1000);
                     calendarAddEventsQuery.params.end = String.valueOf(endTimeEvent.getTimeInMillis() / 1000);
+                    // !!! calendarAddEventsQuery.params.duration = durationEventMin;
                     if (listSharedId.size() == 0)
                         calendarAddEventsQuery.params.shared_with = "";
                     else {
@@ -654,7 +672,6 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                         calendarAddEventsQuery.params.shared_with = sharedWith;
                     }
 
-                    Log.d("TAG_query", calendarAddEventsQuery.toString());
                     ((MainActivity) getActivity()).startHttpIntent(calendarAddEventsQuery, HttpIntentService.CALENDAR_ADD_EVENT);
                     panelAddEvent.setVisibility(View.GONE);
 

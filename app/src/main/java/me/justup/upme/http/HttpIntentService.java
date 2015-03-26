@@ -77,7 +77,6 @@ public class HttpIntentService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         BaseHttpQueryEntity mQueryEntity = (BaseHttpQueryEntity) intent.getSerializableExtra(HTTP_INTENT_QUERY_EXTRA);
         partNumber = intent.getIntExtra(HTTP_INTENT_PART_EXTRA, 0);
-        LOGD("TAG_mQueryEntity", "mQueryEntity " + mQueryEntity);
         ApiWrapper.syncQuery(mQueryEntity, new OnQueryResponse());
     }
 
@@ -362,7 +361,6 @@ public class HttpIntentService extends IntentService {
 
 
     private void fillEventsCalendarDB(String content) {
-        LOGD("TAG_content", content);
         CalendarGetEventsResponse response = null;
         try {
             response = ApiWrapper.gson.fromJson(content, CalendarGetEventsResponse.class);
@@ -377,7 +375,6 @@ public class HttpIntentService extends IntentService {
 
 
     private void fillProductsDB(String content) {
-        LOGD("TAG_", content);
         ProductsGetAllCategoriesResponse response = null;
         try {
             response = ApiWrapper.gson.fromJson(content, ProductsGetAllCategoriesResponse.class);
@@ -391,7 +388,6 @@ public class HttpIntentService extends IntentService {
     }
 
     private void fillProductHtmlDB(String content) {
-        LOGD("TAG_html", content);
         GetProductHtmlByIdResponse response = null;
         try {
             response = ApiWrapper.gson.fromJson(content, GetProductHtmlByIdResponse.class);
