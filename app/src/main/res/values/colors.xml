@@ -3,6 +3,8 @@
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
 
+    <color name="main_menu_text">#b0b2b5</color>
+
     <color name="product_title">#f7142c</color>
     <color name="product_description">#adada8</color>
     <color name="base_background">#2f2d30</color>

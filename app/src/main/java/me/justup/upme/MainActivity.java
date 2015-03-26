@@ -18,7 +18,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -52,6 +51,7 @@ import me.justup.upme.fragments.DocumentsFragment;
 import me.justup.upme.fragments.MailFragment;
 import me.justup.upme.fragments.NewsFeedFragment;
 import me.justup.upme.fragments.ProductsFragment;
+import me.justup.upme.fragments.StudyFragment;
 import me.justup.upme.fragments.UserFragment;
 import me.justup.upme.fragments.WebRtcFragment;
 import me.justup.upme.http.ApiWrapper;
@@ -70,13 +70,15 @@ import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener, OnLoadMailFragment, OnDownloadCloudFile {
     private static final String TAG = makeLogTag(MainActivity.class);
+
     private static final int SELECTED_FRAGMENT_NEWS = 1;
     private static final int SELECTED_FRAGMENT_MAIL = 2;
     private static final int SELECTED_FRAGMENT_CALENDAR = 3;
     private static final int SELECTED_FRAGMENT_PRODUCTS = 4;
     private static final int SELECTED_FRAGMENT_BRIEFCASE = 5;
     private static final int SELECTED_FRAGMENT_DOCS = 6;
-    private static final int SELECTED_FRAGMENT_BROWSER = 7;
+    private static final int SELECTED_FRAGMENT_STUDY = 7;
+    private static final int SELECTED_FRAGMENT_BROWSER = 8;
     private int currentlySelectedFragment;
 
 
@@ -86,7 +88,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private boolean isShowMainFragmentContainer;
 
     private ArrayList<Button> mButtonList = new ArrayList<>();
-    private Button mNewsButton, mMailButton, mCalendarButton, mProductsButton, mBriefcaseButton, mDocsButton, mBrowserButton;
+    private Button mNewsButton, mMailButton, mCalendarButton, mProductsButton, mBriefcaseButton, mDocsButton, mStudyButton, mBrowserButton;
     private Push push;
     private String shareFileName;
 
@@ -140,8 +142,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mFragmentSliderOut = AnimationUtils.loadAnimation(this, R.anim.fragment_slider_out);
         mFragmentSliderIn = AnimationUtils.loadAnimation(this, R.anim.fragment_slider_in);
 
-        Button mSettingButton = (Button) findViewById(R.id.settings_button);
+        Button mSettingButton = (Button) findViewById(R.id.settings_menu_item);
         mSettingButton.setOnClickListener(new OnLoadSettingsListener());
+
+        Button mExitButton = (Button) findViewById(R.id.demo_menu_item);
+        mExitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         makeButtonSelector();
 
@@ -166,17 +176,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
         View mOpenStatusBar = findViewById(R.id.status_bar_fragment);
         mOpenStatusBar.setOnClickListener(new OnOpenStatusBarListener());
-
-
-        // DELETE - only for exit
-        TextView exit = (TextView) findViewById(R.id.exit_menu_item);
-        exit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
     }
 
     @Override
@@ -192,12 +191,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     fragment = new NewsFeedFragment();
                     currentlySelectedFragment = SELECTED_FRAGMENT_NEWS;
                 }
-
                 break;
 
             case R.id.mail_menu_item:
                 if (currentlySelectedFragment != SELECTED_FRAGMENT_MAIL) {
-                    //startHttpIntent(new GetMailContactQuery(), HttpIntentService.MAIL_CONTACT_PART);
                     changeButtonState(mMailButton);
                     fragment = new MailFragment();
                     currentlySelectedFragment = SELECTED_FRAGMENT_MAIL;
@@ -225,7 +222,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
             case R.id.briefcase_menu_item:
                 if (currentlySelectedFragment != SELECTED_FRAGMENT_BRIEFCASE) {
-                    //startHttpIntent(new GetMailContactQuery(), HttpIntentService.MAIL_CONTACT_PART);
                     changeButtonState(mBriefcaseButton);
                     fragment = new BriefcaseFragment();
                     currentlySelectedFragment = SELECTED_FRAGMENT_BRIEFCASE;
@@ -237,6 +233,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     changeButtonState(mDocsButton);
                     fragment = new DocumentsFragment();
                     currentlySelectedFragment = SELECTED_FRAGMENT_DOCS;
+                }
+                break;
+
+            case R.id.study_menu_item:
+                if (currentlySelectedFragment != SELECTED_FRAGMENT_STUDY) {
+                    changeButtonState(mStudyButton);
+                    fragment = new StudyFragment();
+                    currentlySelectedFragment = SELECTED_FRAGMENT_STUDY;
                 }
                 break;
 
@@ -267,6 +271,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mProductsButton = (Button) findViewById(R.id.products_menu_item);
         mBriefcaseButton = (Button) findViewById(R.id.briefcase_menu_item);
         mDocsButton = (Button) findViewById(R.id.docs_menu_item);
+        mStudyButton = (Button) findViewById(R.id.study_menu_item);
         mBrowserButton = (Button) findViewById(R.id.browser_menu_item);
 
         mNewsButton.setOnClickListener(this);
@@ -275,6 +280,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mProductsButton.setOnClickListener(this);
         mBriefcaseButton.setOnClickListener(this);
         mDocsButton.setOnClickListener(this);
+        mStudyButton.setOnClickListener(this);
         mBrowserButton.setOnClickListener(this);
 
         mButtonList.add(mNewsButton);
@@ -283,12 +289,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mButtonList.add(mProductsButton);
         mButtonList.add(mBriefcaseButton);
         mButtonList.add(mDocsButton);
+        mButtonList.add(mStudyButton);
         mButtonList.add(mBrowserButton);
     }
 
     private void changeButtonState(Button activeButton) {
         for (Button button : mButtonList) {
-            button.setBackground(getResources().getDrawable(R.drawable.user_fragment_block_gradient));
+            button.setBackground(getResources().getDrawable(R.drawable.main_menu_background));
         }
 
         activeButton.setBackground(getResources().getDrawable(R.drawable.pay_button_pressed));

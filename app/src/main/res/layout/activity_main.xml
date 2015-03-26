@@ -22,11 +22,6 @@
             android:layout_weight="55"
             tools:layout="@layout/fragment_fast_paying" />
 
-        <!-- <View
-            android:background="@drawable/left_shadow"
-            android:layout_width="10dp"
-            android:layout_height="wrap_content" /> -->
-
         <FrameLayout
             android:id="@+id/mapAndUserFragment"
             android:layout_width="wrap_content"
@@ -76,30 +71,43 @@
         <Button
             android:id="@+id/docs_menu_item"
             android:text="@string/menu_item_title_docs"
-            android:drawableStart="@drawable/ic_main_news"
+            android:drawableStart="@drawable/ic_main_docs"
+            style="@style/MainMenuItemLayout" />
+
+        <Button
+            android:id="@+id/study_menu_item"
+            android:text="@string/menu_item_title_study"
+            android:drawableStart="@drawable/ic_main_study"
             style="@style/MainMenuItemLayout" />
 
         <Button
             android:id="@+id/browser_menu_item"
             android:text="@string/menu_item_title_browser"
-            android:drawableStart="@drawable/ic_main_mail"
+            android:drawableStart="@drawable/ic_main_browser"
             style="@style/MainMenuItemLayout" />
 
-        <TextView
-            android:id="@+id/exit_menu_item"
+        <Button
+            android:id="@+id/settings_menu_item"
+            android:text="@string/menu_item_title_settings"
+            android:drawableStart="@drawable/ic_main_settings"
+            style="@style/MainMenuItemLayout" />
+
+        <Button
+            android:id="@+id/demo_menu_item"
+            android:text="@string/menu_item_title_demo"
+            android:drawableStart="@drawable/ic_main_demo"
             style="@style/MainMenuItemLayout"
-            android:layout_marginTop="@dimen/base20dp720sw"
-            android:layout_marginStart="@dimen/base30dp720sw"
-            android:text="Выход" />
+            android:background="@drawable/main_menu_demo_background" />
     </LinearLayout>
 
     <FrameLayout
         android:id="@+id/main_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_toEndOf="@+id/settings_button"
         android:visibility="gone"
-        android:layout_below="@+id/status_bar_fragment" />
+        android:layout_below="@+id/status_bar_fragment"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="@dimen/base75dp720sw" />
 
     <fragment
         android:layout_width="match_parent"
@@ -114,16 +122,10 @@
         layout="@layout/upme_corner"
         android:id="@+id/include_corner" />
 
-    <Button
-        android:id="@+id/settings_button"
-        android:layout_above="@+id/left_main_menu"
-        style="@style/CornerSettingsButton" />
-
     <RelativeLayout
         android:id="@+id/container_video_chat"
         android:layout_alignParentEnd="true"
         android:layout_width="@dimen/base250dp720sw"
         android:layout_height="@dimen/base250dp720sw"
         android:layout_below="@+id/status_bar_fragment" />
-
 </RelativeLayout>

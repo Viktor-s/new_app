@@ -266,12 +266,14 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/base20sp720sw</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textAllCaps">true</item>
-        <item name="android:padding">@dimen/base10dp720sw</item>
-        <item name="android:drawablePadding">@dimen/base10dp720sw</item>
+        <item name="android:textColor">@color/main_menu_text</item>
+        <item name="android:paddingStart">@dimen/base20dp720sw</item>
+        <item name="android:paddingTop">@dimen/base10dp720sw</item>
+        <item name="android:paddingBottom">@dimen/base10dp720sw</item>
+        <item name="android:drawablePadding">@dimen/base25dp720sw</item>
         <item name="android:gravity">center_vertical</item>
-        <item name="android:background">@drawable/main_menu_selector</item>
+        <item name="android:background">@drawable/main_menu_background</item>
+        <item name="android:layout_weight">1</item>
     </style>
 
     <style name="PayFragmentButtonStyle">

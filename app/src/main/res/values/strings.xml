@@ -47,12 +47,15 @@
     <string name="product_description_airline_tickets">Мы сотрудничаем с ведущими авиакомпаниями и подбираем вам рейс, максимально удовлетворяющий Ваши требования.</string>
     <string name="product_description_credit_education_online">Доступное европейское образование MBA не выходя из дома. По завершению программы каждый из участников получает сертификат от MMU Business School.</string>
     <string name="menu_item_title_news">Новости</string>
-    <string name="menu_item_title_mail">Почта</string>
+    <string name="menu_item_title_mail">Сообщения</string>
     <string name="menu_item_title_calendar">Календарь</string>
     <string name="menu_item_title_products">Продукты</string>
     <string name="menu_item_title_briefcase">Портфель</string>
     <string name="menu_item_title_docs">Документы</string>
+    <string name="menu_item_title_study">Обучение</string>
     <string name="menu_item_title_browser">Браузер</string>
+    <string name="menu_item_title_settings">Настройка</string>
+    <string name="menu_item_title_demo">Демо-режим</string>
     <string name="fast_pay">Заплати\nбыстро</string>
     <string name="communication">Связь</string>
     <string name="internet">Интернет</string>
