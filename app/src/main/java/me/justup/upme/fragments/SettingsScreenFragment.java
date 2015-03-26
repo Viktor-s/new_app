@@ -11,8 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.CompoundButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import me.justup.upme.R;
 
@@ -22,12 +24,16 @@ import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 public class SettingsScreenFragment extends Fragment {
     private static final String TAG = makeLogTag(SettingsScreenFragment.class);
+    private static final String SCREEN_BRIGHTNESS_MODE = "screen_brightness_mode";
+    private static final int SCREEN_BRIGHTNESS_MODE_MANUAL = 0;
+    private static final int SCREEN_BRIGHTNESS_MODE_AUTOMATIC = 1;
 
     private int brightness;
     private ContentResolver mContentResolver;
     private Window mWindow;
     private TextView mPercentage;
     private AudioManager mAudioManager;
+    private ToggleButton mAutoBrightnessButton;
 
 
     @Override
@@ -44,7 +50,7 @@ public class SettingsScreenFragment extends Fragment {
         mAudioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
         brightness = getSystemBrightness();
 
-        SeekBar mBrightBar = (SeekBar) v.findViewById(R.id.settings_bright_bar);
+        final SeekBar mBrightBar = (SeekBar) v.findViewById(R.id.settings_bright_bar);
         mBrightBar.setMax(255);
         mBrightBar.setKeyProgressIncrement(1);
         mBrightBar.setProgress(brightness);
@@ -72,6 +78,34 @@ public class SettingsScreenFragment extends Fragment {
         mNotificationSeekBar.setMax(mAudioManager.getStreamMaxVolume(AudioManager.STREAM_NOTIFICATION));
         mNotificationSeekBar.setProgress(mAudioManager.getStreamVolume(AudioManager.STREAM_NOTIFICATION));
         mNotificationSeekBar.setOnSeekBarChangeListener(new OnNotificationChangeListener());
+        mAutoBrightnessButton = (ToggleButton) v.findViewById(R.id.settings_brightness_auto_button);
+        mAutoBrightnessButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    mBrightBar.setEnabled(false);
+                    setAutoBrightness(true);
+                } else {
+                    mBrightBar.setEnabled(true);
+                    setAutoBrightness(false);
+                }
+
+            }
+        });
+        int mode = 0;
+        try {
+            mode = Settings.System.getInt(mContentResolver,
+                    Settings.System.SCREEN_BRIGHTNESS_MODE);
+        } catch (Settings.SettingNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        if (mode == SCREEN_BRIGHTNESS_MODE_AUTOMATIC) {
+            mAutoBrightnessButton.setChecked(true);
+        } else {
+            mAutoBrightnessButton.setChecked(false);
+        }
+
 
         return v;
     }
@@ -93,6 +127,42 @@ public class SettingsScreenFragment extends Fragment {
         return bright;
     }
 
+    private void setAutoBrightness(boolean value) {
+        if (value) {
+            Settings.System.putInt(mContentResolver, SCREEN_BRIGHTNESS_MODE, SCREEN_BRIGHTNESS_MODE_AUTOMATIC);
+        } else {
+            Settings.System.putInt(mContentResolver, SCREEN_BRIGHTNESS_MODE, SCREEN_BRIGHTNESS_MODE_MANUAL);
+        }
+
+        // After brightness change we need to "refresh" current app brightness
+        if (value) {
+            refreshBrightness(-1);
+        } else {
+            refreshBrightness(brightness);
+        }
+    }
+
+    private void refreshBrightness(float brightness) {
+        WindowManager.LayoutParams lp = getActivity().getWindow().getAttributes();
+        if (brightness < 0) {
+            lp.screenBrightness = WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE;
+        } else {
+            lp.screenBrightness = brightness;
+        }
+        getActivity().getWindow().setAttributes(lp);
+    }
+
+    private int getBrightnessLevel() {
+        try {
+            int value = Settings.System.getInt(mContentResolver, Settings.System.SCREEN_BRIGHTNESS);
+            // convert brightness level to range 0..1
+            value = value / 255;
+            return value;
+        } catch (Settings.SettingNotFoundException e) {
+            return 0;
+        }
+    }
+
     private class OnBrightnessChangeListener implements SeekBar.OnSeekBarChangeListener {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -111,6 +181,8 @@ public class SettingsScreenFragment extends Fragment {
             mLayoutParams.screenBrightness = brightness / (float) 255;
             mWindow.setAttributes(mLayoutParams);
         }
+
+
     }
 
     private class OnPlayerChangeListener implements SeekBar.OnSeekBarChangeListener {
@@ -118,11 +190,9 @@ public class SettingsScreenFragment extends Fragment {
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, progress, 0);
         }
-
         @Override
         public void onStartTrackingTouch(SeekBar seekBar) {
         }
-
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
         }
@@ -133,11 +203,9 @@ public class SettingsScreenFragment extends Fragment {
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             mAudioManager.setStreamVolume(AudioManager.STREAM_RING, progress, 0);
         }
-
         @Override
         public void onStartTrackingTouch(SeekBar seekBar) {
         }
-
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
         }
@@ -148,11 +216,9 @@ public class SettingsScreenFragment extends Fragment {
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             mAudioManager.setStreamVolume(AudioManager.STREAM_ALARM, progress, 0);
         }
-
         @Override
         public void onStartTrackingTouch(SeekBar seekBar) {
         }
-
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
         }
@@ -163,11 +229,9 @@ public class SettingsScreenFragment extends Fragment {
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             mAudioManager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, progress, 0);
         }
-
         @Override
         public void onStartTrackingTouch(SeekBar seekBar) {
         }
-
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
         }
