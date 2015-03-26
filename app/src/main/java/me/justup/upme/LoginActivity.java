@@ -286,7 +286,11 @@ public class LoginActivity extends BaseActivity {
             String content = ApiWrapper.responseBodyToString(responseBody);
             LOGE(TAG, "onFailure(): " + content);
 
-            showWarningDialog(ApiWrapper.getResponseError(content));
+            try {
+                showWarningDialog(ApiWrapper.getResponseError(content));
+            } catch (Exception e) {
+                LOGE(TAG, "showWarningDialog FAIL", e);
+            }
         }
     }
 

@@ -123,24 +123,26 @@ public class FileRemoveShareDialog extends DialogFragment {
             String content = ApiWrapper.responseBodyToString(responseBody);
             LOGD(TAG, "GetContactList onSuccess(): " + content);
 
-            FileGetShareWithResponse response = null;
-            try {
-                response = ApiWrapper.gson.fromJson(content, FileGetShareWithResponse.class);
-            } catch (JsonSyntaxException e) {
-                LOGE(TAG, "gson.fromJson:\n" + content);
-            }
+            if (FileRemoveShareDialog.this.isAdded()) {
+                FileGetShareWithResponse response = null;
+                try {
+                    response = ApiWrapper.gson.fromJson(content, FileGetShareWithResponse.class);
+                } catch (JsonSyntaxException e) {
+                    LOGE(TAG, "gson.fromJson:\n" + content);
+                }
 
-            if (response != null && response.result != null) {
-                if (response.result.size() > 0) {
-                    for (FileGetShareWithResponse.Result user : response.result) {
-                        addUser(user.id, user.name);
+                if (response != null && response.result != null) {
+                    if (response.result.size() > 0) {
+                        for (FileGetShareWithResponse.Result user : response.result) {
+                            addUser(user.id, user.name);
+                        }
+                    } else {
+                        addUser(0, getString(R.string.file_share_user_list_empty));
                     }
                 } else {
-                    addUser(0, getString(R.string.file_share_user_list_empty));
-                }
-            } else {
-                if (response != null && response.error != null) {
-                    addUser(0, response.error.data);
+                    if (response != null && response.error != null) {
+                        addUser(0, response.error.data);
+                    }
                 }
             }
         }
@@ -150,10 +152,12 @@ public class FileRemoveShareDialog extends DialogFragment {
             String content = ApiWrapper.responseBodyToString(responseBody);
             LOGE(TAG, "GetContactList onFailure(): " + content);
 
-            if (error != null) {
-                addUser(0, error.getMessage());
-            } else {
-                addUser(0, content);
+            if (FileRemoveShareDialog.this.isAdded()) {
+                if (error != null) {
+                    addUser(0, error.getMessage());
+                } else {
+                    addUser(0, content);
+                }
             }
         }
     }
