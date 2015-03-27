@@ -14,7 +14,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -144,7 +143,13 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        database = DBAdapter.getInstance().openDatabase();
+        if (database != null) {
+            if (!database.isOpen()) {
+                database = DBAdapter.getInstance().openDatabase();
+            }
+        } else {
+            database = DBAdapter.getInstance().openDatabase();
+        }
         String selectQuery = "SELECT * FROM " + MAIL_CONTACT_TABLE_NAME;
         Cursor mCursor = database.rawQuery(selectQuery, null);
         listPerson = fillPersonsFromCursor(mCursor);
@@ -329,7 +334,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
         numberPickerMinutes.setMaxValue(59);
         if (typeDialog == START_TIME_EVENT) {
             textTitleDialogTime.setText("Установите начальное время события");
-            numberPickerHours.setValue(startTimeEvent.get(Calendar.HOUR));
+            numberPickerHours.setValue(startTimeEvent.get(Calendar.HOUR_OF_DAY));
             numberPickerMinutes.setValue(startTimeEvent.get(Calendar.MINUTE));
         } else if (typeDialog == DURATION_EVENT) {
             textTitleDialogTime.setText("Установите продолжительность события");
@@ -349,7 +354,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
             public void onClick(View v) {
                 String convertedTime = convertTimeToString(numberPickerHours.getValue(), numberPickerMinutes.getValue());
                 if (typeDialog == START_TIME_EVENT) {
-                    startTimeEvent.set(Calendar.HOUR, numberPickerHours.getValue());
+                    startTimeEvent.set(Calendar.HOUR_OF_DAY, numberPickerHours.getValue());
                     startTimeEvent.set(Calendar.MINUTE, numberPickerMinutes.getValue());
                     tvStartTimeEvent.setText(convertedTime);
                     dialogSteTimeCalendar.dismiss();
@@ -519,12 +524,12 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                     @TargetApi(11)
                     public void onClick(DialogInterface dialog, int id) {
                         int day = myDatePicker.getDayOfMonth();
-                        int month = myDatePicker.getMonth() + 1;
+                        int month = myDatePicker.getMonth();
                         int year = myDatePicker.getYear();
                         startTimeEvent.set(Calendar.DAY_OF_MONTH, day);
                         startTimeEvent.set(Calendar.MONTH, month);
                         startTimeEvent.set(Calendar.YEAR, year);
-                        startDateEvent.setText(String.format("%02d/%02d/%d", day, month, year));
+                        startDateEvent.setText(String.format("%02d/%02d/%d", day, month + 1, year));
                         dialog.cancel();
                     }
                 }).show();
@@ -661,7 +666,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                     break;
                 }
 
-                endTimeEvent.add(Calendar.HOUR, hour);
+                endTimeEvent.add(Calendar.HOUR_OF_DAY, hour);
                 endTimeEvent.add(Calendar.MINUTE, minute);
                 if (!isEventNeedUpdate) {
                     addNewEventButton.setText("Добавить");
@@ -694,6 +699,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                     calendarUpdateEventQuery.params.location = CommonUtils.convertToUTF8(eventLocation);
                     calendarUpdateEventQuery.params.start = String.valueOf(startTimeEvent.getTimeInMillis() / 1000);
                     calendarUpdateEventQuery.params.end = String.valueOf(endTimeEvent.getTimeInMillis() / 1000);
+                    calendarUpdateEventQuery.params.shared_with = listSharedId.toString().replaceAll("(^\\[|\\]$)", "").replace(", ", ",");
                     LOGE("pavel", calendarUpdateEventQuery.toString());
                     ((MainActivity) getActivity()).startHttpIntent(calendarUpdateEventQuery, HttpIntentService.CALENDAR_UPDATE_EVENT);
                     isEventNeedUpdate = false;

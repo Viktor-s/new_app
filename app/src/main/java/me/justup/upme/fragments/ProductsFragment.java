@@ -47,13 +47,7 @@ import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 public class ProductsFragment extends Fragment implements View.OnClickListener {
     private static final String TAG = makeLogTag(ProductsFragment.class);
-
-    List<ProductCategoryEntity> listCategory;
-    //List<GroupProductEntity> listGroup;
-    //ListGroupProductMock listGroupProductMock;
-    // private DBAdapter mDBAdapter;
-    //private DBHelper mDBHelper;
-    //private BroadcastReceiver receiver;
+    private List<ProductCategoryEntity> listCategory;
     private SQLiteDatabase database;
     private BroadcastReceiver mProductsReceiver;
     private Cursor cursorProducts;
@@ -67,10 +61,7 @@ public class ProductsFragment extends Fragment implements View.OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         database = DBAdapter.getInstance().openDatabase();
-        cursorProducts = database.rawQuery("SELECT * FROM " + PRODUCTS_CATEGORIES_TABLE_NAME, null);
-        listCategory = fillProductsFromCursor(cursorProducts);
-        if (cursorProducts != null)
-            cursorProducts.close();
+        updateProductsList();
     }
 
 
@@ -83,10 +74,7 @@ public class ProductsFragment extends Fragment implements View.OnClickListener {
                 if (listCategory.size() > 1) {
                     containerProductMain.removeAllViews();
                 }
-                cursorProducts = database.rawQuery("SELECT * FROM " + PRODUCTS_CATEGORIES_TABLE_NAME, null);
-                listCategory = fillProductsFromCursor(cursorProducts);
-                if (cursorProducts != null)
-                    cursorProducts.close();
+                updateProductsList();
                 updateView();
             }
         };
@@ -110,54 +98,9 @@ public class ProductsFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_products, container, false);
         layoutInflater = LayoutInflater.from(getActivity());
-
-//
-//        for (CategoryProductEntityMock categoryProductEntityMock : listCategory) {
-//
-//            RelativeLayout categoryProductLayout = (RelativeLayout) inflater.inflate(R.layout.category_product_layout, null, false);
-//            TextView categoryProductTitle = (TextView) categoryProductLayout.findViewById(R.id.category_product_title);
-//            categoryProductTitle.setText(categoryProductEntityMock.getName());
-//            LinearLayout categoryProductContainer = (LinearLayout) categoryProductLayout.findViewById(R.id.category_product_container);
-//
-//            for (GroupProductEntity groupProductEntity : listGroupProductMock.getGroupProductByIdCategory(categoryProductEntityMock.getId())) {
-//
-//                RelativeLayout groupProductLayout = (RelativeLayout) inflater.inflate(R.layout.group_product_layout, null, false);
-//
-//                TextView idGroupProduct = (TextView) groupProductLayout.findViewById(R.id.id_group_product);
-//                idGroupProduct.setText(Integer.toString(groupProductEntity.getId()));
-//
-//                ImageView groupProductPhoto = (ImageView) groupProductLayout.findViewById(R.id.group_product_photo);
-//                groupProductPhoto.setImageResource(R.drawable.risk_insurance);
-//
-//                TextView groupProductTitle = (TextView) groupProductLayout.findViewById(R.id.group_product_title);
-//                groupProductTitle.setText(groupProductEntity.getName());
-//
-//                TextView groupProductDescription = (TextView) groupProductLayout.findViewById(R.id.group_product_description);
-//                groupProductDescription.setText(groupProductEntity.getDescription());
-//
-//                groupProductLayout.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        LOGD("TAG", "-------onClick");
-//                        int idCurrentGroup = Integer.parseInt(((TextView) view.findViewById(R.id.id_group_product)).getText().toString());
-//                        Intent intent = new Intent(getActivity(), ProductItemActivity.class);
-//                        intent.putExtra(ProductItemActivity.ID_CURRENT_GROUP, idCurrentGroup);
-//                        startActivity(intent);
-//                    }
-//                });
-//
-//                categoryProductContainer.addView(groupProductLayout);
-//
-//
-//            }
-//
-//            LinearLayout containerProductMain = (LinearLayout) view.findViewById(R.id.container_product_main);
-//            containerProductMain.addView(categoryProductLayout);
         if (listCategory.size() > 1) {
             updateView();
         }
-
-
         return view;
     }
 
@@ -174,7 +117,6 @@ public class ProductsFragment extends Fragment implements View.OnClickListener {
                 ImageView groupProductPhoto = (ImageView) groupProductLayout.findViewById(R.id.group_product_photo);
                 String imagePath = (listCategory.get(i).getBrandList().get(j).getImage() != null && listCategory.get(i).getBrandList().get(j).getImage().length() > 1) ? listCategory.get(i).getBrandList().get(j).getImage() : "fake";
                 Picasso.with(getActivity()).load(imagePath).placeholder(R.drawable.ic_launcher).into(groupProductPhoto);
-                // groupProductPhoto.setImageResource(R.drawable.risk_insurance);
                 TextView groupProductTitle = (TextView) groupProductLayout.findViewById(R.id.group_product_title);
                 groupProductTitle.setText(listCategory.get(i).getBrandList().get(j).getName());
                 TextView groupProductDescription = (TextView) groupProductLayout.findViewById(R.id.group_product_description);
@@ -184,8 +126,6 @@ public class ProductsFragment extends Fragment implements View.OnClickListener {
                     public void onClick(View view) {
                         LOGD("TAG", "-------onClick");
                         int idCurrentGroup = Integer.parseInt(((TextView) view.findViewById(R.id.id_group_product)).getText().toString());
-                        // ProductsCategoryBrandEntity productsCategoryBrandEntity = listCategory.
-
                         Intent intent = new Intent(getActivity(), ProductItemActivity.class);
                         intent.putExtra(ProductItemActivity.ID_CURRENT_GROUP, idCurrentGroup);
                         intent.putExtra("AllBrandsList", mAllBrandsList);
@@ -197,6 +137,14 @@ public class ProductsFragment extends Fragment implements View.OnClickListener {
             containerProductMain = (LinearLayout) view.findViewById(R.id.container_product_main);
             containerProductMain.addView(categoryProductLayout);
         }
+    }
+
+
+    private void updateProductsList() {
+        cursorProducts = database.rawQuery("SELECT * FROM " + PRODUCTS_CATEGORIES_TABLE_NAME, null);
+        listCategory = fillProductsFromCursor(cursorProducts);
+        if (cursorProducts != null)
+            cursorProducts.close();
     }
 
     @Override
@@ -234,7 +182,7 @@ public class ProductsFragment extends Fragment implements View.OnClickListener {
                         productsList.add(productsProductEntity);
                     }
                     productsCategoryBrandEntity.setProductEntityList(productsList);
-                  //  LOGE("pavel", productsList.toString());
+                    //  LOGE("pavel", productsList.toString());
                     brandsList.add(productsCategoryBrandEntity);
                     cursorBrandProduct.close();
                 }

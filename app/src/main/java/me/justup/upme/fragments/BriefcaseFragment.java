@@ -68,10 +68,13 @@ public class BriefcaseFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        mDBHelper = new DBHelper(AppContext.getAppContext());
-//        mDBAdapter = new DBAdapter(AppContext.getAppContext());
-//        mDBAdapter.open();
-        database = DBAdapter.getInstance().openDatabase();
+        if (database != null) {
+            if (!database.isOpen()) {
+                database = DBAdapter.getInstance().openDatabase();
+            }
+        } else {
+            database = DBAdapter.getInstance().openDatabase();
+        }
         selectQuery = "SELECT * FROM " + MAIL_CONTACT_TABLE_NAME;
     }
 

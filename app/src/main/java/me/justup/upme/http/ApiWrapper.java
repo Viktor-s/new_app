@@ -73,6 +73,7 @@ public class ApiWrapper {
 
     public static final String PRODUCTS_GET_ALL_CATEGORIES = "Products.getProductCategories";
     public static final String PRODUCTS_GET_HTML_BY_ID = "Products.getProductById";
+    public static final String PRODUCTS_ORDER_CREATE = "Order.create";
 
     private static final String CALL_CLOUD_UPLOAD = "/upload";
     private static final String CALL_CLOUD_FILE = "/file/";

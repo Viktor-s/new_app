@@ -131,6 +131,8 @@
 
     <!-- Calendar -->
     <string name="week">&#160;неделя</string>
+    <string name="calendar_сhange">ИЗМЕНИТЬ</string>
+    <string name="calendar_delete">УДАЛИТЬ</string>
 
     <string name="browser_back">Назад</string>
     <string name="browser_home">Домой</string>
@@ -141,6 +143,7 @@
     <string name="adjust_alarm_volume">Регулировка громкости предупреждения</string>
     <string name="adjust_notification_volume">Регулировка громкости уведомления</string>
     <string name="change_the_brightness">Уровень яркости</string>
+
 
     <string name="jabber_chat_connecting">Соединение…</string>
     <string name="jabber_chat_wait">Пожалуйста ожидайте…</string>

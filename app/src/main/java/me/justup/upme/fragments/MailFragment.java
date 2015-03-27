@@ -52,7 +52,13 @@ public class MailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        database = DBAdapter.getInstance().openDatabase();
+        if (database != null) {
+            if (!database.isOpen()) {
+                database = DBAdapter.getInstance().openDatabase();
+            }
+        } else {
+            database = DBAdapter.getInstance().openDatabase();
+        }
         selectQuery = "SELECT * FROM " + MAIL_CONTACT_TABLE_NAME;
         cursor = database.rawQuery(selectQuery, null);
         mMailContactsAdapter = new MailContactsAdapter(this, AppContext.getAppContext(), cursor, 0);
