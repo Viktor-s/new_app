@@ -3,11 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/explorer_file_item_layout"
     android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:paddingStart="@dimen/base10dp720sw"
     android:paddingEnd="@dimen/base10dp720sw"
     android:paddingTop="@dimen/base15dp720sw"
-    android:paddingBottom="@dimen/base15dp720sw"
-    android:layout_height="wrap_content">
+    android:paddingBottom="@dimen/base15dp720sw">
 
     <ImageView
         android:layout_width="@dimen/base45dp720sw"

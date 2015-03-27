@@ -4,6 +4,7 @@
     <color name="black">#000000</color>
 
     <color name="main_menu_text">#b0b2b5</color>
+    <color name="action_bar_background">#4c576e</color>
 
     <color name="product_title">#f7142c</color>
     <color name="product_description">#adada8</color>

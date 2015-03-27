@@ -10,14 +10,12 @@
         android:layout_height="wrap_content"
         android:text="@string/fast_pay"
         android:textAllCaps="true"
-        android:layout_marginTop="@dimen/base20dp720sw"
-        android:layout_marginBottom="@dimen/base15dp720sw"
-        android:textSize="@dimen/base42sp720sw" />
+        android:textSize="@dimen/base28sp720sw" />
 
     <ImageView
         android:layout_width="@dimen/base160dp720sw"
         android:layout_height="@dimen/base40dp720sw"
-        android:layout_marginBottom="@dimen/base35dp720sw"
+        android:layout_marginBottom="@dimen/base10dp720sw"
         android:src="@drawable/ic_fastpay_cards" />
 
     <LinearLayout

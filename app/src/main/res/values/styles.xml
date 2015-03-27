@@ -408,4 +408,10 @@
         <item name="android:layout_marginEnd">@dimen/base10dp720sw</item>
     </style>
 
+    <style name="ActionBarStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:background">@color/action_bar_background</item>
+        <item name="android:layout_height">@dimen/base90dp720sw</item>
+    </style>
+
 </resources>
