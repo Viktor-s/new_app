@@ -63,7 +63,6 @@ import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 public class NewsItemFragment extends Fragment {
     private static final String TAG = makeLogTag(NewsItemFragment.class);
-
     private static final String ARG_NEWS_FEED_ENTITY = "news_feed_entity";
     private static final String QUERY_COMMENTS_PATH = "SELECT * FROM short_news_comments_table WHERE article_id=";
     private static final String QUERY_FULL_ARTICLE_PATH = "SELECT * FROM full_news_table WHERE server_id=";
@@ -73,17 +72,12 @@ public class NewsItemFragment extends Fragment {
     private EditText mNewsItemCommentEditText;
     private Button mNewsItemAddCommentButton;
     private ListView mNewsItemCommentsListView;
-    private Button mNewsItemCloseButton;
-    //private DBHelper mDBHelper;
-    // private DBAdapter mDBAdapter;
     private List<ArticleShortCommentEntity> articleCommentsList;
     private ArticleFullEntity mArticleFullEntity;
     private String selectQueryFullNews;
-
     private boolean isBroadcastUpdateFullArticle = true;
     private boolean isBroadcastAddComment = false;
     private boolean isBroadcastUpdateComments = false;
-
     private SocialAuthAdapter adapter;
     private Button mShareButton;
     private BroadcastReceiver receiver;
@@ -124,7 +118,6 @@ public class NewsItemFragment extends Fragment {
                     Cursor cursorNews = database.rawQuery(selectQueryFullNews, null);
                     mArticleFullEntity = fillFullNewsFromCursor(cursorNews);
                     fillViewsWithData();
-
                     if (cursorNews != null) {
                         cursorNews.close();
                     }
@@ -145,13 +138,7 @@ public class NewsItemFragment extends Fragment {
                     isBroadcastUpdateFullArticle = true;
                     isBroadcastAddComment = false;
                     isBroadcastUpdateComments = false;
-//                    articleCommentsList = fillCommentsFromCursor(mArticleFullEntity.getId());
-//                    NewsCommentsAdapter newsCommentsAdapter = new NewsCommentsAdapter(AppContext.getAppContext(), articleCommentsList);
-//                    mNewsItemCommentsListView.setAdapter(newsCommentsAdapter);
-//                    newsCommentsAdapter.notifyDataSetChanged();
-//                    setListViewHeightBasedOnChildren(mNewsItemCommentsListView);
                     mNewsItemAddCommentButton.setEnabled(true);
-
                 }
             }
         };
@@ -227,7 +214,7 @@ public class NewsItemFragment extends Fragment {
             }
         });
         mNewsItemCommentsListView = (ListView) view.findViewById(R.id.news_item_comments_listView);
-        mNewsItemCloseButton = (Button) view.findViewById(R.id.news_item_close_button);
+        Button mNewsItemCloseButton = (Button) view.findViewById(R.id.news_item_close_button);
         mNewsItemCloseButton.setVisibility(View.INVISIBLE);
         mNewsItemCloseButton.setOnClickListener(new View.OnClickListener() {
             @SuppressWarnings("ConstantConditions")

@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 
 import me.justup.upme.R;
 import me.justup.upme.db.DBAdapter;
@@ -26,6 +27,7 @@ import static me.justup.upme.utils.LogUtils.LOGE;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 public class ProductHTMLFragment extends Fragment {
+
     private static final String TAG = makeLogTag(NewsItemFragment.class);
     private SQLiteDatabase database;
     private BroadcastReceiver mProductHtmlReceiver;
@@ -92,14 +94,23 @@ public class ProductHTMLFragment extends Fragment {
                 return true;
             }
         });
-        //webView.loadDataWithBaseURL("", data, "text/html", "UTF-8", "");
+        Button mCloseButton = (Button) view.findViewById(R.id.product_html_close_button);
+        //mCloseButton.setVisibility(View.INVISIBLE);
+        mCloseButton.setOnClickListener(new View.OnClickListener() {
+            @SuppressWarnings("ConstantConditions")
+            @Override
+            public void onClick(View view) {
+                LocalBroadcastManager.getInstance(ProductHTMLFragment.this.getActivity()).unregisterReceiver(mProductHtmlReceiver);
+               getActivity().getFragmentManager().beginTransaction().remove(ProductHTMLFragment.this).commit();
+            }
+        });
         updateProduct();
         return view;
     }
 
     private void updateProduct() {
         mProductHtmlEntity = fillProductHtmlFromDB(currentProductId);
-        LOGE("pavel", mProductHtmlEntity.getHtmlContent() + " "+mProductHtmlEntity.getId());
+        LOGE("pavel", mProductHtmlEntity.getHtmlContent() + " " + mProductHtmlEntity.getId());
         if (mProductHtmlEntity != null) {
             updateWebView(mProductHtmlEntity.getHtmlContent());
         }
@@ -119,7 +130,9 @@ public class ProductHTMLFragment extends Fragment {
             productHtmlEntity.setId(cursorProductHtml.getInt(cursorProductHtml.getColumnIndex(PRODUCTS_HTML_SERVER_ID)));
             productHtmlEntity.setHtmlContent(cursorProductHtml.getString(cursorProductHtml.getColumnIndex(PRODUCTS_HTML_CONTENT)));
         }
-        cursorProductHtml.close();
+        if (cursorProductHtml != null) {
+            cursorProductHtml.close();
+        }
         return productHtmlEntity;
     }
 }

@@ -14,7 +14,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -144,7 +143,13 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        database = DBAdapter.getInstance().openDatabase();
+        if (database != null) {
+            if (!database.isOpen()) {
+                database = DBAdapter.getInstance().openDatabase();
+            }
+        } else {
+            database = DBAdapter.getInstance().openDatabase();
+        }
         String selectQuery = "SELECT * FROM " + MAIL_CONTACT_TABLE_NAME;
         Cursor mCursor = database.rawQuery(selectQuery, null);
         listPerson = fillPersonsFromCursor(mCursor);
@@ -694,6 +699,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                     calendarUpdateEventQuery.params.location = CommonUtils.convertToUTF8(eventLocation);
                     calendarUpdateEventQuery.params.start = String.valueOf(startTimeEvent.getTimeInMillis() / 1000);
                     calendarUpdateEventQuery.params.end = String.valueOf(endTimeEvent.getTimeInMillis() / 1000);
+                    calendarUpdateEventQuery.params.shared_with = listSharedId.toString().replaceAll("(^\\[|\\]$)", "").replace(", ", ",");
                     LOGE("pavel", calendarUpdateEventQuery.toString());
                     ((MainActivity) getActivity()).startHttpIntent(calendarUpdateEventQuery, HttpIntentService.CALENDAR_UPDATE_EVENT);
                     isEventNeedUpdate = false;

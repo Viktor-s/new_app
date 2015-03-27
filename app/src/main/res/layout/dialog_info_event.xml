@@ -83,19 +83,19 @@
 
         <Button
             android:id="@+id/edit_button"
-            android:layout_width="@dimen/base110dp720sw"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@android:color/white"
             android:textSize="@dimen/base14sp720sw"
-            android:text="Изменить"/>
+            android:text="@string/calendar_сhange"/>
 
         <Button
             android:id="@+id/delete_button"
-            android:layout_width="@dimen/base110dp720sw"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@android:color/white"
             android:textSize="@dimen/base14sp720sw"
-            android:text="УДАЛИТЬ"/>
+            android:text="@string/calendar_delete"/>
 
         </LinearLayout>
 

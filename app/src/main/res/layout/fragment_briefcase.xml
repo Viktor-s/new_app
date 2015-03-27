@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/app_background"
+    android:clickable="true"
     android:paddingLeft="@dimen/base40dp720sw">
 
     <RelativeLayout
@@ -23,9 +24,9 @@
                 android:layout_height="wrap_content">
 
                 <!--<ImageView-->
-                    <!--android:layout_width="@dimen/base100dp720sw"-->
-                    <!--android:layout_height="@dimen/base100dp720sw"-->
-                    <!--android:src="@drawable/p13" />-->
+                <!--android:layout_width="@dimen/base100dp720sw"-->
+                <!--android:layout_height="@dimen/base100dp720sw"-->
+                <!--android:src="@drawable/p13" />-->
 
 
                 <View

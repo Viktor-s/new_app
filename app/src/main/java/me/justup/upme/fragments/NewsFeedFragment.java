@@ -76,7 +76,13 @@ public class NewsFeedFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        database = DBAdapter.getInstance().openDatabase();
+        if (database != null) {
+            if (!database.isOpen()) {
+                database = DBAdapter.getInstance().openDatabase();
+            }
+        } else {
+            database = DBAdapter.getInstance().openDatabase();
+        }
         Cursor cursorReadNews = database.rawQuery("SELECT * FROM " + IS_SHORT_NEWS_READ_TABLE_NAME, null);
         mReadNewsList = getAllReadNewsFromCursor(cursorReadNews);
         if (cursorReadNews != null)
@@ -125,7 +131,6 @@ public class NewsFeedFragment extends Fragment {
                         if (cursorNews != null) {
                             cursorNews.close();
                         }
-                        // mProgressBarLayout.setVisibility(View.GONE);
                         mProgressBar.setVisibility(View.GONE);
                         isFirstArticlesUpdate = false;
                     } else {
@@ -139,7 +144,6 @@ public class NewsFeedFragment extends Fragment {
                 if (HttpIntentService.BROADCAST_INTENT_NEWS_FEED_SERVER_ERROR.equals(intent.getAction())) {
                     LOGI(TAG, "onReceive, error");
                     Toast.makeText(AppContext.getAppContext(), "Server error", Toast.LENGTH_SHORT).show();
-                    // mProgressBarLayout.setVisibility(View.GONE);
                     mProgressBar.setVisibility(View.GONE);
                 }
 
@@ -157,16 +161,12 @@ public class NewsFeedFragment extends Fragment {
 
         mNewsItemContainer = (FrameLayout) view.findViewById(R.id.news_item_container_frameLayout);
         mNewsFeedView = (RecyclerView) view.findViewById(R.id.news_RecyclerView);
-        //mProgressBarLayout = (FrameLayout) view.findViewById(R.id.base_progressBar);
         mProgressBar = (ProgressBar) view.findViewById(R.id.news_feed_progressbar);
         if (!ApiWrapper.isOnline()) {
-            //mProgressBarLayout.setVisibility(View.GONE);
             mProgressBar.setVisibility(View.GONE);
         }
-
         mLayoutManager = new LinearLayoutManager(AppContext.getAppContext());
         mNewsFeedView.setLayoutManager(mLayoutManager);
-
         if (mNewsFeedEntityPartOfList.size() > 0) {
             updateAdapter();
         }
@@ -182,7 +182,6 @@ public class NewsFeedFragment extends Fragment {
                         int oldListSize = mNewsFeedEntityPartOfList.size();
                         mNewsFeedEntityPartOfList.addAll(getNextArticlesPack());
                         mNewsFeedAdapter.notifyItemRangeInserted(oldListSize, mNewsFeedEntityPartOfList.size());
-                        //mNewsFeedAdapter.notifyDataSetChanged();
                         if (totalItemCount >= mNewsFeedEntityPartOfList.size()) {
                             isLoading = false;
                         }
@@ -303,7 +302,6 @@ public class NewsFeedFragment extends Fragment {
         mNewsFeedEntityPartOfList.clear();
         mNewsFeedEntityPartOfList.addAll(mNewsFeedEntityList.subList(0, oldSizeValue));
         mNewsFeedAdapter.notifyDataSetChanged();
-
     }
 
 }
