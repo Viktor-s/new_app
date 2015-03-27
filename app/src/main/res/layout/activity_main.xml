@@ -78,6 +78,7 @@
             android:id="@+id/study_menu_item"
             android:text="@string/menu_item_title_study"
             android:drawableStart="@drawable/ic_main_study"
+            android:visibility="gone"
             style="@style/MainMenuItemLayout" />
 
         <Button
@@ -108,8 +109,10 @@
         android:background="@drawable/upme_main_logo_background">
 
         <ImageView
+            android:id="@+id/upme_brick_logo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="@dimen/base3dp720sw"
             android:src="@drawable/upme_main_logo"
             android:layout_gravity="center"
             android:contentDescription="@string/app_name" />

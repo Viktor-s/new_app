@@ -12,11 +12,13 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -91,6 +93,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private Push push;
     private String shareFileName;
 
+    private FrameLayout.LayoutParams mLogoParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+    private ImageView mUPMELogo;
+
     //GCM
     private GoogleCloudMessaging gcm;
     private String regid;
@@ -143,6 +148,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
         Button mSettingButton = (Button) findViewById(R.id.settings_menu_item);
         mSettingButton.setOnClickListener(new OnLoadSettingsListener());
+
+        mUPMELogo = (ImageView) findViewById(R.id.upme_brick_logo);
 
         Button mExitButton = (Button) findViewById(R.id.demo_menu_item);
         mExitButton.setOnClickListener(new View.OnClickListener() {
@@ -306,7 +313,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             if (isShowMainFragmentContainer) {
                 mMainFragmentContainer.startAnimation(mFragmentSliderOut);
                 mMainFragmentContainer.setVisibility(View.GONE);
+
                 isShowMainFragmentContainer = false;
+
+                mLogoParams.gravity = Gravity.CENTER;
+                mUPMELogo.setLayoutParams(mLogoParams);
             } else {
                 showMainFragmentContainer();
             }
@@ -314,8 +325,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void showMainFragmentContainer() {
+        mLogoParams.gravity = Gravity.CENTER | Gravity.START;
+        mUPMELogo.setLayoutParams(mLogoParams);
+
         mMainFragmentContainer.setVisibility(View.VISIBLE);
         mMainFragmentContainer.startAnimation(mFragmentSliderIn);
+
         isShowMainFragmentContainer = true;
     }
 

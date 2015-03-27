@@ -1,5 +1,6 @@
 <resources>
 
+    <dimen name="base3dp720sw">2dp</dimen>
     <dimen name="base5dp720sw">4dp</dimen>
     <dimen name="base6dp720sw">4.8dp</dimen>
     <dimen name="base10dp720sw">8dp</dimen>
