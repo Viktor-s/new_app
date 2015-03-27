@@ -17,9 +17,15 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 
+import java.util.HashMap;
+
 import me.justup.upme.R;
 import me.justup.upme.db.DBAdapter;
+import me.justup.upme.entity.BaseHttpQueryEntity;
 import me.justup.upme.entity.ProductHtmlEntity;
+import me.justup.upme.entity.ProductsOrderCreateQuery;
+import me.justup.upme.http.HttpIntentService;
+import me.justup.upme.utils.AppContext;
 
 import static me.justup.upme.db.DBHelper.PRODUCTS_HTML_CONTENT;
 import static me.justup.upme.db.DBHelper.PRODUCTS_HTML_SERVER_ID;
@@ -101,7 +107,8 @@ public class ProductHTMLFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 LocalBroadcastManager.getInstance(ProductHTMLFragment.this.getActivity()).unregisterReceiver(mProductHtmlReceiver);
-               getActivity().getFragmentManager().beginTransaction().remove(ProductHTMLFragment.this).commit();
+                getActivity().getFragmentManager().beginTransaction().remove(ProductHTMLFragment.this).commit();
+                //sendOrderQuery();
             }
         });
         updateProduct();
@@ -134,5 +141,24 @@ public class ProductHTMLFragment extends Fragment {
             cursorProductHtml.close();
         }
         return productHtmlEntity;
+    }
+
+    private void sendOrderQuery() {
+        HashMap<String, String> data = new HashMap<String, String>();
+        data.put("color", "black");
+        data.put("qty", "3");
+        ProductsOrderCreateQuery productsOrderCreateQuery = new ProductsOrderCreateQuery();
+        productsOrderCreateQuery.params.product_id = currentProductId;
+        productsOrderCreateQuery.params.data = data;
+        startHttpIntent(productsOrderCreateQuery, HttpIntentService.PRODUCTS_CREATE_ORDER);
+
+    }
+
+    public void startHttpIntent(BaseHttpQueryEntity entity, int dbTable) {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(HttpIntentService.HTTP_INTENT_QUERY_EXTRA, entity);
+        bundle.putInt(HttpIntentService.HTTP_INTENT_PART_EXTRA, dbTable);
+        Intent intent = new Intent(AppContext.getAppContext(), HttpIntentService.class);
+        getActivity().startService(intent.putExtras(bundle));
     }
 }

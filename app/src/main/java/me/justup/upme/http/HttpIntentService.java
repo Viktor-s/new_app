@@ -53,6 +53,7 @@ public class HttpIntentService extends IntentService {
     public static final int CALENDAR_UPDATE_EVENT = 12;
     public static final int PRODUCTS_GET_ALL_CATEGORIES = 13;
     public static final int PRODUCTS_GET_HTML_BY_ID = 14;
+    public static final int PRODUCTS_CREATE_ORDER = 15;
 
 
     //private DBAdapter mDBAdapter;
@@ -150,7 +151,9 @@ public class HttpIntentService extends IntentService {
                 case PRODUCTS_GET_HTML_BY_ID:
                     fillProductHtmlDB(content);
                     break;
+                case PRODUCTS_CREATE_ORDER:
 
+                    break;
                 default:
                     break;
             }
