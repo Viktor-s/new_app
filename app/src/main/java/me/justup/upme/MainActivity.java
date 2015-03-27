@@ -19,11 +19,13 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.gson.JsonSyntaxException;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.apache.http.Header;
@@ -37,10 +39,13 @@ import java.util.ArrayList;
 import me.justup.upme.dialogs.BreakCallDialog;
 import me.justup.upme.dialogs.CallDialog;
 import me.justup.upme.dialogs.StatusBarSliderDialog;
+import me.justup.upme.dialogs.WarningDialog;
 import me.justup.upme.entity.ArticlesGetShortDescriptionQuery;
 import me.justup.upme.entity.BaseHttpQueryEntity;
+import me.justup.upme.entity.BaseMethodEmptyQuery;
 import me.justup.upme.entity.CalendarGetEventsQuery;
 import me.justup.upme.entity.GetLoggedUserInfoQuery;
+import me.justup.upme.entity.GetLoggedUserInfoResponse;
 import me.justup.upme.entity.GetMailContactQuery;
 import me.justup.upme.entity.ProductsGetAllCategoriesQuery;
 import me.justup.upme.entity.Push;
@@ -61,6 +66,7 @@ import me.justup.upme.interfaces.OnDownloadCloudFile;
 import me.justup.upme.interfaces.OnLoadMailFragment;
 import me.justup.upme.services.GPSTracker;
 import me.justup.upme.utils.AppContext;
+import me.justup.upme.utils.AppPreferences;
 import me.justup.upme.utils.CommonUtils;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
@@ -95,6 +101,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     private FrameLayout.LayoutParams mLogoParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
     private ImageView mUPMELogo;
+    private TextView mUserName;
+    private TextView mUserInSystem;
 
     //GCM
     private GoogleCloudMessaging gcm;
@@ -150,6 +158,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mSettingButton.setOnClickListener(new OnLoadSettingsListener());
 
         mUPMELogo = (ImageView) findViewById(R.id.upme_brick_logo);
+        mUserName = (TextView) findViewById(R.id.ab_user_name_textView);
+        mUserInSystem = (TextView) findViewById(R.id.ab_user_in_system_textView);
 
         Button mExitButton = (Button) findViewById(R.id.demo_menu_item);
         mExitButton.setOnClickListener(new View.OnClickListener() {
@@ -160,6 +170,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         });
 
         makeButtonSelector();
+
+        ApiWrapper.query(new GetLoggedUserInfoQuery(), new OnGetLoggedUserInfoResponse());
 
         Fragment fragment = UserFragment.newInstance(new GetLoggedUserInfoQuery(), true);
         getFragmentManager().beginTransaction().add(R.id.mapAndUserFragment, fragment).commit();
@@ -533,13 +545,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         @Override
         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
             String content = ApiWrapper.responseBodyToString(responseBody);
-            LOGD(TAG, "onSuccess(): " + content);
+            LOGD(TAG, "OnPushRegisterResponse onSuccess: " + content);
         }
 
         @Override
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
             String content = ApiWrapper.responseBodyToString(responseBody);
-            LOGE(TAG, "onFailure(): " + content);
+            LOGE(TAG, "OnPushRegisterResponse onFailure: " + content);
         }
     }
 
@@ -602,6 +614,54 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     public void setShareFileName(String shareFileName) {
         this.shareFileName = shareFileName;
+    }
+
+    private class OnGetLoggedUserInfoResponse extends AsyncHttpResponseHandler {
+        @Override
+        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+            String content = ApiWrapper.responseBodyToString(responseBody);
+            LOGD(TAG, "OnGetLoggedUserInfoResponse onSuccess: " + content);
+
+            GetLoggedUserInfoResponse response = null;
+            try {
+                response = ApiWrapper.gson.fromJson(content, GetLoggedUserInfoResponse.class);
+            } catch (JsonSyntaxException e) {
+                LOGE(TAG, "OnGetLoggedUserInfoResponse gson.fromJson:\n" + content);
+            }
+
+            if (response != null && response.result != null) {
+                String userName = (response.result.name != null) ? response.result.name : "";
+
+                mUserName.setText(userName);
+                // mUserInSystem.setText(response.result.in_system);
+
+                AppPreferences appPreferences = new AppPreferences(AppContext.getAppContext());
+                appPreferences.setUserName(userName);
+                appPreferences.setUserId(response.result.id);
+                appPreferences.setJabberId(response.result.jabber_id);
+
+                BaseMethodEmptyQuery query = new BaseMethodEmptyQuery();
+                query.method = ApiWrapper.ACCOUNT_GET_ALL_CONTACTS;
+                startHttpIntent(query, HttpIntentService.MAIL_CONTACT_PART);
+            }
+        }
+
+        @Override
+        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            String content = ApiWrapper.responseBodyToString(responseBody);
+            LOGE(TAG, "OnGetLoggedUserInfoResponse onFailure: " + content);
+
+            try {
+                showWarningDialog(ApiWrapper.getResponseError(content));
+            } catch (Exception e) {
+                LOGE(TAG, "showWarningDialog FAIL", e);
+            }
+        }
+    }
+
+    private void showWarningDialog(String message) {
+        WarningDialog dialog = WarningDialog.newInstance(getString(R.string.network_error), message);
+        dialog.show(getFragmentManager(), WarningDialog.WARNING_DIALOG);
     }
 
 }

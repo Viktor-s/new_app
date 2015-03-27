@@ -48,4 +48,6 @@
     <color name="local_drive_title">#4a724a</color>
     <color name="cloud_drive_title">#425b8e</color>
     <color name="cloud_drive_background">#474449</color>
+
+    <color name="ab_text_online_color">#828b9d</color>
 </resources>

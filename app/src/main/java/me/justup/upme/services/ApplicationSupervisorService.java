@@ -20,6 +20,9 @@ public class ApplicationSupervisorService extends Service {
     private static final String TAG = makeLogTag(ApplicationSupervisorService.class);
 
     private static final String APP_PACKAGE = "me.justup.upme";
+    private static final String APP_DOC_PACKAGE = "com.android.documentsui";
+    private static final String APP_CAMERA_PACKAGE = "com.android.camera";
+
     private static final long TIMER_INTERVAL = 10000; // 10 sec
     private Timer mTimer = null;
 
@@ -53,9 +56,9 @@ public class ApplicationSupervisorService extends Service {
             List<ActivityManager.RunningTaskInfo> taskInfo = am.getRunningTasks(1);
 
             ComponentName componentInfo = taskInfo.get(0).topActivity;
-            componentInfo.getPackageName();
+            String appPackage = componentInfo.getPackageName();
 
-            if (!componentInfo.getPackageName().equals(APP_PACKAGE)) {
+            if (!appPackage.equals(APP_PACKAGE) && !appPackage.equals(APP_DOC_PACKAGE) && !appPackage.equals(APP_CAMERA_PACKAGE)) {
                 LOGI(TAG, "ping! ... start Application");
 
                 Intent i = new Intent(ApplicationSupervisorService.this, LoginActivity.class);

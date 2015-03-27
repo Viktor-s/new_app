@@ -23,17 +23,11 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.apache.http.Header;
 
-import me.justup.upme.MainActivity;
 import me.justup.upme.R;
-import me.justup.upme.dialogs.WarningDialog;
 import me.justup.upme.entity.BaseHttpQueryEntity;
-import me.justup.upme.entity.BaseMethodEmptyQuery;
 import me.justup.upme.entity.GetLoggedUserInfoResponse;
 import me.justup.upme.http.ApiWrapper;
-import me.justup.upme.http.HttpIntentService;
 import me.justup.upme.interfaces.OnCloseFragment;
-import me.justup.upme.utils.AppContext;
-import me.justup.upme.utils.AppPreferences;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.LOGE;
@@ -170,11 +164,18 @@ public class UserFragment extends Fragment implements OnMapReadyCallback, OnClos
 
             if (response != null && response.result != null) {
                 mUserMapTitle = (response.result.name != null) ? response.result.name : "";
-                int mUserId = response.result.id;
+                // int mUserId = response.result.id;
                 mUserMapSnippet = (response.result.name != null) ? response.result.name : "";
 
-                userLatitude = 50.4501000;
-                userLongitude = 30.523400;
+                userLatitude = response.result.latitude;
+                userLongitude = response.result.longitude;
+
+                if (userLatitude < 1) {
+                    userLatitude = 50.4401;
+                }
+                if (userLongitude < 1) {
+                    userLongitude = 30.5134;
+                }
 
                 mUserName.setText(mUserMapTitle);
                 mUserTotalAmount.setText(DOLLAR_SIGN + response.result.total_sum);
@@ -182,6 +183,7 @@ public class UserFragment extends Fragment implements OnMapReadyCallback, OnClos
 
                 loadMap();
 
+                /*
                 if (isOwner) {
                     AppPreferences appPreferences = new AppPreferences(AppContext.getAppContext());
                     appPreferences.setUserName(mUserMapTitle);
@@ -192,6 +194,7 @@ public class UserFragment extends Fragment implements OnMapReadyCallback, OnClos
                     query.method = ApiWrapper.ACCOUNT_GET_ALL_CONTACTS;
                     ((MainActivity) getActivity()).startHttpIntent(query, HttpIntentService.MAIL_CONTACT_PART);
                 }
+                */
             }
 
         }
@@ -200,14 +203,7 @@ public class UserFragment extends Fragment implements OnMapReadyCallback, OnClos
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
             String content = ApiWrapper.responseBodyToString(responseBody);
             LOGE(TAG, "onFailure(): " + content);
-
-            showWarningDialog(ApiWrapper.getResponseError(content));
         }
-    }
-
-    private void showWarningDialog(String message) {
-        WarningDialog dialog = WarningDialog.newInstance(getString(R.string.network_error), message);
-        dialog.show(getChildFragmentManager(), WarningDialog.WARNING_DIALOG);
     }
 
 }

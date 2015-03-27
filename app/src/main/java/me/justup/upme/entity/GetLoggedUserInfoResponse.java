@@ -13,6 +13,8 @@ public class GetLoggedUserInfoResponse extends BaseHttpResponseEntity {
         public String login = "";
         public String phone = "";
         public String img = "";
+        public double latitude = 0.0;
+        public double longitude = 0.0;
         public String in_system = "";
         public int total_sum = 0;
     }

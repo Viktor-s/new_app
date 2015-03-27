@@ -122,13 +122,42 @@
             app:civ_border_width="@dimen/base3dp720sw" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:layout_marginStart="@dimen/base15dp720sw"
             tools:text="User Name"
             android:layout_gravity="center_vertical"
+            android:layout_weight="1"
             android:id="@+id/ab_user_name_textView" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/online_dots"
+            android:textColor="@color/ab_text_online_color"
+            android:layout_marginEnd="@dimen/base5dp720sw"
+            android:layout_gravity="center_vertical" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="1 год 2 месяца 3 недели"
+            android:layout_marginEnd="@dimen/base15dp720sw"
+            android:layout_gravity="center_vertical"
+            android:id="@+id/ab_user_in_system_textView" />
+
+        <Button
+            android:layout_width="@dimen/base150dp720sw"
+            android:layout_height="@dimen/base50dp720sw"
+            android:background="@drawable/pay_panel_button_selector"
+            android:layout_gravity="center_vertical"
+            android:textSize="@dimen/base20sp720sw"
+            android:layout_marginEnd="@dimen/base20dp720sw"
+            android:textAllCaps="true"
+            android:text="@string/ordering" />
 
     </LinearLayout>
 

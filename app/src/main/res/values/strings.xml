@@ -111,6 +111,7 @@
     <string name="your_commission">Ваша коммисия</string>
     <string name="ordering">Выписка</string>
     <string name="in_system">В системе</string>
+    <string name="online_dots">Онлайн:</string>
     <string name="level">Уровень</string>
 
     <!-- Settings -->
