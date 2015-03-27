@@ -1,21 +1,30 @@
 package me.justup.upme.fragments;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 
@@ -93,6 +102,7 @@ public class ProductHTMLFragment extends Fragment {
 
         webView = (WebView) view.findViewById(R.id.product_html_webview);
         webView.getSettings().setJavaScriptEnabled(true);
+        webView.addJavascriptInterface(new AndroidBridge(getActivity()), "android");
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -143,10 +153,10 @@ public class ProductHTMLFragment extends Fragment {
         return productHtmlEntity;
     }
 
-    private void sendOrderQuery() {
+    private void sendOrderQuery(String paramColor, String paramQty) {
         HashMap<String, String> data = new HashMap<String, String>();
-        data.put("color", "black");
-        data.put("qty", "3");
+        data.put("color", paramColor);
+        data.put("qty", paramQty);
         ProductsOrderCreateQuery productsOrderCreateQuery = new ProductsOrderCreateQuery();
         productsOrderCreateQuery.params.product_id = currentProductId;
         productsOrderCreateQuery.params.data = data;
@@ -160,5 +170,53 @@ public class ProductHTMLFragment extends Fragment {
         bundle.putInt(HttpIntentService.HTTP_INTENT_PART_EXTRA, dbTable);
         Intent intent = new Intent(AppContext.getAppContext(), HttpIntentService.class);
         getActivity().startService(intent.putExtras(bundle));
+    }
+
+
+    public class AndroidBridge {
+
+        private static final String TAG = "AndroidBridge";
+        private final Handler handler = new Handler();
+        private Activity activity;
+
+        public AndroidBridge(Activity activity) {
+            this.activity = activity;
+        }
+
+        public Activity getActivity() {
+            return activity;
+        }
+
+        public void setActivity(Activity activity) {
+            this.activity = activity;
+        }
+
+        @JavascriptInterface
+        public void submit(final String json) { // must be final
+            handler.post(new Runnable() {
+                public void run() {
+                    try {
+                        JSONObject jsonObject = new JSONObject(json.toString());
+
+                        String strColor = jsonObject.getString("color");
+                        String strQty = jsonObject.getString("qty");
+                        Log.d("TAG_submit", "strColor " + strColor + " strQty " + strQty);
+                        sendOrderQuery(strColor, strQty);
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        builder.setMessage("Заказ принят")
+                                .setNegativeButton("OK", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) { }
+                                }).create().show();
+                        
+                        LocalBroadcastManager.getInstance(ProductHTMLFragment.this.getActivity()).unregisterReceiver(mProductHtmlReceiver);
+                        getActivity().getFragmentManager().beginTransaction().remove(ProductHTMLFragment.this).commit();
+                    } catch (JSONException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
     }
 }
