@@ -38,6 +38,7 @@ import java.util.ArrayList;
 
 import me.justup.upme.dialogs.BreakCallDialog;
 import me.justup.upme.dialogs.CallDialog;
+import me.justup.upme.dialogs.OrderDialog;
 import me.justup.upme.dialogs.StatusBarSliderDialog;
 import me.justup.upme.dialogs.WarningDialog;
 import me.justup.upme.entity.ArticlesGetShortDescriptionQuery;
@@ -718,7 +719,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void showOrderFormDialog(String htmlString) {
-        // --- open dialog with html response this ---
+        OrderDialog dialog = OrderDialog.newInstance(htmlString);
+        dialog.show(getFragmentManager(), OrderDialog.ORDER_DIALOG);
     }
 
 }
