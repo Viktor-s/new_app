@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +19,6 @@ import me.justup.upme.entity.GetProductHtmlByIdResponse;
 import me.justup.upme.entity.ProductsGetAllCategoriesResponse;
 import me.justup.upme.entity.Push;
 import me.justup.upme.utils.AppContext;
-import me.justup.upme.utils.CommonUtils;
 
 import static me.justup.upme.db.DBHelper.CREATE_TABLE_MAIL_CONTACT;
 import static me.justup.upme.db.DBHelper.CREATE_TABLE_STATUS_BAR_PUSH;
@@ -93,9 +91,11 @@ import static me.justup.upme.db.DBHelper.SHORT_NEWS_THUMBNAIL;
 import static me.justup.upme.db.DBHelper.SHORT_NEWS_TITLE;
 import static me.justup.upme.db.DBHelper.STATUS_BAR_PUSH_DATE;
 import static me.justup.upme.db.DBHelper.STATUS_BAR_PUSH_FILE_NAME;
+import static me.justup.upme.db.DBHelper.STATUS_BAR_PUSH_FORM_ID;
 import static me.justup.upme.db.DBHelper.STATUS_BAR_PUSH_ID;
 import static me.justup.upme.db.DBHelper.STATUS_BAR_PUSH_JABBER;
 import static me.justup.upme.db.DBHelper.STATUS_BAR_PUSH_LINK;
+import static me.justup.upme.db.DBHelper.STATUS_BAR_PUSH_PUSH_DESCRIPTION;
 import static me.justup.upme.db.DBHelper.STATUS_BAR_PUSH_ROOM;
 import static me.justup.upme.db.DBHelper.STATUS_BAR_PUSH_TABLE_NAME;
 import static me.justup.upme.db.DBHelper.STATUS_BAR_PUSH_TYPE;
@@ -376,7 +376,13 @@ public class DBAdapter {
         ContentValues values = new ContentValues();
         values.put(STATUS_BAR_PUSH_TYPE, push.getType());
         values.put(STATUS_BAR_PUSH_USER_ID, push.getUserId());
-        values.put(STATUS_BAR_PUSH_USER_NAME, push.getUserName());
+
+        if (push.getUserName() != null) {
+            values.put(STATUS_BAR_PUSH_USER_NAME, push.getUserName());
+        } else {
+            values.put(STATUS_BAR_PUSH_USER_NAME, EMPTY_VALUE);
+        }
+
         values.put(STATUS_BAR_PUSH_DATE, date);
 
         if (push.getLink() != null) {
@@ -403,6 +409,18 @@ public class DBAdapter {
             values.put(STATUS_BAR_PUSH_ROOM, EMPTY_VALUE);
         }
 
+        if (push.getFormId() != null) {
+            values.put(STATUS_BAR_PUSH_FORM_ID, push.getFormId());
+        } else {
+            values.put(STATUS_BAR_PUSH_FORM_ID, EMPTY_VALUE);
+        }
+
+        if (push.getPushDescription() != null) {
+            values.put(STATUS_BAR_PUSH_PUSH_DESCRIPTION, push.getPushDescription());
+        } else {
+            values.put(STATUS_BAR_PUSH_PUSH_DESCRIPTION, EMPTY_VALUE);
+        }
+
         return database.insert(STATUS_BAR_PUSH_TABLE_NAME, null, values);
     }
 
@@ -424,6 +442,8 @@ public class DBAdapter {
                 push.setJabberId(cursor.getString(cursor.getColumnIndex(STATUS_BAR_PUSH_JABBER)));
                 push.setFileName(cursor.getString(cursor.getColumnIndex(STATUS_BAR_PUSH_FILE_NAME)));
                 push.setRoom(cursor.getString(cursor.getColumnIndex(STATUS_BAR_PUSH_ROOM)));
+                push.setFormId(cursor.getString(cursor.getColumnIndex(STATUS_BAR_PUSH_FORM_ID)));
+                push.setPushDescription(cursor.getString(cursor.getColumnIndex(STATUS_BAR_PUSH_PUSH_DESCRIPTION)));
 
                 pushArray.add(push);
             }

@@ -48,6 +48,8 @@ import me.justup.upme.entity.GetLoggedUserInfoQuery;
 import me.justup.upme.entity.GetLoggedUserInfoResponse;
 import me.justup.upme.entity.GetMailContactQuery;
 import me.justup.upme.entity.ProductsGetAllCategoriesQuery;
+import me.justup.upme.entity.ProductsOrderGetFormQuery;
+import me.justup.upme.entity.ProductsOrderGetFormResponse;
 import me.justup.upme.entity.Push;
 import me.justup.upme.entity.SetGooglePushIdQuery;
 import me.justup.upme.fragments.BriefcaseFragment;
@@ -568,6 +570,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             return;
         }
 
+        if (push != null && push.getType() == MailFragment.ORDER_FORM) {
+            getOrderFormQuery(push.getFormId());
+
+            setPush(null);
+            return;
+        }
+
         startHttpIntent(new GetMailContactQuery(), HttpIntentService.MAIL_CONTACT_PART);
         Fragment fragment = new MailFragment();
         getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, fragment).commit();
@@ -662,6 +671,54 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private void showWarningDialog(String message) {
         WarningDialog dialog = WarningDialog.newInstance(getString(R.string.network_error), message);
         dialog.show(getFragmentManager(), WarningDialog.WARNING_DIALOG);
+    }
+
+    private void getOrderFormQuery(String formId) {
+        ProductsOrderGetFormQuery query = new ProductsOrderGetFormQuery();
+        query.params.key = formId;
+
+        ApiWrapper.query(query, new OrderGetFormResponse());
+    }
+
+    private class OrderGetFormResponse extends AsyncHttpResponseHandler {
+        @Override
+        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+            String content = ApiWrapper.responseBodyToString(responseBody);
+            LOGD(TAG, "OrderGetFormResponse onSuccess: " + content);
+
+            ProductsOrderGetFormResponse response = null;
+            try {
+                response = ApiWrapper.gson.fromJson(content, ProductsOrderGetFormResponse.class);
+            } catch (JsonSyntaxException e) {
+                LOGE(TAG, "ProductsOrderGetFormResponse gson.fromJson:\n" + content);
+            }
+
+            if (response != null && !response.result.equals("")) {
+                showOrderFormDialog(response.result);
+            } else if (response != null && response.error != null) {
+                try {
+                    showWarningDialog(response.error.data);
+                } catch (Exception e) {
+                    LOGE(TAG, "showWarningDialog FAIL", e);
+                }
+            }
+        }
+
+        @Override
+        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            String content = ApiWrapper.responseBodyToString(responseBody);
+            LOGE(TAG, "OrderGetFormResponse onFailure: " + content);
+
+            try {
+                showWarningDialog(ApiWrapper.getResponseError(content));
+            } catch (Exception e) {
+                LOGE(TAG, "showWarningDialog FAIL", e);
+            }
+        }
+    }
+
+    private void showOrderFormDialog(String htmlString) {
+        // --- open dialog with html response this ---
     }
 
 }

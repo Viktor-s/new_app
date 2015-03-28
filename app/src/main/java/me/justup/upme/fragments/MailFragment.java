@@ -41,11 +41,14 @@ public class MailFragment extends Fragment {
     private MailContactsAdapter mMailContactsAdapter;
     private String selectQuery;
     private BroadcastReceiver receiver;
+
     public static final int JABBER = 1;
     public static final int WEBRTC = 2;
     public static final int FILE = 3;
     public static final int BREAK_CALL = 4;
     public static final int CALENDAR_NEW_EVENT = 5;
+    public static final int ORDER_FORM = 6;
+
     private SQLiteDatabase database;
     private Cursor cursor;
 

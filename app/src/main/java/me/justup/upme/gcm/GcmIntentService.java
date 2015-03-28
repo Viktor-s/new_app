@@ -51,6 +51,8 @@ public class GcmIntentService extends IntentService {
     private static final String LINK = "link";
     private static final String JABBER_ID = "jabber_id";
     private static final String FILE_NAME = "file_name";
+    private static final String FORM_ID = "form_id";
+    private static final String PUSH_DESCRIPTION = "push_description";
 
     private static final String TIME_FORMAT = "HH:mm - dd MMMM yyyy";
 
@@ -94,7 +96,7 @@ public class GcmIntentService extends IntentService {
                     final Push push = createPushObject((String) extras.get(CONNECTIONS));
 
                     // Post notification of received message.
-                    if (push != null && push.getType() != 0 && push.getUserName() != null) {
+                    if (push != null && push.getType() != 0) {
                         sendNotification(push);
                     }
                     break;
@@ -185,6 +187,10 @@ public class GcmIntentService extends IntentService {
                 push.setJabberId(jsonObject.getString(JABBER_ID));
             if (jsonObject.has(FILE_NAME))
                 push.setFileName(jsonObject.getString(FILE_NAME));
+            if (jsonObject.has(FORM_ID))
+                push.setFormId(jsonObject.getString(FORM_ID));
+            if (jsonObject.has(PUSH_DESCRIPTION))
+                push.setPushDescription(jsonObject.getString(PUSH_DESCRIPTION));
 
         } catch (JSONException e) {
             LOGE(TAG, "createPushObject()", e);

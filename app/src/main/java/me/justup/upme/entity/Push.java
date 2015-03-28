@@ -15,7 +15,24 @@ public class Push implements Serializable {
     private String link = "";
     private String jabberId = "";
     private String fileName = "";
+    private String formId = "";
+    private String pushDescription = "";
 
+    public String getPushDescription() {
+        return pushDescription;
+    }
+
+    public void setPushDescription(String pushDescription) {
+        this.pushDescription = pushDescription;
+    }
+
+    public String getFormId() {
+        return formId;
+    }
+
+    public void setFormId(String formId) {
+        this.formId = formId;
+    }
 
     public String getJabberId() {
         return jabberId;
@@ -101,6 +118,8 @@ public class Push implements Serializable {
                 ", link=" + link +
                 ", jabberId=" + jabberId +
                 ", fileName=" + fileName +
+                ", formId=" + formId +
+                ", pushDescription=" + pushDescription +
                 '}';
     }
 

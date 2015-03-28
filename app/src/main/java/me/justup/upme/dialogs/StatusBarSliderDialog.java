@@ -147,6 +147,10 @@ public class StatusBarSliderDialog extends DialogFragment {
                 mStringBuilder.append(getString(R.string.submit_file)).append(LEFT_BRACERS).append(push.getFileName()).append(RIGHT_BRACERS);
                 break;
 
+            case MailFragment.ORDER_FORM:
+                mStringBuilder.append(LEFT_BRACERS).append(push.getPushDescription()).append(RIGHT_BRACERS);
+                break;
+
             default:
                 break;
         }
