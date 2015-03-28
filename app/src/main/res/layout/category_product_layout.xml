@@ -2,23 +2,30 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tool="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="1dp"
+    android:background="@android:color/white">
 
     <ScrollView
         android:layout_width="@dimen/base200dp720sw"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/base15dp720sw">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:id="@+id/category_product_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:background="@color/gray">
 
             <TextView
                 android:id="@+id/category_product_title"
                 style="@style/ProductMainTitle"
                 tool:text="@string/product_title_credit"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/white"/>
 
             <!--
             <include layout="@layout/group_product_layout"/>

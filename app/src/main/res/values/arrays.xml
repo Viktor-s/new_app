@@ -38,4 +38,19 @@
         <item>Test5</item>
     </string-array>
 
+    <string-array name="color_for_product">
+        <item>#a34578</item>
+        <item>#4c576e</item>
+        <item>#60bb46</item>
+        <item>#d2c26e</item>
+        <item>#93b6ba</item>
+        <item>#545323</item>
+        <item>#545323</item>
+        <item>#545323</item>
+        <item>#545323</item>
+        <item>#545323</item>
+        <item>#545323</item>
+        <item>#545323</item>
+    </string-array>
+
 </resources>

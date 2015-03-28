@@ -13,4 +13,12 @@ public class ProductsGetAllCategoriesQuery extends BaseHttpQueryEntity {
 
     }
 
+    @Override
+    public String toString() {
+        return "ProductsGetAllCategoriesQuery{" +
+                "method='" + method + '\'' +
+                ", params=" + params +
+                ", id=" + id +
+                '}';
+    }
 }
