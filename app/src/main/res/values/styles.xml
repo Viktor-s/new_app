@@ -39,27 +39,23 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center</item>
-        <item name="android:textSize">@dimen/base16sp720sw</item>
-        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">@dimen/base22sp720sw</item>
         <item name="android:layout_margin">@dimen/base10dp720sw</item>
-        <item name="android:textColor">@color/product_title</item>
+        <item name="android:textColor">@android:color/white</item>
     </style>
 
     <style name="ProductTitle" parent="android:style/Widget.TextView">
-        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_margin">@dimen/base15dp720sw</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textSize">@dimen/base14sp720sw</item>
-        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">@dimen/base18sp720sw</item>
         <item name="android:textColor">@android:color/white</item>
+        <item name="android:padding">@dimen/base10dp720sw</item>
 
     </style>
 
     <style name="ProductDescription" parent="android:style/Widget.TextView">
-        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:padding">@dimen/base15dp720sw</item>
         <item name="android:layout_marginBottom">@dimen/base20dp720sw</item>
         <item name="android:background">@android:color/white</item>
         <item name="android:textSize">@dimen/base12sp720sw</item>

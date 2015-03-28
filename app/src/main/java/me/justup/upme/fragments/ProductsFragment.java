@@ -1,14 +1,18 @@
 package me.justup.upme.fragments;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,9 +60,13 @@ public class ProductsFragment extends Fragment implements View.OnClickListener {
     private LinearLayout containerProductMain;
     private ArrayList<ProductsCategoryBrandEntity> mAllBrandsList = new ArrayList<>();
 
+    private String[] colorForProduct;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
+        colorForProduct = getResources().getStringArray(R.array.color_for_product);
+
         super.onCreate(savedInstanceState);
         database = DBAdapter.getInstance().openDatabase();
         updateProductsList();
@@ -110,6 +118,7 @@ public class ProductsFragment extends Fragment implements View.OnClickListener {
             TextView categoryProductTitle = (TextView) categoryProductLayout.findViewById(R.id.category_product_title);
             categoryProductTitle.setText(listCategory.get(i).getName());
             LinearLayout categoryProductContainer = (LinearLayout) categoryProductLayout.findViewById(R.id.category_product_container);
+            categoryProductContainer.setBackgroundColor(Color.parseColor(colorForProduct[i]));
             for (int j = 0; j < listCategory.get(i).getBrandList().size(); j++) {
                 RelativeLayout groupProductLayout = (RelativeLayout) layoutInflater.inflate(R.layout.group_product_layout, null, false);
                 TextView idGroupProduct = (TextView) groupProductLayout.findViewById(R.id.id_group_product);
@@ -143,6 +152,7 @@ public class ProductsFragment extends Fragment implements View.OnClickListener {
     private void updateProductsList() {
         cursorProducts = database.rawQuery("SELECT * FROM " + PRODUCTS_CATEGORIES_TABLE_NAME, null);
         listCategory = fillProductsFromCursor(cursorProducts);
+        Log.d("TAG_product", listCategory.toString());
         if (cursorProducts != null)
             cursorProducts.close();
     }
@@ -197,6 +207,27 @@ public class ProductsFragment extends Fragment implements View.OnClickListener {
         }
         return categoryEntities;
     }
+
+
+//    if (savedInstanceState == null)
+//    replaceFragment(ListBanksFragment.newInstance(), false);
+
+//    public void replaceFragment(Fragment fragment, boolean anim) {
+//        String backStateName = fragment.getClass().getName();
+//
+//        FragmentManager manager = getFragmentManager();
+//        boolean fragmentPopped = manager.popBackStackImmediate(backStateName, 0);
+//
+//        if (!fragmentPopped) { //fragment not in back stack, create it.
+//            FragmentTransaction ft = manager.beginTransaction();
+//            if (anim)
+//                ft.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);
+//            ft.replace(R.id.container, fragment);
+//            ft.addToBackStack(backStateName);
+//            ft.commit();
+//        }
+//    }
+
 }
 
 
