@@ -135,10 +135,15 @@ public class ProductsFragment extends Fragment implements View.OnClickListener {
                     public void onClick(View view) {
                         LOGD("TAG", "-------onClick");
                         int idCurrentGroup = Integer.parseInt(((TextView) view.findViewById(R.id.id_group_product)).getText().toString());
-                        Intent intent = new Intent(getActivity(), ProductItemActivity.class);
-                        intent.putExtra(ProductItemActivity.ID_CURRENT_GROUP, idCurrentGroup);
-                        intent.putExtra("AllBrandsList", mAllBrandsList);
-                        startActivity(intent);
+//                        Intent intent = new Intent(getActivity(), ProductItemActivity.class);
+//                        intent.putExtra(ProductItemActivity.ID_CURRENT_GROUP, idCurrentGroup);
+//                        intent.putExtra("AllBrandsList", mAllBrandsList);
+//                        startActivity(intent);
+                        final FragmentTransaction ft = getFragmentManager().beginTransaction();
+                        ft.replace(R.id.main_fragment_container, ProductsCategoryFragment.newInstance(getCurrentBrand(mAllBrandsList,idCurrentGroup), idCurrentGroup));
+                        ft.addToBackStack(null);
+                        ft.commit();
+
                     }
                 });
                 categoryProductContainer.addView(groupProductLayout);
@@ -207,7 +212,15 @@ public class ProductsFragment extends Fragment implements View.OnClickListener {
         }
         return categoryEntities;
     }
-
+    public ProductsCategoryBrandEntity getCurrentBrand(List<ProductsCategoryBrandEntity> list, long id) {
+        ProductsCategoryBrandEntity productsCategoryBrandEntity = new ProductsCategoryBrandEntity();
+        for (ProductsCategoryBrandEntity object : list) {
+            if (object.getId() == id) {
+                productsCategoryBrandEntity = object;
+            }
+        }
+        return productsCategoryBrandEntity;
+    }
 
 //    if (savedInstanceState == null)
 //    replaceFragment(ListBanksFragment.newInstance(), false);

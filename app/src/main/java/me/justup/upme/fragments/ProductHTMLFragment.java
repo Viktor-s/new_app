@@ -116,9 +116,9 @@ public class ProductHTMLFragment extends Fragment {
             @SuppressWarnings("ConstantConditions")
             @Override
             public void onClick(View view) {
-                LocalBroadcastManager.getInstance(ProductHTMLFragment.this.getActivity()).unregisterReceiver(mProductHtmlReceiver);
-                getActivity().getFragmentManager().beginTransaction().remove(ProductHTMLFragment.this).commit();
-                //sendOrderQuery();
+                //LocalBroadcastManager.getInstance(ProductHTMLFragment.this.getActivity()).unregisterReceiver(mProductHtmlReceiver);
+                //getActivity().getFragmentManager().beginTransaction().remove(ProductHTMLFragment.this).commit();
+                getFragmentManager().popBackStack();
             }
         });
         updateProduct();
@@ -206,9 +206,10 @@ public class ProductHTMLFragment extends Fragment {
                         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                         builder.setMessage("Заказ принят")
                                 .setNegativeButton("OK", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) { }
+                                    public void onClick(DialogInterface dialog, int id) {
+                                    }
                                 }).create().show();
-                        
+
                         LocalBroadcastManager.getInstance(ProductHTMLFragment.this.getActivity()).unregisterReceiver(mProductHtmlReceiver);
                         getActivity().getFragmentManager().beginTransaction().remove(ProductHTMLFragment.this).commit();
                     } catch (JSONException e) {
