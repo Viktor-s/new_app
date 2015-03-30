@@ -651,7 +651,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                 break;
             case R.id.add_new_event_button:
                 if (startTimeEvent.getTimeInMillis() < Calendar.getInstance().getTimeInMillis()) {
-                    Toast.makeText(getActivity(), "Событие не может быть установллено в прошлом", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Событие не может быть установлено в прошлом", Toast.LENGTH_SHORT).show();
                     break;
                 }
 

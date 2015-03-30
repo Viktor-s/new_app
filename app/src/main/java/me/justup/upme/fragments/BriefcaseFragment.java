@@ -55,8 +55,6 @@ public class BriefcaseFragment extends Fragment {
     private LinearLayout containerLayout;
     private RelativeLayout photoLayout;
     private Button mCloseUserFragmentButton;
-    //  private DBAdapter mDBAdapter;
-    // private DBHelper mDBHelper;
     private BroadcastReceiver receiver;
     private String selectQuery;
     private TextView mUserContactsCountTextView;
@@ -64,6 +62,7 @@ public class BriefcaseFragment extends Fragment {
     private Animation mFragmentSliderFadeIn;
     private Animation mFragmentSliderOut;
     private SQLiteDatabase database;
+    private Cursor cursor;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -76,6 +75,7 @@ public class BriefcaseFragment extends Fragment {
             database = DBAdapter.getInstance().openDatabase();
         }
         selectQuery = "SELECT * FROM " + MAIL_CONTACT_TABLE_NAME;
+        cursor = database.rawQuery(selectQuery, null);
     }
 
     public List<PersonBriefcaseEntity> getChildrenOnParent(List<PersonBriefcaseEntity> sourceList, int id) {
@@ -195,7 +195,7 @@ public class BriefcaseFragment extends Fragment {
 
 
     private void updatePersonsList() {
-        Cursor cursor = database.rawQuery(selectQuery, null);
+
         listPerson = fillPersonsFromCursor(cursor);
         mUserContactsCountTextView.setText(listPerson.size() - 1 + " " + "people in your network");
         LOGI(TAG, listPerson.toString());

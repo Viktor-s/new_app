@@ -15,8 +15,13 @@ import android.widget.TextView;
 
 import me.justup.upme.R;
 
+import static me.justup.upme.utils.LogUtils.LOGE;
+import static me.justup.upme.utils.LogUtils.makeLogTag;
+
 
 public class StatusBarFragment extends Fragment {
+    private static final String TAG = makeLogTag(StatusBarFragment.class);
+
     private static final String DOTS = ":";
     private static final String PERCENT = "%";
 
@@ -99,9 +104,26 @@ public class StatusBarFragment extends Fragment {
     public void onStop() {
         super.onStop();
 
-        getActivity().unregisterReceiver(mStatusBarAccumReceiver);
-        getActivity().unregisterReceiver(mStatusBarServiceReceiver);
-        getActivity().unregisterReceiver(mStatusBarPushReceiver);
+        try {
+            getActivity().unregisterReceiver(mStatusBarAccumReceiver);
+        } catch (Exception e) {
+            LOGE(TAG, "unregisterReceiver(mStatusBarAccumReceiver)", e);
+            mStatusBarAccumReceiver = null;
+        }
+
+        try {
+            getActivity().unregisterReceiver(mStatusBarServiceReceiver);
+        } catch (Exception e) {
+            LOGE(TAG, "unregisterReceiver(mStatusBarServiceReceiver)", e);
+            mStatusBarServiceReceiver = null;
+        }
+
+        try {
+            getActivity().unregisterReceiver(mStatusBarPushReceiver);
+        } catch (Exception e) {
+            LOGE(TAG, "unregisterReceiver(mStatusBarPushReceiver)", e);
+            mStatusBarPushReceiver = null;
+        }
     }
 
 }

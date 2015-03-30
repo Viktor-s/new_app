@@ -123,6 +123,8 @@ public class ProductsFragment extends Fragment implements View.OnClickListener {
                 RelativeLayout groupProductLayout = (RelativeLayout) layoutInflater.inflate(R.layout.group_product_layout, null, false);
                 TextView idGroupProduct = (TextView) groupProductLayout.findViewById(R.id.id_group_product);
                 idGroupProduct.setText(Integer.toString(listCategory.get(i).getBrandList().get(j).getId()));
+                TextView categoryName = (TextView) groupProductLayout.findViewById(R.id.category_name);
+                categoryName.setText(listCategory.get(i).getName());
                 ImageView groupProductPhoto = (ImageView) groupProductLayout.findViewById(R.id.group_product_photo);
                 String imagePath = (listCategory.get(i).getBrandList().get(j).getImage() != null && listCategory.get(i).getBrandList().get(j).getImage().length() > 1) ? listCategory.get(i).getBrandList().get(j).getImage() : "fake";
                 Picasso.with(getActivity()).load(imagePath).placeholder(R.drawable.ic_launcher).into(groupProductPhoto);
@@ -135,12 +137,9 @@ public class ProductsFragment extends Fragment implements View.OnClickListener {
                     public void onClick(View view) {
                         LOGD("TAG", "-------onClick");
                         int idCurrentGroup = Integer.parseInt(((TextView) view.findViewById(R.id.id_group_product)).getText().toString());
-//                        Intent intent = new Intent(getActivity(), ProductItemActivity.class);
-//                        intent.putExtra(ProductItemActivity.ID_CURRENT_GROUP, idCurrentGroup);
-//                        intent.putExtra("AllBrandsList", mAllBrandsList);
-//                        startActivity(intent);
+                        String categoryName = ((TextView) view.findViewById(R.id.category_name)).getText().toString();
                         final FragmentTransaction ft = getFragmentManager().beginTransaction();
-                        ft.replace(R.id.main_fragment_container, ProductsCategoryFragment.newInstance(getCurrentBrand(mAllBrandsList,idCurrentGroup), idCurrentGroup));
+                        ft.replace(R.id.main_fragment_container, ProductsCategoryFragment.newInstance(getCurrentBrand(mAllBrandsList, idCurrentGroup), categoryName));
                         ft.addToBackStack(null);
                         ft.commit();
 
@@ -212,6 +211,7 @@ public class ProductsFragment extends Fragment implements View.OnClickListener {
         }
         return categoryEntities;
     }
+
     public ProductsCategoryBrandEntity getCurrentBrand(List<ProductsCategoryBrandEntity> list, long id) {
         ProductsCategoryBrandEntity productsCategoryBrandEntity = new ProductsCategoryBrandEntity();
         for (ProductsCategoryBrandEntity object : list) {
