@@ -9,7 +9,7 @@ android {
         minSdkVersion 17
         targetSdkVersion 21
         versionCode 1
-        versionName "0.9"
+        versionName "0.10"
     }
 
     signingConfigs {
@@ -41,8 +41,7 @@ dependencies {
     compile 'com.loopj.android:android-async-http:1.4.6'
     compile 'com.google.code.gson:gson:2.3.1'
     compile 'ch.acra:acra:4.5.0'
-    compile 'com.squareup.picasso:picasso:2.5.0'
+    compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'joda-time:joda-time:2.7'
     compile 'com.github.alamkanak:android-week-view:1.2.1'
-
 }

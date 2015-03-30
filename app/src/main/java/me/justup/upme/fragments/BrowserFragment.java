@@ -14,12 +14,16 @@ import android.widget.ImageButton;
 
 import me.justup.upme.R;
 
+import static me.justup.upme.utils.LogUtils.makeLogTag;
+
 
 public class BrowserFragment extends Fragment implements View.OnClickListener {
+    private static final String TAG = makeLogTag(BrowserFragment.class);
+
     private static final String HOME_URL = "https://duckduckgo.com/";
     private static final String HTTP = "http://";
 
-    private WebView mWebView;
+    private WebView mWebView = null;
     private EditText mUrlField;
 
 
@@ -109,6 +113,14 @@ public class BrowserFragment extends Fragment implements View.OnClickListener {
 
             mWebView.loadUrl(url);
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        mWebView.loadUrl(HOME_URL);
+        mWebView.onPause();
     }
 
 }
