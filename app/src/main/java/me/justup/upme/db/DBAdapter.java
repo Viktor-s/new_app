@@ -215,6 +215,9 @@ public class DBAdapter {
     }
 
     public void saveNewsReadValue(int articleId) {
+        if (!database.isOpen()) {
+            DBAdapter.getInstance().openDatabase();
+        }
         ContentValues values = new ContentValues();
         values.put(IS_SHORT_NEWS_READ_ARTICLE_ID, articleId);
         values.put(IS_SHORT_NEWS_READ_VALUE, 1);

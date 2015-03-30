@@ -29,21 +29,20 @@ import me.justup.upme.http.HttpIntentService;
 import me.justup.upme.utils.CommonUtils;
 
 public class ProductsCategoryFragment extends Fragment {
-    private static final String ARG_PRODUCT_ID = "prod_id";
     private static final String ARG_PRODUCTS_LIST = "products_list";
+    private static final String ARG_CATEGORY_NAME = "category_name";
     private ProductsCategoryBrandEntity productsCategoryBrandEntiti;
-    private long productBrandId;
     private GridLayout gridLayout;
     private LayoutInflater layoutInflater;
-    private View view;
-    int column = 3;
-    int screenWidth;
+    private int column = 3;
+    private int screenWidth;
+    private String categoryName;
 
-    public static ProductsCategoryFragment newInstance(ProductsCategoryBrandEntity productsCategoryBrandEntity, long productId) {
+    public static ProductsCategoryFragment newInstance(ProductsCategoryBrandEntity productsCategoryBrandEntity, String categoryName) {
         ProductsCategoryFragment fragment = new ProductsCategoryFragment();
         Bundle args = new Bundle();
         args.putSerializable(ARG_PRODUCTS_LIST, productsCategoryBrandEntity);
-        args.putLong(ARG_PRODUCT_ID, productId);
+        args.putString(ARG_CATEGORY_NAME, categoryName);
         fragment.setArguments(args);
         return fragment;
     }
@@ -54,7 +53,7 @@ public class ProductsCategoryFragment extends Fragment {
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             productsCategoryBrandEntiti = (ProductsCategoryBrandEntity) bundle.getSerializable(ARG_PRODUCTS_LIST);
-            productBrandId = bundle.getLong(ARG_PRODUCT_ID);
+            categoryName = bundle.getString(ARG_CATEGORY_NAME);
         }
         Display display = getActivity().getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -65,8 +64,12 @@ public class ProductsCategoryFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_products_category, container, false);
+        View view = inflater.inflate(R.layout.fragment_products_category, container, false);
         layoutInflater = LayoutInflater.from(getActivity());
+        TextView tvTitleMain = (TextView) view.findViewById(R.id.prod_category_top_title_main_textView);
+        TextView tvTitle = (TextView) view.findViewById(R.id.prod_category_top_title_textView);
+        tvTitleMain.setText("Продукты /" + " " + categoryName);
+        tvTitle.setText(productsCategoryBrandEntiti.getName());
         gridLayout = (GridLayout) view.findViewById(R.id.productItemsGridLayout);
 
         int row = productsCategoryBrandEntiti.getProductEntityList().size() / column;
@@ -110,29 +113,6 @@ public class ProductsCategoryFragment extends Fragment {
                     showProductHtmlFragment(idCurrentGroup);
                 }
             });
-
-//            LinearLayout categoryProductContainer = (LinearLayout) categoryProductLayout.findViewById(R.id.category_product_container);
-//            categoryProductContainer.setBackgroundColor(Color.parseColor(colorForProduct[i]));
-//            for (int j = 0; j < listCategory.get(i).getBrandList().size(); j++) {
-//                RelativeLayout groupProductLayout = (RelativeLayout) layoutInflater.inflate(R.layout.group_product_layout, null, false);
-//                TextView idGroupProduct = (TextView) groupProductLayout.findViewById(R.id.id_group_product);
-//                idGroupProduct.setText(Integer.toString(listCategory.get(i).getBrandList().get(j).getId()));
-//                ImageView groupProductPhoto = (ImageView) groupProductLayout.findViewById(R.id.group_product_photo);
-//                String imagePath = (listCategory.get(i).getBrandList().get(j).getImage() != null && listCategory.get(i).getBrandList().get(j).getImage().length() > 1) ? listCategory.get(i).getBrandList().get(j).getImage() : "fake";
-//                Picasso.with(getActivity()).load(imagePath).placeholder(R.drawable.ic_launcher).into(groupProductPhoto);
-//                TextView groupProductTitle = (TextView) groupProductLayout.findViewById(R.id.group_product_title);
-//                groupProductTitle.setText(listCategory.get(i).getBrandList().get(j).getName());
-//                TextView groupProductDescription = (TextView) groupProductLayout.findViewById(R.id.group_product_description);
-//                groupProductDescription.setText(listCategory.get(i).getBrandList().get(j).getDescription());
-//
-//                categoryProductContainer.addView(groupProductLayout);
-//            }
-            //containerProductMain = (LinearLayout) view.findViewById(R.id.container_product_main);
-            // containerProductMain.addView(categoryProductLayout);
-
-
-            // gridLayout.addView(oImageView);
-
             gridLayout.addView(categoryProductLayout);
         }
     }
@@ -145,7 +125,6 @@ public class ProductsCategoryFragment extends Fragment {
 
     public void showProductHtmlFragment(int id) {
         startHttpIntent(getProductHtml(id), HttpIntentService.PRODUCTS_GET_HTML_BY_ID);
-        // getFragmentManager().beginTransaction().replace(R.id.products_fragment_html_container, ProductHTMLFragment.newInstance(id)).commit();
         final FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(R.id.main_fragment_container, ProductHTMLFragment.newInstance(id));
         ft.addToBackStack(null);
