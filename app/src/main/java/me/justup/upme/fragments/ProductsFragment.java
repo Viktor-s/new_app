@@ -138,10 +138,14 @@ public class ProductsFragment extends Fragment implements View.OnClickListener {
                         LOGD("TAG", "-------onClick");
                         int idCurrentGroup = Integer.parseInt(((TextView) view.findViewById(R.id.id_group_product)).getText().toString());
                         String categoryName = ((TextView) view.findViewById(R.id.category_name)).getText().toString();
-                        final FragmentTransaction ft = getFragmentManager().beginTransaction();
-                        ft.replace(R.id.main_fragment_container, ProductsCategoryFragment.newInstance(getCurrentBrand(mAllBrandsList, idCurrentGroup), categoryName));
-                        ft.addToBackStack(null);
-                        ft.commit();
+
+                        LOGD("TAG1", "---idCurrentGroup--- " + String.valueOf(idCurrentGroup));
+                        if (idCurrentGroup == 6) {
+                            final FragmentTransaction ft = getFragmentManager().beginTransaction();
+                            ft.replace(R.id.main_fragment_container, ProductsCategoryFragment.newInstance(getCurrentBrand(mAllBrandsList, idCurrentGroup), categoryName));
+                            ft.addToBackStack(null);
+                            ft.commit();
+                        }
 
                     }
                 });
