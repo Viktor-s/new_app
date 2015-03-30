@@ -143,7 +143,7 @@ public class NewsFeedFragment extends Fragment {
                 }
                 if (HttpIntentService.BROADCAST_INTENT_NEWS_FEED_SERVER_ERROR.equals(intent.getAction())) {
                     LOGI(TAG, "onReceive, error");
-                    Toast.makeText(AppContext.getAppContext(), "Server error", Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(AppContext.getAppContext(), "Server error", Toast.LENGTH_SHORT).show();
                     mProgressBar.setVisibility(View.GONE);
                 }
 
