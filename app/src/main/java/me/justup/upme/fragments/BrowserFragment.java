@@ -13,6 +13,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 
 import me.justup.upme.R;
+import me.justup.upme.utils.AppContext;
+import me.justup.upme.utils.AppPreferences;
 
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
@@ -20,12 +22,21 @@ import static me.justup.upme.utils.LogUtils.makeLogTag;
 public class BrowserFragment extends Fragment implements View.OnClickListener {
     private static final String TAG = makeLogTag(BrowserFragment.class);
 
-    private static final String HOME_URL = "https://duckduckgo.com/";
+    public static final String HOME_URL = "https://duckduckgo.com/";
     private static final String HTTP = "http://";
 
     private WebView mWebView = null;
     private EditText mUrlField;
+    private AppPreferences mAppPreferences = new AppPreferences(AppContext.getAppContext());
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        String url = mAppPreferences.getBrowserUrl();
+        mWebView.loadUrl(url);
+    }
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -64,8 +75,6 @@ public class BrowserFragment extends Fragment implements View.OnClickListener {
                 mUrlField.setText(url);
             }
         });
-
-        mWebView.loadUrl(HOME_URL);
 
         return view;
     }
@@ -118,6 +127,8 @@ public class BrowserFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onPause() {
         super.onPause();
+
+        mAppPreferences.setBrowserUrl(mWebView.getUrl());
 
         mWebView.loadUrl(HOME_URL);
         mWebView.onPause();

@@ -3,6 +3,8 @@ package me.justup.upme.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import me.justup.upme.fragments.BrowserFragment;
+
 
 public class AppPreferences {
     private SharedPreferences mSharedPreferences;
@@ -16,6 +18,7 @@ public class AppPreferences {
     private static final String TAG_PHONE = "user_phone";
     private static final String TAG_JABBER_ID = "jabber_id";
     private static final String TAG_MONITORING = "is_monitoring";
+    private static final String TAG_BROWSER_URL = "browser_url";
 
 
     public AppPreferences(final Context context) {
@@ -99,6 +102,16 @@ public class AppPreferences {
 
     public boolean isMonitoring() {
         return mSharedPreferences.getBoolean(TAG_MONITORING, true);
+    }
+
+    public void setBrowserUrl(String url) {
+        mEditor = mSharedPreferences.edit();
+        mEditor.putString(TAG_BROWSER_URL, url);
+        mEditor.apply();
+    }
+
+    public String getBrowserUrl() {
+        return mSharedPreferences.getString(TAG_BROWSER_URL, BrowserFragment.HOME_URL);
     }
 
 }
