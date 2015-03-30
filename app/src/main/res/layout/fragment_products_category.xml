@@ -10,16 +10,34 @@
         android:layout_height="fill_parent"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textView7"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/base90dp720sw"
             android:background="@color/action_bar_background"
-            android:paddingLeft="@dimen/base20dp720sw"
-            android:paddingTop="@dimen/base18dp720sw"
-            android:text="Продукты"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/base22sp720sw" />
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/prod_category_top_title_main_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/action_bar_background"
+                android:paddingLeft="@dimen/base20dp720sw"
+                android:paddingTop="@dimen/base18dp720sw"
+                android:text="Продукты"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/base22sp720sw" />
+
+            <TextView
+                android:id="@+id/prod_category_top_title_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/base20dp720sw"
+                android:paddingTop="@dimen/base18dp720sw"
+                android:text="New Text"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/base28sp720sw"
+                android:layout_marginTop="-15dp" />
+        </LinearLayout>
 
         <ScrollView
             android:id="@+id/horizontalScrollView"

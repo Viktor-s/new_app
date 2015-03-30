@@ -22,23 +22,36 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+
+import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import me.justup.upme.R;
 import me.justup.upme.db.DBAdapter;
 import me.justup.upme.entity.BaseHttpQueryEntity;
 import me.justup.upme.entity.ProductHtmlEntity;
+import me.justup.upme.entity.ProductsJSQuery;
 import me.justup.upme.entity.ProductsOrderCreateQuery;
+import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.http.HttpIntentService;
 import me.justup.upme.utils.AppContext;
 
 import static me.justup.upme.db.DBHelper.PRODUCTS_HTML_CONTENT;
 import static me.justup.upme.db.DBHelper.PRODUCTS_HTML_SERVER_ID;
+import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.LOGE;
+import static me.justup.upme.utils.LogUtils.LOGI;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 public class ProductHTMLFragment extends Fragment {
@@ -107,6 +120,7 @@ public class ProductHTMLFragment extends Fragment {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 view.loadUrl(url);
+//                view.loadUrl("file:///android_asset/form.html");
                 return true;
             }
         });
@@ -192,32 +206,100 @@ public class ProductHTMLFragment extends Fragment {
         }
 
         @JavascriptInterface
-        public void submit(final String json) { // must be final
-            handler.post(new Runnable() {
-                public void run() {
-                    try {
-                        JSONObject jsonObject = new JSONObject(json.toString());
+        public void submit(final String json, final String method) {
+            LOGI("TAG1", " ----------- json " + json);
 
-                        String strColor = jsonObject.getString("color");
-                        String strQty = jsonObject.getString("qty");
-                        Log.d("TAG_submit", "strColor " + strColor + " strQty " + strQty);
-                        sendOrderQuery(strColor, strQty);
+            JSONObject jsonObject = null;
+            String strData = "";
+            String strProductId = "";
+            try {
+                jsonObject = new JSONObject(json);
+                strData = jsonObject.getString("data");
+                strProductId = jsonObject.getString("product_id");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                        builder.setMessage("Заказ принят")
-                                .setNegativeButton("OK", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                    }
-                                }).create().show();
+            Gson gson = new Gson();
+            Type stringStringMap = new TypeToken<Map<String, String>>() {
+            }.getType();
+            Map<String, String> map = gson.fromJson(strData, stringStringMap);
 
-                        LocalBroadcastManager.getInstance(ProductHTMLFragment.this.getActivity()).unregisterReceiver(mProductHtmlReceiver);
-                        getActivity().getFragmentManager().beginTransaction().remove(ProductHTMLFragment.this).commit();
-                    } catch (JSONException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-                }
-            });
+            ProductsJSQuery productsJSQuery = new ProductsJSQuery();
+            productsJSQuery.method = method;
+            productsJSQuery.params.product_id = strProductId;
+            productsJSQuery.params.data = map;
+
+            LOGI("TAG1", " ----------- productsJSQuery " + productsJSQuery.toString());
+
+            ApiWrapper.query(productsJSQuery, new OnQueryResponse());
+
+
+
+        }
+
+        @JavascriptInterface
+        public void closePage() {
+//            LocalBroadcastManager.getInstance(ProductHTMLFragment.this.getActivity()).unregisterReceiver(mProductHtmlReceiver);
+//            getActivity().getFragmentManager().beginTransaction().remove(ProductHTMLFragment.this).commit();
+//            getFragmentManager().popBackStack();
+        }
+
+
+    }
+
+    private class OnQueryResponse extends AsyncHttpResponseHandler {
+        @Override
+        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+            String content = ApiWrapper.responseBodyToString(responseBody);
+            LOGD("TAG1", "onSuccess(): " + content);
+//          callJavaScriptFunctionBack(content);
+
+            ////////////////////////////////////////////////////////////////////////////////////
+
+            getFragmentManager().popBackStack();
+
+            JSONObject jsonObject = null;
+            String hashStr = "1_3fd39333ba06759783f1371612b4ad23";
+            try {
+                jsonObject = new JSONObject(content);
+                JSONObject jsonResult = (JSONObject) jsonObject.get("result");
+                hashStr = jsonResult.getString("hash");
+                LOGD("TAG1", "hashStr --- " + hashStr);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage("Заказ № " + hashStr + " успешно создан")
+                    .setNegativeButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                        }
+                    }).create().show();
+        }
+
+        @Override
+        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            String content = ApiWrapper.responseBodyToString(responseBody);
+            LOGE(TAG, "onFailure(): " + content);
+
+            ///////////////////   DELETE   ////////////////////////////////
+            getFragmentManager().popBackStack();
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage("Заказ № 3fd39333ba06759783f1371612b4ad23 успешно создан")
+                    .setNegativeButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                        }
+                    }).create().show();
         }
     }
+
+    public void callJavaScriptFunctionBack(final String str) {
+        getActivity().runOnUiThread(new Runnable() {
+            public void run() {
+                webView.loadUrl("javascript:window.android.jsCallback(" + str + ")");
+            }
+        });
+    }
+
 }

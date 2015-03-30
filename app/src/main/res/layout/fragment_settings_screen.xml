@@ -6,74 +6,86 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:text="@string/settings_screen_sound"
-        style="@style/SettingsTitle" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/scrollView3" >
 
-    <TextView
-        android:text="@string/change_the_brightness"
-        style="@style/SettingsItemTitle" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
 
-    <TextView
-        style="@style/SettingsItemTitle"
-        android:text="Автоматический уровень яркости"
-        android:id="@+id/textView6"
-        android:layout_gravity="center_horizontal" />
+            <TextView
+                android:text="@string/settings_screen_sound"
+                style="@style/SettingsTitle" />
 
-    <ToggleButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New ToggleButton"
-        android:id="@+id/settings_brightness_auto_button"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="@dimen/base5dp720sw"
-        android:checked="false"
-        android:textOff="OFF"
-        android:textOn="ON" />
+            <TextView
+                android:text="@string/change_the_brightness"
+                style="@style/SettingsItemTitle" />
 
-    <SeekBar
-        android:id="@+id/settings_bright_bar"
-        style="@style/SettingsSeekBar"
-        android:layout_marginBottom="@dimen/base5dp720sw" />
+            <TextView
+                style="@style/SettingsItemTitle"
+                android:text="Автоматический уровень яркости"
+                android:id="@+id/textView6"
+                android:layout_gravity="center_horizontal" />
 
-    <TextView
-        android:id="@+id/settings_bright_bar_percentage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        tools:text="12%"
-        android:layout_marginBottom="@dimen/base40dp720sw" />
+            <ToggleButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New ToggleButton"
+                android:id="@+id/settings_brightness_auto_button"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="@dimen/base5dp720sw"
+                android:checked="false"
+                android:textOff="OFF"
+                android:textOn="ON" />
 
-    <TextView
-        android:text="@string/adjust_media_player_volume"
-        style="@style/SettingsItemTitle" />
+            <SeekBar
+                android:id="@+id/settings_bright_bar"
+                style="@style/SettingsSeekBar"
+                android:layout_marginBottom="@dimen/base5dp720sw" />
 
-    <SeekBar
-        android:id="@+id/settings_player_seekBar"
-        style="@style/SettingsSeekBar" />
+            <TextView
+                android:id="@+id/settings_bright_bar_percentage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                tools:text="12%"
+                android:layout_marginBottom="@dimen/base40dp720sw" />
 
-    <TextView
-        android:text="@string/adjust_ringer_volume"
-        style="@style/SettingsItemTitle" />
+            <TextView
+                android:text="@string/adjust_media_player_volume"
+                style="@style/SettingsItemTitle" />
 
-    <SeekBar
-        android:id="@+id/settings_ringer_seekBar"
-        style="@style/SettingsSeekBar" />
+            <SeekBar
+                android:id="@+id/settings_player_seekBar"
+                style="@style/SettingsSeekBar" />
 
-    <TextView
-        android:text="@string/adjust_alarm_volume"
-        style="@style/SettingsItemTitle" />
+            <TextView
+                android:text="@string/adjust_ringer_volume"
+                style="@style/SettingsItemTitle" />
 
-    <SeekBar
-        android:id="@+id/settings_alarm_seekBar"
-        style="@style/SettingsSeekBar" />
+            <SeekBar
+                android:id="@+id/settings_ringer_seekBar"
+                style="@style/SettingsSeekBar" />
 
-    <TextView
-        android:text="@string/adjust_notification_volume"
-        style="@style/SettingsItemTitle" />
+            <TextView
+                android:text="@string/adjust_alarm_volume"
+                style="@style/SettingsItemTitle" />
 
-    <SeekBar
-        android:id="@+id/settings_notification_seekBar"
-        style="@style/SettingsSeekBar" />
+            <SeekBar
+                android:id="@+id/settings_alarm_seekBar"
+                style="@style/SettingsSeekBar" />
+
+            <TextView
+                android:text="@string/adjust_notification_volume"
+                style="@style/SettingsItemTitle" />
+
+            <SeekBar
+                android:id="@+id/settings_notification_seekBar"
+                style="@style/SettingsSeekBar" />
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

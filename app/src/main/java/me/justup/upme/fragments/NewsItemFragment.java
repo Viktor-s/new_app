@@ -11,10 +11,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
@@ -191,6 +193,17 @@ public class NewsItemFragment extends Fragment {
                 return true;
             }
         });
+        mNewsItemWebView.getSettings().setLoadWithOverviewMode(true);
+        mNewsItemWebView.getSettings().setUseWideViewPort(true);
+
+        mNewsItemWebView.setOnTouchListener(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return (event.getAction() == MotionEvent.ACTION_MOVE);
+            }
+        });
+
 
         mNewsItemCommentEditText = (EditText) view.findViewById(R.id.news_item_comment_editText);
         mNewsItemAddCommentButton = (Button) view.findViewById(R.id.news_item_button_add_comment);
@@ -256,7 +269,7 @@ public class NewsItemFragment extends Fragment {
 
     private void fillViewsWithData() {
         LOGI(TAG, "fillViewsWithData");
-        mNewsItemWebView.loadDataWithBaseURL("", convertToHtml(mArticleFullEntity.getFull_descr()), "text/html", "UTF-8", "");
+        mNewsItemWebView.loadDataWithBaseURL("",mArticleFullEntity.getFull_descr(), "text/html", "UTF-8", "");
         updateCommentsList();
     }
 
