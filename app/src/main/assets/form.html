@@ -1,0 +1,27 @@
+<html>
+
+  <head>
+    <script type="text/javascript">
+      function prepareToSubmit(){
+
+        var myJSONObject =
+            {"param1": document.getElementById('firstname').value,
+             "param2": document.getElementById('lastname').value };
+
+        window.android.submit(JSON.stringify(myJSONObject), "methodName");
+      }
+    </script>
+  </head>
+
+  <body>
+    <h2>Form</h2>
+
+    <form>
+    First name: <input type="text" name="firstname" id="firstname"/><br />
+    Last name: <input type="text" name="lastname" id="lastname"/><br />
+
+    <input type="button" onclick="prepareToSubmit();" value="submit">
+
+    </form>
+  </body>
+</html>
