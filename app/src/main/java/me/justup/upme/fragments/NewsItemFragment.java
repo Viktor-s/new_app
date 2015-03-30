@@ -269,7 +269,7 @@ public class NewsItemFragment extends Fragment {
 
     private void fillViewsWithData() {
         LOGI(TAG, "fillViewsWithData");
-        mNewsItemWebView.loadDataWithBaseURL("", convertToHtml(mArticleFullEntity.getFull_descr()), "text/html", "UTF-8", "");
+        mNewsItemWebView.loadDataWithBaseURL("",mArticleFullEntity.getFull_descr(), "text/html", "UTF-8", "");
         updateCommentsList();
     }
 
