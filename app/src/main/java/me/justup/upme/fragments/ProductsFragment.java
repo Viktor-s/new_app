@@ -1,7 +1,6 @@
 package me.justup.upme.fragments;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -26,7 +25,6 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.justup.upme.ProductItemActivity;
 import me.justup.upme.R;
 import me.justup.upme.db.DBAdapter;
 import me.justup.upme.entity.ProductCategoryEntity;

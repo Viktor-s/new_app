@@ -23,6 +23,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -136,6 +137,7 @@ public class ProductHTMLFragment extends Fragment {
             }
         });
         updateProduct();
+
         return view;
     }
 
@@ -234,15 +236,12 @@ public class ProductHTMLFragment extends Fragment {
 
             ApiWrapper.query(productsJSQuery, new OnQueryResponse());
 
-
-
         }
 
         @JavascriptInterface
         public void closePage() {
-//            LocalBroadcastManager.getInstance(ProductHTMLFragment.this.getActivity()).unregisterReceiver(mProductHtmlReceiver);
-//            getActivity().getFragmentManager().beginTransaction().remove(ProductHTMLFragment.this).commit();
-//            getFragmentManager().popBackStack();
+            LOGI("TAG1", " ----------- closePage()");
+            getFragmentManager().popBackStack();
         }
 
 
@@ -253,14 +252,9 @@ public class ProductHTMLFragment extends Fragment {
         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
             String content = ApiWrapper.responseBodyToString(responseBody);
             LOGD("TAG1", "onSuccess(): " + content);
-//          callJavaScriptFunctionBack(content);
-
-            ////////////////////////////////////////////////////////////////////////////////////
-
-            getFragmentManager().popBackStack();
 
             JSONObject jsonObject = null;
-            String hashStr = "1_3fd39333ba06759783f1371612b4ad23";
+            String hashStr = "";
             try {
                 jsonObject = new JSONObject(content);
                 JSONObject jsonResult = (JSONObject) jsonObject.get("result");
@@ -269,6 +263,8 @@ public class ProductHTMLFragment extends Fragment {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+
+            callJavaScriptFunctionBack(hashStr);
 
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setMessage("Заказ № " + hashStr + " успешно создан")
@@ -282,24 +278,17 @@ public class ProductHTMLFragment extends Fragment {
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
             String content = ApiWrapper.responseBodyToString(responseBody);
             LOGE(TAG, "onFailure(): " + content);
-
-            ///////////////////   DELETE   ////////////////////////////////
-            getFragmentManager().popBackStack();
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setMessage("Заказ № 3fd39333ba06759783f1371612b4ad23 успешно создан")
-                    .setNegativeButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                        }
-                    }).create().show();
         }
     }
 
     public void callJavaScriptFunctionBack(final String str) {
         getActivity().runOnUiThread(new Runnable() {
             public void run() {
-                webView.loadUrl("javascript:window.android.jsCallback(" + str + ")");
+                LOGD("TAG1", "callJavaScriptFunctionBack: " + str);
+                webView.loadUrl("javascript:jsCallback(\""+str+"\")");
             }
         });
     }
+
 
 }
