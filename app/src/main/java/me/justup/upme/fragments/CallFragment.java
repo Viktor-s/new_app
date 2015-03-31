@@ -47,11 +47,14 @@ import me.justup.upme.R;
 import me.justup.upme.apprtc.PeerConnectionClient;
 
 import static me.justup.upme.utils.LogUtils.LOGE;
+import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 /**
  * Fragment for call control.
  */
 public class CallFragment extends Fragment {
+    private static final String TAG = makeLogTag(CallFragment.class);
+
     private View controlView;
     private TextView encoderStatView;
     private TextView roomIdView;
@@ -161,8 +164,9 @@ public class CallFragment extends Fragment {
 
     @Override
     public void onStop() {
-        isRunning = false;
         super.onStop();
+
+        isRunning = false;
     }
 
     @Override
@@ -172,7 +176,7 @@ public class CallFragment extends Fragment {
         try {
             callEvents = (OnCallEvents) getActivity().getFragmentManager().findFragmentById(R.id.container_video_chat);
         } catch (ClassCastException e) {
-            LOGE("upme_", "must implement OnCallEvents", e);
+            LOGE(TAG, "must implement OnCallEvents", e);
         }
     }
 
@@ -225,4 +229,5 @@ public class CallFragment extends Fragment {
         encoderStatView.setText(stat.toString());
         hudView.setText(bweBuilder.toString() + hudView.getText());
     }
+
 }
