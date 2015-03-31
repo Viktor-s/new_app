@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.URLUtil;
 import android.widget.RelativeLayout;
-import android.widget.TableLayout;
 import android.widget.Toast;
 
 import org.webrtc.IceCandidate;
@@ -32,8 +31,13 @@ import me.justup.upme.apprtc.UnhandledExceptionHandler;
 import me.justup.upme.apprtc.WebSocketRTCClient;
 import me.justup.upme.utils.LooperExecutor;
 
+import static me.justup.upme.utils.LogUtils.LOGE;
+import static me.justup.upme.utils.LogUtils.LOGI;
+import static me.justup.upme.utils.LogUtils.makeLogTag;
+
 
 public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEvents, PeerConnectionClient.PeerConnectionEvents, CallFragment.OnCallEvents {
+    private static final String TAG = makeLogTag(WebRtcFragment.class);
 
     private static final String ROOM_ID = "room_id";
 
@@ -64,7 +68,6 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
     public static final String EXTRA_CMDLINE = "appspot.apprtc.CMDLINE";
     public static final String EXTRA_RUNTIME = "apprtc.RUNTIME";
 
-    private static final String TAG = "CallRTCClient";
     // Peer connection statistics callback period in ms.
     private static final int STAT_CALLBACK_PERIOD = 1000;
     // Local preview screen position before call is connected.
@@ -252,7 +255,8 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
         callFragment.setArguments(bundle);
 
         // Activate call fragment and start the call.
-        getActivity().getFragmentManager().beginTransaction().add(R.id.call_fragment_container, callFragment).commit();
+        // getActivity().getFragmentManager().beginTransaction().add(R.id.call_fragment_container, callFragment).commit();
+        getChildFragmentManager().beginTransaction().add(R.id.call_fragment_container, callFragment).commit();
 
         startCall();
 
@@ -266,13 +270,22 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
             }, runTimeMs);
         }
 
+        LOGI(TAG, "WebRTC init");
+//        videoView.onResume();
+        activityRunning = true;
+//        if (peerConnectionClient != null) {
+//            peerConnectionClient.startVideoSource();
+//        }
+
         return view;
     }
 
     // Activity interfaces
+    /*
     @Override
     public void onPause() {
         super.onPause();
+
         videoView.onPause();
         activityRunning = false;
         if (peerConnectionClient != null) {
@@ -289,16 +302,31 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
             peerConnectionClient.startVideoSource();
         }
     }
+    */
 
     @Override
-    public void onDestroy() {
+    public void onStop() {
+        super.onStop();
+
         disconnect();
+
+        if (logToast != null) {
+            logToast.cancel();
+        }
+        activityRunning = false;
+    }
+
+    /*
+    @Override
+    public void onDestroy() {
+
         super.onDestroy();
         if (logToast != null) {
             logToast.cancel();
         }
         activityRunning = false;
     }
+    */
 
     // CallFragment.OnCallEvents interface implementation.
     @Override
@@ -412,44 +440,58 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
 
     // Disconnect from remote resources, dispose of local resources, and exit.
     private void disconnect() {
-        Log.d("TAG_", "disconnect()");
+        LOGI(TAG, "disconnect()");
+
         if (appRtcClient != null) {
             appRtcClient.disconnectFromRoom();
             appRtcClient = null;
         }
+
         if (peerConnectionClient != null) {
             peerConnectionClient.close();
             peerConnectionClient = null;
         }
+
         if (audioManager != null) {
             audioManager.close();
             audioManager = null;
         }
+
         if (iceConnected && !isError) {
-            Toast.makeText(getActivity(), "RESULT_OK", Toast.LENGTH_SHORT).show();
+            // Toast.makeText(getActivity(), "RESULT_OK", Toast.LENGTH_SHORT).show();
+            LOGI(TAG, "RESULT_OK");
         } else {
-            Toast.makeText(getActivity(), "RESULT_CANCELED", Toast.LENGTH_SHORT).show();
+            // Toast.makeText(getActivity(), "RESULT_CANCELED", Toast.LENGTH_SHORT).show();
+            LOGE(TAG, "RESULT_CANCELED");
         }
 
-        getActivity().getFragmentManager().beginTransaction().remove(WebRtcFragment.this).commit();
+        if (callFragment != null) {
+            getChildFragmentManager().beginTransaction().remove(callFragment).commitAllowingStateLoss();
+        }
+        getActivity().getFragmentManager().beginTransaction().remove(this).commitAllowingStateLoss();
     }
 
     private void disconnectWithErrorMessage(final String errorMessage) {
         if (commandLineRun || !activityRunning) {
-            Log.e(TAG, "Critical error: " + errorMessage);
+            LOGE(TAG, "Critical error: " + errorMessage);
+
             disconnect();
         } else {
-            new AlertDialog.Builder(getActivity())
-                    .setTitle(getText(R.string.channel_error_title))
-                    .setMessage(errorMessage)
-                    .setCancelable(false)
-                    .setNeutralButton(R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.cancel();
-                            disconnect();
-                        }
-                    }).create().show();
+            LOGE(TAG, "disconnectWithErrorMessage DIALOG");
+
+            if (WebRtcFragment.this.isAdded()) {
+                new AlertDialog.Builder(getActivity()).setTitle(getText(R.string.channel_error_title))
+                        .setMessage(errorMessage)
+                        .setCancelable(false)
+                        .setNeutralButton(R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                                disconnect();
+                            }
+                        }).create().show();
+            }
+
         }
     }
 

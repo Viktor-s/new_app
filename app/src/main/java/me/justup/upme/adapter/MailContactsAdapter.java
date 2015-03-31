@@ -82,6 +82,11 @@ public class MailContactsAdapter extends CursorAdapter {
                     int roomId = rand.nextInt((max - min) + 1) + min;
                     ft.replace(R.id.container_video_chat, WebRtcFragment.newInstance(String.valueOf(roomId)));
                     ft.commit();
+//                    handler.postDelayed(new Runnable() {
+//                        public void run() {
+//                            doStuff();
+//                        }
+//                    }, 5000);
                     startNotificationIntent(id, roomId);
                 }
             });
