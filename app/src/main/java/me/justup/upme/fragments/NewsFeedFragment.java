@@ -18,7 +18,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +53,6 @@ import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 public class NewsFeedFragment extends Fragment {
     private static final String TAG = makeLogTag(NewsFeedFragment.class);
-
     private RecyclerView mNewsFeedView;
     private NewsFeedAdapter mNewsFeedAdapter;
     private List<ArticleShortEntity> mNewsFeedEntityList;

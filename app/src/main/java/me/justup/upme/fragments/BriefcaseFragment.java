@@ -92,8 +92,7 @@ public class BriefcaseFragment extends Fragment {
         super.onPause();
         DBAdapter.getInstance().closeDatabase();
         LocalBroadcastManager.getInstance(BriefcaseFragment.this.getActivity()).unregisterReceiver(receiver);
-        //  mDBAdapter.close();
-    }
+           }
 
     @Override
     public void onResume() {
