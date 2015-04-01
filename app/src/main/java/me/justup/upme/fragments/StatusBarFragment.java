@@ -22,14 +22,12 @@ import static me.justup.upme.utils.LogUtils.makeLogTag;
 public class StatusBarFragment extends Fragment {
     private static final String TAG = makeLogTag(StatusBarFragment.class);
 
-    private static final String DOTS = ":";
     private static final String PERCENT = "%";
 
     public static final String BROADCAST_ACTION = "me.justup.upme.broadcast.status_bar.notify";
     public static final String BROADCAST_ACTION_PUSH = "me.justup.upme.broadcast.status_bar.push";
 
-    public static final String BROADCAST_EXTRA_HOURS = "broadcast_extra_hours";
-    public static final String BROADCAST_EXTRA_MINUTES = "broadcast_extra_minutes";
+    public static final String BROADCAST_EXTRA_TIME = "broadcast_extra_time";
     public static final String BROADCAST_EXTRA_IS_CONNECTED = "broadcast_extra_is_connected";
 
     public static final String BROADCAST_EXTRA_IS_NEW_MESSAGE = "broadcast_extra_is_new_message";
@@ -52,11 +50,10 @@ public class StatusBarFragment extends Fragment {
     private BroadcastReceiver mStatusBarServiceReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            int hours = intent.getIntExtra(BROADCAST_EXTRA_HOURS, 0);
-            int minutes = intent.getIntExtra(BROADCAST_EXTRA_MINUTES, 0);
+            String time = intent.getStringExtra(BROADCAST_EXTRA_TIME);
             boolean isConnected = intent.getBooleanExtra(BROADCAST_EXTRA_IS_CONNECTED, true);
 
-            mClock.setText(hours + DOTS + String.format("%02d", minutes));
+            mClock.setText(time);
 
             if (isConnected) {
                 mWiFi.setImageResource(R.drawable.wifi_3);

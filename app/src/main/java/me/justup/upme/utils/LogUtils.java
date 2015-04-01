@@ -42,8 +42,4 @@ public class LogUtils {
     public static void LOGE(final String tag, String message, Throwable cause) {
         Log.e(tag, message, cause);
     }
-
-    private LogUtils() {
-    }
-
 }

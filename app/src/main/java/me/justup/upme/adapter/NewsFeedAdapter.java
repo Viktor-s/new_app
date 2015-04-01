@@ -18,9 +18,9 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import me.justup.upme.JustUpApplication;
 import me.justup.upme.R;
 import me.justup.upme.entity.ArticleShortEntity;
-import me.justup.upme.utils.AppContext;
 
 public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHolder> {
 
@@ -54,7 +54,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
         Picasso.with(context).load(newsFeedEntity.getThumbnail()).into(viewHolder.mImage);
         //viewHolder.mImage.setImageDrawable(newsFeedEntity.result.get(i).thumbnail);
         if (newsFeedEntity.getComments() != null) {
-            viewHolder.mListViewComments.setAdapter(new NewsCommentsAdapter(AppContext.getAppContext(), newsFeedEntity.getComments()));
+            viewHolder.mListViewComments.setAdapter(new NewsCommentsAdapter(JustUpApplication.getApplication().getApplicationContext(), newsFeedEntity.getComments()));
             viewHolder.mCommentsLength.setText(newsFeedEntity.getComments().size() + "");
         }
 
@@ -115,7 +115,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
             if (mItemClickListener != null) {
                 mItemClickListener.onItemClick(view, getPosition());
                 if (mIsNewsViewed.getVisibility() == View.VISIBLE) {
-                    Animation animation = AnimationUtils.loadAnimation(AppContext.getAppContext(), R.anim.news_is_viewed_scale);
+                    Animation animation = AnimationUtils.loadAnimation(JustUpApplication.getApplication().getApplicationContext(), R.anim.news_is_viewed_scale);
                     animation.setAnimationListener(new Animation.AnimationListener() {
                         @Override
                         public void onAnimationEnd(Animation animation) {

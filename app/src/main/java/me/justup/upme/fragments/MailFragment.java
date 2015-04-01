@@ -28,7 +28,6 @@ import me.justup.upme.db.DBHelper;
 import me.justup.upme.entity.Push;
 import me.justup.upme.entity.StartChatQuery;
 import me.justup.upme.services.PushIntentService;
-import me.justup.upme.utils.AppContext;
 import me.justup.upme.utils.AppPreferences;
 import me.justup.upme.utils.CommonUtils;
 
@@ -64,7 +63,7 @@ public class MailFragment extends Fragment {
         }
         selectQuery = "SELECT * FROM " + MAIL_CONTACT_TABLE_NAME;
         cursor = database.rawQuery(selectQuery, null);
-        mMailContactsAdapter = new MailContactsAdapter(this, AppContext.getAppContext(), cursor, 0);
+        mMailContactsAdapter = new MailContactsAdapter(this, getActivity().getApplicationContext(), cursor, 0);
         mMailContactsAdapter.setFilterQueryProvider(new FilterQueryProvider() {
             @Override
             public Cursor runQuery(CharSequence constraint) {
@@ -111,18 +110,21 @@ public class MailFragment extends Fragment {
 
         final Push push = ((MainActivity) getActivity()).getPush();
         if (push != null) {
-            ((MainActivity) getActivity()).setPush(null);
 
             if (push.getType() == JABBER) {
                 String friendJabberId = push.getJabberId();
+                String friendName = push.getUserName();
                 String yourJabberId = appPreferences.getJabberId();
+                String yourName = appPreferences.getUserName();
 
-                getChildFragmentManager().beginTransaction().replace(R.id.mail_messages_container_frameLayout, MailMessagesFragment.newInstance(yourJabberId, friendJabberId, push.getUserId())).commit();
+                getChildFragmentManager().beginTransaction()
+                        .replace(R.id.mail_messages_container_frameLayout, MailMessagesFragment.newInstance(yourName, yourJabberId, friendName, friendJabberId, push.getUserId())).commit();
+
             } else if (push.getType() == WEBRTC) {
-                final FragmentTransaction ft = getChildFragmentManager().beginTransaction();
-                ft.replace(R.id.mail_messages_container_frameLayout, WebRtcFragment.newInstance(String.valueOf(push.getRoom())));
-                ft.commit();
+                ((MainActivity) getActivity()).prepareAndCallRTC(String.valueOf(push.getRoom()), false, false, 0);
             }
+
+            ((MainActivity) getActivity()).setPush(null);
         }
 
         ListView contactsListView = (ListView) view.findViewById(R.id.mail_contacts_ListView);
@@ -132,12 +134,16 @@ public class MailFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 CommonUtils.hideKeyboard(getActivity());
                 if (lastChosenPosition != position) {
-                    String friendJabberId = mMailContactsAdapter.getCursor().getString(mMailContactsAdapter.getCursor().getColumnIndex(DBHelper.MAIL_CONTACT_NAME));
+                    String friendJabberId = mMailContactsAdapter.getCursor().getString(mMailContactsAdapter.getCursor().getColumnIndex(DBHelper.MAIL_CONTACT_JABBER_ID));
+                    String friendName = mMailContactsAdapter.getCursor().getString(mMailContactsAdapter.getCursor().getColumnIndex(DBHelper.MAIL_CONTACT_NAME));
                     String yourJabberId = appPreferences.getJabberId();
+                    String yourName = appPreferences.getUserName();
                     int userId = mMailContactsAdapter.getCursor().getInt(mMailContactsAdapter.getCursor().getColumnIndex(DBHelper.MAIL_CONTACT_SERVER_ID));
+
                     startNotificationIntent(userId);
+
                     final FragmentTransaction ft = getChildFragmentManager().beginTransaction();
-                    ft.replace(R.id.mail_messages_container_frameLayout, MailMessagesFragment.newInstance(yourJabberId, friendJabberId, userId));
+                    ft.replace(R.id.mail_messages_container_frameLayout, MailMessagesFragment.newInstance(yourName, yourJabberId, friendName, friendJabberId, userId));
                     ft.commit();
                     lastChosenPosition = position;
                 }

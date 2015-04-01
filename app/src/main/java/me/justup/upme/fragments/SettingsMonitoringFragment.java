@@ -11,7 +11,6 @@ import android.widget.CompoundButton;
 
 import me.justup.upme.R;
 import me.justup.upme.services.ApplicationSupervisorService;
-import me.justup.upme.utils.AppContext;
 import me.justup.upme.utils.AppPreferences;
 
 
@@ -36,10 +35,10 @@ public class SettingsMonitoringFragment extends Fragment {
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             if (mAppPreferences.isMonitoring()) {
                 mAppPreferences.setMonitoring(false);
-                getActivity().stopService(new Intent(AppContext.getAppContext(), ApplicationSupervisorService.class));
+                getActivity().stopService(new Intent(getActivity().getApplicationContext(), ApplicationSupervisorService.class));
             } else {
                 mAppPreferences.setMonitoring(true);
-                getActivity().startService(new Intent(AppContext.getAppContext(), ApplicationSupervisorService.class));
+                getActivity().startService(new Intent(getActivity().getApplicationContext(), ApplicationSupervisorService.class));
             }
         }
     }

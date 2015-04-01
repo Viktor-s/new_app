@@ -31,7 +31,6 @@ import me.justup.upme.entity.ArticleShortCommentEntity;
 import me.justup.upme.entity.ArticleShortEntity;
 import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.http.HttpIntentService;
-import me.justup.upme.utils.AppContext;
 import me.justup.upme.utils.CommonUtils;
 
 import static me.justup.upme.db.DBHelper.IS_SHORT_NEWS_READ_ARTICLE_ID;
@@ -53,6 +52,7 @@ import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 public class NewsFeedFragment extends Fragment {
     private static final String TAG = makeLogTag(NewsFeedFragment.class);
+
     private RecyclerView mNewsFeedView;
     private NewsFeedAdapter mNewsFeedAdapter;
     private List<ArticleShortEntity> mNewsFeedEntityList;
@@ -141,7 +141,7 @@ public class NewsFeedFragment extends Fragment {
                 }
                 if (HttpIntentService.BROADCAST_INTENT_NEWS_FEED_SERVER_ERROR.equals(intent.getAction())) {
                     LOGI(TAG, "onReceive, error");
-                    // Toast.makeText(AppContext.getAppContext(), "Server error", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getActivity().getApplicationContext(), "Server error", Toast.LENGTH_SHORT).show();
                     mProgressBar.setVisibility(View.GONE);
                 }
 
@@ -163,7 +163,7 @@ public class NewsFeedFragment extends Fragment {
         if (!ApiWrapper.isOnline()) {
             mProgressBar.setVisibility(View.GONE);
         }
-        mLayoutManager = new LinearLayoutManager(AppContext.getAppContext());
+        mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         mNewsFeedView.setLayoutManager(mLayoutManager);
         if (mNewsFeedEntityPartOfList.size() > 0) {
             updateAdapter();
@@ -254,7 +254,7 @@ public class NewsFeedFragment extends Fragment {
                 if (lastChosenPosition != position) {
                     mNewsFeedEntityPartOfList.get(position).setViewed(true);
                     DBAdapter.getInstance().saveNewsReadValue(mNewsFeedEntityPartOfList.get(position).getId());
-                    Animation mFragmentSliderFadeIn = AnimationUtils.loadAnimation(AppContext.getAppContext(), R.anim.fragment_item_slide_fade_in);
+                    Animation mFragmentSliderFadeIn = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.fragment_item_slide_fade_in);
                     getChildFragmentManager().beginTransaction().replace(R.id.news_item_container_frameLayout, NewsItemFragment.newInstance(mNewsFeedEntityList.get(position))).commit();
                     mNewsItemContainer.startAnimation(mFragmentSliderFadeIn);
                     lastChosenPosition = position;

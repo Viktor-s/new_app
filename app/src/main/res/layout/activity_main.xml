@@ -16,20 +16,12 @@
         android:layout_marginTop="@dimen/base5dp720sw"
         android:baselineAligned="false">
 
-        <fragment
-            android:name="me.justup.upme.fragments.FastPayingFragment"
-            android:id="@+id/fastPayingFragment"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="55"
-            tools:layout="@layout/fragment_fast_paying" />
-
         <FrameLayout
-            android:id="@+id/mapAndUserFragment"
-            android:layout_width="wrap_content"
-            tools:layout_width="@dimen/base420dp720sw"
-            android:layout_height="match_parent"
-            tools:background="@color/blue_gray" />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </FrameLayout>
+
     </LinearLayout>
 
     <LinearLayout
@@ -116,7 +108,6 @@
             android:id="@+id/ab_user_image_imageView"
             android:src="@drawable/protection"
             android:layout_marginTop="@dimen/base5dp720sw"
-            android:layout_marginStart="@dimen/base15dp720sw"
             app:civ_border="true"
             app:civ_border_color="@color/white"
             app:civ_border_width="@dimen/base3dp720sw" />
@@ -144,7 +135,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="1 год 2 месяца 3 недели"
+            tools:text="1 год 2 месяца 3 недели"
             android:layout_marginEnd="@dimen/base15dp720sw"
             android:layout_gravity="center_vertical"
             android:id="@+id/ab_user_in_system_textView" />
@@ -155,7 +146,6 @@
             android:background="@drawable/pay_panel_button_selector"
             android:layout_gravity="center_vertical"
             android:textSize="@dimen/base20sp720sw"
-            android:layout_marginEnd="@dimen/base20dp720sw"
             android:textAllCaps="true"
             android:text="@string/ordering" />
 
@@ -202,4 +192,5 @@
         android:layout_width="@dimen/base250dp720sw"
         android:layout_height="@dimen/base250dp720sw"
         android:layout_below="@+id/status_bar_fragment" />
+
 </RelativeLayout>

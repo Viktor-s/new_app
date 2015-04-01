@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import me.justup.upme.JustUpApplication;
 import me.justup.upme.entity.ArticleFullResponse;
 import me.justup.upme.entity.ArticlesGetShortDescriptionResponse;
 import me.justup.upme.entity.CalendarGetEventsResponse;
@@ -18,7 +19,6 @@ import me.justup.upme.entity.GetAllContactsResponse;
 import me.justup.upme.entity.GetProductHtmlByIdResponse;
 import me.justup.upme.entity.ProductsGetAllCategoriesResponse;
 import me.justup.upme.entity.Push;
-import me.justup.upme.utils.AppContext;
 
 import static me.justup.upme.db.DBHelper.CREATE_TABLE_MAIL_CONTACT;
 import static me.justup.upme.db.DBHelper.CREATE_TABLE_STATUS_BAR_PUSH;
@@ -144,18 +144,17 @@ public class DBAdapter {
 
     }
 
-
-    public static synchronized void initializeInstance(DBHelper helper) {
+    public static synchronized void initInstance() {
         if (dbAdapterInstance == null) {
             dbAdapterInstance = new DBAdapter();
-            mDatabaseHelper = helper;
+            mDatabaseHelper = new DBHelper(JustUpApplication.getApplication().getApplicationContext());
         }
     }
 
     public static synchronized DBAdapter getInstance() {
         if (dbAdapterInstance == null) {
             throw new IllegalStateException(DBAdapter.class.getSimpleName() +
-                    " is not initialized, call initializeInstance(..) method first.");
+                    " is not initialized, call initInstance(..) method first.");
         }
 
         return dbAdapterInstance;
@@ -218,6 +217,7 @@ public class DBAdapter {
         if (!database.isOpen()) {
             DBAdapter.getInstance().openDatabase();
         }
+        
         ContentValues values = new ContentValues();
         values.put(IS_SHORT_NEWS_READ_ARTICLE_ID, articleId);
         values.put(IS_SHORT_NEWS_READ_VALUE, 1);
@@ -372,7 +372,7 @@ public class DBAdapter {
 
     public void sendBroadcast(String type) {
         Intent intent = new Intent(type);
-        LocalBroadcastManager.getInstance(AppContext.getAppContext()).sendBroadcast(intent);
+        LocalBroadcastManager.getInstance(JustUpApplication.getApplication().getApplicationContext()).sendBroadcast(intent);
     }
 
     public long savePush(final Push push, String date) {

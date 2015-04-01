@@ -2,7 +2,6 @@ package me.justup.upme.entity;
 
 import me.justup.upme.http.ApiWrapper;
 
-
 public class SetGooglePushIdQuery extends BaseHttpQueryEntity {
     private String method = ApiWrapper.PUSH_SET_GOOGLE_PUSH_ID;
 

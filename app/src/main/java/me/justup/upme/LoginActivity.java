@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
@@ -24,14 +25,12 @@ import me.justup.upme.entity.LoginResponseEntity;
 import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.services.ApplicationSupervisorService;
 import me.justup.upme.services.StatusBarService;
-import me.justup.upme.utils.AppContext;
 import me.justup.upme.utils.AppPreferences;
 import me.justup.upme.utils.ServerSwitcher;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.LOGE;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
-
 
 public class LoginActivity extends BaseActivity {
     private static final String TAG = makeLogTag(LoginActivity.class);
@@ -42,7 +41,7 @@ public class LoginActivity extends BaseActivity {
     private LinearLayout mLoginPinCodePanel;
 
     private StringBuilder mNumberString = new StringBuilder("+");
-    private AppPreferences mAppPreferences = new AppPreferences(AppContext.getAppContext());
+    private AppPreferences mAppPreferences = new AppPreferences(JustUpApplication.getApplication().getApplicationContext());
 
     private static final int phoneNumberLength = 12;
     private static final int minPhoneNumberLength = 11;
@@ -82,9 +81,8 @@ public class LoginActivity extends BaseActivity {
         loadSavedPhoneNumber();
 
         if (mAppPreferences.isMonitoring()) {
-            startService(new Intent(AppContext.getAppContext(), ApplicationSupervisorService.class));
+            startService(new Intent(JustUpApplication.getApplication().getApplicationContext(), ApplicationSupervisorService.class));
         }
-
 
         // Delete! Only for debug!
         TextView appVersion = (TextView) findViewById(R.id.app_version_textView);
@@ -93,7 +91,22 @@ public class LoginActivity extends BaseActivity {
             versionName = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
         } catch (PackageManager.NameNotFoundException ignored) {
         }
+
         appVersion.setText("UPME v" + versionName);
+
+        final EditText mNewUrlString = (EditText) findViewById(R.id.test_set_url_editText);
+        Button mSetNewUrl = (Button) findViewById(R.id.test_set_url_button);
+        mSetNewUrl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String newUrl = mNewUrlString.getText().toString();
+
+                if (newUrl != null && newUrl.length() > 2) {
+                    mNewUrlString.setText("");
+                    ServerSwitcher.getInstance().setUrl(newUrl);
+                }
+            }
+        });
 
         RadioGroup radiogroup = (RadioGroup) findViewById(R.id.server_radioGroup);
         radiogroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -248,7 +261,7 @@ public class LoginActivity extends BaseActivity {
         @Override
         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
             String content = ApiWrapper.responseBodyToString(responseBody);
-            LOGD(TAG, "onSuccess(): " + content);
+            LOGD(TAG, "onSuccess() : " + content);
 
             LoginResponseEntity response = null;
 
@@ -273,8 +286,8 @@ public class LoginActivity extends BaseActivity {
                 } else {
                     mAppPreferences.setToken(response.result.token);
 
-                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                    finish();
+                    startActivity(new Intent(LoginActivity.this, SplashActivity.class));
+                    LoginActivity.this.finish();
                 }
             } else {
                 showPinError();

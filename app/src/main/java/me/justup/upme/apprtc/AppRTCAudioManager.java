@@ -35,11 +35,11 @@ import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.util.Log;
 
-import me.justup.upme.utils.AppRTCUtils;
-
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+
+import me.justup.upme.utils.AppRTCUtils;
 
 /**
  * AppRTCAudioManager manages all audio related parts of the AppRTC demo.
@@ -119,8 +119,7 @@ public class AppRTCAudioManager {
       Runnable deviceStateChangeListener) {
     apprtcContext = context;
     onStateChangeListener = deviceStateChangeListener;
-    audioManager = ((AudioManager) context.getSystemService(
-        Context.AUDIO_SERVICE));
+    audioManager = ((AudioManager) context.getSystemService(Context.AUDIO_SERVICE));
 
     // Create and initialize the proximity sensor.
     // Tablet devices (e.g. Nexus 7) does not support proximity sensors.
@@ -137,7 +136,6 @@ public class AppRTCAudioManager {
   }
 
   public void init() {
-    Log.d(TAG, "init");
     if (initialized) {
       return;
     }
