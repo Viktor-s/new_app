@@ -43,30 +43,30 @@ import org.webrtc.VideoRendererGui.ScalingType;
 import java.util.HashMap;
 import java.util.Map;
 
+import me.justup.upme.JustUpApplication;
 import me.justup.upme.R;
 import me.justup.upme.apprtc.PeerConnectionClient;
 
 import static me.justup.upme.utils.LogUtils.LOGE;
-import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 /**
  * Fragment for call control.
  */
 public class CallFragment extends Fragment {
-    private static final String TAG = makeLogTag(CallFragment.class);
+    private static final String TAG = CallFragment.class.getSimpleName();
 
-    private View controlView;
-    private TextView encoderStatView;
-    private TextView roomIdView;
-    private ImageButton disconnectButton;
-    private ImageButton cameraSwitchButton;
-    private ImageButton videoScalingButton;
-    private ImageButton toggleDebugButton;
-    private OnCallEvents callEvents;
-    private ScalingType scalingType;
+    private View controlView = null;
+    private TextView encoderStatView = null;
+    private TextView roomIdView = null;
+    private ImageButton disconnectButton = null;
+    private ImageButton cameraSwitchButton = null;
+    private ImageButton videoScalingButton = null;
+    private ImageButton toggleDebugButton = null;
+    private OnCallEvents callEvents = null;
+    private ScalingType scalingType = null;
     private boolean displayHud;
     private volatile boolean isRunning;
-    private TextView hudView;
+    private TextView hudView = null;
 
     /**
      * Call control interface for container activity.
@@ -77,15 +77,6 @@ public class CallFragment extends Fragment {
         public void onCameraSwitch();
 
         public void onVideoScalingSwitch(ScalingType scalingType);
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-//        callEvents = (OnCallEvents)  getParentFragment();
-//        Log.d("TAG_", "onCreate --- getParentFragment" + getParentFragment().toString());
-//        Log.d("TAG_", "onCreate --- callEvents" + callEvents.toString());
     }
 
     @Override
@@ -150,10 +141,11 @@ public class CallFragment extends Fragment {
 
         Bundle args = getArguments();
         if (args != null) {
-            String roomId = args.getString(WebRtcFragment.EXTRA_ROOMID);
+            String roomId = args.getString(JustUpApplication.EXTRA_ROOMID);
             roomIdView.setText(roomId);
-            displayHud = args.getBoolean(WebRtcFragment.EXTRA_DISPLAY_HUD, false);
+            displayHud = args.getBoolean(JustUpApplication.EXTRA_DISPLAY_HUD, false);
         }
+
         int visibility = displayHud ? View.VISIBLE : View.INVISIBLE;
         encoderStatView.setVisibility(visibility);
         toggleDebugButton.setVisibility(visibility);
@@ -164,9 +156,8 @@ public class CallFragment extends Fragment {
 
     @Override
     public void onStop() {
-        super.onStop();
-
         isRunning = false;
+        super.onStop();
     }
 
     @Override
@@ -176,7 +167,7 @@ public class CallFragment extends Fragment {
         try {
             callEvents = (OnCallEvents) getActivity().getFragmentManager().findFragmentById(R.id.container_video_chat);
         } catch (ClassCastException e) {
-            LOGE(TAG, "must implement OnCallEvents", e);
+            LOGE(TAG, "Must implement OnCallEvents", e);
         }
     }
 
@@ -185,6 +176,7 @@ public class CallFragment extends Fragment {
         for (StatsReport.Value value : report.values) {
             reportMap.put(value.name, value.value);
         }
+
         return reportMap;
     }
 
@@ -192,6 +184,7 @@ public class CallFragment extends Fragment {
         if (!isRunning || !displayHud) {
             return;
         }
+
         String fps = null;
         String targetBitrate = null;
         String actualBitrate = null;
@@ -200,9 +193,11 @@ public class CallFragment extends Fragment {
             if (report.type.equals("ssrc") && report.id.contains("ssrc") && report.id.contains("send")) {
                 Map<String, String> reportMap = getReportMap(report);
                 String trackId = reportMap.get("googTrackId");
+
                 if (trackId != null && trackId.contains(PeerConnectionClient.VIDEO_TRACK_ID)) {
                     fps = reportMap.get("googFrameRateSent");
                 }
+
             } else if (report.id.equals("bweforvideo")) {
                 Map<String, String> reportMap = getReportMap(report);
                 targetBitrate = reportMap.get("googTargetEncBitrate");
@@ -212,20 +207,25 @@ public class CallFragment extends Fragment {
                     String name = value.name.replace("goog", "").replace("Available", "").replace("Bandwidth", "").replace("Bitrate", "").replace("Enc", "");
                     bweBuilder.append(name).append("=").append(value.value).append(" ");
                 }
+
                 bweBuilder.append("\n");
             }
         }
 
         StringBuilder stat = new StringBuilder(128);
+
         if (fps != null) {
-            stat.append("Fps:  ").append(fps).append("\n");
+            stat.append("Fps :  ").append(fps).append("\n");
         }
+
         if (targetBitrate != null) {
-            stat.append("Target BR: ").append(targetBitrate).append("\n");
+            stat.append("Target BR : ").append(targetBitrate).append("\n");
         }
+
         if (actualBitrate != null) {
-            stat.append("Actual BR: ").append(actualBitrate).append("\n");
+            stat.append("Actual BR : ").append(actualBitrate).append("\n");
         }
+
         encoderStatView.setText(stat.toString());
         hudView.setText(bweBuilder.toString() + hudView.getText());
     }

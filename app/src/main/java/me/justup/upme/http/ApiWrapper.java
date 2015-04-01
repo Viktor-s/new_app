@@ -19,10 +19,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 
+import me.justup.upme.JustUpApplication;
 import me.justup.upme.R;
 import me.justup.upme.entity.BaseHttpQueryEntity;
 import me.justup.upme.entity.OnHttpFailureResponse;
-import me.justup.upme.utils.AppContext;
 import me.justup.upme.utils.AppPreferences;
 import me.justup.upme.utils.ServerSwitcher;
 
@@ -109,7 +109,7 @@ public class ApiWrapper {
     }
 
     private static String getToken() {
-        return new AppPreferences(AppContext.getAppContext()).getToken();
+        return new AppPreferences(JustUpApplication.getApplication().getApplicationContext()).getToken();
     }
 
     private static StringEntity queryBuilder(BaseHttpQueryEntity obj) {
@@ -211,7 +211,7 @@ public class ApiWrapper {
 
     public static String getResponseError(String content) {
         OnHttpFailureResponse errorResponse = null;
-        String error = AppContext.getAppContext().getString(R.string.network_error);
+        String error = JustUpApplication.getApplication().getApplicationContext().getString(R.string.network_error);
 
         try {
             errorResponse = gson.fromJson(content, OnHttpFailureResponse.class);
@@ -231,7 +231,7 @@ public class ApiWrapper {
     }
 
     public static boolean isOnline() {
-        ConnectivityManager cm = (ConnectivityManager) AppContext.getAppContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager cm = (ConnectivityManager) JustUpApplication.getApplication().getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
 
         return netInfo != null && netInfo.isConnectedOrConnecting();

@@ -69,7 +69,6 @@ import me.justup.upme.entity.FileAddShareWithQuery;
 import me.justup.upme.entity.SendFileToCloudResponse;
 import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.utils.AnimateButtonClose;
-import me.justup.upme.utils.AppContext;
 import me.justup.upme.utils.AppLocale;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
@@ -449,7 +448,7 @@ public class MailMessagesFragment extends Fragment {
                 String content = ApiWrapper.responseBodyToString(responseBody);
                 LOGE(TAG, "sendFileToCloud onFailure(): " + content);
 
-                Toast.makeText(AppContext.getAppContext(), getString(R.string.sent_file_error), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity().getApplicationContext(), getString(R.string.sent_file_error), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -506,7 +505,7 @@ public class MailMessagesFragment extends Fragment {
             public void onClick(DialogInterface dialog, int item) {
                 if (items[item].equals(TAKE_PHOTO)) {
                     Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    if (takePictureIntent.resolveActivity(AppContext.getAppContext().getPackageManager()) != null) {
+                    if (takePictureIntent.resolveActivity(getActivity().getApplicationContext().getPackageManager()) != null) {
                         File photoFile = null;
                         try {
                             photoFile = createImageFile();
@@ -547,7 +546,7 @@ public class MailMessagesFragment extends Fragment {
 
                 case REQUEST_TAKE_IMAGE_FILE:
                     Uri selectedImageUri = data.getData();
-                    mFilePath = getPath(selectedImageUri, AppContext.getAppContext());
+                    mFilePath = getPath(selectedImageUri, getActivity().getApplicationContext());
 
                     try {
                         mAttachImageBitmap = decodeUri(selectedImageUri);
@@ -560,7 +559,7 @@ public class MailMessagesFragment extends Fragment {
 
                 case REQUEST_TAKE_FILE:
                     Uri uriFile = data.getData();
-                    mFilePath = getPath(uriFile, AppContext.getAppContext());
+                    mFilePath = getPath(uriFile, getActivity().getApplicationContext());
 
                     if (mFilePath.contains(".jpg") || mFilePath.contains(".png")) {
                         try {

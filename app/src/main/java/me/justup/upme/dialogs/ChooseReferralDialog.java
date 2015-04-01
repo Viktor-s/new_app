@@ -5,18 +5,15 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.TouchDelegate;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -25,18 +22,15 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import me.justup.upme.JustUpApplication;
 import me.justup.upme.R;
 import me.justup.upme.db.DBAdapter;
 import me.justup.upme.entity.PersonBriefcaseEntity;
 import me.justup.upme.fragments.CalendarFragment;
-import me.justup.upme.utils.AppContext;
 import me.justup.upme.utils.AppPreferences;
 
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_IMG;
@@ -74,7 +68,7 @@ public class ChooseReferralDialog extends DialogFragment { // ChooseReferralDial
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        int currentUserId = new AppPreferences(AppContext.getAppContext()).getUserId();
+        int currentUserId = new AppPreferences(JustUpApplication.getApplication().getApplicationContext()).getUserId();
 
         SQLiteDatabase database = DBAdapter.getInstance().openDatabase();
         String selectQuery = "SELECT * FROM " + MAIL_CONTACT_TABLE_NAME;

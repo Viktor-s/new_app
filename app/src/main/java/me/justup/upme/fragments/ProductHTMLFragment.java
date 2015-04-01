@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,8 +21,6 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -35,7 +32,6 @@ import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import me.justup.upme.R;
@@ -46,7 +42,6 @@ import me.justup.upme.entity.ProductsJSQuery;
 import me.justup.upme.entity.ProductsOrderCreateQuery;
 import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.http.HttpIntentService;
-import me.justup.upme.utils.AppContext;
 
 import static me.justup.upme.db.DBHelper.PRODUCTS_HTML_CONTENT;
 import static me.justup.upme.db.DBHelper.PRODUCTS_HTML_SERVER_ID;
@@ -184,7 +179,7 @@ public class ProductHTMLFragment extends Fragment {
         Bundle bundle = new Bundle();
         bundle.putSerializable(HttpIntentService.HTTP_INTENT_QUERY_EXTRA, entity);
         bundle.putInt(HttpIntentService.HTTP_INTENT_PART_EXTRA, dbTable);
-        Intent intent = new Intent(AppContext.getAppContext(), HttpIntentService.class);
+        Intent intent = new Intent(getActivity().getApplicationContext(), HttpIntentService.class);
         getActivity().startService(intent.putExtras(bundle));
     }
 

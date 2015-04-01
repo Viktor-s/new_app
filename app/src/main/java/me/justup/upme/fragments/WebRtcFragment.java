@@ -4,16 +4,13 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.URLUtil;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -23,6 +20,8 @@ import org.webrtc.StatsReport;
 import org.webrtc.VideoRenderer;
 import org.webrtc.VideoRendererGui;
 
+import me.justup.upme.JustUpApplication;
+import me.justup.upme.MainActivity;
 import me.justup.upme.R;
 import me.justup.upme.apprtc.AppRTCAudioManager;
 import me.justup.upme.apprtc.AppRTCClient;
@@ -35,38 +34,12 @@ import static me.justup.upme.utils.LogUtils.LOGE;
 import static me.justup.upme.utils.LogUtils.LOGI;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
-
+/**
+ * Fragment for peer connection call setup, call waiting
+ * and call view.
+ */
 public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEvents, PeerConnectionClient.PeerConnectionEvents, CallFragment.OnCallEvents {
     private static final String TAG = makeLogTag(WebRtcFragment.class);
-
-    private static final String ROOM_ID = "room_id";
-
-
-    private SharedPreferences sharedPref;
-    private String keyprefResolution;
-    private String keyprefFps;
-    private String keyprefBitrateType;
-    private String keyprefBitrateValue;
-    private String keyprefVideoCodec;
-    private String keyprefHwCodecAcceleration;
-    private String keyprefCpuUsageDetection;
-    private String keyprefDisplayHud;
-    private String keyprefRoomServerUrl;
-    private String keyprefRoom;
-    private String keyprefRoomList;
-
-    public static final String EXTRA_ROOMID = "apprtc.ROOMID";
-    public static final String EXTRA_LOOPBACK = "apprtc.LOOPBACK";
-    public static final String EXTRA_HWCODEC = "apprtc.HWCODEC";
-    public static final String EXTRA_VIDEO_BITRATE = "apprtc.VIDEO_BITRATE";
-    public static final String EXTRA_VIDEO_WIDTH = "apprtc.VIDEO_WIDTH";
-    public static final String EXTRA_VIDEO_HEIGHT = "apprtc.VIDEO_HEIGHT";
-    public static final String EXTRA_VIDEO_FPS = "apprtc.VIDEO_FPS";
-    public static final String EXTRA_VIDEOCODEC = "apprtc.VIDEOCODEC";
-    public static final String EXTRA_CPUOVERUSE_DETECTION = "apprtc.CPUOVERUSE_DETECTION";
-    public static final String EXTRA_DISPLAY_HUD = "apprtc.DISPLAY_HUD";
-    public static final String EXTRA_CMDLINE = "appspot.apprtc.CMDLINE";
-    public static final String EXTRA_RUNTIME = "apprtc.RUNTIME";
 
     // Peer connection statistics callback period in ms.
     private static final int STAT_CALLBACK_PERIOD = 1000;
@@ -87,82 +60,86 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
     private static final int REMOTE_HEIGHT = 100;
 
     private PeerConnectionClient peerConnectionClient = null;
-    private AppRTCClient appRtcClient;
-    private AppRTCClient.SignalingParameters signalingParameters;
+    private AppRTCClient appRtcClient = null;
+    private AppRTCClient.SignalingParameters signalingParameters = null;
     private AppRTCAudioManager audioManager = null;
-    private VideoRenderer.Callbacks localRender;
-    private VideoRenderer.Callbacks remoteRender;
-    private VideoRendererGui.ScalingType scalingType;
-    private Toast logToast;
-    private boolean commandLineRun = false;
+    private VideoRenderer.Callbacks localRender = null;
+    private VideoRenderer.Callbacks remoteRender = null;
+    private VideoRendererGui.ScalingType scalingType = null;
+    private Toast logToast = null;
+    private boolean commandLineRun;
+    private int runTimeMs;
     private boolean activityRunning;
-    private AppRTCClient.RoomConnectionParameters roomConnectionParameters;
-    private PeerConnectionClient.PeerConnectionParameters peerConnectionParameters;
+    private AppRTCClient.RoomConnectionParameters roomConnectionParameters = null;
+    private PeerConnectionClient.PeerConnectionParameters peerConnectionParameters = null;
     private boolean hwCodecAcceleration;
-    private String videoCodec;
+    private String videoCodec = null;
     private boolean iceConnected;
     private boolean isError;
     private boolean callControlFragmentVisible = true;
 
     // Controls
-    private GLSurfaceView videoView;
-    CallFragment callFragment;
+    private GLSurfaceView videoView = null;
+    CallFragment callFragment = null;
 
-    private String roomId;
+    private View mContentView = null;
 
-    public static WebRtcFragment newInstance(String roomId) {
-        Bundle args = new Bundle();
-        args.putString(ROOM_ID, roomId);
+    public static WebRtcFragment newInstance(Bundle callParam) {
         WebRtcFragment fragment = new WebRtcFragment();
-        fragment.setArguments(args);
+        fragment.setArguments(callParam);
+
         return fragment;
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        roomId = (String) getArguments().getSerializable(ROOM_ID);
-        Log.d("TAG_11", "onCreate roomId" + roomId);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        mContentView = super.onCreateView(inflater, container, savedInstanceState);
 
-        // Get setting keys.
-        PreferenceManager.setDefaultValues(getActivity(), R.xml.preferences, false);
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        keyprefResolution = getString(R.string.pref_resolution_key);
-        keyprefFps = getString(R.string.pref_fps_key);
-        keyprefBitrateType = getString(R.string.pref_startbitrate_key);
-        keyprefBitrateValue = getString(R.string.pref_startbitratevalue_key);
-        keyprefVideoCodec = getString(R.string.pref_videocodec_key);
-        keyprefHwCodecAcceleration = getString(R.string.pref_hwcodec_key);
-        keyprefCpuUsageDetection = getString(R.string.pref_cpu_usage_detection_key);
-        keyprefDisplayHud = getString(R.string.pref_displayhud_key);
-        keyprefRoomServerUrl = getString(R.string.pref_room_server_url_key);
-        keyprefRoom = getString(R.string.pref_room_key);
-        keyprefRoomList = getString(R.string.pref_room_list_key);
+        if (mContentView == null) {
+            mContentView = inflater.inflate(R.layout.activity_call, container, false);
+        }
 
+        return mContentView;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // Init UI
+        if (getActivity() != null) {
+
+            // Init Data
+            initUI();
+        }
+    }
+
+    private void initUI(){
         Thread.setDefaultUncaughtExceptionHandler(new UnhandledExceptionHandler(getActivity()));
 
         iceConnected = false;
         signalingParameters = null;
         scalingType = VideoRendererGui.ScalingType.SCALE_ASPECT_FILL;
 
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_call, container, false);
-
         // Create UI controls.
-        videoView = (GLSurfaceView) view.findViewById(R.id.glview_call);
+        videoView = (GLSurfaceView) mContentView.findViewById(R.id.glview_call);
+        callFragment = new CallFragment();
 
-        // Create video renderers.
+        // Create video renders.
         VideoRendererGui.setView(videoView, new Runnable() {
             @Override
             public void run() {
                 createPeerConnectionFactory();
             }
         });
-        remoteRender = VideoRendererGui.create(REMOTE_X, REMOTE_Y, REMOTE_WIDTH, REMOTE_HEIGHT, scalingType, false);
-        localRender = VideoRendererGui.create(LOCAL_X_CONNECTING, LOCAL_Y_CONNECTING, LOCAL_WIDTH_CONNECTING, LOCAL_HEIGHT_CONNECTING, scalingType, true);
+
+        remoteRender = VideoRendererGui.create(
+                REMOTE_X, REMOTE_Y,
+                REMOTE_WIDTH, REMOTE_HEIGHT, scalingType, false);
+
+        localRender = VideoRendererGui.create(
+                LOCAL_X_CONNECTING, LOCAL_Y_CONNECTING,
+                LOCAL_WIDTH_CONNECTING, LOCAL_HEIGHT_CONNECTING, scalingType, true);
 
         // Show/hide call control fragment on view click.
         videoView.setOnClickListener(new View.OnClickListener() {
@@ -172,96 +149,65 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
             }
         });
 
-        ////////////////////// ////////////////////// ////////////////////// ///////////////////////
+        // Get Bundle parameters.
+        final Bundle args = getArguments();
 
-        String roomUrl = sharedPref.getString(keyprefRoomServerUrl, getString(R.string.pref_room_server_url_default));
-
-        // Get default video codec.
-        videoCodec = sharedPref.getString(keyprefVideoCodec, getString(R.string.pref_videocodec_default));
-
-        // Check HW codec flag.
-        hwCodecAcceleration = sharedPref.getBoolean(keyprefHwCodecAcceleration, Boolean.valueOf(getString(R.string.pref_hwcodec_default)));
-
-        // Get video resolution from settings.
-        int videoWidth = 0;
-        int videoHeight = 0;
-        String resolution = sharedPref.getString(keyprefResolution, getString(R.string.pref_resolution_default));
-        String[] dimensions = resolution.split("[ x]+");
-        if (dimensions.length == 2) {
-            try {
-                videoWidth = Integer.parseInt(dimensions[0]);
-                videoHeight = Integer.parseInt(dimensions[1]);
-            } catch (NumberFormatException e) {
-                videoWidth = 0;
-                videoHeight = 0;
-                Log.e(TAG, "Wrong video resolution setting: " + resolution);
-            }
-        }
-
-        // Get camera fps from settings.
-        int cameraFps = 0;
-        String fps = sharedPref.getString(keyprefFps, getString(R.string.pref_fps_default));
-        String[] fpsValues = fps.split("[ x]+");
-        if (fpsValues.length == 2) {
-            try {
-                cameraFps = Integer.parseInt(fpsValues[0]);
-            } catch (NumberFormatException e) {
-                Log.e(TAG, "Wrong camera fps setting: " + fps);
-            }
-        }
-
-        // Get start bitrate.
-        int startBitrate = 0;
-        String bitrateTypeDefault = getString(R.string.pref_startbitrate_default);
-        String bitrateType = sharedPref.getString(keyprefBitrateType, bitrateTypeDefault);
-        if (!bitrateType.equals(bitrateTypeDefault)) {
-            String bitrateValue = sharedPref.getString(keyprefBitrateValue, getString(R.string.pref_startbitratevalue_default));
-            startBitrate = Integer.parseInt(bitrateValue);
-        }
-
-        // Test if CpuOveruseDetection should be disabled. By default is on.
-        boolean cpuOveruseDetection = sharedPref.getBoolean(keyprefCpuUsageDetection, Boolean.valueOf(getString(R.string.pref_cpu_usage_detection_default)));
-
-        // Check statistics display option.
-        boolean displayHud = sharedPref.getBoolean(keyprefDisplayHud, Boolean.valueOf(getString(R.string.pref_displayhud_default)));
-
-
-        Log.d("TAG", "roomUrl - " + roomUrl + " videoCodec - " + videoCodec + " hwCodecAcceleration - " + hwCodecAcceleration +
-                " resolution - " + resolution + " fps - " + fps + " bitrateType - " + bitrateType + " bitrateValue - " + startBitrate +
-                " cpuOveruseDetection - " + cpuOveruseDetection + " displayHud - " + displayHud);
-        ////////////////////////////////////////////////////////////////////////////////////////////
-
-        Uri roomUri;
-        if (validateUrl(roomUrl))
-            roomUri = Uri.parse(roomUrl);
-        else {
-            roomUri = Uri.parse("");
+        String roomUrlString = args.getString(JustUpApplication.EXTRA_ROOM_URL);
+        Uri roomUri = null;
+        if (roomUrlString == null) {
             logAndToast(getString(R.string.missing_url));
             Log.e(TAG, "Didn't get any URL in intent!");
-        }
-        peerConnectionParameters = new PeerConnectionClient.PeerConnectionParameters(videoWidth, videoHeight, cameraFps, startBitrate, cpuOveruseDetection);
 
+            // setResult(RESULT_CANCELED);
+            // finish();
+
+            return;
+        }else{
+            roomUri = Uri.parse(roomUrlString);
+        }
+
+        String roomId = args.getString(JustUpApplication.EXTRA_ROOMID);
+        if (roomId == null || roomId.length() == 0) {
+            logAndToast(getString(R.string.missing_url));
+            Log.e(TAG, "Incorrect room ID in intent!");
+
+            // setResult(RESULT_CANCELED);
+            // finish();
+
+            return;
+        }
+
+        boolean loopback = args.getBoolean(JustUpApplication.EXTRA_LOOPBACK, false);
+        hwCodecAcceleration = args.getBoolean(JustUpApplication.EXTRA_HWCODEC, true);
+
+        if (args.getString(JustUpApplication.EXTRA_VIDEOCODEC)!=null) {
+            videoCodec = args.getString(JustUpApplication.EXTRA_VIDEOCODEC);
+        } else {
+            videoCodec = PeerConnectionClient.VIDEO_CODEC_VP8; // use VP8 by default.
+        }
+
+        peerConnectionParameters = new PeerConnectionClient.PeerConnectionParameters(
+                args.getInt(JustUpApplication.EXTRA_VIDEO_WIDTH, 0),
+                args.getInt(JustUpApplication.EXTRA_VIDEO_HEIGHT, 0),
+                args.getInt(JustUpApplication.EXTRA_VIDEO_FPS, 0),
+                args.getInt(JustUpApplication.EXTRA_VIDEO_BITRATE, 0),
+                args.getBoolean(JustUpApplication.EXTRA_CPUOVERUSE_DETECTION, true));
+
+        commandLineRun = args.getBoolean(JustUpApplication.EXTRA_CMDLINE, false);
+
+        runTimeMs = args.getInt(JustUpApplication.EXTRA_RUNTIME, 0);
 
         // Create connection client and connection parameters.
         appRtcClient = new WebSocketRTCClient(this, new LooperExecutor());
-        Boolean loopback = false; // сам себе
         roomConnectionParameters = new AppRTCClient.RoomConnectionParameters(roomUri.toString(), roomId, loopback);
 
         // Send intent arguments to fragment.
-        callFragment = new CallFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString(WebRtcFragment.EXTRA_ROOMID, roomId);
-        bundle.putBoolean(WebRtcFragment.EXTRA_DISPLAY_HUD, displayHud);
-        callFragment.setArguments(bundle);
-
+        callFragment.setArguments(args);
         // Activate call fragment and start the call.
-        // getActivity().getFragmentManager().beginTransaction().add(R.id.call_fragment_container, callFragment).commit();
-        getChildFragmentManager().beginTransaction().add(R.id.call_fragment_container, callFragment).commit();
-
+        getFragmentManager().beginTransaction().add(R.id.call_fragment_container, callFragment).commit();
         startCall();
 
         // For command line execution run connection for <runTimeMs> and exit.
-        int runTimeMs = 0;
         if (commandLineRun && runTimeMs > 0) {
             videoView.postDelayed(new Runnable() {
                 public void run() {
@@ -269,23 +215,11 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
                 }
             }, runTimeMs);
         }
-
-        LOGI(TAG, "WebRTC init");
-//        videoView.onResume();
-        activityRunning = true;
-//        if (peerConnectionClient != null) {
-//            peerConnectionClient.startVideoSource();
-//        }
-
-        return view;
     }
 
-    // Activity interfaces
-    /*
     @Override
     public void onPause() {
         super.onPause();
-
         videoView.onPause();
         activityRunning = false;
         if (peerConnectionClient != null) {
@@ -302,31 +236,30 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
             peerConnectionClient.startVideoSource();
         }
     }
-    */
+
+//    @Override
+//    public void onStop() {
+//        super.onStop();
+//
+//        disconnect();
+//
+//        if (logToast != null) {
+//            logToast.cancel();
+//        }
+//        
+//        activityRunning = false;
+//    }
 
     @Override
-    public void onStop() {
-        super.onStop();
-
+     public void onDestroy() {
         disconnect();
-
-        if (logToast != null) {
-            logToast.cancel();
-        }
-        activityRunning = false;
-    }
-
-    /*
-    @Override
-    public void onDestroy() {
-
         super.onDestroy();
         if (logToast != null) {
             logToast.cancel();
         }
+
         activityRunning = false;
     }
-    */
 
     // CallFragment.OnCallEvents interface implementation.
     @Override
@@ -344,18 +277,33 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
     @Override
     public void onVideoScalingSwitch(VideoRendererGui.ScalingType scalingType) {
         this.scalingType = scalingType;
+
+        // New functionality
         RelativeLayout containerVideoChat = (RelativeLayout) getActivity().findViewById(R.id.container_video_chat);
         if (scalingType == VideoRendererGui.ScalingType.SCALE_ASPECT_FIT)
             containerVideoChat.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
         else {
-            int dpValue = 250;
+            // int dpValue = (int)getActivity().getResources().getDimension(R.dimen.base250dp720sw);
+            int dpValue = 160;
             float d = getActivity().getResources().getDisplayMetrics().density;
             int size = (int) (dpValue * d);
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(size, size);
             params.addRule(RelativeLayout.ALIGN_PARENT_END, 1);
             containerVideoChat.setLayoutParams(params);
         }
+
         // updateVideoView();
+
+    }
+
+    private void updateVideoView() {
+        VideoRendererGui.update(remoteRender, REMOTE_X, REMOTE_Y, REMOTE_WIDTH, REMOTE_HEIGHT, scalingType);
+
+        if (iceConnected) {
+            VideoRendererGui.update(localRender, LOCAL_X_CONNECTED, LOCAL_Y_CONNECTED, LOCAL_WIDTH_CONNECTED, LOCAL_HEIGHT_CONNECTED, VideoRendererGui.ScalingType.SCALE_ASPECT_FIT);
+        } else {
+            VideoRendererGui.update(localRender, LOCAL_X_CONNECTING, LOCAL_Y_CONNECTING, LOCAL_WIDTH_CONNECTING, LOCAL_HEIGHT_CONNECTING, scalingType);
+        }
     }
 
     // Helper functions.
@@ -363,6 +311,7 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
         if (!iceConnected || !callFragment.isAdded()) {
             return;
         }
+
         // Show/hide call control fragment
         callControlFragmentVisible = !callControlFragmentVisible;
         FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -371,17 +320,9 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
         } else {
             ft.hide(callFragment);
         }
+
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         ft.commit();
-    }
-
-    private void updateVideoView() {
-        VideoRendererGui.update(remoteRender, REMOTE_X, REMOTE_Y, REMOTE_WIDTH, REMOTE_HEIGHT, scalingType);
-        if (iceConnected) {
-            VideoRendererGui.update(localRender, LOCAL_X_CONNECTED, LOCAL_Y_CONNECTED, LOCAL_WIDTH_CONNECTED, LOCAL_HEIGHT_CONNECTED, VideoRendererGui.ScalingType.SCALE_ASPECT_FIT);
-        } else {
-            VideoRendererGui.update(localRender, LOCAL_X_CONNECTING, LOCAL_Y_CONNECTING, LOCAL_WIDTH_CONNECTING, LOCAL_HEIGHT_CONNECTING, scalingType);
-        }
     }
 
     private void startCall() {
@@ -389,6 +330,7 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
             Log.e(TAG, "AppRTC client is not allocated for a call.");
             return;
         }
+
         // Start room connection.
         logAndToast(getString(R.string.connecting_to, roomConnectionParameters.roomUrl));
         appRtcClient.connectToRoom(roomConnectionParameters);
@@ -402,6 +344,7 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
                     }
                 }
         );
+
         // Store existing audio settings and change audio mode to
         // MODE_IN_COMMUNICATION for best possible VoIP performance.
         Log.d(TAG, "Initializing the audio manager...");
@@ -440,7 +383,8 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
 
     // Disconnect from remote resources, dispose of local resources, and exit.
     private void disconnect() {
-        LOGI(TAG, "disconnect()");
+
+        LOGI(TAG, "Disconnect()");
 
         if (appRtcClient != null) {
             appRtcClient.disconnectFromRoom();
@@ -465,19 +409,16 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
             LOGE(TAG, "RESULT_CANCELED");
         }
 
-        if (callFragment != null) {
-            getChildFragmentManager().beginTransaction().remove(callFragment).commitAllowingStateLoss();
-        }
-        getActivity().getFragmentManager().beginTransaction().remove(this).commitAllowingStateLoss();
+        ((MainActivity)getActivity()).clearDataAfterCallRTC();
     }
 
     private void disconnectWithErrorMessage(final String errorMessage) {
         if (commandLineRun || !activityRunning) {
-            LOGE(TAG, "Critical error: " + errorMessage);
+            LOGE(TAG, "Critical error : " + errorMessage);
 
             disconnect();
         } else {
-            LOGE(TAG, "disconnectWithErrorMessage DIALOG");
+            LOGE(TAG, "DisconnectWithErrorMessage DIALOG");
 
             if (WebRtcFragment.this.isAdded()) {
                 new AlertDialog.Builder(getActivity()).setTitle(getText(R.string.channel_error_title))
@@ -491,7 +432,6 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
                             }
                         }).create().show();
             }
-
         }
     }
 
@@ -501,6 +441,7 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
         if (logToast != null) {
             logToast.cancel();
         }
+
         logToast = Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT);
         logToast.show();
     }
@@ -513,6 +454,7 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
             Log.w(TAG, "Room is connected, but EGL context is not ready yet.");
             return;
         }
+
         logAndToast("Creating peer connection...");
         peerConnectionClient.createPeerConnection(localRender, remoteRender, signalingParameters, peerConnectionParameters);
 
@@ -527,6 +469,7 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
                 // Create answer. Answer SDP will be sent to offering client in PeerConnectionEvents.onLocalDescription event.
                 peerConnectionClient.createAnswer();
             }
+
             if (params.iceCandidates != null) {
                 // Add remote ICE candidates from room.
                 for (IceCandidate iceCandidate : params.iceCandidates) {
@@ -555,8 +498,10 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
                     Log.e(TAG, "Received remote SDP for non-initilized peer connection.");
                     return;
                 }
+
                 logAndToast("Received remote " + sdp.type + " ...");
                 peerConnectionClient.setRemoteDescription(sdp);
+
                 if (!signalingParameters.initiator) {
                     logAndToast("Creating ANSWER...");
                     // Create answer. Answer SDP will be sent to offering client in
@@ -576,6 +521,7 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
                     Log.e(TAG, "Received ICE candidate for non-initilized peer connection.");
                     return;
                 }
+
                 peerConnectionClient.addRemoteIceCandidate(candidate);
             }
         });
@@ -690,22 +636,4 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
             }
         });
     }
-
-    private boolean validateUrl(String url) {
-        if (URLUtil.isHttpsUrl(url) || URLUtil.isHttpUrl(url)) {
-            return true;
-        }
-
-        new AlertDialog.Builder(getActivity())
-                .setTitle(getText(R.string.invalid_url_title))
-                .setMessage(getString(R.string.invalid_url_text, url))
-                .setCancelable(false)
-                .setNeutralButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                }).create().show();
-        return false;
-    }
-
 }
