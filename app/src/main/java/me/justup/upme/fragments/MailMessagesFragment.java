@@ -83,6 +83,8 @@ public class MailMessagesFragment extends Fragment {
     private static final String FRIEND_NAME = "mail_messages_friend_name";
     private static final String YOUR_NAME = "mail_messages_your_name";
     private static final String FRIEND_ID = "mail_messages_friend_id";
+    private static final String FRIEND_JABBER_ID = "mail_messages_friend_jabber_id";
+    private static final String YOUR_JABBER_ID = "mail_messages_your_jabber_id";
 
     private static final int REQUEST_TAKE_PHOTO = 0;
     private static final int REQUEST_TAKE_IMAGE_FILE = 1;
@@ -109,7 +111,6 @@ public class MailMessagesFragment extends Fragment {
     private static final String HOST = "95.213.170.164";
     private static final int PORT = 3222;
     private static final String SERVICE = "upme-spb-pbx-dlj01";
-    private static final String PASSWORD = "TempuS123#";
 
     private static final String AT = "@";
     private static final String DOTS = ": ";
@@ -128,18 +129,23 @@ public class MailMessagesFragment extends Fragment {
     private Button mSendButton;
 
     private EditText mTextMessage;
+    private String mFriendJabberId;
     private String mFriendName;
     private int friendId;
     private String mYourName;
+    private String mYourJabberId;
+    private String mYourPassword;
     private String mFilePath;
 
 
-    public static MailMessagesFragment newInstance(String yourName, String userName, int userId) {
+    public static MailMessagesFragment newInstance(String yourName, String yourJabberId, String userName, String userJabberId, int userId) {
         MailMessagesFragment fragment = new MailMessagesFragment();
 
         Bundle args = new Bundle();
+        args.putString(FRIEND_JABBER_ID, userJabberId);
         args.putString(FRIEND_NAME, userName);
         args.putString(YOUR_NAME, yourName);
+        args.putString(YOUR_JABBER_ID, yourJabberId);
         args.putInt(FRIEND_ID, userId);
         fragment.setArguments(args);
 
@@ -152,7 +158,9 @@ public class MailMessagesFragment extends Fragment {
         mAttachFileType = AttachFileType.NOTHING;
 
         mYourName = getArguments().getString(YOUR_NAME, "");
-        mFriendName = getArguments().getString(FRIEND_NAME, "") + AT + SERVICE;
+        mFriendName = getArguments().getString(FRIEND_NAME, "");
+        mYourJabberId = mYourPassword = getArguments().getString(YOUR_JABBER_ID, "");
+        mFriendJabberId = getArguments().getString(FRIEND_JABBER_ID, "") + AT + SERVICE;
         friendId = getArguments().getInt(FRIEND_ID, 0);
     }
 
@@ -239,7 +247,7 @@ public class MailMessagesFragment extends Fragment {
         mSendButton = (Button) view.findViewById(R.id.mail_messages_add_button);
         mSendButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                String to = mFriendName;
+                String to = mFriendJabberId;
                 String text = mTextMessage.getText().toString();
                 mTextMessage.setText("");
 
@@ -325,7 +333,7 @@ public class MailMessagesFragment extends Fragment {
 
                 try {
                     // SASLAuthentication.supportSASLMechanism("PLAIN", 0);
-                    connection.login(mYourName, PASSWORD);
+                    connection.login(mYourJabberId, mYourPassword);
                     LOGI(TAG, "Logged in as " + connection.getUser());
 
                     Presence presence = new Presence(Presence.Type.available);
@@ -354,7 +362,7 @@ public class MailMessagesFragment extends Fragment {
                     */
 
                 } catch (XMPPException ex) {
-                    LOGE(TAG, "Failed to log in as " + mYourName);
+                    LOGE(TAG, "Failed to log in as " + mYourJabberId);
                     LOGE(TAG, ex.toString());
                     setConnection(null);
                 }
@@ -395,13 +403,13 @@ public class MailMessagesFragment extends Fragment {
         mChatLineBuilder.setLength(0);
         String user = parts[0];
 
-        if (user.equals(mYourName)) {
-            mChatLineBuilder.append(START_HTML_OWNER);
+        if (user.equals(mYourJabberId)) {
+            mChatLineBuilder.append(START_HTML_OWNER).append(mYourName);
         } else {
-            mChatLineBuilder.append(START_HTML_COMPANION);
+            mChatLineBuilder.append(START_HTML_COMPANION).append(mFriendName);
         }
 
-        mChatLineBuilder.append(user).append(DOTS).append(END_HTML).append(text);
+        mChatLineBuilder.append(DOTS).append(END_HTML).append(text);
 
         return Html.fromHtml(mChatLineBuilder.toString());
     }

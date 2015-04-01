@@ -115,9 +115,13 @@ public class MailFragment extends Fragment {
 
             if (push.getType() == JABBER) {
                 String friendJabberId = push.getJabberId();
+                String friendName = push.getUserName();
                 String yourJabberId = appPreferences.getJabberId();
+                String yourName = appPreferences.getUserName();
 
-                getChildFragmentManager().beginTransaction().replace(R.id.mail_messages_container_frameLayout, MailMessagesFragment.newInstance(yourJabberId, friendJabberId, push.getUserId())).commit();
+                getChildFragmentManager().beginTransaction()
+                        .replace(R.id.mail_messages_container_frameLayout, MailMessagesFragment.newInstance(yourName, yourJabberId, friendName, friendJabberId, push.getUserId())).commit();
+
             } else if (push.getType() == WEBRTC) {
                 final FragmentTransaction ft = getChildFragmentManager().beginTransaction();
                 ft.replace(R.id.mail_messages_container_frameLayout, WebRtcFragment.newInstance(String.valueOf(push.getRoom())));
@@ -132,12 +136,16 @@ public class MailFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 CommonUtils.hideKeyboard(getActivity());
                 if (lastChosenPosition != position) {
-                    String friendJabberId = mMailContactsAdapter.getCursor().getString(mMailContactsAdapter.getCursor().getColumnIndex(DBHelper.MAIL_CONTACT_NAME));
+                    String friendJabberId = mMailContactsAdapter.getCursor().getString(mMailContactsAdapter.getCursor().getColumnIndex(DBHelper.MAIL_CONTACT_JABBER_ID));
+                    String friendName = mMailContactsAdapter.getCursor().getString(mMailContactsAdapter.getCursor().getColumnIndex(DBHelper.MAIL_CONTACT_NAME));
                     String yourJabberId = appPreferences.getJabberId();
+                    String yourName = appPreferences.getUserName();
                     int userId = mMailContactsAdapter.getCursor().getInt(mMailContactsAdapter.getCursor().getColumnIndex(DBHelper.MAIL_CONTACT_SERVER_ID));
+
                     startNotificationIntent(userId);
+
                     final FragmentTransaction ft = getChildFragmentManager().beginTransaction();
-                    ft.replace(R.id.mail_messages_container_frameLayout, MailMessagesFragment.newInstance(yourJabberId, friendJabberId, userId));
+                    ft.replace(R.id.mail_messages_container_frameLayout, MailMessagesFragment.newInstance(yourName, yourJabberId, friendName, friendJabberId, userId));
                     ft.commit();
                     lastChosenPosition = position;
                 }
