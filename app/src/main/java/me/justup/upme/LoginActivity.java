@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
@@ -88,9 +89,24 @@ public class LoginActivity extends BaseActivity {
         String versionName = "";
         try {
             versionName = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
-        } catch (PackageManager.NameNotFoundException ignored) {}
+        } catch (PackageManager.NameNotFoundException ignored) {
+        }
 
         appVersion.setText("UPME v" + versionName);
+
+        final EditText mNewUrlString = (EditText) findViewById(R.id.test_set_url_editText);
+        Button mSetNewUrl = (Button) findViewById(R.id.test_set_url_button);
+        mSetNewUrl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String newUrl = mNewUrlString.getText().toString();
+
+                if (newUrl != null && newUrl.length() > 2) {
+                    mNewUrlString.setText("");
+                    ServerSwitcher.getInstance().setUrl(newUrl);
+                }
+            }
+        });
 
         RadioGroup radiogroup = (RadioGroup) findViewById(R.id.server_radioGroup);
         radiogroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
