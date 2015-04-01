@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
@@ -46,7 +45,6 @@ import me.justup.upme.entity.CommentAddQuery;
 import me.justup.upme.entity.CommentsArticleFullQuery;
 import me.justup.upme.http.HttpIntentService;
 import me.justup.upme.utils.AnimateButtonClose;
-import me.justup.upme.utils.AppContext;
 import me.justup.upme.utils.AppPreferences;
 import me.justup.upme.utils.CommonUtils;
 
@@ -131,7 +129,7 @@ public class NewsItemFragment extends Fragment {
                     ArticleShortCommentEntity articleShortCommentEntity = mLastShortComment;
                     articleShortCommentEntity.setContent(CommonUtils.convertFromUTF8(mLastShortComment.getContent()));
                     articleCommentsList.add(articleShortCommentEntity);
-                    mNewsItemCommentsListView.setAdapter(new NewsCommentsAdapter(AppContext.getAppContext(), articleCommentsList));
+                    mNewsItemCommentsListView.setAdapter(new NewsCommentsAdapter(getActivity().getApplicationContext(), articleCommentsList));
                     setListViewHeightBasedOnChildren(mNewsItemCommentsListView);
                     mNewsItemCommentEditText.setText("");
                     ((MainActivity) NewsItemFragment.this.getActivity()).startHttpIntent(getCommentsFullArticleQuery(mArticleFullEntity.getId(), 100, 0), HttpIntentService.GET_COMMENTS_FULL_ARTICLE);
@@ -276,7 +274,7 @@ public class NewsItemFragment extends Fragment {
     private void updateCommentsList() {
         if (mArticleFullEntity.getComments() != null) {
             articleCommentsList = mArticleFullEntity.getComments();
-            mNewsItemCommentsListView.setAdapter(new NewsCommentsAdapter(AppContext.getAppContext(), articleCommentsList));
+            mNewsItemCommentsListView.setAdapter(new NewsCommentsAdapter(getActivity().getApplicationContext(), articleCommentsList));
             setListViewHeightBasedOnChildren(mNewsItemCommentsListView);
         }
     }

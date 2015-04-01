@@ -32,7 +32,6 @@ import static me.justup.upme.utils.LogUtils.LOGE;
 import static me.justup.upme.utils.LogUtils.LOGI;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
-
 /**
  * This {@code IntentService} does the actual handling of the GCM message.
  * {@code GcmBroadcastReceiver} (a {@code WakefulBroadcastReceiver}) holds a
@@ -56,8 +55,7 @@ public class GcmIntentService extends IntentService {
 
     private static final String TIME_FORMAT = "HH:mm - dd MMMM yyyy";
 
-    private Handler mHandler;
-
+    private Handler mHandler= new Handler();
 
     public GcmIntentService() {
         super("GcmIntentService");
@@ -66,8 +64,6 @@ public class GcmIntentService extends IntentService {
     @Override
     public void onCreate() {
         super.onCreate();
-
-        mHandler = new Handler();
 
         DBAdapter.getInstance().openDatabase();
     }
@@ -82,16 +78,16 @@ public class GcmIntentService extends IntentService {
         if (!extras.isEmpty()) {  // has effect of unparcelling Bundle
             switch (messageType) {
                 case GoogleCloudMessaging.MESSAGE_TYPE_SEND_ERROR:
-                    LOGE(TAG, "Send error: " + extras.toString());
+                    LOGE(TAG, "Send error : " + extras.toString());
                     break;
 
                 case GoogleCloudMessaging.MESSAGE_TYPE_DELETED:
-                    LOGD(TAG, "Deleted messages on server: " + extras.toString());
+                    LOGD(TAG, "Deleted messages on server : " + extras.toString());
                     break;
 
                 // If it's a regular GCM message, do some work.
                 case GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE:
-                    LOGI(TAG, "PUSH received: " + extras.toString());
+                    LOGI(TAG, "PUSH received : " + extras.toString());
 
                     final Push push = createPushObject((String) extras.get(CONNECTIONS));
 
@@ -99,6 +95,7 @@ public class GcmIntentService extends IntentService {
                     if (push != null && push.getType() != 0) {
                         sendNotification(push);
                     }
+
                     break;
 
                 default:
@@ -117,8 +114,11 @@ public class GcmIntentService extends IntentService {
         DBAdapter.getInstance().closeDatabase();
     }
 
+    // Put the message into a notification and post it.
+    // This is just one simple example of what you might choose to do with
+    // a GCM message.
     private void sendNotification(final Push push) {
-        LOGD(TAG, "sendNotification(): " + push.toString());
+        LOGD(TAG, "Push message : " + push.toString());
 
         if (push.getType() == MailFragment.BREAK_CALL) {
             Intent i = new Intent(MainActivity.BROADCAST_ACTION_BREAK_CALL);
@@ -135,9 +135,9 @@ public class GcmIntentService extends IntentService {
         sendBroadcast(i);
 
         if (push.getType() == MailFragment.WEBRTC) {
-            Intent webrtcIntent = new Intent(MainActivity.BROADCAST_ACTION_CALL);
-            webrtcIntent.putExtra(MainActivity.BROADCAST_EXTRA_PUSH, push);
-            sendBroadcast(webrtcIntent);
+            Intent webRTCIntent = new Intent(MainActivity.BROADCAST_ACTION_CALL);
+            webRTCIntent.putExtra(MainActivity.BROADCAST_EXTRA_PUSH, push);
+            sendBroadcast(webRTCIntent);
 
             playNotify(TYPE_CALL);
         } else {
@@ -193,7 +193,7 @@ public class GcmIntentService extends IntentService {
                 push.setPushDescription(jsonObject.getString(PUSH_DESCRIPTION));
 
         } catch (JSONException e) {
-            LOGE(TAG, "createPushObject()", e);
+            LOGE(TAG, "createPushObject() \nError : ", e);
             return null;
         }
 

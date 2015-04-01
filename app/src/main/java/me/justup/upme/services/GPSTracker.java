@@ -20,7 +20,6 @@ import java.util.TimerTask;
 import me.justup.upme.entity.GPSEntity;
 import me.justup.upme.entity.SendGPSQuery;
 import me.justup.upme.http.ApiWrapper;
-import me.justup.upme.utils.AppContext;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.LOGE;
@@ -59,7 +58,7 @@ public class GPSTracker extends Service implements LocationListener {
         super.onCreate();
         LOGI(TAG, "Start GPSTracker");
 
-        mContext = AppContext.getAppContext();
+        mContext = getApplicationContext();
         getLocation();
 
         if (mTimer == null) {

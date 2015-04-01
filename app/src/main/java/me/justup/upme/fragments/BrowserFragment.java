@@ -13,11 +13,9 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 
 import me.justup.upme.R;
-import me.justup.upme.utils.AppContext;
 import me.justup.upme.utils.AppPreferences;
 
 import static me.justup.upme.utils.LogUtils.makeLogTag;
-
 
 public class BrowserFragment extends Fragment implements View.OnClickListener {
     private static final String TAG = makeLogTag(BrowserFragment.class);
@@ -26,9 +24,11 @@ public class BrowserFragment extends Fragment implements View.OnClickListener {
     private static final String HTTP = "http://";
 
     private WebView mWebView = null;
-    private EditText mUrlField;
-    private AppPreferences mAppPreferences = new AppPreferences(AppContext.getAppContext());
+    private EditText mUrlField = null;
 
+    private View mContentView = null;
+
+    private AppPreferences mAppPreferences = null;
 
     @Override
     public void onResume() {
@@ -41,42 +41,57 @@ public class BrowserFragment extends Fragment implements View.OnClickListener {
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_browser, container, false);
+        mContentView = super.onCreateView(inflater, container, savedInstanceState);
 
-        mWebView = (WebView) view.findViewById(R.id.browser_webView);
-        mUrlField = (EditText) view.findViewById(R.id.browser_url_editText);
+        if (mContentView == null) {
+            mContentView = inflater.inflate(R.layout.fragment_browser, container, false);
+        }
 
-        ImageButton mGoButton = (ImageButton) view.findViewById(R.id.browser_go_button);
-        mGoButton.setOnClickListener(new OnLoadUrlListener());
+        return mContentView;
+    }
 
-        ImageButton mBackButton = (ImageButton) view.findViewById(R.id.browser_back_button);
-        mBackButton.setOnClickListener(this);
-        ImageButton mHomeButton = (ImageButton) view.findViewById(R.id.browser_home_button);
-        mHomeButton.setOnClickListener(this);
-        ImageButton mForwardButton = (ImageButton) view.findViewById(R.id.browser_forward_button);
-        mForwardButton.setOnClickListener(this);
-        ImageButton mReloadButton = (ImageButton) view.findViewById(R.id.browser_reload_button);
-        mReloadButton.setOnClickListener(this);
-        ImageButton mStopButton = (ImageButton) view.findViewById(R.id.browser_stop_button);
-        mStopButton.setOnClickListener(this);
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-        mWebView.getSettings().setJavaScriptEnabled(true);
-        mWebView.setWebChromeClient(new WebChromeClient());
-        mWebView.setWebViewClient(new WebViewClient() {
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
-                return true;
-            }
+        mAppPreferences = new AppPreferences(getActivity().getApplicationContext());
 
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                super.onPageFinished(view, url);
-                mUrlField.setText(url);
-            }
-        });
+        // Init UI
+        if (getActivity() != null) {
 
-        return view;
+            mWebView = (WebView) mContentView.findViewById(R.id.browser_webView);
+            mUrlField = (EditText) mContentView.findViewById(R.id.browser_url_editText);
+
+            ImageButton mGoButton = (ImageButton) mContentView.findViewById(R.id.browser_go_button);
+            mGoButton.setOnClickListener(new OnLoadUrlListener());
+
+            ImageButton mBackButton = (ImageButton) mContentView.findViewById(R.id.browser_back_button);
+            mBackButton.setOnClickListener(this);
+            ImageButton mHomeButton = (ImageButton) mContentView.findViewById(R.id.browser_home_button);
+            mHomeButton.setOnClickListener(this);
+            ImageButton mForwardButton = (ImageButton) mContentView.findViewById(R.id.browser_forward_button);
+            mForwardButton.setOnClickListener(this);
+            ImageButton mReloadButton = (ImageButton) mContentView.findViewById(R.id.browser_reload_button);
+            mReloadButton.setOnClickListener(this);
+            ImageButton mStopButton = (ImageButton) mContentView.findViewById(R.id.browser_stop_button);
+            mStopButton.setOnClickListener(this);
+
+            mWebView.getSettings().setJavaScriptEnabled(true);
+            mWebView.setWebChromeClient(new WebChromeClient());
+            mWebView.setWebViewClient(new WebViewClient() {
+                @Override
+                public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                    view.loadUrl(url);
+                    return true;
+                }
+
+                @Override
+                public void onPageFinished(WebView view, String url) {
+                    super.onPageFinished(view, url);
+                    mUrlField.setText(url);
+                }
+            });
+        }
     }
 
     @Override

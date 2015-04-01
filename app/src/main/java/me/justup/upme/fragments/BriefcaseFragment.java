@@ -35,7 +35,6 @@ import me.justup.upme.entity.GetAccountPanelInfoQuery;
 import me.justup.upme.entity.PersonBriefcaseEntity;
 import me.justup.upme.entity.ReferalAddQuery;
 import me.justup.upme.http.HttpIntentService;
-import me.justup.upme.utils.AppContext;
 import me.justup.upme.utils.AppPreferences;
 import me.justup.upme.utils.CircularImageView;
 
@@ -113,7 +112,7 @@ public class BriefcaseFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_briefcase, container, false);
-        mFragmentSliderFadeIn = AnimationUtils.loadAnimation(AppContext.getAppContext(), R.anim.fragment_item_slide_fade_in);
+        mFragmentSliderFadeIn = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.fragment_item_slide_fade_in);
         mFragmentSliderOut = AnimationUtils.loadAnimation(getActivity(), R.anim.order_slider_out);
         mFragmentSliderOut.setAnimationListener(new Animation.AnimationListener() {
             @Override
@@ -138,8 +137,8 @@ public class BriefcaseFragment extends Fragment {
         mUserContactsCountTextView = (TextView) view.findViewById(R.id.briefcase_fragment_user_contacts_count);
         mUserContainer = (FrameLayout) view.findViewById(R.id.briefcase_user_info_container_frameLayout);
         CircularImageView mUserImageImageView = (CircularImageView) view.findViewById(R.id.briefcase_fragment_user_photo);
-        mObjectIdTextView.setText("" + new AppPreferences(AppContext.getAppContext()).getUserId());
-        mUserNameTextView.setText(new AppPreferences(AppContext.getAppContext()).getUserName());
+        mObjectIdTextView.setText("" + new AppPreferences(getActivity().getApplicationContext()).getUserId());
+        mUserNameTextView.setText(new AppPreferences(getActivity().getApplicationContext()).getUserName());
         updatePersonsList();
         containerLayout = (LinearLayout) view.findViewById(R.id.containerLayout);
         photoLayout = (RelativeLayout) view.findViewById(R.id.photo_main);
@@ -217,7 +216,7 @@ public class BriefcaseFragment extends Fragment {
 
     private List<PersonBriefcaseEntity> fillPersonsFromCursor(Cursor cursorPersons) {
         ArrayList<PersonBriefcaseEntity> personsList = new ArrayList<>();
-        AppPreferences appPreferences = new AppPreferences(AppContext.getAppContext());
+        AppPreferences appPreferences = new AppPreferences(getActivity().getApplicationContext());
         int userId = appPreferences.getUserId();
         String userName = appPreferences.getUserName();
         PersonBriefcaseEntity personBriefcaseEntityUser = new PersonBriefcaseEntity(userId, 0, userName, " ");
@@ -322,7 +321,7 @@ public class BriefcaseFragment extends Fragment {
                     LOGI(TAG, "id personal " + idPersonal);
                     GetAccountPanelInfoQuery getLoggedUserInfoQuery = new GetAccountPanelInfoQuery();
                     getLoggedUserInfoQuery.params.id = idPersonal;
-                    Animation mFragmentSliderFadeIn = AnimationUtils.loadAnimation(AppContext.getAppContext(), R.anim.fragment_item_slide_fade_in);
+                    Animation mFragmentSliderFadeIn = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.fragment_item_slide_fade_in);
                     Fragment fragment = UserFragment.newInstance(getLoggedUserInfoQuery, false);
                     getChildFragmentManager().beginTransaction().replace(R.id.briefcase_user_info_container_frameLayout, fragment, "UserFragmentBriefcase").commit();
                     mUserContainer.startAnimation(mFragmentSliderFadeIn);

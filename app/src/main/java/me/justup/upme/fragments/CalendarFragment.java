@@ -57,7 +57,6 @@ import me.justup.upme.entity.CalendarRemoveEventQuery;
 import me.justup.upme.entity.CalendarUpdateEventQuery;
 import me.justup.upme.entity.PersonBriefcaseEntity;
 import me.justup.upme.http.HttpIntentService;
-import me.justup.upme.utils.AppContext;
 import me.justup.upme.utils.AppPreferences;
 import me.justup.upme.utils.CommonUtils;
 import me.justup.upme.weekview.WeekView;
@@ -131,30 +130,28 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
     private boolean isEventNeedUpdate = false;
     private long currentEventId;
 
-    //    private AppPreferences mAppPreferences = new AppPreferences(AppContext.getAppContext());
-//    private final int currentUserId = mAppPreferences.getUserId();
-    private AppPreferences mAppPreferences = new AppPreferences(AppContext.getAppContext());
-    private final int currentUserId = mAppPreferences.getUserId();
+    private AppPreferences mAppPreferences = null; // Never call getContext here. Make produce NullPointerException!
+    private int mCurrentUserId;
 
     private ArrayList<Integer> listSharedId = new ArrayList<>();
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mAppPreferences = new AppPreferences(getActivity().getApplicationContext());
+        mCurrentUserId = mAppPreferences.getUserId();
+
         if (database != null) {
             if (!database.isOpen()) {
-                database = DBAdapter.getInstance().openDatabase();
+                 database = DBAdapter.getInstance().openDatabase();
             }
         } else {
             database = DBAdapter.getInstance().openDatabase();
         }
+
         String selectQuery = "SELECT * FROM " + MAIL_CONTACT_TABLE_NAME;
-        Cursor mCursor = database.rawQuery(selectQuery, null);
-        listPerson = fillPersonsFromCursor(mCursor);
-
-
+        listPerson = fillPersonsFromCursor(database.rawQuery(selectQuery, null));
     }
 
     private List<PersonBriefcaseEntity> fillPersonsFromCursor(Cursor cursorPersons) {
@@ -167,6 +164,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
             personBriefcaseEntity.setPhoto(cursorPersons.getString(cursorPersons.getColumnIndex(MAIL_CONTACT_IMG)));
             personsList.add(personBriefcaseEntity);
         }
+
         cursorPersons.close();
         return personsList;
     }
@@ -182,6 +180,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                 listEventsForWeek(firstDayCurrentWeek);
             }
         };
+
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver, new IntentFilter(DBAdapter.CALENDAR_SQL_BROADCAST_INTENT));
     }
 
@@ -221,8 +220,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
+            public void onNothingSelected(AdapterView<?> parent) { }
         });
 
         Button previousWeekButton = (Button) v.findViewById(R.id.previous_week_button);
@@ -385,7 +383,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
 
 
         String textOwner = "";
-        if (currentUserId == event.getOwnerId()) {
+        if (mCurrentUserId == event.getOwnerId()) {
             textOwner = "мое событие";
 
             String nameSharedWith = "";
@@ -400,7 +398,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
             eventSharedwithTextView.setText("Расшаренно: \n" + nameSharedWith);
         } else
             for (PersonBriefcaseEntity itemPerson : listPerson)
-                if (itemPerson.getId() == currentUserId) {
+                if (itemPerson.getId() == mCurrentUserId) {
                     textOwner = "событие назначенно " + itemPerson.getName();
                     break;
                 }
@@ -437,7 +435,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                 Calendar time = event.getStartTime();
                 startTimeEvent = time;
 
-                Animation mFragmentSliderFadeIn = AnimationUtils.loadAnimation(AppContext.getAppContext(), R.anim.fragment_item_slide_fade_in);
+                Animation mFragmentSliderFadeIn = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.fragment_item_slide_fade_in);
                 panelAddEvent.setVisibility(View.VISIBLE);
                 panelAddEvent.startAnimation(mFragmentSliderFadeIn);
                 chooseDateLayout.setVisibility(View.VISIBLE);
@@ -475,7 +473,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
             }
         });
 
-        if (event.getOwnerId() != currentUserId) {
+        if (event.getOwnerId() != mCurrentUserId) {
             deleteButton.setVisibility(View.GONE);
             editButton.setVisibility(View.GONE);
         }
@@ -578,7 +576,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
         addNewEventButton.setText("Добавить");
         startTimeEvent = time;
 
-        Animation mFragmentSliderFadeIn = AnimationUtils.loadAnimation(AppContext.getAppContext(), R.anim.fragment_item_slide_fade_in);
+        Animation mFragmentSliderFadeIn = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.fragment_item_slide_fade_in);
         panelAddEvent.setVisibility(View.VISIBLE);
         panelAddEvent.startAnimation(mFragmentSliderFadeIn);
 

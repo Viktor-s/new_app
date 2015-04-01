@@ -2,8 +2,6 @@ package me.justup.upme.services;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.os.Handler;
-import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
@@ -21,18 +19,9 @@ public class PushIntentService extends IntentService {
     private static final String TAG = makeLogTag(PushIntentService.class);
 
     public static final String PUSH_INTENT_QUERY_EXTRA = "push_intent_query_extra";
-    private Handler mHandler;
-
 
     public PushIntentService() {
         super(TAG);
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-
-        mHandler = new Handler();
     }
 
     @Override
@@ -45,25 +34,14 @@ public class PushIntentService extends IntentService {
         @Override
         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
             String content = ApiWrapper.responseBodyToString(responseBody);
-            LOGD(TAG, "onSuccess(): " + content);
-
-            // makeToast(content);
+            LOGD(TAG, "onSuccess() : " + content);
         }
 
         @Override
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
             String content = ApiWrapper.responseBodyToString(responseBody);
-            LOGE(TAG, "onFailure(): " + content);
+            LOGE(TAG, "onFailure() : " + content);
         }
-    }
-
-    private void makeToast(final String message) {
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(PushIntentService.this, message, Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
 }

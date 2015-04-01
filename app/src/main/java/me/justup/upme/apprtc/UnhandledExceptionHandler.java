@@ -46,10 +46,10 @@ import java.io.StringWriter;
  * Thread.setDefaultUncaughtExceptionHandler() rather than
  * Thread.setUncaughtExceptionHandler(), to apply to background threads as well.
  */
-public class UnhandledExceptionHandler
-        implements Thread.UncaughtExceptionHandler {
-    private static final String TAG = "AppRTCDemoActivity";
-    private final Activity activity;
+public class UnhandledExceptionHandler implements Thread.UncaughtExceptionHandler {
+    private static final String TAG = "UnhandledExHandler";
+
+    private Activity activity = null;
 
     public UnhandledExceptionHandler(final Activity activity) {
         this.activity = activity;
@@ -59,21 +59,25 @@ public class UnhandledExceptionHandler
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                String title = "Stack trace: " + getTopLevelCauseMessage(e);
+                String title = "Stack trace : " + getTopLevelCauseMessage(e);
                 String msg = getRecursiveStackTrace(e);
+
                 TextView errorView = new TextView(activity);
                 errorView.setText(msg);
                 errorView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 8);
                 ScrollView scrollingContainer = new ScrollView(activity);
                 scrollingContainer.addView(errorView);
+
                 Log.e(TAG, title + "\n\n" + msg);
+
                 DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        // System.exit(1);
+                        System.exit(1);
                     }
                 };
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                 builder.setTitle(title).setView(scrollingContainer).setPositiveButton("Exit", listener).show();
             }
@@ -83,9 +87,11 @@ public class UnhandledExceptionHandler
     // Returns the Message attached to the original Cause of |t|.
     private static String getTopLevelCauseMessage(Throwable t) {
         Throwable topLevelCause = t;
+
         while (topLevelCause.getCause() != null) {
             topLevelCause = topLevelCause.getCause();
         }
+
         return topLevelCause.getMessage();
     }
 
@@ -94,6 +100,7 @@ public class UnhandledExceptionHandler
     private static String getRecursiveStackTrace(Throwable t) {
         StringWriter writer = new StringWriter();
         t.printStackTrace(new PrintWriter(writer));
+
         return writer.toString();
     }
 }

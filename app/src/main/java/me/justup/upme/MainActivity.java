@@ -1,15 +1,10 @@
 package me.justup.upme;
 
 import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -20,11 +15,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.gson.JsonSyntaxException;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
@@ -33,7 +24,6 @@ import org.joda.time.DateTimeConstants;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import me.justup.upme.dialogs.BreakCallDialog;
@@ -52,7 +42,6 @@ import me.justup.upme.entity.ProductsGetAllCategoriesQuery;
 import me.justup.upme.entity.ProductsOrderGetFormQuery;
 import me.justup.upme.entity.ProductsOrderGetFormResponse;
 import me.justup.upme.entity.Push;
-import me.justup.upme.entity.SetGooglePushIdQuery;
 import me.justup.upme.fragments.BriefcaseFragment;
 import me.justup.upme.fragments.BrowserFragment;
 import me.justup.upme.fragments.CalendarFragment;
@@ -68,7 +57,6 @@ import me.justup.upme.http.HttpIntentService;
 import me.justup.upme.interfaces.OnDownloadCloudFile;
 import me.justup.upme.interfaces.OnLoadMailFragment;
 import me.justup.upme.services.GPSTracker;
-import me.justup.upme.utils.AppContext;
 import me.justup.upme.utils.AppPreferences;
 import me.justup.upme.utils.CommonUtils;
 
@@ -76,7 +64,6 @@ import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.LOGE;
 import static me.justup.upme.utils.LogUtils.LOGI;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
-
 
 public class MainActivity extends BaseActivity implements View.OnClickListener, OnLoadMailFragment, OnDownloadCloudFile {
     private static final String TAG = makeLogTag(MainActivity.class);
@@ -90,7 +77,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private static final int SELECTED_FRAGMENT_STUDY = 7;
     private static final int SELECTED_FRAGMENT_BROWSER = 8;
     private int currentlySelectedFragment;
-
 
     private FrameLayout mMainFragmentContainer;
     private Animation mFragmentSliderOut;
@@ -107,12 +93,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private TextView mUserName;
     private TextView mUserInSystem;
 
-    //GCM
-    private GoogleCloudMessaging gcm;
-    private String regid;
-    private static final String SENDER_ID = "896253211448";
-    private Context context = AppContext.getAppContext();
-    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    private WebRtcFragment mWebRtcFragment = null;
 
     // broadcast push
     public static final String BROADCAST_ACTION_CALL = "me.justup.upme.broadcast.call.call";
@@ -134,7 +115,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             showBreakCallDialog(userName);
         }
     };
-
 
     @Override
     protected void onResume() {
@@ -178,22 +158,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
         Fragment fragment = UserFragment.newInstance(new GetLoggedUserInfoQuery(), true);
         getFragmentManager().beginTransaction().add(R.id.mapAndUserFragment, fragment).commit();
-
-
-        // Check device for Play Services APK. If check succeeds, proceed with GCM registration.
-        if (checkPlayServices()) {
-            gcm = GoogleCloudMessaging.getInstance(this);
-            regid = getRegistrationId(context);
-
-            if (regid.isEmpty()) {
-                registerInBackground();
-            } else {
-                sendAsyncRegistrationIdToBackend(regid);
-            }
-
-        } else {
-            LOGE(TAG, "No valid Google Play Services APK found.");
-        }
 
         View mOpenStatusBar = findViewById(R.id.status_bar_fragment);
         mOpenStatusBar.setOnClickListener(new OnOpenStatusBarListener());
@@ -304,19 +268,23 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mStudyButton.setOnClickListener(this);
         mBrowserButton.setOnClickListener(this);
 
-        mButtonList.add(mNewsButton);
-        mButtonList.add(mMailButton);
-        mButtonList.add(mCalendarButton);
-        mButtonList.add(mProductsButton);
-        mButtonList.add(mBriefcaseButton);
-        mButtonList.add(mDocsButton);
-        mButtonList.add(mStudyButton);
-        mButtonList.add(mBrowserButton);
+        if(mButtonList!=null) {
+            mButtonList.add(mNewsButton);
+            mButtonList.add(mMailButton);
+            mButtonList.add(mCalendarButton);
+            mButtonList.add(mProductsButton);
+            mButtonList.add(mBriefcaseButton);
+            mButtonList.add(mDocsButton);
+            mButtonList.add(mStudyButton);
+            mButtonList.add(mBrowserButton);
+        }
     }
 
     private void changeButtonState(Button activeButton) {
-        for (Button button : mButtonList) {
-            button.setBackground(getResources().getDrawable(R.drawable.main_menu_background));
+        if(mButtonList!=null) {
+            for (Button button : mButtonList) {
+                button.setBackground(getResources().getDrawable(R.drawable.main_menu_background));
+            }
         }
 
         activeButton.setBackground(getResources().getDrawable(R.drawable.pay_button_pressed));
@@ -373,7 +341,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         startService(intent.putExtras(bundle));
     }
 
-
     @Override
     public void onStop() {
         super.onStop();
@@ -402,170 +369,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         return query;
     }
 
-    // GCM
-    private static final String PROPERTY_REG_ID = "registration_id";
-    private static final String PROPERTY_APP_VERSION = "appVersion";
-
-    /**
-     * Check the device to make sure it has the Google Play Services APK. If
-     * it doesn't, display a dialog that allows users to download the APK from
-     * the Google Play Store or enable it in the device's system settings.
-     */
-    private boolean checkPlayServices() {
-        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-        if (resultCode != ConnectionResult.SUCCESS) {
-            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
-                GooglePlayServicesUtil.getErrorDialog(resultCode, this, PLAY_SERVICES_RESOLUTION_REQUEST).show();
-            } else {
-                LOGE(TAG, "This device is not supported GCM");
-                // finish();
-                Toast.makeText(this, "Это устройство не поддерживает GCM", Toast.LENGTH_LONG).show();
-            }
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * Gets the current registration ID for application on GCM service, if there is one.
-     * <p/>
-     * If result is empty, the app needs to register.
-     *
-     * @return registration ID, or empty string if there is no existing
-     * registration ID.
-     */
-    private String getRegistrationId(Context context) {
-        final SharedPreferences prefs = getGcmPreferences();
-        String registrationId = prefs.getString(PROPERTY_REG_ID, "");
-        if (registrationId.isEmpty()) {
-            LOGI(TAG, "Registration not found.");
-            return "";
-        }
-
-        // Check if app was updated; if so, it must clear the registration ID
-        // since the existing regID is not guaranteed to work with the new app version.
-        int registeredVersion = prefs.getInt(PROPERTY_APP_VERSION, Integer.MIN_VALUE);
-        int currentVersion = getAppVersion(context);
-        if (registeredVersion != currentVersion) {
-            LOGI(TAG, "App version changed.");
-            return "";
-        }
-        return registrationId;
-    }
-
-    /**
-     * Registers the application with GCM servers asynchronously.
-     * <p/>
-     * Stores the registration ID and the app versionCode in the application's
-     * shared preferences.
-     */
-    private void registerInBackground() {
-        new AsyncTask<Void, Void, String>() {
-            @Override
-            protected String doInBackground(Void... params) {
-                String msg;
-                try {
-                    if (gcm == null) {
-                        gcm = GoogleCloudMessaging.getInstance(context);
-                    }
-                    regid = gcm.register(SENDER_ID);
-
-                    LOGD(TAG, "GCM registration ID:" + regid);
-                    msg = "Device registered in GCM";
-
-                    sendSyncRegistrationIdToBackend(regid);
-
-                    // Persist the regID - no need to register again.
-                    storeRegistrationId(context, regid);
-                } catch (IOException ex) {
-                    msg = "Error :" + ex.getMessage();
-                    // Require the user to click a button again, or perform exponential back-off.
-                }
-                return msg;
-            }
-
-            @Override
-            protected void onPostExecute(String msg) {
-                Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
-            }
-        }.execute(null, null, null);
-    }
-
-    /**
-     * Stores the registration ID and the app versionCode in the application's
-     * {@code SharedPreferences}.
-     *
-     * @param context application's context.
-     * @param regId   registration ID
-     */
-    private void storeRegistrationId(Context context, String regId) {
-        final SharedPreferences prefs = getGcmPreferences();
-        int appVersion = getAppVersion(context);
-        LOGI(TAG, "Saving regId on app version " + appVersion);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(PROPERTY_REG_ID, regId);
-        editor.putInt(PROPERTY_APP_VERSION, appVersion);
-        editor.apply();
-    }
-
-    /**
-     * @return Application's version code from the {@code PackageManager}.
-     */
-    private static int getAppVersion(Context context) {
-        try {
-            PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-            return packageInfo.versionCode;
-        } catch (PackageManager.NameNotFoundException e) {
-            throw new RuntimeException("Could not get package name: " + e);
-        }
-    }
-
-    /**
-     * @return Application's {@code SharedPreferences}.
-     */
-    private SharedPreferences getGcmPreferences() {
-        return getSharedPreferences(MainActivity.class.getSimpleName(), Context.MODE_PRIVATE);
-    }
-
-    private SetGooglePushIdQuery createPushIdEntity(final String pushId) {
-        SetGooglePushIdQuery query = new SetGooglePushIdQuery();
-        query.params.google_push_id = pushId;
-
-        return query;
-    }
-
-    // for Main thread
-    private void sendAsyncRegistrationIdToBackend(final String pushId) {
-        ApiWrapper.query(createPushIdEntity(pushId), new OnPushRegisterResponse());
-    }
-
-    // for works threads
-    private void sendSyncRegistrationIdToBackend(final String pushId) {
-        ApiWrapper.syncQuery(createPushIdEntity(pushId), new OnPushRegisterResponse());
-    }
-
-    private class OnPushRegisterResponse extends AsyncHttpResponseHandler {
-        @Override
-        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-            String content = ApiWrapper.responseBodyToString(responseBody);
-            LOGD(TAG, "OnPushRegisterResponse onSuccess: " + content);
-        }
-
-        @Override
-        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-            String content = ApiWrapper.responseBodyToString(responseBody);
-            LOGE(TAG, "OnPushRegisterResponse onFailure: " + content);
-        }
-    }
-
     @Override
     public void onLoadMailFragment(final Push push) {
         setPush(push);
 
         if (push != null && push.getType() == MailFragment.WEBRTC) {
-            final FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.replace(R.id.container_video_chat, WebRtcFragment.newInstance(String.valueOf(push.getRoom())));
-            ft.commit();
+            prepareAndCallRTC(push.getRoom(), false, false, 1000);
 
             setPush(null);
             return;
@@ -645,7 +454,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 mUserName.setText(userName);
                 mUserInSystem.setText(response.result.in_system);
 
-                AppPreferences appPreferences = new AppPreferences(AppContext.getAppContext());
+                AppPreferences appPreferences = new AppPreferences(getApplicationContext());
                 appPreferences.setUserName(userName);
                 appPreferences.setUserId(response.result.id);
                 appPreferences.setJabberId(response.result.jabber_id);
@@ -723,4 +532,19 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         dialog.show(getFragmentManager(), OrderDialog.ORDER_DIALOG);
     }
 
+    public void prepareAndCallRTC(Object roomId, Boolean loopback, Boolean commandLineRun, int runTimeMs){
+        final Bundle callParam = JustUpApplication.getApplication().prepareCallParam(roomId.getClass().equals(String.class) ? (String) roomId : String.valueOf(roomId), loopback, commandLineRun, runTimeMs);
+        mWebRtcFragment = WebRtcFragment.newInstance(callParam);
+
+        getFragmentManager().beginTransaction().replace(R.id.container_video_chat, mWebRtcFragment).commit();
+    }
+
+    public void clearDataAfterCallRTC(){
+        if(mWebRtcFragment!=null) {
+            getFragmentManager().beginTransaction().remove(mWebRtcFragment).commit();
+            mWebRtcFragment = null;
+        }else{
+            LOGI(TAG, "WebRTCFragment is NULL");
+        }
+    }
 }

@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/encoder_stat_call"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:textStyle="bold"
+        android:layout_margin="@dimen/base10dp720sw"
         android:textColor="#C000FF00"
         android:textSize="@dimen/base12sp720sw"
-        android:layout_margin="@dimen/base10dp720sw"/>
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/contact_name_call"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:layout_above="@+id/buttons_call_container"
-        android:textSize="@dimen/base24sp720sw"
-        android:layout_margin="@dimen/base10dp720sw"/>
+        android:layout_centerHorizontal="true"
+        android:layout_margin="@dimen/base10dp720sw"
+        android:textSize="@dimen/base24sp720sw" />
 
     <TextView
         android:id="@+id/hud_stat_call"
@@ -31,48 +31,48 @@
         android:layout_height="wrap_content"
         android:alpha="0.4"
         android:background="@android:color/white"
-        android:textColor="@android:color/black"/>
+        android:textColor="@android:color/black" />
 
     <ImageButton
         android:id="@+id/button_toggle_debug"
-        android:background="@android:drawable/ic_menu_info_details"
-        android:contentDescription="@string/toggle_debug"
+        android:layout_width="@dimen/base50dp720sw"
+        android:layout_height="@dimen/base50dp720sw"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_width="@dimen/base50dp720sw"
-        android:layout_height="@dimen/base50dp720sw"/>
+        android:background="@android:drawable/ic_menu_info_details"
+        android:contentDescription="@string/toggle_debug" />
 
     <LinearLayout
-           android:id="@+id/buttons_call_container"
-           android:orientation="horizontal"
-           android:layout_alignParentBottom="true"
-           android:layout_marginBottom="@dimen/base35dp720sw"
-           android:layout_centerHorizontal="true"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content">
-
-       <ImageButton
-           android:id="@+id/button_call_disconnect"
-           android:background="@drawable/disconnect"
-           android:contentDescription="@string/disconnect_call"
-           android:layout_marginRight="@dimen/base15dp720sw"
-           android:layout_width="@dimen/base50dp720sw"
-           android:layout_height="@dimen/base50dp720sw"/>
-
-       <ImageButton
-           android:id="@+id/button_call_switch_camera"
-           android:background="@android:drawable/ic_menu_camera"
-           android:contentDescription="@string/switch_camera"
-           android:layout_marginRight="@dimen/base10dp720sw"
-           android:layout_width="@dimen/base50dp720sw"
-           android:layout_height="@dimen/base50dp720sw"/>
+        android:id="@+id/buttons_call_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/base35dp720sw"
+        android:orientation="horizontal">
 
         <ImageButton
-           android:id="@+id/button_call_scaling_mode"
-           android:background="@drawable/ic_action_return_from_full_screen"
-           android:contentDescription="@string/disconnect_call"
-           android:layout_width="@dimen/base50dp720sw"
-           android:layout_height="@dimen/base50dp720sw"/>
+            android:id="@+id/button_call_disconnect"
+            android:layout_width="@dimen/base50dp720sw"
+            android:layout_height="@dimen/base50dp720sw"
+            android:layout_marginRight="@dimen/base15dp720sw"
+            android:background="@drawable/disconnect"
+            android:contentDescription="@string/disconnect_call" />
+
+        <ImageButton
+            android:id="@+id/button_call_switch_camera"
+            android:layout_width="@dimen/base50dp720sw"
+            android:layout_height="@dimen/base50dp720sw"
+            android:layout_marginRight="@dimen/base10dp720sw"
+            android:background="@android:drawable/ic_menu_camera"
+            android:contentDescription="@string/switch_camera" />
+
+        <ImageButton
+            android:id="@+id/button_call_scaling_mode"
+            android:layout_width="@dimen/base50dp720sw"
+            android:layout_height="@dimen/base50dp720sw"
+            android:background="@drawable/ic_action_return_from_full_screen"
+            android:contentDescription="@string/disconnect_call" />
     </LinearLayout>
 
 </RelativeLayout>

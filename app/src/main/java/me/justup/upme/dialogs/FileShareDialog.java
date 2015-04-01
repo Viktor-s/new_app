@@ -22,12 +22,12 @@ import org.apache.http.Header;
 
 import java.util.List;
 
+import me.justup.upme.JustUpApplication;
 import me.justup.upme.R;
 import me.justup.upme.entity.BaseMethodEmptyQuery;
 import me.justup.upme.entity.FileAddShareWithQuery;
 import me.justup.upme.entity.GetAllContactsResponse;
 import me.justup.upme.http.ApiWrapper;
-import me.justup.upme.utils.AppContext;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.LOGE;
@@ -157,7 +157,7 @@ public class FileShareDialog extends DialogFragment {
                 LOGD(TAG, "addFileShareWith onSuccess(): " + content);
 
                 if (FileShareDialog.this.isAdded()) {
-                    Toast.makeText(AppContext.getAppContext(), getString(R.string.share_access_grant), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(JustUpApplication.getApplication().getApplicationContext(), getString(R.string.share_access_grant), Toast.LENGTH_SHORT).show();
                 }
             }
 
