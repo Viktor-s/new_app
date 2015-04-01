@@ -282,5 +282,8 @@
     <string name="file_changed">Изменен:</string>
 
     <string name="select_people">Выберите рефералов</string>
+    <string name="web_browser">Веб-браузер</string>
+    <string name="file_explorer">Диспетчер файлов</string>
+    <string name="contacts">Контакты</string>
 
 </resources>

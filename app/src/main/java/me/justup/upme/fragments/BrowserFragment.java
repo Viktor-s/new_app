@@ -15,11 +15,8 @@ import android.widget.ImageButton;
 import me.justup.upme.R;
 import me.justup.upme.utils.AppPreferences;
 
-import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 public class BrowserFragment extends Fragment implements View.OnClickListener {
-    private static final String TAG = makeLogTag(BrowserFragment.class);
-
     public static final String HOME_URL = "https://duckduckgo.com/";
     private static final String HTTP = "http://";
 
@@ -50,6 +47,7 @@ public class BrowserFragment extends Fragment implements View.OnClickListener {
         return mContentView;
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

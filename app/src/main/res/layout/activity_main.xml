@@ -108,7 +108,6 @@
             android:id="@+id/ab_user_image_imageView"
             android:src="@drawable/protection"
             android:layout_marginTop="@dimen/base5dp720sw"
-            android:layout_marginStart="@dimen/base15dp720sw"
             app:civ_border="true"
             app:civ_border_color="@color/white"
             app:civ_border_width="@dimen/base3dp720sw" />
@@ -147,7 +146,6 @@
             android:background="@drawable/pay_panel_button_selector"
             android:layout_gravity="center_vertical"
             android:textSize="@dimen/base20sp720sw"
-            android:layout_marginEnd="@dimen/base20dp720sw"
             android:textAllCaps="true"
             android:text="@string/ordering" />
 

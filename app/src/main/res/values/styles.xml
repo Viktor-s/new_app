@@ -406,8 +406,10 @@
 
     <style name="ActionBarStyle">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:background">@color/action_bar_background</item>
         <item name="android:layout_height">@dimen/base90dp720sw</item>
+        <item name="android:paddingStart">@dimen/base15dp720sw</item>
+        <item name="android:paddingEnd">@dimen/base20dp720sw</item>
+        <item name="android:background">@color/action_bar_background</item>
     </style>
 
 </resources>
