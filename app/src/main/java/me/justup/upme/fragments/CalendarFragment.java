@@ -154,7 +154,8 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
         Cursor mCursor = database.rawQuery(selectQuery, null);
         listPerson = fillPersonsFromCursor(mCursor);
 
-
+        firstDayCurrentWeek = new LocalDateTime().withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0).withDayOfWeek(DateTimeConstants.MONDAY);
+        currentWeek = firstDayCurrentWeek.getWeekOfWeekyear();
     }
 
     private List<PersonBriefcaseEntity> fillPersonsFromCursor(Cursor cursorPersons) {
@@ -174,8 +175,6 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
     @Override
     public void onResume() {
         super.onResume();
-        firstDayCurrentWeek = new LocalDateTime().withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0).withDayOfWeek(DateTimeConstants.MONDAY);
-        currentWeek = firstDayCurrentWeek.getWeekOfWeekyear();
         receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -614,6 +613,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                 break;
             case R.id.previous_week_button:
                 firstDayCurrentWeek = firstDayCurrentWeek.minusDays(Calendar.DAY_OF_WEEK);
+                LOGD("TAG1", "------ previous_week_button "+firstDayCurrentWeek.toString());
                 mWeekView.goToDate(firstDayCurrentWeek.toDateTime(DateTimeZone.UTC).toGregorianCalendar());
                 selectWeekTextView.setText(Integer.toString(currentWeek == 1 ? currentWeek = 52 : --currentWeek) + getResources().getString(R.string.week));
                 String strMonthYearPrev = String.format("%s %d", months[firstDayCurrentWeek.getMonthOfYear() - 1], firstDayCurrentWeek.getYear());
@@ -623,6 +623,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                 break;
             case R.id.next_week_button:
                 firstDayCurrentWeek = firstDayCurrentWeek.plusDays(Calendar.DAY_OF_WEEK);
+                LOGD("TAG1", "------ previous_week_button "+firstDayCurrentWeek.toString());
                 mWeekView.goToDate(firstDayCurrentWeek.toDateTime(DateTimeZone.UTC).toGregorianCalendar());
                 selectWeekTextView.setText(Integer.toString(currentWeek == 52 ? currentWeek = 1 : ++currentWeek) + getResources().getString(R.string.week));
                 String strMonthYearNext = String.format("%s %d", months[firstDayCurrentWeek.getMonthOfYear() - 1], firstDayCurrentWeek.getYear());

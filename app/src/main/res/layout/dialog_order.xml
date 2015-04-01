@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:padding="@dimen/base10dp720sw"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="@dimen/base10dp720sw">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/order_string_form_textView"
-        android:layout_gravity="center" />
+
+
+    <WebView
+        android:id="@+id/dialog_product_html_webview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+
 </FrameLayout>

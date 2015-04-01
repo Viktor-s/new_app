@@ -4,9 +4,37 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <LinearLayout
+        android:id="@+id/title_LinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/base90dp720sw"
+        android:background="@color/action_bar_background"
+        android:paddingLeft="@dimen/base20dp720sw"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/web_prod_category_top_title_main_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/base18dp720sw"
+            android:text="Продукты"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/base22sp720sw" />
+
+        <TextView
+            android:id="@+id/web_prod_category_top_title_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Text"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/base26sp720sw"
+            android:textStyle="bold"/>
+    </LinearLayout>
+
     <WebView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/title_LinearLayout"
         android:id="@+id/product_html_webview"
         android:layout_gravity="center_horizontal"
         android:layout_alignParentLeft="true" />
@@ -17,11 +45,11 @@
         android:id="@+id/product_html_close_button"
         android:visibility="visible"
         android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="false"
+        android:layout_alignParentEnd="true"
         android:background="@drawable/button_close_test"
         android:clickable="false"
-        android:layout_marginTop="@dimen/base30dp720sw" />
+        android:layout_marginTop="@dimen/base20dp720sw"
+        android:layout_marginEnd="@dimen/base20dp720sw"/>
 
 
 </RelativeLayout>
