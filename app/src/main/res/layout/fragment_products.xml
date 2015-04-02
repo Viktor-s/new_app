@@ -10,18 +10,14 @@
         android:orientation="horizontal"
         style="@style/ActionBarStyle">
 
-
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:layout_marginStart="@dimen/base15dp720sw"
             android:text="Продукты"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:id="@+id/ab_user_name_textView" />
-
-
     </LinearLayout>
 
     <HorizontalScrollView

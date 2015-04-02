@@ -8,7 +8,6 @@
     android:orientation="vertical"
     tools:context=".MyActivity">
 
-
     <LinearLayout
         android:id="@+id/title_calendar_LinearLayout"
         style="@style/ActionBarStyle"
@@ -18,8 +17,7 @@
             android:id="@+id/web_prod_category_top_title_main_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/base18dp720sw"
-            android:layout_marginStart="@dimen/base15dp720sw"
+            android:paddingTop="@dimen/base15dp720sw"
             android:text="Календарь"
             android:textColor="@android:color/white"
             android:textAppearance="?android:attr/textAppearanceLarge" />
@@ -28,11 +26,10 @@
             android:id="@+id/web_prod_category_top_title_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/base15dp720sw"
-            tools:text="New Text"
+            android:text="New Text"
             android:textColor="@android:color/white"
             android:textSize="@dimen/base26sp720sw"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
     </LinearLayout>
 
     <RelativeLayout
@@ -304,7 +301,7 @@
             android:background="@drawable/button_close_test"
             android:clickable="false"
             android:layout_marginTop="@dimen/base20dp720sw" />
-            android:visibility="visible" />
+        android:visibility="visible" />
 
     </RelativeLayout>
 </RelativeLayout>
