@@ -1,19 +1,48 @@
 apply plugin: 'com.android.application'
 
 android {
+
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
+    enforceUniquePackageName = false
+
+    dexOptions {
+        preDexLibraries = false
+    }
+
+    dexOptions {
+        incremental false
+        javaMaxHeapSize "2048m"
+        jumboMode = true
+    }
+
+    // This is important, it will run lint checks but won't abort build
+    lintOptions {
+        abortOnError false
+    }
 
     defaultConfig {
         applicationId "me.justup.upme"
+        testInstrumentationRunner "android.test.InstrumentationTestRunner"
+
         minSdkVersion 17
         targetSdkVersion 21
+
         versionCode 1
         versionName "0.12"
+
+        multiDexEnabled true
     }
 
     signingConfigs {
-        release {
+        release { // 1.2 Release property
+            storeFile file('upmedroid.keystore')
+            storePassword 'upmedroid'
+            keyAlias 'upme'
+            keyPassword 'upmedroid'
+        }
+
+        debug { // 1.2 Debug property
             storeFile file('upmedroid.keystore')
             storePassword 'upmedroid'
             keyAlias 'upme'
@@ -22,17 +51,141 @@ android {
     }
 
     buildTypes {
-        release {
-            minifyEnabled false
+        release { // 1.1 Release property
+            minifyEnabled false // true - on ProGuard
+
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
+            signingConfig signingConfigs.release // Go to 1.2
+
             zipAlignEnabled true
+        }
+
+        debug { // 1.1 Debug property
+            minifyEnabled false // true - on ProGuard
+
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug // Go to 1.2
+
+            zipAlignEnabled false
+        }
+
+        Lrelease { // 1.1 Launcher Release property
+            minifyEnabled false // true - on ProGuard
+
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release // Go to 1.2
+
+            zipAlignEnabled true
+        }
+
+        Ldebug { // 1.1 Launcher Debug property
+            minifyEnabled false // true - on ProGuard
+
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug // Go to 1.2
+
+            zipAlignEnabled false
+        }
+    }
+
+    productFlavors {
+        launcher {
+            applicationId 'me.justup.upme.L'
+            resValue "string", "app_name", "UPME"
+            resValue "string", "app_name_launcher_launcher", "UPME Launcher"
+            minSdkVersion 17
+            targetSdkVersion 21
+            testInstrumentationRunner 'android.test.InstrumentationTestRunner'
+            versionCode 1
+            versionName '0.12'
+            signingConfig signingConfigs.release
+
+            applicationVariants.all { variant ->
+                variant.outputs.each { output ->
+                    output.processManifest.doLast {
+                        def manifestFile = output.processManifest.manifestOutputFile
+                        def updatedContent = manifestFile.getText('UTF-8')
+
+                        // *** DEFINE VARS ***
+                        def brandVersion = variant.buildType.name
+                        def brandVersionString = brandVersion.toString()
+
+                        if (brandVersionString.contains("Lrelease")) {
+                            updatedContent = updatedContent.replaceAll(/\{packagename\}/, "me.justup.upme.L")
+                            updatedContent = updatedContent.replaceAll("uplaunchm", "android.intent.action.MAIN")
+                            updatedContent = updatedContent.replaceAll("uplaunchh", "android.intent.category.HOME")
+                            updatedContent = updatedContent.replaceAll("uplaunchd", "android.intent.category.DEFAULT")
+                            updatedContent = updatedContent.replaceAll("ic_launcher", "upme_main_logo")
+
+                            updatedContent = updatedContent.replaceAll("app_name", "app_name_launcher")
+                        } else if (brandVersionString.contains("Ldebug")) {
+                            updatedContent = updatedContent.replaceAll(/\{packagename\}/, "me.justup.upme.L")
+                            updatedContent = updatedContent.replaceAll("uplaunchm", "android.intent.action.MAIN")
+                            updatedContent = updatedContent.replaceAll("uplaunchh", "android.intent.category.HOME")
+                            updatedContent = updatedContent.replaceAll("uplaunchd", "android.intent.category.DEFAULT")
+                            updatedContent = updatedContent.replaceAll("ic_launcher", "upme_main_logo")
+
+                            updatedContent = updatedContent.replaceAll("app_name", "app_name_launcher")
+                        } else {
+                            updatedContent = updatedContent.replaceAll(/\{packagename\}/, "me.justup.upme")
+                        }
+
+                        manifestFile.write(updatedContent, 'UTF-8')
+                    }
+                }
+            }
+        }
+
+        app {
+            applicationId 'me.justup.upme'
+            resValue "string", "app_name", "UPME"
+            minSdkVersion 17
+            targetSdkVersion 21
+            testInstrumentationRunner 'android.test.InstrumentationTestRunner'
+            versionCode 1
+            versionName '0.12'
+            signingConfig signingConfigs.release
+
+            applicationVariants.all { variant ->
+                variant.outputs.each { output ->
+                    output.processManifest.doLast {
+                        def manifestFile = output.processManifest.manifestOutputFile
+                        def updatedContent = manifestFile.getText('UTF-8')
+
+                        // *** DEFINE VARS ***
+                        def brandVersion = variant.buildType.name
+                        def brandVersionString = brandVersion.toString()
+
+                        if (brandVersionString.contains("Lrelease")) {
+                            updatedContent = updatedContent.replaceAll(/\{packagename\}/, "me.justup.upme.L")
+                            updatedContent = updatedContent.replaceAll("uplaunchm", "android.intent.action.MAIN")
+                            updatedContent = updatedContent.replaceAll("uplaunchh", "android.intent.category.HOME")
+                            updatedContent = updatedContent.replaceAll("uplaunchd", "android.intent.category.DEFAULT")
+                            updatedContent = updatedContent.replaceAll("ic_launcher", "upme_main_logo")
+
+                            updatedContent = updatedContent.replaceAll("app_name", "app_name_launcher")
+                        } else if (brandVersionString.contains("Ldebug")) {
+                            updatedContent = updatedContent.replaceAll(/\{packagename\}/, "me.justup.upme.L")
+                            updatedContent = updatedContent.replaceAll("uplaunchm", "android.intent.action.MAIN")
+                            updatedContent = updatedContent.replaceAll("uplaunchh", "android.intent.category.HOME")
+                            updatedContent = updatedContent.replaceAll("uplaunchd", "android.intent.category.DEFAULT")
+                            updatedContent = updatedContent.replaceAll("ic_launcher", "upme_main_logo")
+
+                            updatedContent = updatedContent.replaceAll("app_name", "app_name_launcher")
+                        } else {
+                            updatedContent = updatedContent.replaceAll(/\{packagename\}/, "me.justup.upme")
+                        }
+
+                        manifestFile.write(updatedContent, 'UTF-8')
+                    }
+                }
+            }
         }
     }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile files('libs/autobanh.jar')
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.android.support:recyclerview-v7:21.0.3'
@@ -40,8 +193,23 @@ dependencies {
     compile 'com.google.android.gms:play-services-base:6.5.87'
     compile 'com.loopj.android:android-async-http:1.4.6'
     compile 'com.google.code.gson:gson:2.3.1'
-    compile 'ch.acra:acra:4.5.0'
+    compile('ch.acra:acra:4.5.0') {
+        exclude group: 'org.json'
+    }
+
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'joda-time:joda-time:2.7'
     compile 'com.github.alamkanak:android-week-view:1.2.1'
+}
+
+afterEvaluate {
+    tasks.matching {
+        it.name.startsWith('dex')
+    }.each { dx ->
+        if (dx.additionalParameters == null) {
+            dx.additionalParameters = []
+        }
+        dx.additionalParameters += '--multi-dex'
+        dx.additionalParameters += "--main-dex-list=$projectDir/multidex.keep".toString()
+    }
 }

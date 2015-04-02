@@ -1,10 +1,8 @@
 package me.justup.upme.entity;
 
-
 import java.io.Serializable;
 
 import me.justup.upme.http.ApiWrapper;
-
 
 public class LoginPhoneQueryEntity extends BaseHttpQueryEntity {
     private String method = ApiWrapper.AUTH_GET_VERIFICATION;

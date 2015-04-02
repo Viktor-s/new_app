@@ -555,4 +555,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             LOGI(TAG, "WebRTCFragment is NULL");
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        if(BuildConfig.FLAVOR.equals("app")) {
+            super.onBackPressed();
+        }
+    }
 }
