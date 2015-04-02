@@ -103,7 +103,7 @@ public class LoginActivity extends BaseActivity {
 
                 if (newUrl != null && newUrl.length() > 2) {
                     mNewUrlString.setText("");
-                    ServerSwitcher.getInstance().setUrl(newUrl);
+                    ServerSwitcher.getInstance().setEasyUrl(newUrl);
                 }
             }
         });
