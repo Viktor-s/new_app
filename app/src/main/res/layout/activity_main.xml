@@ -11,17 +11,21 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_toEndOf="@+id/left_main_menu"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_below="@+id/main_action_bar"
         android:layout_marginTop="@dimen/base5dp720sw"
+        android:paddingBottom="@dimen/base120dp720sw"
         android:baselineAligned="false">
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/base75dp720sw"
+            android:layout_margin="@dimen/base25dp720sw"
+            android:layout_gravity="center"
+            android:src="@drawable/test_top_info_main_title"
+            android:contentDescription="@string/settings_name" />
 
-        </FrameLayout>
-
+        <include layout="@layout/layout_for_test_and_trash" />
     </LinearLayout>
 
     <LinearLayout

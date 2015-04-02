@@ -8,22 +8,16 @@
     <LinearLayout
         android:id="@+id/main_action_bar"
         android:orientation="horizontal"
-        android:layout_toEndOf="@+id/left_main_menu"
-        android:layout_below="@+id/status_bar_fragment"
         style="@style/ActionBarStyle">
-
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:layout_marginStart="@dimen/base15dp720sw"
             android:text="Новости"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:id="@+id/ab_user_name_textView" />
-
-
     </LinearLayout>
 
     <me.justup.upme.view.InteractiveScrollView
@@ -41,6 +35,7 @@
 
         </GridLayout>
     </me.justup.upme.view.InteractiveScrollView>
+
     <FrameLayout
         android:id="@+id/news_item_container_frameLayout"
         android:layout_width="wrap_content"

@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:stretchColumns="*">
+
+    <TableRow android:layout_weight="1">
+
+        <FrameLayout
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_margin="@dimen/base3dp720sw"
+            android:background="@color/action_bar_background">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_shadow_umbrella"
+                android:layout_gravity="right|bottom" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Быстрая\nоплата"
+                android:textColor="@color/white"
+                android:layout_marginTop="@dimen/base20dp720sw"
+                android:layout_marginStart="@dimen/base20dp720sw"
+                android:textSize="@dimen/base20sp720sw" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_margin="@dimen/base3dp720sw"
+            android:background="@color/user_fragment_red_money_color">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_shadow_umbrella"
+                android:layout_gravity="right|bottom" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Лотерея"
+                android:textColor="@color/white"
+                android:layout_marginTop="@dimen/base20dp720sw"
+                android:layout_marginStart="@dimen/base20dp720sw"
+                android:textSize="@dimen/base20sp720sw" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Джекпот"
+                android:layout_gravity="center"
+                android:textColor="@color/white"
+                android:layout_marginTop="@dimen/base20dp720sw"
+                android:layout_marginStart="@dimen/base20dp720sw"
+                android:textSize="@dimen/base15sp720sw" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1234567"
+                android:layout_gravity="center|bottom"
+                android:textColor="@color/white"
+                android:layout_marginTop="@dimen/base20dp720sw"
+                android:layout_marginStart="@dimen/base20dp720sw"
+                android:textSize="@dimen/base28sp720sw" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_margin="@dimen/base3dp720sw"
+            android:layout_span="2"
+            android:background="@color/action_bar_background">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Широкий виджет"
+                android:textColor="@color/white"
+                android:layout_marginTop="@dimen/base20dp720sw"
+                android:layout_marginStart="@dimen/base20dp720sw"
+                android:textSize="@dimen/base20sp720sw" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_shadow_umbrella"
+                android:layout_gravity="right|bottom" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_margin="@dimen/base3dp720sw"
+            android:background="@color/action_bar_background">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_shadow_umbrella"
+                android:layout_gravity="right|bottom" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Страхование\nжизни"
+                android:textColor="@color/white"
+                android:layout_marginTop="@dimen/base20dp720sw"
+                android:layout_marginStart="@dimen/base20dp720sw"
+                android:textSize="@dimen/base20sp720sw" />
+        </FrameLayout>
+
+    </TableRow>
+
+    <TableRow android:layout_weight="1">
+
+        <FrameLayout
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_margin="@dimen/base3dp720sw"
+            android:background="#60bb46">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_shadow_umbrella"
+                android:layout_gravity="right|bottom" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Авиабилеты"
+                android:textColor="@color/white"
+                android:layout_marginTop="@dimen/base20dp720sw"
+                android:layout_marginStart="@dimen/base20dp720sw"
+                android:textSize="@dimen/base20sp720sw" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_margin="@dimen/base3dp720sw"
+            android:background="@color/action_bar_background">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_shadow_umbrella"
+                android:layout_gravity="right|bottom" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Страхование\nжизни"
+                android:textColor="@color/white"
+                android:layout_marginTop="@dimen/base20dp720sw"
+                android:layout_marginStart="@dimen/base20dp720sw"
+                android:textSize="@dimen/base20sp720sw" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_margin="@dimen/base3dp720sw"
+            android:background="@drawable/test_aero_back">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Авиабилеты"
+                android:textColor="@color/white"
+                android:layout_marginTop="@dimen/base20dp720sw"
+                android:layout_marginStart="@dimen/base20dp720sw"
+                android:textSize="@dimen/base20sp720sw" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_margin="@dimen/base3dp720sw"
+            android:background="@color/action_bar_background">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_shadow_umbrella"
+                android:layout_gravity="right|bottom" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Страхование\nжизни"
+                android:textColor="@color/white"
+                android:layout_marginTop="@dimen/base20dp720sw"
+                android:layout_marginStart="@dimen/base20dp720sw"
+                android:textSize="@dimen/base20sp720sw" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_margin="@dimen/base3dp720sw"
+            android:background="@color/action_bar_background">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/test_ic_circle_image"
+                android:layout_gravity="right|bottom" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Страхование\nжизни"
+                android:textColor="@color/white"
+                android:layout_marginTop="@dimen/base20dp720sw"
+                android:layout_marginStart="@dimen/base20dp720sw"
+                android:textSize="@dimen/base20sp720sw" />
+        </FrameLayout>
+
+    </TableRow>
+
+    <TableRow android:layout_weight="1">
+
+        <FrameLayout
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_margin="@dimen/base3dp720sw"
+            android:background="@color/action_bar_background">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_shadow_umbrella"
+                android:layout_gravity="right|bottom" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Авиабилеты"
+                android:textColor="@color/white"
+                android:layout_marginTop="@dimen/base20dp720sw"
+                android:layout_marginStart="@dimen/base20dp720sw"
+                android:textSize="@dimen/base20sp720sw" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_margin="@dimen/base3dp720sw"
+            android:background="@color/action_bar_background">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_shadow_umbrella"
+                android:layout_gravity="right|bottom" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Страхование\nжизни"
+                android:textColor="@color/white"
+                android:layout_marginTop="@dimen/base20dp720sw"
+                android:layout_marginStart="@dimen/base20dp720sw"
+                android:textSize="@dimen/base20sp720sw" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_margin="@dimen/base3dp720sw"
+            android:background="#d2c26e">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_shadow_umbrella"
+                android:layout_gravity="right|bottom" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Авиабилеты"
+                android:textColor="@color/white"
+                android:layout_marginTop="@dimen/base20dp720sw"
+                android:layout_marginStart="@dimen/base20dp720sw"
+                android:textSize="@dimen/base20sp720sw" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_margin="@dimen/base3dp720sw"
+            android:background="@color/action_bar_background">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_shadow_umbrella"
+                android:layout_gravity="right|bottom" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Страхование\nжизни"
+                android:textColor="@color/white"
+                android:layout_marginTop="@dimen/base20dp720sw"
+                android:layout_marginStart="@dimen/base20dp720sw"
+                android:textSize="@dimen/base20sp720sw" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_margin="@dimen/base3dp720sw">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_cross"
+                android:layout_gravity="center" />
+        </FrameLayout>
+
+    </TableRow>
+
+</TableLayout>
