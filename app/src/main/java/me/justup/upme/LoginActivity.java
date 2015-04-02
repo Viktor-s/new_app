@@ -41,7 +41,7 @@ public class LoginActivity extends BaseActivity {
     private LinearLayout mLoginPinCodePanel;
 
     private StringBuilder mNumberString = new StringBuilder("+");
-    private AppPreferences mAppPreferences = new AppPreferences(JustUpApplication.getApplication().getApplicationContext());
+    private AppPreferences mAppPreferences = null;
 
     private static final int phoneNumberLength = 12;
     private static final int minPhoneNumberLength = 11;
@@ -57,6 +57,8 @@ public class LoginActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        mAppPreferences = new AppPreferences(JustUpApplication.getApplication().getApplicationContext());
 
         startService(new Intent(this, StatusBarService.class));
 
@@ -328,6 +330,13 @@ public class LoginActivity extends BaseActivity {
         mNumberString.setLength(0);
         mNumberString.append(number);
         updateNumberField();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(BuildConfig.FLAVOR.equals("app")) {
+            super.onBackPressed();
+        }
     }
 
 }
