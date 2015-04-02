@@ -10,8 +10,8 @@
     android:paddingBottom="@dimen/base15dp720sw">
 
     <ImageView
-        android:layout_width="@dimen/base45dp720sw"
-        android:layout_height="@dimen/base45dp720sw"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/base15dp720sw"
         android:src="@drawable/file"
         android:contentDescription="@string/app_name"
@@ -41,8 +41,8 @@
 
     <ImageButton
         style="?android:attr/buttonStyleSmall"
-        android:layout_width="@dimen/base45dp720sw"
-        android:layout_height="@dimen/base45dp720sw"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:src="@drawable/ic_file_action"
         android:id="@+id/file_action_button"

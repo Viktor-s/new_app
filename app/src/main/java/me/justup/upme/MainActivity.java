@@ -264,7 +264,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mStudyButton.setOnClickListener(this);
         mBrowserButton.setOnClickListener(this);
 
-        if(mButtonList!=null) {
+        if (mButtonList != null) {
             mButtonList.add(mNewsButton);
             mButtonList.add(mMailButton);
             mButtonList.add(mCalendarButton);
@@ -277,7 +277,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void changeButtonState(Button activeButton) {
-        if(mButtonList!=null) {
+        if (mButtonList != null) {
             for (Button button : mButtonList) {
                 button.setBackground(getResources().getDrawable(R.drawable.main_menu_background));
             }
@@ -342,8 +342,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         super.onStop();
 
         stopService(new Intent(this, GPSTracker.class));
-        unregisterReceiver(mCallPushReceiver);
-        unregisterReceiver(mBreakCallReceiver);
+
+        try {
+            unregisterReceiver(mCallPushReceiver);
+        } catch (Exception e) {
+            LOGE(TAG, "unregisterReceiver(mCallPushReceiver)", e);
+            mCallPushReceiver = null;
+        }
+
+        try {
+            unregisterReceiver(mBreakCallReceiver);
+        } catch (Exception e) {
+            LOGE(TAG, "unregisterReceiver(mBreakCallReceiver)", e);
+            mBreakCallReceiver = null;
+        }
     }
 
     public static ArticlesGetShortDescriptionQuery getShortDescriptionQuery(int limit, int offset) {
@@ -528,18 +540,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         dialog.show(getFragmentManager(), OrderDialog.ORDER_DIALOG);
     }
 
-    public void prepareAndCallRTC(Object roomId, Boolean loopback, Boolean commandLineRun, int runTimeMs){
+    public void prepareAndCallRTC(Object roomId, Boolean loopback, Boolean commandLineRun, int runTimeMs) {
         final Bundle callParam = JustUpApplication.getApplication().prepareCallParam(roomId.getClass().equals(String.class) ? (String) roomId : String.valueOf(roomId), loopback, commandLineRun, runTimeMs);
         mWebRtcFragment = WebRtcFragment.newInstance(callParam);
 
         getFragmentManager().beginTransaction().replace(R.id.container_video_chat, mWebRtcFragment).commit();
     }
 
-    public void clearDataAfterCallRTC(){
-        if(mWebRtcFragment!=null) {
+    public void clearDataAfterCallRTC() {
+        if (mWebRtcFragment != null) {
             getFragmentManager().beginTransaction().remove(mWebRtcFragment).commit();
             mWebRtcFragment = null;
-        }else{
+        } else {
             LOGI(TAG, "WebRTCFragment is NULL");
         }
     }
