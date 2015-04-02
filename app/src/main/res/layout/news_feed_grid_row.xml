@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/grid_row_imageView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/base300dp720sw"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentStart="false"
+            android:layout_alignParentEnd="false"
+            android:layout_alignParentLeft="false"
+            android:layout_alignParentRight="false" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Text"
+            android:id="@+id/grid_row_date_textView"
+            android:layout_alignParentEnd="false"
+            android:layout_alignParentBottom="false"
+            android:layout_alignBottom="@+id/grid_row_imageView"
+            android:textSize="@dimen/base19sp720sw"
+            android:textColor="@color/white"
+            android:layout_marginLeft="@dimen/base5dp720sw"
+            android:layout_marginBottom="@dimen/base5dp720sw" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="11"
+            android:id="@+id/grid_row_comments_lenght_textView"
+            android:layout_alignParentStart="false"
+            android:layout_alignParentLeft="false"
+            android:layout_alignParentRight="false"
+            android:layout_alignRight="@+id/grid_row_imageView"
+            android:layout_alignBottom="@+id/grid_row_imageView"
+            android:textSize="@dimen/base19sp720sw"
+            android:textColor="@android:color/white"
+            android:background="@drawable/pay_panel_button_pressed"
+            android:layout_marginRight="@dimen/base5dp720sw"
+            android:layout_marginBottom="@dimen/base5dp720sw"
+            android:paddingLeft="@dimen/base5dp720sw"
+            android:paddingRight="@dimen/base5dp720sw" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/grid_row_name_extView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/grid_row_imageView"
+        android:layout_centerHorizontal="true"
+        android:text="New Text"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/base26sp720sw"
+     />
+
+    <TextView
+        android:id="@+id/grid_row_description_textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/grid_row_name_extView"
+        android:layout_centerHorizontal="true"
+        android:text="New Text"
+        android:textColor="@color/black"
+        android:textSize="@dimen/base20sp720sw" />
+
+    <TextView
+        android:id="@+id/grid_hide_id"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:text="New Text"
+        android:visibility="invisible" />
+</LinearLayout>

@@ -119,7 +119,7 @@ public class HttpIntentService extends IntentService {
                     break;
 
                 case GET_COMMENTS_FULL_ARTICLE:
-                    fillCommentsFullDB(content, NewsItemFragment.mNewsFeedEntity.getId());
+                    fillCommentsFullDB(content, NewsItemFragment.newsFeedEntityId);
                     break;
 
                 case ADD_REFERAL:

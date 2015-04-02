@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/app_background">
+
     <LinearLayout
         android:id="@+id/main_action_bar"
         android:orientation="horizontal"
@@ -25,26 +26,30 @@
 
     </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/news_RecyclerView"
+    <me.justup.upme.view.InteractiveScrollView
+        android:id="@+id/interactiveScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="vertical"
-        android:layout_marginBottom="@dimen/base25dp720sw"
-        android:background="@android:color/transparent"
-        android:layout_below="@+id/main_action_bar" />
+        android:layout_marginLeft="@dimen/base30dp720sw"
+        android:layout_below="@+id/main_action_bar">
 
+        <GridLayout
+            android:id="@+id/newsFeedGridLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+        </GridLayout>
+    </me.justup.upme.view.InteractiveScrollView>
     <FrameLayout
         android:id="@+id/news_item_container_frameLayout"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
-        android:layout_marginLeft="@dimen/base240dp720sw"
         android:layout_alignParentStart="false"
         android:layout_alignParentTop="false"
         android:background="@android:color/white"
         android:layout_below="@+id/main_action_bar" />
 
-    <!--<include layout="@layout/base_progress_bar" />-->
     <ProgressBar
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"

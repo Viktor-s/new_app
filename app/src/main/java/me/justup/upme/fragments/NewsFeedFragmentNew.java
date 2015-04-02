@@ -7,24 +7,29 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
+import android.widget.GridLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import me.justup.upme.MainActivity;
 import me.justup.upme.R;
-import me.justup.upme.adapter.NewsFeedAdapter;
 import me.justup.upme.db.DBAdapter;
 import me.justup.upme.entity.ArticleFullQuery;
 import me.justup.upme.entity.ArticleShortCommentEntity;
@@ -32,6 +37,7 @@ import me.justup.upme.entity.ArticleShortEntity;
 import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.http.HttpIntentService;
 import me.justup.upme.utils.CommonUtils;
+import me.justup.upme.view.InteractiveScrollView;
 
 import static me.justup.upme.db.DBHelper.IS_SHORT_NEWS_READ_ARTICLE_ID;
 import static me.justup.upme.db.DBHelper.IS_SHORT_NEWS_READ_TABLE_NAME;
@@ -49,19 +55,14 @@ import static me.justup.upme.db.DBHelper.SHORT_NEWS_TITLE;
 import static me.justup.upme.utils.LogUtils.LOGI;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
-
-public class NewsFeedFragment extends Fragment {
-    private static final String TAG = makeLogTag(NewsFeedFragment.class);
-
-    private RecyclerView mNewsFeedView;
-    private NewsFeedAdapter mNewsFeedAdapter;
+public class NewsFeedFragmentNew extends Fragment {
+    private static final String TAG = makeLogTag(NewsFeedFragmentNew.class);
     private List<ArticleShortEntity> mNewsFeedEntityList;
     private List<ArticleShortEntity> mNewsFeedEntityPartOfList = new ArrayList<>();
     private FrameLayout mNewsItemContainer;
     private int lastChosenPosition = -1;
     private boolean isLoading = true;
     private int pastVisibleItems, visibleItemCount, totalItemCount;
-    private LinearLayoutManager mLayoutManager;
     private String selectQueryShortNews;
     private int from = 0;
     private int to = 10;
@@ -71,9 +72,19 @@ public class NewsFeedFragment extends Fragment {
     private ArrayList<Integer> mReadNewsList;
     private SQLiteDatabase database;
 
+
+    private GridLayout gridLayout;
+    private int column = 3;
+    private int screenWidth;
+    private LayoutInflater layoutInflater;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Display display = getActivity().getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        screenWidth = size.x - CommonUtils.convertDpToPixels(getActivity(), 165);
         if (database != null) {
             if (!database.isOpen()) {
                 database = DBAdapter.getInstance().openDatabase();
@@ -98,7 +109,7 @@ public class NewsFeedFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        LocalBroadcastManager.getInstance(NewsFeedFragment.this.getActivity()).unregisterReceiver(mNewsFeedReceiver);
+        LocalBroadcastManager.getInstance(NewsFeedFragmentNew.this.getActivity()).unregisterReceiver(mNewsFeedReceiver);
         LOGI(TAG, "unregisterRecNewsFeed");
     }
 
@@ -124,7 +135,7 @@ public class NewsFeedFragment extends Fragment {
                         if (mNewsFeedEntityPartOfList.size() < 10) {
                             mNewsFeedEntityPartOfList.addAll(getNextArticlesPack());
                         }
-                        updateAdapter();
+                        updateView();
 
                         if (cursorNews != null) {
                             cursorNews.close();
@@ -149,48 +160,107 @@ public class NewsFeedFragment extends Fragment {
         };
         IntentFilter filter = new IntentFilter(DBAdapter.NEWS_FEED_SQL_BROADCAST_INTENT);
         filter.addAction(HttpIntentService.BROADCAST_INTENT_NEWS_FEED_SERVER_ERROR);
-        LocalBroadcastManager.getInstance(NewsFeedFragment.this.getActivity())
+        LocalBroadcastManager.getInstance(NewsFeedFragmentNew.this.getActivity())
                 .registerReceiver(mNewsFeedReceiver, filter);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_news_feed, container, false);
+        View view = inflater.inflate(R.layout.fragment_news_feed_new, container, false);
+        layoutInflater = LayoutInflater.from(getActivity());
+        gridLayout = (GridLayout) view.findViewById(R.id.newsFeedGridLayout);
+
+        int row = mNewsFeedEntityList.size() / column;
+        gridLayout.setColumnCount(column);
+        gridLayout.setRowCount(row + 1);
+        updateView();
+
+        InteractiveScrollView interactiveScrollView = (InteractiveScrollView) view.findViewById(R.id.interactiveScrollView);
+        interactiveScrollView.setOnBottomReachedListener(
+                new InteractiveScrollView.OnBottomReachedListener() {
+                    @Override
+                    public void onBottomReached() {
+                        visibleItemCount = gridLayout.getChildCount();
+                        totalItemCount = mNewsFeedEntityList.size();
+                        LOGI(TAG, "scrollview on bottom reached");
+
+                        if (isLoading) {
+                            if (visibleItemCount >= totalItemCount) {
+                                int oldListSize = mNewsFeedEntityPartOfList.size();
+                                mNewsFeedEntityPartOfList.addAll(getNextArticlesPack());
+                                // mNewsFeedAdapter.notifyItemRangeInserted(oldListSize, mNewsFeedEntityPartOfList.size());
+                                if (totalItemCount >= mNewsFeedEntityPartOfList.size()) {
+                                    isLoading = false;
+                                }
+                                LOGI(TAG, mNewsFeedEntityPartOfList.size() + " " + visibleItemCount + " " + totalItemCount);
+                            }
+                        }
+                    }
+                }
+        );
+
 
         mNewsItemContainer = (FrameLayout) view.findViewById(R.id.news_item_container_frameLayout);
-        mNewsFeedView = (RecyclerView) view.findViewById(R.id.news_RecyclerView);
         mProgressBar = (ProgressBar) view.findViewById(R.id.news_feed_progressbar);
         if (!ApiWrapper.isOnline()) {
             mProgressBar.setVisibility(View.GONE);
         }
-        mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
-        mNewsFeedView.setLayoutManager(mLayoutManager);
-        if (mNewsFeedEntityPartOfList.size() > 0) {
-            updateAdapter();
-        }
 
-        mNewsFeedView.setOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                visibleItemCount = mLayoutManager.getChildCount();
-                totalItemCount = mLayoutManager.getItemCount();
-                pastVisibleItems = mLayoutManager.findFirstVisibleItemPosition();
-                if (isLoading) {
-                    if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
-                        int oldListSize = mNewsFeedEntityPartOfList.size();
-                        mNewsFeedEntityPartOfList.addAll(getNextArticlesPack());
-                        mNewsFeedAdapter.notifyItemRangeInserted(oldListSize, mNewsFeedEntityPartOfList.size());
-                        if (totalItemCount >= mNewsFeedEntityPartOfList.size()) {
-                            isLoading = false;
-                        }
-                        LOGI(TAG, mNewsFeedEntityPartOfList.size() + " " + pastVisibleItems + " " + visibleItemCount + " " + totalItemCount);
-                    }
-                }
-            }
-        });
 
         return view;
     }
+
+    private void updateView() {
+        for (int i = 0, c = 0, r = 0; i < mNewsFeedEntityPartOfList.size(); i++, c++) {
+            if (c == column) {
+                c = 0;
+                r++;
+            }
+            GridLayout.LayoutParams param = new GridLayout.LayoutParams();
+            param.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+            param.width = (int) (screenWidth / 3);
+            param.rightMargin = CommonUtils.convertDpToPixels(getActivity(), 30);
+            // param.topMargin = 10;
+            //  param.setGravity(Gravity.CENTER);
+            param.columnSpec = GridLayout.spec(c);
+            param.rowSpec = GridLayout.spec(r);
+
+            LinearLayout shortNewsLayout = (LinearLayout) layoutInflater.inflate(R.layout.news_feed_grid_row, null, false);
+            TextView shortNewsId = (TextView) shortNewsLayout.findViewById(R.id.grid_hide_id);
+            shortNewsId.setText(Integer.toString(mNewsFeedEntityPartOfList.get(i).getId()));
+            ImageView shortNewsImage = (ImageView) shortNewsLayout.findViewById(R.id.grid_row_imageView);
+            String imagePath = (mNewsFeedEntityPartOfList.get(i).getThumbnail() != null && mNewsFeedEntityPartOfList.get(i).getThumbnail().length() > 1) ? mNewsFeedEntityPartOfList.get(i).getThumbnail() : "fake";
+            Picasso.with(getActivity()).load(imagePath).placeholder(R.drawable.ic_launcher).fit().centerCrop().into(shortNewsImage);
+            TextView shortNewsDate = (TextView) shortNewsLayout.findViewById(R.id.grid_row_date_textView);
+            TextView shortNewsCommentsLenght = (TextView) shortNewsLayout.findViewById(R.id.grid_row_comments_lenght_textView);
+            shortNewsDate.setText(mNewsFeedEntityPartOfList.get(i).getPosted_at());
+            shortNewsCommentsLenght.setText(Integer.toString(mNewsFeedEntityPartOfList.get(i).getComments().size()));
+            TextView shortNewsTitle = (TextView) shortNewsLayout.findViewById(R.id.grid_row_name_extView);
+            shortNewsTitle.setText(mNewsFeedEntityPartOfList.get(i).getTitle());
+            TextView shortNewsDescription = (TextView) shortNewsLayout.findViewById(R.id.grid_row_description_textView);
+            shortNewsDescription.setText((mNewsFeedEntityPartOfList.get(i).getShort_descr()));
+            shortNewsLayout.setLayoutParams(param);
+            shortNewsLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int shortNewsId = Integer.parseInt(((TextView) v.findViewById(R.id.grid_hide_id)).getText().toString());
+                    if (lastChosenPosition != shortNewsId) {
+                        // mNewsFeedEntityPartOfList.get(position).setViewed(true);
+                        //  DBAdapter.getInstance().saveNewsReadValue(mNewsFeedEntityPartOfList.get(position).getId());
+                        Animation mFragmentSliderFadeIn = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.fragment_slider_in);
+                        getChildFragmentManager().beginTransaction().replace(R.id.news_item_container_frameLayout, NewsItemFragment.newInstance(shortNewsId)).commit();
+                        mNewsItemContainer.startAnimation(mFragmentSliderFadeIn);
+                        lastChosenPosition = shortNewsId;
+                        ((MainActivity) NewsFeedFragmentNew.this.getActivity()).startHttpIntent(getFullDescriptionQuery(shortNewsId), HttpIntentService.NEWS_PART_FULL);
+                    }
+
+
+                }
+            });
+            gridLayout.addView(shortNewsLayout);
+        }
+    }
+
 
     public void updateLastChosenPosition() {
         lastChosenPosition = -1;
@@ -244,27 +314,7 @@ public class NewsFeedFragment extends Fragment {
         return allReadValues;
     }
 
-    private void updateAdapter() {
-        mNewsFeedAdapter = new NewsFeedAdapter(mNewsFeedEntityPartOfList, getActivity());
-        mNewsFeedView.setAdapter(mNewsFeedAdapter);
-        mNewsFeedAdapter.setOnItemClickListener(new NewsFeedAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                CommonUtils.hideKeyboard(getActivity());
-                if (lastChosenPosition != position) {
-                    mNewsFeedEntityPartOfList.get(position).setViewed(true);
-                    DBAdapter.getInstance().saveNewsReadValue(mNewsFeedEntityPartOfList.get(position).getId());
-                    Animation mFragmentSliderFadeIn = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.fragment_item_slide_fade_in);
-                    getChildFragmentManager().beginTransaction().replace(R.id.news_item_container_frameLayout, NewsItemFragment.newInstance(mNewsFeedEntityList.get(position).getId())).commit();
-                    mNewsItemContainer.startAnimation(mFragmentSliderFadeIn);
-                    lastChosenPosition = position;
-                    ((MainActivity) NewsFeedFragment.this.getActivity()).startHttpIntent(getFullDescriptionQuery(mNewsFeedEntityList.get(position).getId()), HttpIntentService.NEWS_PART_FULL);
-                }
-            }
-        });
-    }
-
-    public static ArticleFullQuery getFullDescriptionQuery(int id) {
+    public ArticleFullQuery getFullDescriptionQuery(int id) {
         ArticleFullQuery query = new ArticleFullQuery();
         query.params.id = id;
         return query;
@@ -299,7 +349,7 @@ public class NewsFeedFragment extends Fragment {
         int oldSizeValue = mNewsFeedEntityPartOfList.size();
         mNewsFeedEntityPartOfList.clear();
         mNewsFeedEntityPartOfList.addAll(mNewsFeedEntityList.subList(0, oldSizeValue));
-        mNewsFeedAdapter.notifyDataSetChanged();
+        updateView();
     }
 
 }

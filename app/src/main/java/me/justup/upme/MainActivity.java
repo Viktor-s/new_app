@@ -47,7 +47,7 @@ import me.justup.upme.fragments.BrowserFragment;
 import me.justup.upme.fragments.CalendarFragment;
 import me.justup.upme.fragments.DocumentsFragment;
 import me.justup.upme.fragments.MailFragment;
-import me.justup.upme.fragments.NewsFeedFragment;
+import me.justup.upme.fragments.NewsFeedFragmentNew;
 import me.justup.upme.fragments.ProductsFragment;
 import me.justup.upme.fragments.StudyFragment;
 import me.justup.upme.fragments.UserFragment;
@@ -170,10 +170,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         switch (view.getId()) {
             case R.id.news_menu_item:
                 if (currentlySelectedFragment != SELECTED_FRAGMENT_NEWS) {
-                    startHttpIntent(getShortDescriptionQuery(20, 0), HttpIntentService.NEWS_PART_SHORT);
-                    startHttpIntent(getShortDescriptionQuery(500, 20), HttpIntentService.NEWS_PART_SHORT);
+                    startHttpIntent(getShortDescriptionQuery(100, 0), HttpIntentService.NEWS_PART_SHORT);
+                    //startHttpIntent(getShortDescriptionQuery(500, 20), HttpIntentService.NEWS_PART_SHORT);
                     changeButtonState(mNewsButton);
-                    fragment = new NewsFeedFragment();
+                    fragment = new NewsFeedFragmentNew();
                     currentlySelectedFragment = SELECTED_FRAGMENT_NEWS;
                 }
                 break;
@@ -268,7 +268,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mStudyButton.setOnClickListener(this);
         mBrowserButton.setOnClickListener(this);
 
-        if(mButtonList!=null) {
+        if (mButtonList != null) {
             mButtonList.add(mNewsButton);
             mButtonList.add(mMailButton);
             mButtonList.add(mCalendarButton);
@@ -281,7 +281,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void changeButtonState(Button activeButton) {
-        if(mButtonList!=null) {
+        if (mButtonList != null) {
             for (Button button : mButtonList) {
                 button.setBackground(getResources().getDrawable(R.drawable.main_menu_background));
             }
@@ -532,18 +532,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         dialog.show(getFragmentManager(), OrderDialog.ORDER_DIALOG);
     }
 
-    public void prepareAndCallRTC(Object roomId, Boolean loopback, Boolean commandLineRun, int runTimeMs){
+    public void prepareAndCallRTC(Object roomId, Boolean loopback, Boolean commandLineRun, int runTimeMs) {
         final Bundle callParam = JustUpApplication.getApplication().prepareCallParam(roomId.getClass().equals(String.class) ? (String) roomId : String.valueOf(roomId), loopback, commandLineRun, runTimeMs);
         mWebRtcFragment = WebRtcFragment.newInstance(callParam);
 
         getFragmentManager().beginTransaction().replace(R.id.container_video_chat, mWebRtcFragment).commit();
     }
 
-    public void clearDataAfterCallRTC(){
-        if(mWebRtcFragment!=null) {
+    public void clearDataAfterCallRTC() {
+        if (mWebRtcFragment != null) {
             getFragmentManager().beginTransaction().remove(mWebRtcFragment).commit();
             mWebRtcFragment = null;
-        }else{
+        } else {
             LOGI(TAG, "WebRTCFragment is NULL");
         }
     }
