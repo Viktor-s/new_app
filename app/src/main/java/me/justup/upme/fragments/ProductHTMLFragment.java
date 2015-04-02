@@ -21,6 +21,7 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -56,14 +57,20 @@ public class ProductHTMLFragment extends Fragment {
     private SQLiteDatabase database;
     private BroadcastReceiver mProductHtmlReceiver;
     private static final String ARG_PRODUCT_ID = "product_id";
+    private static final String ARG_PRODUCT_NAME = "product_name";
+    private static final String ARG_PRODUCT_PATH = "product_path";
     private int currentProductId;
+    private String currentProductName;
+    private String currentProductPath;
     private ProductHtmlEntity mProductHtmlEntity;
     private WebView webView;
 
-    public static ProductHTMLFragment newInstance(int prodyctId) {
+    public static ProductHTMLFragment newInstance(int prodyctId, String nameProduct, String namePath) {
         ProductHTMLFragment fragment = new ProductHTMLFragment();
         Bundle args = new Bundle();
         args.putSerializable(ARG_PRODUCT_ID, prodyctId);
+        args.putString(ARG_PRODUCT_NAME, nameProduct);
+        args.putSerializable(ARG_PRODUCT_PATH, namePath);
         fragment.setArguments(args);
         return fragment;
     }
@@ -75,6 +82,8 @@ public class ProductHTMLFragment extends Fragment {
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             currentProductId = bundle.getInt(ARG_PRODUCT_ID);
+            currentProductName = bundle.getString(ARG_PRODUCT_NAME);
+            currentProductPath = bundle.getString(ARG_PRODUCT_PATH);
         }
 
     }
@@ -108,6 +117,9 @@ public class ProductHTMLFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_product_html, container, false);
+
+        ((TextView) view.findViewById(R.id.web_prod_category_top_title_main_textView)).setText(currentProductPath);
+        ((TextView) view.findViewById(R.id.web_prod_category_top_title_textView)).setText(currentProductName);
 
         webView = (WebView) view.findViewById(R.id.product_html_webview);
         webView.getSettings().setJavaScriptEnabled(true);

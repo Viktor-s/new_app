@@ -50,7 +50,6 @@ import me.justup.upme.fragments.MailFragment;
 import me.justup.upme.fragments.NewsFeedFragmentNew;
 import me.justup.upme.fragments.ProductsFragment;
 import me.justup.upme.fragments.StudyFragment;
-import me.justup.upme.fragments.UserFragment;
 import me.justup.upme.fragments.WebRtcFragment;
 import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.http.HttpIntentService;
@@ -155,9 +154,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         makeButtonSelector();
 
         ApiWrapper.query(new GetLoggedUserInfoQuery(), new OnGetLoggedUserInfoResponse());
-
-        Fragment fragment = UserFragment.newInstance(new GetLoggedUserInfoQuery(), true);
-        getFragmentManager().beginTransaction().add(R.id.mapAndUserFragment, fragment).commit();
 
         View mOpenStatusBar = findViewById(R.id.status_bar_fragment);
         mOpenStatusBar.setOnClickListener(new OnOpenStatusBarListener());
@@ -545,6 +541,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             mWebRtcFragment = null;
         } else {
             LOGI(TAG, "WebRTCFragment is NULL");
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(BuildConfig.FLAVOR.equals("app")) {
+            super.onBackPressed();
         }
     }
 }

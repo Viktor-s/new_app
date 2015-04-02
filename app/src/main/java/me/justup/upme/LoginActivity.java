@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
@@ -40,7 +41,7 @@ public class LoginActivity extends BaseActivity {
     private LinearLayout mLoginPinCodePanel;
 
     private StringBuilder mNumberString = new StringBuilder("+");
-    private AppPreferences mAppPreferences = new AppPreferences(JustUpApplication.getApplication().getApplicationContext());
+    private AppPreferences mAppPreferences = null;
 
     private static final int phoneNumberLength = 12;
     private static final int minPhoneNumberLength = 11;
@@ -56,6 +57,8 @@ public class LoginActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        mAppPreferences = new AppPreferences(JustUpApplication.getApplication().getApplicationContext());
 
         startService(new Intent(this, StatusBarService.class));
 
@@ -88,9 +91,24 @@ public class LoginActivity extends BaseActivity {
         String versionName = "";
         try {
             versionName = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
-        } catch (PackageManager.NameNotFoundException ignored) {}
+        } catch (PackageManager.NameNotFoundException ignored) {
+        }
 
         appVersion.setText("UPME v" + versionName);
+
+        final EditText mNewUrlString = (EditText) findViewById(R.id.test_set_url_editText);
+        Button mSetNewUrl = (Button) findViewById(R.id.test_set_url_button);
+        mSetNewUrl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String newUrl = mNewUrlString.getText().toString();
+
+                if (newUrl != null && newUrl.length() > 2) {
+                    mNewUrlString.setText("");
+                    ServerSwitcher.getInstance().setEasyUrl(newUrl);
+                }
+            }
+        });
 
         RadioGroup radiogroup = (RadioGroup) findViewById(R.id.server_radioGroup);
         radiogroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -312,6 +330,13 @@ public class LoginActivity extends BaseActivity {
         mNumberString.setLength(0);
         mNumberString.append(number);
         updateNumberField();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(BuildConfig.FLAVOR.equals("app")) {
+            super.onBackPressed();
+        }
     }
 
 }

@@ -7,10 +7,16 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.IBinder;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static me.justup.upme.fragments.StatusBarFragment.*;
+import me.justup.upme.utils.AppLocale;
+
+import static me.justup.upme.fragments.StatusBarFragment.BROADCAST_ACTION;
+import static me.justup.upme.fragments.StatusBarFragment.BROADCAST_EXTRA_IS_CONNECTED;
+import static me.justup.upme.fragments.StatusBarFragment.BROADCAST_EXTRA_TIME;
 import static me.justup.upme.utils.LogUtils.LOGI;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
@@ -21,6 +27,8 @@ public class StatusBarService extends Service {
     private Timer mTimer = null;
     private ConnectivityManager mConnectivityManager;
     private static final long TIMER_INTERVAL = 5000; // 5 sec
+    private static final String TIME_FORMAT = "HH:mm";
+    private SimpleDateFormat mTimeFormat;
 
 
     @Override
@@ -29,6 +37,7 @@ public class StatusBarService extends Service {
         LOGI(TAG, "Start StatusBarService");
 
         mConnectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        mTimeFormat = new SimpleDateFormat(TIME_FORMAT, AppLocale.getAppLocale());
 
         if (mTimer == null) {
             mTimer = new Timer();
@@ -48,16 +57,13 @@ public class StatusBarService extends Service {
     private class getAllParams extends TimerTask {
         @Override
         public void run() {
-            long millis = System.currentTimeMillis();
-            int minutes = (int) ((millis / (1000 * 60)) % 60);
-            int hours = (int) ((millis / (1000 * 60 * 60)) % 24);
+            String currentTime = mTimeFormat.format(new Date());
 
             NetworkInfo activeNetwork = mConnectivityManager.getActiveNetworkInfo();
             boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
 
             Intent intent = new Intent(BROADCAST_ACTION);
-            intent.putExtra(BROADCAST_EXTRA_HOURS, hours);
-            intent.putExtra(BROADCAST_EXTRA_MINUTES, minutes);
+            intent.putExtra(BROADCAST_EXTRA_TIME, currentTime);
             intent.putExtra(BROADCAST_EXTRA_IS_CONNECTED, isConnected);
             sendBroadcast(intent);
         }

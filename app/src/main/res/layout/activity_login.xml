@@ -170,7 +170,7 @@
 
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/base350dp720sw"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_alignParentBottom="true"
@@ -208,8 +208,44 @@
                 android:text="другой"
                 android:textColor="@color/black"
                 android:padding="@dimen/base10dp720sw"
-                android:id="@+id/server2_radioButton" />
+                android:id="@+id/server2_radioButton"
+                android:visibility="gone" />
         </RadioGroup>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/base10dp720sw"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="http://" />
+
+            <EditText
+                android:id="@+id/test_set_url_editText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/base5dp720sw"
+                android:layout_marginEnd="@dimen/base5dp720sw"
+                android:hint="test.justup.me"
+                android:inputType="text" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="/uptabinterface/jsonrpc/" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/test_set_url_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Set"
+            android:layout_gravity="center_horizontal" />
     </LinearLayout>
 
     <TextView

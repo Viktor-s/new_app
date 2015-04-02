@@ -1,6 +1,5 @@
 package me.justup.upme.dialogs;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -12,6 +11,8 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import me.justup.upme.R;
@@ -19,7 +20,6 @@ import me.justup.upme.entity.Push;
 import me.justup.upme.entity.WebRtcStopCallQuery;
 import me.justup.upme.interfaces.OnLoadMailFragment;
 import me.justup.upme.services.PushIntentService;
-
 
 public class CallDialog extends DialogFragment {
     public static final String CALL_DIALOG = "call_dialog";
@@ -49,13 +49,26 @@ public class CallDialog extends DialogFragment {
         }
     }
 
-    @SuppressLint("InflateParams")
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Window window = getActivity().getWindow();
+
+        if(window!=null) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        }
+
+        View root = getActivity().findViewById(android.R.id.content);
+        if (root != null) {
+            root.setKeepScreenOn(true);
+        }
+
         PowerManager pm = (PowerManager) getActivity().getSystemService(Context.POWER_SERVICE);
-        PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "My Tag");
-        wl.acquire();
-        wl.release();
+
+        if(pm!=null) {
+            PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP, "My Tag");
+            wl.acquire();
+            wl.release();
+        }
 
         final Push push = (Push) getArguments().getSerializable(CALL_PUSH);
 

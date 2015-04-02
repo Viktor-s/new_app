@@ -37,6 +37,7 @@ public class ProductsCategoryFragment extends Fragment {
     private int column = 3;
     private int screenWidth;
     private String categoryName;
+    private String namePath;
 
     public static ProductsCategoryFragment newInstance(ProductsCategoryBrandEntity productsCategoryBrandEntity, String categoryName) {
         ProductsCategoryFragment fragment = new ProductsCategoryFragment();
@@ -70,8 +71,9 @@ public class ProductsCategoryFragment extends Fragment {
         TextView tvTitle = (TextView) view.findViewById(R.id.prod_category_top_title_textView);
         tvTitleMain.setText("Продукты /" + " " + categoryName);
         tvTitle.setText(productsCategoryBrandEntiti.getName());
-        gridLayout = (GridLayout) view.findViewById(R.id.productItemsGridLayout);
+        namePath = "Продукты / " + categoryName + " / " + productsCategoryBrandEntiti.getName();
 
+        gridLayout = (GridLayout) view.findViewById(R.id.productItemsGridLayout);
         int row = productsCategoryBrandEntiti.getProductEntityList().size() / column;
         gridLayout.setColumnCount(column);
         gridLayout.setRowCount(row + 1);
@@ -110,7 +112,8 @@ public class ProductsCategoryFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     int idCurrentGroup = Integer.parseInt(((TextView) v.findViewById(R.id.grid_hide_id)).getText().toString());
-                    showProductHtmlFragment(idCurrentGroup);
+                    String nameCurrentGroup = ((TextView) v.findViewById(R.id.grid_row_name_extView)).getText().toString();
+                    showProductHtmlFragment(idCurrentGroup, nameCurrentGroup, namePath);
                 }
             });
             gridLayout.addView(categoryProductLayout);
@@ -123,10 +126,10 @@ public class ProductsCategoryFragment extends Fragment {
         super.onPause();
     }
 
-    public void showProductHtmlFragment(int id) {
+    public void showProductHtmlFragment(int id, String nameProduct, String namePath) {
         startHttpIntent(getProductHtml(id), HttpIntentService.PRODUCTS_GET_HTML_BY_ID);
         final FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.replace(R.id.main_fragment_container, ProductHTMLFragment.newInstance(id));
+        ft.replace(R.id.main_fragment_container, ProductHTMLFragment.newInstance(id, nameProduct, namePath));
         ft.addToBackStack(null);
         ft.commit();
     }
