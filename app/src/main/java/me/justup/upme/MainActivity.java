@@ -47,7 +47,7 @@ import me.justup.upme.fragments.BrowserFragment;
 import me.justup.upme.fragments.CalendarFragment;
 import me.justup.upme.fragments.DocumentsFragment;
 import me.justup.upme.fragments.MailFragment;
-import me.justup.upme.fragments.NewsFeedFragment;
+import me.justup.upme.fragments.NewsFeedFragmentNew;
 import me.justup.upme.fragments.ProductsFragment;
 import me.justup.upme.fragments.StudyFragment;
 import me.justup.upme.fragments.WebRtcFragment;
@@ -166,10 +166,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         switch (view.getId()) {
             case R.id.news_menu_item:
                 if (currentlySelectedFragment != SELECTED_FRAGMENT_NEWS) {
-                    startHttpIntent(getShortDescriptionQuery(20, 0), HttpIntentService.NEWS_PART_SHORT);
-                    startHttpIntent(getShortDescriptionQuery(500, 20), HttpIntentService.NEWS_PART_SHORT);
+                    startHttpIntent(getShortDescriptionQuery(100, 0), HttpIntentService.NEWS_PART_SHORT);
+                    //startHttpIntent(getShortDescriptionQuery(500, 20), HttpIntentService.NEWS_PART_SHORT);
                     changeButtonState(mNewsButton);
-                    fragment = new NewsFeedFragment();
+                    fragment = new NewsFeedFragmentNew();
                     currentlySelectedFragment = SELECTED_FRAGMENT_NEWS;
                 }
                 break;

@@ -40,7 +40,6 @@ import me.justup.upme.db.DBAdapter;
 import me.justup.upme.dialogs.WarningDialog;
 import me.justup.upme.entity.ArticleFullEntity;
 import me.justup.upme.entity.ArticleShortCommentEntity;
-import me.justup.upme.entity.ArticleShortEntity;
 import me.justup.upme.entity.CommentAddQuery;
 import me.justup.upme.entity.CommentsArticleFullQuery;
 import me.justup.upme.http.HttpIntentService;
@@ -67,7 +66,7 @@ public class NewsItemFragment extends Fragment {
     private static final String QUERY_COMMENTS_PATH = "SELECT * FROM short_news_comments_table WHERE article_id=";
     private static final String QUERY_FULL_ARTICLE_PATH = "SELECT * FROM full_news_table WHERE server_id=";
     private static final int LIST_DIVIDER_HEIGHT = 24;
-    public static ArticleShortEntity mNewsFeedEntity;
+    public static int newsFeedEntityId;
     private WebView mNewsItemWebView;
     private EditText mNewsItemCommentEditText;
     private Button mNewsItemAddCommentButton;
@@ -86,10 +85,10 @@ public class NewsItemFragment extends Fragment {
     private ArticleShortCommentEntity mLastShortComment;
 
 
-    public static NewsItemFragment newInstance(ArticleShortEntity articleShortEntity) {
+    public static NewsItemFragment newInstance(int shortNewsId) {
         NewsItemFragment fragment = new NewsItemFragment();
         Bundle args = new Bundle();
-        args.putSerializable(ARG_NEWS_FEED_ENTITY, articleShortEntity);
+        args.putInt(ARG_NEWS_FEED_ENTITY, shortNewsId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -99,7 +98,7 @@ public class NewsItemFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            mNewsFeedEntity = (ArticleShortEntity) bundle.getSerializable(ARG_NEWS_FEED_ENTITY);
+            newsFeedEntityId = bundle.getInt(ARG_NEWS_FEED_ENTITY);
         }
         database = DBAdapter.getInstance().openDatabase();
     }
@@ -134,7 +133,7 @@ public class NewsItemFragment extends Fragment {
                     mNewsItemCommentEditText.setText("");
                     ((MainActivity) NewsItemFragment.this.getActivity()).startHttpIntent(getCommentsFullArticleQuery(mArticleFullEntity.getId(), 100, 0), HttpIntentService.GET_COMMENTS_FULL_ARTICLE);
                 } else if (isBroadcastUpdateComments) {
-                    ((NewsFeedFragment) getParentFragment()).updateNewsComments();
+                    ((NewsFeedFragmentNew) getParentFragment()).updateNewsComments();
                     isBroadcastUpdateFullArticle = true;
                     isBroadcastAddComment = false;
                     isBroadcastUpdateComments = false;
@@ -231,7 +230,7 @@ public class NewsItemFragment extends Fragment {
             @SuppressWarnings("ConstantConditions")
             @Override
             public void onClick(View view) {
-                ((NewsFeedFragment) getParentFragment()).updateLastChosenPosition();
+                ((NewsFeedFragmentNew) getParentFragment()).updateLastChosenPosition();
                 LocalBroadcastManager.getInstance(NewsItemFragment.this.getActivity()).unregisterReceiver(receiver);
                 NewsItemFragment.this.getView().startAnimation(mFragmentSliderOut);
             }
@@ -246,15 +245,9 @@ public class NewsItemFragment extends Fragment {
         return view;
     }
 
-    public void updateFragmentContent(ArticleShortEntity articleShortEntity) {
-        mNewsItemWebView.loadUrl("about:blank");
-        mNewsItemCommentsListView.setAdapter(null);
-        mNewsFeedEntity = articleShortEntity;
-        updateFullNewsCursor();
-    }
 
     private void updateFullNewsCursor() {
-        selectQueryFullNews = QUERY_FULL_ARTICLE_PATH + mNewsFeedEntity.getId();
+        selectQueryFullNews = QUERY_FULL_ARTICLE_PATH + newsFeedEntityId;
         Cursor cursorNews = database.rawQuery(selectQueryFullNews, null);
         if (cursorNews != null && cursorNews.moveToFirst()) {
             mArticleFullEntity = fillFullNewsFromCursor(cursorNews);
@@ -267,7 +260,7 @@ public class NewsItemFragment extends Fragment {
 
     private void fillViewsWithData() {
         LOGI(TAG, "fillViewsWithData");
-        mNewsItemWebView.loadDataWithBaseURL("",mArticleFullEntity.getFull_descr(), "text/html", "UTF-8", "");
+        mNewsItemWebView.loadDataWithBaseURL("", mArticleFullEntity.getFull_descr(), "text/html", "UTF-8", "");
         updateCommentsList();
     }
 
