@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Html;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
@@ -31,6 +32,7 @@ import me.justup.upme.entity.ProductsJSQuery;
 import me.justup.upme.entity.ProductsJSQueryKey;
 import me.justup.upme.fragments.NewsItemFragment;
 import me.justup.upme.http.ApiWrapper;
+import me.justup.upme.view.LiveWebView;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.LOGE;
@@ -72,10 +74,10 @@ public class OrderDialog extends DialogFragment {
 
         setCancelable(false);
 
-        webView = (WebView) dialogView.findViewById(R.id.dialog_product_html_webview);
+        webView = (LiveWebView) dialogView.findViewById(R.id.dialog_product_html_webview);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.addJavascriptInterface(new AndroidBridge(getActivity()), "android");
-        webView.loadData(htmlString, "text/html", null);
+        webView.loadData(htmlString, "text/html; charset=UTF-8", null);
 
         builder.setView(dialogView).setTitle("Ордер").setPositiveButton(R.string.button_close, new DialogInterface.OnClickListener() {
             @Override

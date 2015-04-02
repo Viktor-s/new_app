@@ -5,15 +5,24 @@
     android:orientation="vertical"
     android:background="@drawable/app_background">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/base90dp720sw"
-        android:text="Продукты"
-        android:background="@color/action_bar_background"
-        android:textColor="@android:color/white"
-        android:textSize="@dimen/base22sp720sw"
-        android:paddingLeft="@dimen/base20dp720sw"
-        android:paddingTop="@dimen/base18dp720sw"/>
+    <LinearLayout
+        android:id="@+id/main_action_bar"
+        android:orientation="horizontal"
+        style="@style/ActionBarStyle">
+
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_marginStart="@dimen/base15dp720sw"
+            android:text="Продукты"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:id="@+id/ab_user_name_textView" />
+
+
+    </LinearLayout>
 
     <HorizontalScrollView
         android:layout_width="match_parent"

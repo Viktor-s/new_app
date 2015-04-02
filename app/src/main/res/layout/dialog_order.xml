@@ -6,7 +6,7 @@
 
 
 
-    <WebView
+    <me.justup.upme.view.LiveWebView
         android:id="@+id/dialog_product_html_webview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
