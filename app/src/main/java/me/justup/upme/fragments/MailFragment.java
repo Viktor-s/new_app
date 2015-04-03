@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Editable;
@@ -133,9 +134,13 @@ public class MailFragment extends Fragment {
         contactsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                view.setSelected(true);
+                for (int i = 0; i < adapterView.getChildCount(); i++) {
+                    adapterView.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
+                }
+                view.setBackgroundColor(Color.LTGRAY);
 
                 CommonUtils.hideKeyboard(getActivity());
+
                 if (lastChosenPosition != position) {
                     String friendJabberId = mMailContactsAdapter.getCursor().getString(mMailContactsAdapter.getCursor().getColumnIndex(DBHelper.MAIL_CONTACT_JABBER_ID));
                     String friendName = mMailContactsAdapter.getCursor().getString(mMailContactsAdapter.getCursor().getColumnIndex(DBHelper.MAIL_CONTACT_NAME));
@@ -152,6 +157,7 @@ public class MailFragment extends Fragment {
                 }
             }
         });
+
         EditText mSearchFieldEditText = (EditText) view.findViewById(R.id.mail_fragment_search_editText);
         mSearchFieldEditText.addTextChangedListener(new TextWatcher() {
 

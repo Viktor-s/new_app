@@ -15,6 +15,7 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import me.justup.upme.JustUpApplication;
 import me.justup.upme.MainActivity;
 import me.justup.upme.R;
 import me.justup.upme.db.DBAdapter;
@@ -156,7 +157,7 @@ public class GcmIntentService extends IntentService {
     }
 
     private void playNotify(int type) {
-        Intent sound = new Intent(new Intent(this, SoundNotifyService.class));
+        Intent sound = new Intent(JustUpApplication.getApplication(), SoundNotifyService.class);
         sound.putExtra(SOUND_NOTIFY_TYPE_EXTRA, type);
         startService(sound);
     }
