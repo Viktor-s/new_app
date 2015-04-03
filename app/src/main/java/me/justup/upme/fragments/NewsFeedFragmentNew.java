@@ -135,6 +135,9 @@ public class NewsFeedFragmentNew extends Fragment {
                         if (mNewsFeedEntityPartOfList.size() < 10) {
                             mNewsFeedEntityPartOfList.addAll(getNextArticlesPack());
                         }
+                        int row = mNewsFeedEntityList.size() / column;
+                        gridLayout.setColumnCount(column);
+                        gridLayout.setRowCount(row + 1);
                         updateView();
 
                         if (cursorNews != null) {
@@ -169,10 +172,12 @@ public class NewsFeedFragmentNew extends Fragment {
         View view = inflater.inflate(R.layout.fragment_news_feed_new, container, false);
         layoutInflater = LayoutInflater.from(getActivity());
         gridLayout = (GridLayout) view.findViewById(R.id.newsFeedGridLayout);
+        if (mNewsFeedEntityList.size() > 0) {
+            int row = mNewsFeedEntityList.size() / column;
+            gridLayout.setColumnCount(column);
+            gridLayout.setRowCount(row + 1);
 
-        int row = mNewsFeedEntityList.size() / column;
-        gridLayout.setColumnCount(column);
-        gridLayout.setRowCount(row + 1);
+        }
         updateView();
 
         InteractiveScrollView interactiveScrollView = (InteractiveScrollView) view.findViewById(R.id.interactiveScrollView);
@@ -211,53 +216,56 @@ public class NewsFeedFragmentNew extends Fragment {
     }
 
     private void updateView() {
-        for (int i = 0, c = 0, r = 0; i < mNewsFeedEntityPartOfList.size(); i++, c++) {
-            if (c == column) {
-                c = 0;
-                r++;
-            }
-            GridLayout.LayoutParams param = new GridLayout.LayoutParams();
-            param.height = LinearLayout.LayoutParams.WRAP_CONTENT;
-            param.width = (int) (screenWidth / 3);
-            param.rightMargin = CommonUtils.convertDpToPixels(getActivity(), 30);
-            // param.topMargin = 10;
-            //  param.setGravity(Gravity.CENTER);
-            param.columnSpec = GridLayout.spec(c);
-            param.rowSpec = GridLayout.spec(r);
-
-            LinearLayout shortNewsLayout = (LinearLayout) layoutInflater.inflate(R.layout.news_feed_grid_row, null, false);
-            TextView shortNewsId = (TextView) shortNewsLayout.findViewById(R.id.grid_hide_id);
-            shortNewsId.setText(Integer.toString(mNewsFeedEntityPartOfList.get(i).getId()));
-            ImageView shortNewsImage = (ImageView) shortNewsLayout.findViewById(R.id.grid_row_imageView);
-            String imagePath = (mNewsFeedEntityPartOfList.get(i).getThumbnail() != null && mNewsFeedEntityPartOfList.get(i).getThumbnail().length() > 1) ? mNewsFeedEntityPartOfList.get(i).getThumbnail() : "fake";
-            Picasso.with(getActivity()).load(imagePath).placeholder(R.drawable.ic_launcher).fit().centerCrop().into(shortNewsImage);
-            TextView shortNewsDate = (TextView) shortNewsLayout.findViewById(R.id.grid_row_date_textView);
-            TextView shortNewsCommentsLenght = (TextView) shortNewsLayout.findViewById(R.id.grid_row_comments_lenght_textView);
-            shortNewsDate.setText(mNewsFeedEntityPartOfList.get(i).getPosted_at());
-            shortNewsCommentsLenght.setText(Integer.toString(mNewsFeedEntityPartOfList.get(i).getComments().size()));
-            TextView shortNewsTitle = (TextView) shortNewsLayout.findViewById(R.id.grid_row_name_extView);
-            shortNewsTitle.setText(mNewsFeedEntityPartOfList.get(i).getTitle());
-            TextView shortNewsDescription = (TextView) shortNewsLayout.findViewById(R.id.grid_row_description_textView);
-            shortNewsDescription.setText((mNewsFeedEntityPartOfList.get(i).getShort_descr()));
-            shortNewsLayout.setLayoutParams(param);
-            shortNewsLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int shortNewsId = Integer.parseInt(((TextView) v.findViewById(R.id.grid_hide_id)).getText().toString());
-                    if (lastChosenPosition != shortNewsId) {
-                        // mNewsFeedEntityPartOfList.get(position).setViewed(true);
-                        //  DBAdapter.getInstance().saveNewsReadValue(mNewsFeedEntityPartOfList.get(position).getId());
-                        Animation mFragmentSliderFadeIn = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.fragment_slider_in);
-                        getChildFragmentManager().beginTransaction().replace(R.id.news_item_container_frameLayout, NewsItemFragment.newInstance(shortNewsId)).commit();
-                        mNewsItemContainer.startAnimation(mFragmentSliderFadeIn);
-                        lastChosenPosition = shortNewsId;
-                        ((MainActivity) NewsFeedFragmentNew.this.getActivity()).startHttpIntent(getFullDescriptionQuery(shortNewsId), HttpIntentService.NEWS_PART_FULL);
-                    }
-
-
+        if (mNewsFeedEntityPartOfList != null && mNewsFeedEntityPartOfList.size() > 0) {
+            for (int i = 0, c = 0, r = 0; i < mNewsFeedEntityPartOfList.size(); i++, c++) {
+                if (c == column) {
+                    c = 0;
+                    r++;
                 }
-            });
-            gridLayout.addView(shortNewsLayout);
+                GridLayout.LayoutParams param = new GridLayout.LayoutParams();
+               param.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+                //param.height = 300;
+                param.width = (screenWidth / 3);
+                param.rightMargin = CommonUtils.convertDpToPixels(getActivity(), 30);
+                param.topMargin = CommonUtils.convertDpToPixels(getActivity(), 30);
+                //  param.setGravity(Gravity.CENTER);
+                param.columnSpec = GridLayout.spec(c);
+                param.rowSpec = GridLayout.spec(r);
+
+                LinearLayout shortNewsLayout = (LinearLayout) layoutInflater.inflate(R.layout.news_feed_grid_row, null, false);
+                TextView shortNewsId = (TextView) shortNewsLayout.findViewById(R.id.grid_hide_id);
+                shortNewsId.setText(Integer.toString(mNewsFeedEntityPartOfList.get(i).getId()));
+                ImageView shortNewsImage = (ImageView) shortNewsLayout.findViewById(R.id.grid_row_imageView);
+                String imagePath = (mNewsFeedEntityPartOfList.get(i).getThumbnail() != null && mNewsFeedEntityPartOfList.get(i).getThumbnail().length() > 1) ? mNewsFeedEntityPartOfList.get(i).getThumbnail() : "fake";
+                Picasso.with(getActivity()).load(imagePath).placeholder(R.drawable.ic_launcher).fit().centerCrop().into(shortNewsImage);
+                TextView shortNewsDate = (TextView) shortNewsLayout.findViewById(R.id.grid_row_date_textView);
+                TextView shortNewsCommentsLenght = (TextView) shortNewsLayout.findViewById(R.id.grid_row_comments_lenght_textView);
+                shortNewsDate.setText(mNewsFeedEntityPartOfList.get(i).getPosted_at());
+                shortNewsCommentsLenght.setText(Integer.toString(mNewsFeedEntityPartOfList.get(i).getComments().size()));
+                TextView shortNewsTitle = (TextView) shortNewsLayout.findViewById(R.id.grid_row_name_extView);
+                shortNewsTitle.setText(mNewsFeedEntityPartOfList.get(i).getTitle());
+                TextView shortNewsDescription = (TextView) shortNewsLayout.findViewById(R.id.grid_row_description_textView);
+                shortNewsDescription.setText((mNewsFeedEntityPartOfList.get(i).getShort_descr()));
+                shortNewsLayout.setLayoutParams(param);
+                shortNewsLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int shortNewsId = Integer.parseInt(((TextView) v.findViewById(R.id.grid_hide_id)).getText().toString());
+                        if (lastChosenPosition != shortNewsId) {
+                            // mNewsFeedEntityPartOfList.get(position).setViewed(true);
+                            //  DBAdapter.getInstance().saveNewsReadValue(mNewsFeedEntityPartOfList.get(position).getId());
+                            Animation mFragmentSliderFadeIn = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.fragment_slider_in);
+                            getChildFragmentManager().beginTransaction().replace(R.id.news_item_container_frameLayout, NewsItemFragment.newInstance(shortNewsId)).commit();
+                            mNewsItemContainer.startAnimation(mFragmentSliderFadeIn);
+                            lastChosenPosition = shortNewsId;
+                            ((MainActivity) NewsFeedFragmentNew.this.getActivity()).startHttpIntent(getFullDescriptionQuery(shortNewsId), HttpIntentService.NEWS_PART_FULL);
+                        }
+
+
+                    }
+                });
+                gridLayout.addView(shortNewsLayout);
+            }
         }
     }
 
@@ -325,7 +333,7 @@ public class NewsFeedFragmentNew extends Fragment {
         LOGI(TAG, "getNextArticlesPack " + mNewsFeedEntityList.size() + " " + mNewsFeedEntityPartOfList.size());
         if (from < mNewsFeedEntityList.size()) {
             if (to > mNewsFeedEntityList.size()) {
-                to = mNewsFeedEntityList.size() - 1;
+                to = mNewsFeedEntityList.size();
             }
             for (int i = from; i < to; i++) {
                 shortEntityList.add(mNewsFeedEntityList.get(i));

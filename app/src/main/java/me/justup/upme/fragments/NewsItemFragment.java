@@ -16,12 +16,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import org.brickred.socialauth.android.DialogListener;
@@ -83,6 +86,8 @@ public class NewsItemFragment extends Fragment {
     private Animation mFragmentSliderOut;
     private SQLiteDatabase database;
     private ArticleShortCommentEntity mLastShortComment;
+    private ScrollView mNewsItemScrollView;
+    private ProgressBar mProgressBar;
 
 
     public static NewsItemFragment newInstance(int shortNewsId) {
@@ -100,6 +105,7 @@ public class NewsItemFragment extends Fragment {
         if (bundle != null) {
             newsFeedEntityId = bundle.getInt(ARG_NEWS_FEED_ENTITY);
         }
+        selectQueryFullNews = QUERY_FULL_ARTICLE_PATH + newsFeedEntityId;
         database = DBAdapter.getInstance().openDatabase();
     }
 
@@ -109,6 +115,7 @@ public class NewsItemFragment extends Fragment {
         super.onResume();
         // mDBAdapter.open();
         LOGI(TAG, "RegisterRecNewsItem");
+
         receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -117,6 +124,7 @@ public class NewsItemFragment extends Fragment {
                     Cursor cursorNews = database.rawQuery(selectQueryFullNews, null);
                     mArticleFullEntity = fillFullNewsFromCursor(cursorNews);
                     fillViewsWithData();
+                    //updateFullNewsCursor();
                     if (cursorNews != null) {
                         cursorNews.close();
                     }
@@ -164,6 +172,10 @@ public class NewsItemFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_news_item, container, false);
+        mNewsItemScrollView = (ScrollView) view.findViewById(R.id.news_item_scrollview);
+        mProgressBar = (ProgressBar) view.findViewById(R.id.news_feed_progressbar);
+        mNewsItemScrollView.setVisibility(View.INVISIBLE);
+        mProgressBar.setVisibility(View.VISIBLE);
 
         mFragmentSliderOut = AnimationUtils.loadAnimation(getActivity(), R.anim.order_slider_out);
         mFragmentSliderOut.setAnimationListener(new Animation.AnimationListener() {
@@ -183,11 +195,28 @@ public class NewsItemFragment extends Fragment {
 
         mNewsItemWebView = (WebView) view.findViewById(R.id.news_item_webView);
         mNewsItemWebView.getSettings().setJavaScriptEnabled(true);
+        mNewsItemWebView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public void onProgressChanged(WebView view, int newProgress) {
+                super.onProgressChanged(view, newProgress);
+
+                if (newProgress == 100) {
+                    mProgressBar.setVisibility(View.GONE);
+                    mNewsItemScrollView.setVisibility(View.VISIBLE);
+                }
+            }
+
+        });
         mNewsItemWebView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 view.loadUrl(url);
                 return true;
+            }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                //  Toast.makeText(getActivity(), "Page loaded", Toast.LENGTH_SHORT).show();
             }
         });
         mNewsItemWebView.getSettings().setLoadWithOverviewMode(true);
@@ -236,7 +265,7 @@ public class NewsItemFragment extends Fragment {
             }
         });
 
-        updateFullNewsCursor();
+
         AnimateButtonClose.animateButtonClose(mNewsItemCloseButton);
         // FB
         adapter = new SocialAuthAdapter(new ResponseListener());
@@ -247,7 +276,7 @@ public class NewsItemFragment extends Fragment {
 
 
     private void updateFullNewsCursor() {
-        selectQueryFullNews = QUERY_FULL_ARTICLE_PATH + newsFeedEntityId;
+
         Cursor cursorNews = database.rawQuery(selectQueryFullNews, null);
         if (cursorNews != null && cursorNews.moveToFirst()) {
             mArticleFullEntity = fillFullNewsFromCursor(cursorNews);
@@ -261,6 +290,7 @@ public class NewsItemFragment extends Fragment {
     private void fillViewsWithData() {
         LOGI(TAG, "fillViewsWithData");
         mNewsItemWebView.loadDataWithBaseURL("", mArticleFullEntity.getFull_descr(), "text/html", "UTF-8", "");
+
         updateCommentsList();
     }
 

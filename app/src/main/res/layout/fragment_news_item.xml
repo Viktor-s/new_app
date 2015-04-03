@@ -4,7 +4,7 @@
     android:background="@drawable/app_background">
 
     <ScrollView
-        android:id="@+id/ScrollView"
+        android:id="@+id/news_item_scrollview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_marginLeft="@dimen/base30dp720sw"
@@ -89,5 +89,15 @@
         android:background="@drawable/button_close_test"
         android:clickable="false"
         android:layout_marginTop="@dimen/base20dp720sw" />
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:indeterminate="false"
+        android:id="@+id/news_feed_progressbar" />
 
 </RelativeLayout>

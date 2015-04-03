@@ -52,26 +52,41 @@
             android:paddingRight="@dimen/base5dp720sw" />
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/grid_row_name_extView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/grid_row_imageView"
-        android:layout_centerHorizontal="true"
-        android:text="New Text"
-        android:textColor="@android:color/black"
-        android:textSize="@dimen/base26sp720sw"
-     />
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/base250dp720sw"
+        android:id="@+id/scrollView4"
+        android:scrollbars="none"
+        android:layout_below="@+id/grid_row_imageView">
 
-    <TextView
-        android:id="@+id/grid_row_description_textView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/grid_row_name_extView"
-        android:layout_centerHorizontal="true"
-        android:text="New Text"
-        android:textColor="@color/black"
-        android:textSize="@dimen/base20sp720sw" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <TextView
+                android:id="@+id/grid_row_name_extView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_centerHorizontal="true"
+                android:text="New Text"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/base26sp720sw" />
+
+
+            <TextView
+                android:id="@+id/grid_row_description_textView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/grid_row_name_extView"
+                android:layout_centerHorizontal="true"
+                android:text="New Text"
+                android:textColor="@color/black"
+                android:textSize="@dimen/base20sp720sw" />
+        </LinearLayout>
+    </ScrollView>
+
 
     <TextView
         android:id="@+id/grid_hide_id"

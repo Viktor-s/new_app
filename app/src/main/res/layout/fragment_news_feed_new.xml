@@ -7,17 +7,19 @@
 
     <LinearLayout
         android:id="@+id/main_action_bar"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         style="@style/ActionBarStyle">
 
         <TextView
-            android:layout_width="0dp"
+            android:id="@+id/news_item_top_title_main_textView"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:paddingTop="@dimen/base18dp720sw"
+            android:layout_marginStart="@dimen/base15dp720sw"
             android:text="Новости"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:id="@+id/ab_user_name_textView" />
+            android:textColor="@android:color/white"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
     </LinearLayout>
 
     <me.justup.upme.view.InteractiveScrollView
