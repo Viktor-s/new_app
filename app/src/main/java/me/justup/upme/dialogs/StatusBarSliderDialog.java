@@ -151,6 +151,10 @@ public class StatusBarSliderDialog extends DialogFragment {
                 mStringBuilder.append(LEFT_BRACERS).append(push.getPushDescription()).append(RIGHT_BRACERS);
                 break;
 
+            case MailFragment.ORDER_INFO:
+                mStringBuilder.append(LEFT_BRACERS).append(push.getPushDescription()).append(RIGHT_BRACERS);
+                break;
+
             default:
                 break;
         }
@@ -167,7 +171,9 @@ public class StatusBarSliderDialog extends DialogFragment {
                     if (push.getType() == MailFragment.WEBRTC) {
                         mOnLoadMailFragment.onLoadMailFragment(null);
                     } else {
-                        mOnLoadMailFragment.onLoadMailFragment(push);
+                        if (push.getType() != MailFragment.ORDER_INFO) {
+                            mOnLoadMailFragment.onLoadMailFragment(push);
+                        }
                     }
                 } else {
                     mOnDownloadCloudFile.onDownloadCloudFile(push.getLink(), push.getFileName());

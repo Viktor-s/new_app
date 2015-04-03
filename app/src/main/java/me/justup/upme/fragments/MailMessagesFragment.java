@@ -92,6 +92,7 @@ public class MailMessagesFragment extends Fragment {
     private static final String TAKE_PHOTO = "Сделать фото";
     private static final String CHOOSE_FROM_GALLERY = "Выбрать из галереи";
     private static final String DIALOG_CANCEL = "Отмена";
+    private static final String TITLE_CHAT = " - чат";
 
     private RelativeLayout mAddFileContainer;
     private String mCurrentPhotoPath;
@@ -234,6 +235,9 @@ public class MailMessagesFragment extends Fragment {
         });
 
         mImageAttachedImageView.setVisibility(View.INVISIBLE);
+
+        TextView mChatTitle = (TextView) view.findViewById(R.id.chat_title_textView);
+        mChatTitle.setText(mFriendName + TITLE_CHAT);
 
 
         // Jabber
