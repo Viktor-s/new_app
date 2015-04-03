@@ -139,7 +139,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            tools:text="1 год 2 месяца 3 недели"
+            android:text="1 год 2 месяца 3 недели"
             android:layout_marginEnd="@dimen/base15dp720sw"
             android:layout_gravity="center_vertical"
             android:id="@+id/ab_user_in_system_textView" />
