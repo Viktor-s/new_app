@@ -92,10 +92,10 @@ public class NewsFeedFragmentNew extends Fragment {
         } else {
             database = DBAdapter.getInstance().openDatabase();
         }
-        Cursor cursorReadNews = database.rawQuery("SELECT * FROM " + IS_SHORT_NEWS_READ_TABLE_NAME, null);
-        mReadNewsList = getAllReadNewsFromCursor(cursorReadNews);
-        if (cursorReadNews != null)
-            cursorReadNews.close();
+        //  Cursor cursorReadNews = database.rawQuery("SELECT * FROM " + IS_SHORT_NEWS_READ_TABLE_NAME, null);
+        //   mReadNewsList = getAllReadNewsFromCursor(cursorReadNews);
+        //  if (cursorReadNews != null)
+        //      cursorReadNews.close();
         selectQueryShortNews = "SELECT * FROM " + SHORT_NEWS_TABLE_NAME;
         Cursor cursorNews = database.rawQuery(selectQueryShortNews, null);
         mNewsFeedEntityList = fillNewsFromCursor(cursorNews, mReadNewsList);
@@ -223,7 +223,7 @@ public class NewsFeedFragmentNew extends Fragment {
                     r++;
                 }
                 GridLayout.LayoutParams param = new GridLayout.LayoutParams();
-               param.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+                param.height = LinearLayout.LayoutParams.WRAP_CONTENT;
                 //param.height = 300;
                 param.width = (screenWidth / 3);
                 param.rightMargin = CommonUtils.convertDpToPixels(getActivity(), 30);
