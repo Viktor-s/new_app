@@ -30,7 +30,7 @@
             android:textStyle="bold"/>
     </LinearLayout>
 
-    <WebView
+    <me.justup.upme.view.CustomWebView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/title_LinearLayout"

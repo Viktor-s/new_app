@@ -5,14 +5,11 @@ import android.content.Context;
 import android.os.Build;
 import android.preference.EditTextPreference;
 import android.util.AttributeSet;
+import android.widget.EditText;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
 
-/**
- * Created by bogdan on 03.04.15.
- */
 public class CustomEditTextPreference extends EditTextPreference {
-
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public CustomEditTextPreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
@@ -31,9 +28,13 @@ public class CustomEditTextPreference extends EditTextPreference {
         super(context);
     }
 
+
+
     @Override
     protected void onDialogClosed(boolean positiveResult) {
         super.onDialogClosed(positiveResult);
+        final EditText mEditText = this.getEditText();
         LOGD("TAG_dialog", " ---> onDialogClosed");
     }
+
 }

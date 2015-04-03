@@ -43,6 +43,7 @@ import me.justup.upme.entity.ProductsJSQuery;
 import me.justup.upme.entity.ProductsOrderCreateQuery;
 import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.http.HttpIntentService;
+import me.justup.upme.view.CustomWebView;
 
 import static me.justup.upme.db.DBHelper.PRODUCTS_HTML_CONTENT;
 import static me.justup.upme.db.DBHelper.PRODUCTS_HTML_SERVER_ID;
@@ -121,7 +122,7 @@ public class ProductHTMLFragment extends Fragment {
         ((TextView) view.findViewById(R.id.web_prod_category_top_title_main_textView)).setText(currentProductPath);
         ((TextView) view.findViewById(R.id.web_prod_category_top_title_textView)).setText(currentProductName);
 
-        webView = (WebView) view.findViewById(R.id.product_html_webview);
+        webView = (CustomWebView) view.findViewById(R.id.product_html_webview);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.addJavascriptInterface(new AndroidBridge(getActivity()), "android");
         webView.setWebViewClient(new WebViewClient() {
@@ -132,6 +133,7 @@ public class ProductHTMLFragment extends Fragment {
                 return true;
             }
         });
+
         Button mCloseButton = (Button) view.findViewById(R.id.product_html_close_button);
         //mCloseButton.setVisibility(View.INVISIBLE);
         mCloseButton.setOnClickListener(new View.OnClickListener() {

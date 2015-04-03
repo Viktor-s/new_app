@@ -56,7 +56,7 @@
         android:title="@string/pref_room_server_url_title"
         android:inputType="text"
         android:defaultValue="@string/pref_room_server_url_default"
-        android:dialogTitle="@string/pref_room_server_url_dlg" />
+        android:dialogTitle="@string/pref_room_server_url_dlg"/>
 
     <CheckBoxPreference
         android:key="@string/pref_displayhud_key"
