@@ -51,7 +51,7 @@
         android:dialogTitle="@string/pref_cpu_usage_detection_dlg"
         android:defaultValue="@string/pref_cpu_usage_detection_default" />
 
-    <EditTextPreference
+    <me.justup.upme.view.CustomEditTextPreference
         android:key="@string/pref_room_server_url_key"
         android:title="@string/pref_room_server_url_title"
         android:inputType="text"
