@@ -52,7 +52,7 @@
             android:id="@+id/mail_contacts_ListView"
             android:layout_width="@dimen/base350dp720sw"
             android:layout_height="match_parent"
-            android:background="@android:color/transparent"
+            android:drawable="@drawable/contact_list_background_selector"
             android:layout_alignParentTop="true" />
     </LinearLayout>
 

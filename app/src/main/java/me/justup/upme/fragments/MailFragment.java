@@ -47,6 +47,7 @@ public class MailFragment extends Fragment {
     public static final int BREAK_CALL = 4;
     public static final int CALENDAR_NEW_EVENT = 5;
     public static final int ORDER_FORM = 6;
+    public static final int ORDER_INFO = 7;
 
     private SQLiteDatabase database;
     private Cursor cursor;
@@ -132,6 +133,8 @@ public class MailFragment extends Fragment {
         contactsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                view.setSelected(true);
+
                 CommonUtils.hideKeyboard(getActivity());
                 if (lastChosenPosition != position) {
                     String friendJabberId = mMailContactsAdapter.getCursor().getString(mMailContactsAdapter.getCursor().getColumnIndex(DBHelper.MAIL_CONTACT_JABBER_ID));

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -162,6 +163,18 @@
         android:transcriptMode="alwaysScroll"
         android:layout_above="@+id/linearLayout3"
         android:layout_marginEnd="@dimen/base60dp720sw"
-        android:src="@android:drawable/dark_header" />
+        android:src="@android:drawable/dark_header"
+        android:layout_below="@+id/chat_title_textView" />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/base10dp720sw"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:background="@color/base_background"
+        tools:text="User name - чат"
+        android:id="@+id/chat_title_textView"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_toStartOf="@+id/mail_messages_close_button" />
 </RelativeLayout>

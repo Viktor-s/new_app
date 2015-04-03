@@ -55,7 +55,7 @@ public class GcmIntentService extends IntentService {
 
     private static final String TIME_FORMAT = "HH:mm - dd MMMM yyyy";
 
-    private Handler mHandler= new Handler();
+    private Handler mHandler = new Handler();
 
     public GcmIntentService() {
         super("GcmIntentService");
@@ -147,6 +147,10 @@ public class GcmIntentService extends IntentService {
         Date date = new Date();
         SimpleDateFormat mTimeFormat = new SimpleDateFormat(TIME_FORMAT, AppLocale.getAppLocale());
         String pushTime = mTimeFormat.format(date);
+
+        if (push.getType() == MailFragment.ORDER_INFO) {
+            push.setPushDescription("Payment OK");
+        }
 
         DBAdapter.getInstance().savePush(push, pushTime);
     }
