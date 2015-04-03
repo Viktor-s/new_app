@@ -91,7 +91,7 @@ public class BriefcaseFragment extends Fragment {
         super.onPause();
         DBAdapter.getInstance().closeDatabase();
         LocalBroadcastManager.getInstance(BriefcaseFragment.this.getActivity()).unregisterReceiver(receiver);
-           }
+    }
 
     @Override
     public void onResume() {
@@ -113,17 +113,19 @@ public class BriefcaseFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_briefcase, container, false);
         mFragmentSliderFadeIn = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.fragment_item_slide_fade_in);
+
         mFragmentSliderOut = AnimationUtils.loadAnimation(getActivity(), R.anim.order_slider_out);
         mFragmentSliderOut.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
+                mCloseUserFragmentButton.setVisibility(View.GONE);
             }
 
             @Override
             public void onAnimationEnd(Animation animation) {
                 Fragment fragment = getChildFragmentManager().findFragmentByTag("UserFragmentBriefcase");
                 if (fragment != null) {
-                    mCloseUserFragmentButton.setVisibility(View.GONE);
+
                     getChildFragmentManager().beginTransaction().remove(fragment).commit();
                 }
             }
@@ -322,10 +324,26 @@ public class BriefcaseFragment extends Fragment {
                     GetAccountPanelInfoQuery getLoggedUserInfoQuery = new GetAccountPanelInfoQuery();
                     getLoggedUserInfoQuery.params.id = idPersonal;
                     Animation mFragmentSliderFadeIn = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.fragment_item_slide_fade_in);
+                    mFragmentSliderFadeIn.setAnimationListener(new Animation.AnimationListener() {
+                        @Override
+                        public void onAnimationStart(Animation animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+                            mCloseUserFragmentButton.setVisibility(View.VISIBLE);
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animation animation) {
+
+                        }
+                    });
                     Fragment fragment = UserFragment.newInstance(getLoggedUserInfoQuery, false);
                     getChildFragmentManager().beginTransaction().replace(R.id.briefcase_user_info_container_frameLayout, fragment, "UserFragmentBriefcase").commit();
                     mUserContainer.startAnimation(mFragmentSliderFadeIn);
-                    mCloseUserFragmentButton.setVisibility(View.VISIBLE);
+
 
                 }
             });
