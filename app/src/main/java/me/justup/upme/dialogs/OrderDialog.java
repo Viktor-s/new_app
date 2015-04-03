@@ -8,13 +8,10 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.Html;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
-import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -28,11 +25,9 @@ import java.lang.reflect.Type;
 import java.util.Map;
 
 import me.justup.upme.R;
-import me.justup.upme.entity.ProductsJSQuery;
 import me.justup.upme.entity.ProductsJSQueryKey;
-import me.justup.upme.fragments.NewsItemFragment;
 import me.justup.upme.http.ApiWrapper;
-import me.justup.upme.view.LiveWebView;
+import me.justup.upme.view.CustomWebView;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.LOGE;
@@ -74,7 +69,7 @@ public class OrderDialog extends DialogFragment {
 
         setCancelable(false);
 
-        webView = (LiveWebView) dialogView.findViewById(R.id.dialog_product_html_webview);
+        webView = (CustomWebView) dialogView.findViewById(R.id.dialog_product_html_webview);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.addJavascriptInterface(new AndroidBridge(getActivity()), "android");
         webView.loadData(htmlString, "text/html; charset=UTF-8", null);
