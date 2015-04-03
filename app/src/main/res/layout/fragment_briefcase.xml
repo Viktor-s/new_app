@@ -140,16 +140,6 @@
 
             </TableLayout>
 
-            <Button
-                android:layout_width="@dimen/base50dp720sw"
-                android:layout_height="@dimen/base50dp720sw"
-                android:id="@+id/briefcase_close_button"
-                android:visibility="gone"
-                android:background="@drawable/button_close_test"
-                android:clickable="false"
-                android:layout_alignParentTop="true"
-                android:layout_toEndOf="@+id/user_briefcase_tableLayout" />
-
 
         </RelativeLayout>
 
@@ -244,6 +234,17 @@
             android:layout_alignParentTop="true"
             android:layout_marginLeft="@dimen/base240dp720sw"
             android:background="@android:color/white" />
+
+        <Button
+            android:layout_width="@dimen/base50dp720sw"
+            android:layout_height="@dimen/base50dp720sw"
+            android:id="@+id/briefcase_close_button"
+            android:visibility="visible"
+            android:background="@drawable/button_close_test"
+            android:clickable="false"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="false"
+            android:layout_toLeftOf="@+id/briefcase_user_info_container_frameLayout" />
 
         <FrameLayout
             android:id="@+id/briefcase_user_info_container_frameLayout"

@@ -27,7 +27,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/base35dp720sw"
                 android:id="@+id/fb_share_Button"
-                android:background="@drawable/facebook" />
+                android:background="@drawable/facebook"
+                android:visibility="gone" />
 
             <View
                 android:layout_width="wrap_content"

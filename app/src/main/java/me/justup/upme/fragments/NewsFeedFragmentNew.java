@@ -98,7 +98,8 @@ public class NewsFeedFragmentNew extends Fragment {
         //      cursorReadNews.close();
         selectQueryShortNews = "SELECT * FROM " + SHORT_NEWS_TABLE_NAME;
         Cursor cursorNews = database.rawQuery(selectQueryShortNews, null);
-        mNewsFeedEntityList = fillNewsFromCursor(cursorNews, mReadNewsList);
+        // mNewsFeedEntityList = fillNewsFromCursor(cursorNews, mReadNewsList);
+        mNewsFeedEntityList = fillNewsFromCursor(cursorNews);
         if (mNewsFeedEntityList.size() >= 10) {
             mNewsFeedEntityPartOfList = getNextArticlesPack();
         }
@@ -131,7 +132,8 @@ public class NewsFeedFragmentNew extends Fragment {
                     if (isFirstArticlesUpdate) {
                         LOGI(TAG, "onReceive, first update");
                         Cursor cursorNews = database.rawQuery(selectQueryShortNews, null);
-                        mNewsFeedEntityList = fillNewsFromCursor(cursorNews, mReadNewsList);
+                        //  mNewsFeedEntityList = fillNewsFromCursor(cursorNews, mReadNewsList);
+                        mNewsFeedEntityList = fillNewsFromCursor(cursorNews);
                         if (mNewsFeedEntityPartOfList.size() < 10) {
                             mNewsFeedEntityPartOfList.addAll(getNextArticlesPack());
                         }
@@ -148,7 +150,8 @@ public class NewsFeedFragmentNew extends Fragment {
                     } else {
                         LOGI(TAG, "onReceive, second update");
                         Cursor cursorNews = database.rawQuery(selectQueryShortNews, null);
-                        mNewsFeedEntityList = fillNewsFromCursor(cursorNews, mReadNewsList);
+                        //mNewsFeedEntityList = fillNewsFromCursor(cursorNews, mReadNewsList);
+                        mNewsFeedEntityList = fillNewsFromCursor(cursorNews);
                         cursorNews.close();
                         isFirstArticlesUpdate = true;
                     }
@@ -274,7 +277,8 @@ public class NewsFeedFragmentNew extends Fragment {
         lastChosenPosition = -1;
     }
 
-    private List<ArticleShortEntity> fillNewsFromCursor(Cursor cursorNews, ArrayList<Integer> readNewsList) {
+    // private List<ArticleShortEntity> fillNewsFromCursor(Cursor cursorNews, ArrayList<Integer> readNewsList) {
+    private List<ArticleShortEntity> fillNewsFromCursor(Cursor cursorNews) {
 
         ArrayList<ArticleShortEntity> newsList = new ArrayList<>();
 
@@ -286,9 +290,9 @@ public class NewsFeedFragmentNew extends Fragment {
             articlesResponse.setThumbnail(cursorNews.getString(cursorNews.getColumnIndex(SHORT_NEWS_THUMBNAIL)));
             articlesResponse.setPosted_at(cursorNews.getString(cursorNews.getColumnIndex(SHORT_NEWS_POSTED_AT)));
             int news_id = cursorNews.getInt(cursorNews.getColumnIndex(SHORT_NEWS_SERVER_ID));
-            if (readNewsList.contains(news_id)) {
-                articlesResponse.setViewed(true);
-            }
+//            if (readNewsList.contains(news_id)) {
+//                articlesResponse.setViewed(true);
+//            }
             String selectQueryShortNewsComments = "SELECT * FROM short_news_comments_table WHERE article_id=" + news_id;
             Cursor cursorComments = database.rawQuery(selectQueryShortNewsComments, null);
             ArrayList<ArticleShortCommentEntity> commentsList = new ArrayList<>();
@@ -350,7 +354,8 @@ public class NewsFeedFragmentNew extends Fragment {
         if (cursorReadNews != null)
             cursorReadNews.close();
         Cursor cursorNews = database.rawQuery(selectQueryShortNews, null);
-        mNewsFeedEntityList = fillNewsFromCursor(cursorNews, mReadNewsList);
+        //  mNewsFeedEntityList = fillNewsFromCursor(cursorNews, mReadNewsList);
+        mNewsFeedEntityList = fillNewsFromCursor(cursorNews);
         if (cursorNews != null) {
             cursorNews.close();
         }
