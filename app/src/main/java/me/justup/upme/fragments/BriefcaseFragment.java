@@ -44,6 +44,7 @@ import static me.justup.upme.db.DBHelper.MAIL_CONTACT_PARENT_ID;
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_SERVER_ID;
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_TABLE_NAME;
 import static me.justup.upme.utils.LogUtils.LOGD;
+import static me.justup.upme.utils.LogUtils.LOGE;
 import static me.justup.upme.utils.LogUtils.LOGI;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
@@ -62,6 +63,9 @@ public class BriefcaseFragment extends Fragment {
     private Animation mFragmentSliderOut;
     private SQLiteDatabase database;
     private Cursor cursor;
+    private int lastChoosenItem;
+    private int userId;
+    private int totalItemCount;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,6 +79,8 @@ public class BriefcaseFragment extends Fragment {
         }
         selectQuery = "SELECT * FROM " + MAIL_CONTACT_TABLE_NAME;
         cursor = database.rawQuery(selectQuery, null);
+        userId = new AppPreferences(getActivity()).getUserId();
+
     }
 
     public List<PersonBriefcaseEntity> getChildrenOnParent(List<PersonBriefcaseEntity> sourceList, int id) {
@@ -89,8 +95,14 @@ public class BriefcaseFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        DBAdapter.getInstance().closeDatabase();
+
         LocalBroadcastManager.getInstance(BriefcaseFragment.this.getActivity()).unregisterReceiver(receiver);
+    }
+
+    @Override
+    public void onDestroy() {
+        DBAdapter.getInstance().closeDatabase();
+        super.onDestroy();
     }
 
     @Override
@@ -179,10 +191,6 @@ public class BriefcaseFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 addUserContainer.setVisibility(View.GONE);
-                // PersonEntity newPerson = new PersonEntity(100, 1, nameField.getText().toString(), "");  // 100 - generate Id
-                // listPerson.add(newPerson);
-                // containerLayout.removeAllViews();
-                // containerLayout.addView(levelGenerate(photoLayout, listPerson));
                 if (nameField.getText().toString().length() > 1 && phoneField.getText().toString().length() == 13) {
                     ((MainActivity) BriefcaseFragment.this.getActivity()).startHttpIntent(getReferalAddQuery(nameField.getText().toString() + " " + surnameField.getText().toString(), phoneField.getText().toString()), HttpIntentService.ADD_REFERAL);
                 } else {
@@ -237,11 +245,11 @@ public class BriefcaseFragment extends Fragment {
         return personsList;
     }
 
-    private GridLayout levelGenerate(final View v, final List<PersonBriefcaseEntity> listPerson) {
+    private GridLayout levelGenerate(final View v, final List<PersonBriefcaseEntity> listPersonInner) {
         int id = Integer.parseInt(((TextView) v.findViewById(R.id.briefcase_fragment_idObject)).getText().toString());
         int row = Integer.parseInt(((TextView) v.findViewById(R.id.row)).getText().toString());
         int column = Integer.parseInt(((TextView) v.findViewById(R.id.column)).getText().toString());
-        List<PersonBriefcaseEntity> children = getChildrenOnParent(listPerson, id);
+        List<PersonBriefcaseEntity> children = getChildrenOnParent(listPersonInner, id);
         int countChildren = children.size();
         LOGD("TAG", "countChildren --- " + countChildren);
         // definition of the first cell to fill
@@ -287,39 +295,64 @@ public class BriefcaseFragment extends Fragment {
             }
         }
 
-        RelativeLayout layoutPhoto;
+        RelativeLayout briefcaseItemLayout;
         LayoutInflater inflater = LayoutInflater.from(v.getContext());
         for (int i = 0; i < countChildren; i++) {
             PersonBriefcaseEntity personBriefcaseEntity = children.get(i);
-            layoutPhoto = (RelativeLayout) inflater.inflate(R.layout.item_briefcase, null, false);
-            RelativeLayout photoLayout = (RelativeLayout) layoutPhoto.findViewById(R.id.image_container);
-            CircularImageView personPhoto = (CircularImageView) layoutPhoto.findViewById(R.id.briefcase_fragment_user_photo);
+            briefcaseItemLayout = (RelativeLayout) inflater.inflate(R.layout.item_briefcase, null, false);
+
+            ImageView ellipsisImageView = (ImageView) briefcaseItemLayout.findViewById(R.id.briefcase_ellipsis_imageView);
+            if (checkListHaveObjectWithValue(listPersonInner, personBriefcaseEntity.getId())) {
+                ellipsisImageView.setVisibility(View.VISIBLE);
+            } else {
+                ellipsisImageView.setVisibility(View.GONE);
+            }
+            RelativeLayout photoLayoutMain = (RelativeLayout) briefcaseItemLayout.findViewById(R.id.r_layout);
+
+            RelativeLayout photoLayoutInner = (RelativeLayout) briefcaseItemLayout.findViewById(R.id.image_container);
+            CircularImageView personPhoto = (CircularImageView) briefcaseItemLayout.findViewById(R.id.briefcase_fragment_user_photo);
             String imagePath = (personBriefcaseEntity.getPhoto() != null && personBriefcaseEntity.getPhoto().length() > 1) ? personBriefcaseEntity.getPhoto() : "fake";
             Picasso.with(BriefcaseFragment.this.getActivity()).load(imagePath).placeholder(R.drawable.ic_launcher).into(personPhoto);
-            photoLayout.setOnClickListener(new View.OnClickListener() {
+
+            final TextView itemId = (TextView) photoLayoutInner.getChildAt(1);
+            itemId.setText(Integer.toString(personBriefcaseEntity.getId()));
+            final TextView parentId = (TextView) photoLayoutInner.getChildAt(4);
+            parentId.setText(Integer.toString(personBriefcaseEntity.getParentId()));
+            photoLayoutMain.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    int row = Integer.parseInt(((TextView) v.findViewById(R.id.row)).getText().toString());
-                    LOGD("TAG", "With - " + (row + 1) + " to - '<' " + containerLayout.getChildCount());
-                    for (int i = containerLayout.getChildCount() - 1; i > row; i--) {
-                        containerLayout.removeViewAt(i);
+                    LOGE("pavel", "" + containerLayout.getChildCount() + " " + lastChoosenItem);
+                    view.findViewById(R.id.briefcase_ellipsis_imageView).setVisibility(View.GONE);
+//
+                    if (lastChoosenItem != Integer.parseInt(itemId.getText().toString()) && totalItemCount > 1 && Integer.parseInt(parentId.getText().toString()) == userId) {
+                        containerLayout.removeAllViews();
+                        containerLayout.addView(levelGenerate(photoLayout, listPersonInner));
+                        containerLayout.addView(levelGenerate(view, listPersonInner));
+                        totalItemCount = 1;
+                    } else {
+
+                        int row = Integer.parseInt(((TextView) v.findViewById(R.id.row)).getText().toString());
+                        for (int i = containerLayout.getChildCount() - 1; i > row; i--) {
+                            containerLayout.removeViewAt(i);
+                        }
+                        containerLayout.addView(levelGenerate(view, listPersonInner));
+                        totalItemCount = containerLayout.getChildCount();
                     }
-                    containerLayout.addView(levelGenerate(view, listPerson));
+                    if (Integer.parseInt(parentId.getText().toString()) == userId) {
+                        lastChoosenItem = Integer.parseInt(itemId.getText().toString());
+                    }
                 }
             });
-
-            final TextView idObject = (TextView) photoLayout.getChildAt(1);
-            idObject.setText(Integer.toString(personBriefcaseEntity.getId()));
-            TextView rowObject = (TextView) photoLayout.getChildAt(2);
+            TextView rowObject = (TextView) photoLayoutInner.getChildAt(2);
             rowObject.setText(Integer.toString(row + 1));
-            TextView columnObject = (TextView) photoLayout.getChildAt(3);
+            TextView columnObject = (TextView) photoLayoutInner.getChildAt(3);
             columnObject.setText(Integer.toString(startPosition + i));
             LOGD("TAG", "id - " + personBriefcaseEntity.getId() + "; row - " + (row + 1) + "; column - " + (startPosition + i));
-            ImageView imageViewInfo = (ImageView) layoutPhoto.getChildAt(1);
+            ImageView imageViewInfo = (ImageView) briefcaseItemLayout.getChildAt(1);
             imageViewInfo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    int idPersonal = Integer.parseInt(idObject.getText().toString());
+                    int idPersonal = Integer.parseInt(itemId.getText().toString());
                     LOGI(TAG, "id personal " + idPersonal);
                     GetAccountPanelInfoQuery getLoggedUserInfoQuery = new GetAccountPanelInfoQuery();
                     getLoggedUserInfoQuery.params.id = idPersonal;
@@ -347,16 +380,26 @@ public class BriefcaseFragment extends Fragment {
 
                 }
             });
-            TextView text = (TextView) layoutPhoto.getChildAt(2);
+            TextView text = (TextView) briefcaseItemLayout.getChildAt(2);
             text.setText(personBriefcaseEntity.getName());
             if (i == 0) {
                 GridLayout.LayoutParams param = new GridLayout.LayoutParams();
                 param.columnSpec = GridLayout.spec(startPosition);
                 param.rowSpec = GridLayout.spec(row + 1);
-                layoutPhoto.setLayoutParams(param);
+                briefcaseItemLayout.setLayoutParams(param);
             }
-            gridLayout.addView(layoutPhoto);
+            gridLayout.addView(briefcaseItemLayout);
         }
         return gridLayout;
     }
+
+    private boolean checkListHaveObjectWithValue(List<PersonBriefcaseEntity> list, int id) {
+        for (PersonBriefcaseEntity object : list) {
+            if (object.getParentId() == id) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
