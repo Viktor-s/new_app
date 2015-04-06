@@ -8,10 +8,14 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
+import android.widget.FrameLayout;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -55,7 +59,7 @@ public class OrderDialog extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setStyle(android.support.v4.app.DialogFragment.STYLE_NORMAL, android.R.style.Theme_Light_NoTitleBar);
+        setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Light_NoTitleBar);
     }
 
     @SuppressLint("InflateParams")
@@ -74,14 +78,24 @@ public class OrderDialog extends DialogFragment {
         webView.addJavascriptInterface(new AndroidBridge(getActivity()), "android");
         webView.loadData(htmlString, "text/html; charset=UTF-8", null);
 
-        builder.setView(dialogView).setTitle("Ордер").setPositiveButton(R.string.button_close, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.dismiss();
-            }
-        });
+        builder.setView(dialogView)
+                .setPositiveButton(R.string.button_close, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
 
         return builder.create();
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        return super.onCreateView(inflater, container, savedInstanceState);
+
     }
 
     public class AndroidBridge {
@@ -173,7 +187,7 @@ public class OrderDialog extends DialogFragment {
         getActivity().runOnUiThread(new Runnable() {
             public void run() {
                 LOGD("TAG1", "callJavaScriptFunctionBack: " + str);
-                webView.loadUrl("javascript:jsCallback(\""+str+"\")");
+                webView.loadUrl("javascript:jsCallback(\"" + str + "\")");
             }
         });
     }

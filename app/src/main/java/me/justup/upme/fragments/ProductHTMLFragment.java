@@ -3,6 +3,7 @@ package me.justup.upme.fragments;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -15,12 +16,14 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -44,6 +47,7 @@ import me.justup.upme.entity.ProductsOrderCreateQuery;
 import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.http.HttpIntentService;
 import me.justup.upme.view.CustomWebView;
+import me.justup.upme.view.LiveWebView;
 
 import static me.justup.upme.db.DBHelper.PRODUCTS_HTML_CONTENT;
 import static me.justup.upme.db.DBHelper.PRODUCTS_HTML_SERVER_ID;
@@ -64,7 +68,8 @@ public class ProductHTMLFragment extends Fragment {
     private String currentProductName;
     private String currentProductPath;
     private ProductHtmlEntity mProductHtmlEntity;
-    private WebView webView;
+    private CustomWebView webView;
+    private FrameLayout mProgressBar;
 
     public static ProductHTMLFragment newInstance(int prodyctId, String nameProduct, String namePath) {
         ProductHTMLFragment fragment = new ProductHTMLFragment();
@@ -98,14 +103,14 @@ public class ProductHTMLFragment extends Fragment {
                 updateProduct();
             }
         };
-        LocalBroadcastManager.getInstance(ProductHTMLFragment.this.getActivity())
+        LocalBroadcastManager.getInstance(getActivity())
                 .registerReceiver(mProductHtmlReceiver, new IntentFilter(DBAdapter.PRODUCT_HTML_SQL_BROADCAST_INTENT));
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        LocalBroadcastManager.getInstance(ProductHTMLFragment.this.getActivity()).unregisterReceiver(mProductHtmlReceiver);
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mProductHtmlReceiver);
     }
 
     @Override
@@ -121,27 +126,37 @@ public class ProductHTMLFragment extends Fragment {
 
         ((TextView) view.findViewById(R.id.web_prod_category_top_title_main_textView)).setText(currentProductPath);
         ((TextView) view.findViewById(R.id.web_prod_category_top_title_textView)).setText(currentProductName);
+        mProgressBar = (FrameLayout) view.findViewById(R.id.base_progressBar);
 
         webView = (CustomWebView) view.findViewById(R.id.product_html_webview);
-        webView.getSettings().setJavaScriptEnabled(true);
         webView.addJavascriptInterface(new AndroidBridge(getActivity()), "android");
+        webView.getSettings().setJavaScriptEnabled(true);
+
+        // Other options
+//        webView.getSettings().setLoadWithOverviewMode(true);
+//        webView.getSettings().setUseWideViewPort(true);
+//        webView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
+//        webView.setScrollbarFadingEnabled(false);
+//        webView.getSettings().setBuiltInZoomControls(true);
+
         webView.setWebViewClient(new WebViewClient() {
-            @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 view.loadUrl(url);
-//                view.loadUrl("file:///android_asset/form.html");
                 return true;
+            }
+            public void onLoadResource(WebView view, String url) {
+                mProgressBar.setVisibility(View.VISIBLE);
+            }
+            public void onPageFinished(WebView view, String url) {
+                mProgressBar.setVisibility(View.GONE);
             }
         });
 
         Button mCloseButton = (Button) view.findViewById(R.id.product_html_close_button);
-        //mCloseButton.setVisibility(View.INVISIBLE);
         mCloseButton.setOnClickListener(new View.OnClickListener() {
             @SuppressWarnings("ConstantConditions")
             @Override
             public void onClick(View view) {
-                //LocalBroadcastManager.getInstance(ProductHTMLFragment.this.getActivity()).unregisterReceiver(mProductHtmlReceiver);
-                //getActivity().getFragmentManager().beginTransaction().remove(ProductHTMLFragment.this).commit();
                 getFragmentManager().popBackStack();
             }
         });
@@ -149,6 +164,7 @@ public class ProductHTMLFragment extends Fragment {
 
         return view;
     }
+
 
     private void updateProduct() {
         mProductHtmlEntity = fillProductHtmlFromDB(currentProductId);
@@ -162,7 +178,6 @@ public class ProductHTMLFragment extends Fragment {
     private void updateWebView(String content) {
         webView.loadDataWithBaseURL("", content, "text/html", "UTF-8", "");
     }
-
 
     private ProductHtmlEntity fillProductHtmlFromDB(int id) {
         String selectQueryBrands = "SELECT * FROM products_html_table WHERE server_id=" + id;
@@ -197,7 +212,6 @@ public class ProductHTMLFragment extends Fragment {
         getActivity().startService(intent.putExtras(bundle));
     }
 
-
     public class AndroidBridge {
 
         private static final String TAG = "AndroidBridge";
@@ -218,8 +232,6 @@ public class ProductHTMLFragment extends Fragment {
 
         @JavascriptInterface
         public void submit(final String json, final String method) {
-            LOGI("TAG1", " ----------- json " + json);
-
             JSONObject jsonObject = null;
             String strData = "";
             String strProductId = "";
@@ -240,16 +252,12 @@ public class ProductHTMLFragment extends Fragment {
             productsJSQuery.method = method;
             productsJSQuery.params.product_id = strProductId;
             productsJSQuery.params.data = map;
-
-            LOGI("TAG1", " ----------- productsJSQuery " + productsJSQuery.toString());
-
             ApiWrapper.query(productsJSQuery, new OnQueryResponse());
 
         }
 
         @JavascriptInterface
         public void closePage() {
-            LOGI("TAG1", " ----------- closePage()");
             getFragmentManager().popBackStack();
         }
 
@@ -260,21 +268,16 @@ public class ProductHTMLFragment extends Fragment {
         @Override
         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
             String content = ApiWrapper.responseBodyToString(responseBody);
-            LOGD("TAG1", "onSuccess(): " + content);
-
             JSONObject jsonObject = null;
             String hashStr = "";
             try {
                 jsonObject = new JSONObject(content);
                 JSONObject jsonResult = (JSONObject) jsonObject.get("result");
                 hashStr = jsonResult.getString("hash");
-                LOGD("TAG1", "hashStr --- " + hashStr);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
             callJavaScriptFunctionBack(hashStr);
-
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setMessage("Заказ № " + hashStr + " успешно создан")
                     .setNegativeButton("OK", new DialogInterface.OnClickListener() {
@@ -286,15 +289,13 @@ public class ProductHTMLFragment extends Fragment {
         @Override
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
             String content = ApiWrapper.responseBodyToString(responseBody);
-            LOGE(TAG, "onFailure(): " + content);
         }
     }
 
     public void callJavaScriptFunctionBack(final String str) {
         getActivity().runOnUiThread(new Runnable() {
             public void run() {
-                LOGD("TAG1", "callJavaScriptFunctionBack: " + str);
-                webView.loadUrl("javascript:jsCallback(\""+str+"\")");
+                webView.loadUrl("javascript:jsCallback(\"" + str + "\")");
             }
         });
     }

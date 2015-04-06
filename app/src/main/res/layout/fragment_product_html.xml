@@ -50,5 +50,7 @@
         android:layout_marginTop="@dimen/base20dp720sw"
         android:layout_marginEnd="@dimen/base20dp720sw"/>
 
+    <include layout="@layout/base_progress_bar" />
+
 
 </RelativeLayout>
