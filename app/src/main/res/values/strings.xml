@@ -148,6 +148,7 @@
     <string name="warning_short_comment">Слишком короткий комментарий</string>
     <string name="push_received">Принято сообщение</string>
     <string name="invites_you">" приглашает вас "</string>
+    <string name="incoming_call_from">"Входящий видеозвонок от "</string>
     <string name="in_chat">в чат</string>
     <string name="on_video">на видеосвязь</string>
     <string name="submit_file">" прислал файл "</string>

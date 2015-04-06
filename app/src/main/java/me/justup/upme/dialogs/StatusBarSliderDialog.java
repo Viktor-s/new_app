@@ -133,18 +133,17 @@ public class StatusBarSliderDialog extends DialogFragment {
         TextView mPushDate = (TextView) item.findViewById(R.id.push_date_TextView);
 
         mStringBuilder.setLength(0);
-        mStringBuilder.append(push.getUserName());
         switch (push.getType()) {
             case MailFragment.JABBER:
-                mStringBuilder.append(getString(R.string.invites_you)).append(getString(R.string.in_chat));
+                mStringBuilder.append(push.getUserName()).append(getString(R.string.invites_you)).append(getString(R.string.in_chat));
                 break;
 
             case MailFragment.WEBRTC:
-                mStringBuilder.append(getString(R.string.invites_you)).append(getString(R.string.on_video));
+                mStringBuilder.append(getString(R.string.incoming_call_from)).append(push.getUserName());
                 break;
 
             case MailFragment.FILE:
-                mStringBuilder.append(getString(R.string.submit_file)).append(LEFT_BRACERS).append(push.getFileName()).append(RIGHT_BRACERS);
+                mStringBuilder.append(push.getUserName()).append(getString(R.string.submit_file)).append(LEFT_BRACERS).append(push.getFileName()).append(RIGHT_BRACERS);
                 break;
 
             case MailFragment.ORDER_FORM:

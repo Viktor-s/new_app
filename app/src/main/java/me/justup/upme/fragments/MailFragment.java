@@ -34,13 +34,25 @@ import me.justup.upme.utils.CommonUtils;
 
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_TABLE_NAME;
 import static me.justup.upme.utils.LogUtils.LOGE;
+import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 
 public class MailFragment extends Fragment {
+    private static final String TAG = makeLogTag(MailFragment.class);
+
     private int lastChosenPosition = -1;
     private MailContactsAdapter mMailContactsAdapter;
     private String selectQuery;
-    private BroadcastReceiver receiver;
+    private Cursor cursor;
+
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            cursor = database.rawQuery(selectQuery, null);
+            mMailContactsAdapter.changeCursor(cursor);
+            mMailContactsAdapter.notifyDataSetChanged();
+        }
+    };
 
     public static final int JABBER = 1;
     public static final int WEBRTC = 2;
@@ -51,11 +63,12 @@ public class MailFragment extends Fragment {
     public static final int ORDER_INFO = 7;
 
     private SQLiteDatabase database;
-    private Cursor cursor;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (database != null) {
             if (!database.isOpen()) {
                 database = DBAdapter.getInstance().openDatabase();
@@ -65,6 +78,7 @@ public class MailFragment extends Fragment {
         }
         selectQuery = "SELECT * FROM " + MAIL_CONTACT_TABLE_NAME;
         cursor = database.rawQuery(selectQuery, null);
+
         mMailContactsAdapter = new MailContactsAdapter(this, getActivity().getApplicationContext(), cursor, 0);
         mMailContactsAdapter.setFilterQueryProvider(new FilterQueryProvider() {
             @Override
@@ -78,7 +92,13 @@ public class MailFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        LocalBroadcastManager.getInstance(MailFragment.this.getActivity()).unregisterReceiver(receiver);
+
+        try {
+            LocalBroadcastManager.getInstance(MailFragment.this.getActivity()).unregisterReceiver(receiver);
+        } catch (Exception e) {
+            LOGE(TAG, "unregisterReceiver(receiver)", e);
+            receiver = null;
+        }
     }
 
     @Override
@@ -91,15 +111,7 @@ public class MailFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        receiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                cursor = database.rawQuery(selectQuery, null);
-                mMailContactsAdapter.changeCursor(cursor);
-                mMailContactsAdapter.notifyDataSetChanged();
 
-            }
-        };
         LocalBroadcastManager.getInstance(MailFragment.this.getActivity())
                 .registerReceiver(receiver, new IntentFilter(DBAdapter.MAIL_SQL_BROADCAST_INTENT));
     }
@@ -191,7 +203,7 @@ public class MailFragment extends Fragment {
         if (search == null || search.length() == 0) {
             mCursor = database.rawQuery(selectQuery, null);
         } else {
-            LOGE("pavel", search);
+            LOGE(TAG, search);
             mCursor = database.rawQuery("SELECT * FROM "
                     + DBHelper.MAIL_CONTACT_TABLE_NAME + " where " + "name_lc" + " like '%" + search
                     + "%'", null);

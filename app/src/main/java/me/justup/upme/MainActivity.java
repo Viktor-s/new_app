@@ -283,7 +283,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             }
         }
 
-        activeButton.setBackground(getResources().getDrawable(R.drawable.pay_button_pressed));
+        activeButton.setBackground(getResources().getDrawable(R.drawable.main_menu_pressed_background));
     }
 
     private class OnCornerButtonListener implements View.OnClickListener {
