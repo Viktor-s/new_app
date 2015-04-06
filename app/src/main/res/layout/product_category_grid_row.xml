@@ -8,7 +8,7 @@
     <ImageView
         android:id="@+id/grid_row_imageView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/base240dp720sw"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 

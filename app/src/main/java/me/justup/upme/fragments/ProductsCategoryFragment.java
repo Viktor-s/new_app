@@ -90,7 +90,7 @@ public class ProductsCategoryFragment extends Fragment {
             }
             GridLayout.LayoutParams param = new GridLayout.LayoutParams();
             param.height = LinearLayout.LayoutParams.WRAP_CONTENT;
-            param.width = (int) (screenWidth / 3);
+            param.width = (screenWidth / 3);
             param.rightMargin = CommonUtils.convertDpToPixels(getActivity(), 30);
             // param.topMargin = 10;
             //  param.setGravity(Gravity.CENTER);
@@ -102,7 +102,7 @@ public class ProductsCategoryFragment extends Fragment {
             idGroupProduct.setText(Integer.toString(productsCategoryBrandEntiti.getProductEntityList().get(i).getId()));
             ImageView groupProductPhoto = (ImageView) categoryProductLayout.findViewById(R.id.grid_row_imageView);
             String imagePath = (productsCategoryBrandEntiti.getProductEntityList().get(i).getImage() != null && productsCategoryBrandEntiti.getProductEntityList().get(i).getImage().length() > 1) ? productsCategoryBrandEntiti.getProductEntityList().get(i).getImage() : "fake";
-            Picasso.with(getActivity()).load(imagePath).placeholder(R.drawable.ic_launcher).into(groupProductPhoto);
+            Picasso.with(getActivity()).load(imagePath).placeholder(R.drawable.ic_launcher).fit().into(groupProductPhoto);
             TextView categoryProductTitle = (TextView) categoryProductLayout.findViewById(R.id.grid_row_name_extView);
             categoryProductTitle.setText(productsCategoryBrandEntiti.getProductEntityList().get(i).getName());
             TextView categoryProductDescr = (TextView) categoryProductLayout.findViewById(R.id.grid_row_description_textView);

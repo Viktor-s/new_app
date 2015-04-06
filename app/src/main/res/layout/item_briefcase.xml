@@ -10,7 +10,7 @@
         android:id="@+id/image_container"
         android:layout_width="@dimen/base70dp720sw"
         android:layout_height="@dimen/base70dp720sw"
-        android:layout_marginLeft="@dimen/base25dp720sw">
+        android:layout_marginLeft="@dimen/base22sp720sw">
 
         <me.justup.upme.utils.CircularImageView
             android:id="@+id/briefcase_fragment_user_photo"
@@ -36,23 +36,38 @@
             android:layout_width="0dp"
             android:layout_height="0dp" />
 
+        <TextView
+            android:id="@+id/briefcase_item_parent_id"
+            android:layout_width="0dp"
+            android:layout_height="0dp" />
+
     </RelativeLayout>
 
     <ImageView
         android:id="@+id/image2"
         android:layout_width="@dimen/base30dp720sw"
         android:layout_height="@dimen/base30dp720sw"
-        android:src="@drawable/photo_info"
+        android:layout_alignBottom="@+id/image_container"
         android:layout_toRightOf="@+id/image_container"
-        android:layout_alignBottom="@+id/image_container" />
+        android:src="@drawable/photo_info" />
 
     <TextView
         android:id="@+id/tv1"
         android:layout_width="@dimen/base100dp720sw"
         android:layout_height="wrap_content"
-        android:text="ВИОЛКТТА ТРОФИМОВА"
-        android:textColor="@android:color/black"
         android:layout_below="@+id/image_container"
-        android:layout_marginLeft="@dimen/base35dp720sw" />
+        android:layout_marginLeft="@dimen/base30dp720sw"
+        android:text="ВИОЛКТТА ТРОФИМОВА"
+        android:textColor="@android:color/black" />
+
+    <ImageView
+        android:id="@+id/briefcase_ellipsis_imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/base40dp720sw"
+        android:layout_alignStart="@+id/image_container"
+        android:layout_below="@+id/tv1"
+        android:layout_toStartOf="@+id/image2"
+        android:src="@drawable/briefcase_ellipsis"
+        android:visibility="visible" />
 
 </RelativeLayout>
