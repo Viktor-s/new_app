@@ -73,7 +73,7 @@ public class MailContactsAdapter extends CursorAdapter {
 
                     final int roomId = JustUpApplication.getApplication().getRandomNum();
 
-                    ((MainActivity) mParentFragment.getActivity()).prepareAndCallRTC(String.valueOf(roomId), false, false, 0);
+                    ((MainActivity) mParentFragment.getActivity()).prepareAndCallRTC(String.valueOf(roomId), false, false, 0, id);
 
 //                    handler.postDelayed(new Runnable() {
 //                        public void run() {
@@ -81,7 +81,7 @@ public class MailContactsAdapter extends CursorAdapter {
 //                        }
 //                    }, 5000);
                     
-                    startNotificationIntent(id, roomId);
+//                    startNotificationIntent(id, roomId);
                 }
             });
         }
@@ -95,16 +95,5 @@ public class MailContactsAdapter extends CursorAdapter {
         private int rowId;
     }
 
-    public void startNotificationIntent(int userId, int roomNumber) {
-        WebRtcStartCallQuery push = new WebRtcStartCallQuery();
-        push.params.setUserIds(userId);
-        push.params.room_id = String.valueOf(roomNumber);
-
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(PushIntentService.PUSH_INTENT_QUERY_EXTRA, push);
-
-        Intent intent = new Intent(mParentFragment.getActivity().getApplicationContext(), PushIntentService.class);
-        mParentFragment.getActivity().getApplicationContext().startService(intent.putExtras(bundle));
-    }
 
 }
