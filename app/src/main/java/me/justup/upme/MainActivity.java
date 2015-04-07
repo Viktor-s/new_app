@@ -537,7 +537,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 String userName = (response.result.name != null) ? response.result.name : "";
 
                 mUserName.setText(userName);
-                // mUserInSystem.setText(response.result.in_system);
+                mUserInSystem.setText(response.result.in_system);
 
                 AppPreferences appPreferences = new AppPreferences(getApplicationContext());
                 appPreferences.setUserName(userName);

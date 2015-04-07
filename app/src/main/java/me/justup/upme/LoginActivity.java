@@ -3,6 +3,7 @@ package me.justup.upme;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -32,8 +33,11 @@ import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.LOGE;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
+
 public class LoginActivity extends BaseActivity {
     private static final String TAG = makeLogTag(LoginActivity.class);
+
+    private static final String IS_SHOW_PIN_PANEL = "is_show_pin_panel";
 
     private TextView mPhoneField;
     private TextView mPinCodeField;
@@ -80,11 +84,26 @@ public class LoginActivity extends BaseActivity {
         Button mAppSettings = (Button) findViewById(R.id.login_settings_button);
         mAppSettings.setOnClickListener(new OnLoadSettings());
 
-        loadSavedPhoneNumber();
+        if (savedInstanceState != null) {
+            isPhoneVerification = savedInstanceState.getBoolean(IS_SHOW_PIN_PANEL, false);
+
+            if (!isPhoneVerification) {
+                mLoginPhonePanel.setVisibility(View.GONE);
+                mLoginPinCodePanel.setVisibility(View.VISIBLE);
+
+                mNumberString.setLength(0);
+                mPhoneNumber = mAppPreferences.getPhoneNumber();
+            } else {
+                loadSavedPhoneNumber();
+            }
+        } else {
+            loadSavedPhoneNumber();
+        }
 
         if (mAppPreferences.isMonitoring()) {
             startService(new Intent(JustUpApplication.getApplication().getApplicationContext(), ApplicationSupervisorService.class));
         }
+
 
         // Delete! Only for debug!
         TextView appVersion = (TextView) findViewById(R.id.app_version_textView);
@@ -334,9 +353,16 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if(BuildConfig.FLAVOR.equals("app")) {
+        if (BuildConfig.FLAVOR.equals("app")) {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putBoolean(IS_SHOW_PIN_PANEL, isPhoneVerification);
     }
 
 }

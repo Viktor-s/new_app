@@ -75,11 +75,8 @@
 
         <activity
             android:name=".SplashActivity"
-            android:screenOrientation="landscape"
             android:noHistory="true"
-            android:uiOptions="splitActionBarWhenNarrow">
-
-        </activity>
+            android:uiOptions="splitActionBarWhenNarrow" />
 
         <activity
             android:name=".MainActivity"
