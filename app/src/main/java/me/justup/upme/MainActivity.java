@@ -9,8 +9,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -66,8 +64,12 @@ import static me.justup.upme.utils.LogUtils.LOGE;
 import static me.justup.upme.utils.LogUtils.LOGI;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
+
 public class MainActivity extends BaseActivity implements View.OnClickListener, OnLoadMailFragment, OnDownloadCloudFile {
     private static final String TAG = makeLogTag(MainActivity.class);
+
+    private static final String SAVE_FRAGMENT_STATE = "save_fragment_state";
+    private static final String IS_SHOW_FRAGMENT_CONTAINER = "is_show_fragment_container";
 
     private static final int SELECTED_FRAGMENT_NEWS = 1;
     private static final int SELECTED_FRAGMENT_MAIL = 2;
@@ -126,6 +128,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         registerReceiver(mBreakCallReceiver, new IntentFilter(BROADCAST_ACTION_BREAK_CALL));
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -159,12 +162,19 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
         View mOpenStatusBar = findViewById(R.id.status_bar_fragment);
         mOpenStatusBar.setOnClickListener(new OnOpenStatusBarListener());
+
+        if (savedInstanceState != null) {
+            currentlySelectedFragment = savedInstanceState.getInt(SAVE_FRAGMENT_STATE, 0);
+            isShowMainFragmentContainer = savedInstanceState.getBoolean(IS_SHOW_FRAGMENT_CONTAINER, false);
+            reopenFragment(currentlySelectedFragment);
+        }
     }
 
     @Override
     public void onClick(View view) {
         Fragment fragment = null;
         CommonUtils.hideKeyboard(this);
+
         switch (view.getId()) {
             case R.id.news_menu_item:
                 if (currentlySelectedFragment != SELECTED_FRAGMENT_NEWS) {
@@ -243,6 +253,62 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, fragment).commit();
         }
         if (!isShowMainFragmentContainer) {
+            showMainFragmentContainer();
+        }
+    }
+
+    private void reopenFragment(int currentNumberFragment) {
+        Fragment fragment = null;
+
+        switch (currentNumberFragment) {
+            case SELECTED_FRAGMENT_NEWS:
+                changeButtonState(mNewsButton);
+                fragment = new NewsFeedFragmentNew();
+                break;
+
+            case SELECTED_FRAGMENT_MAIL:
+                changeButtonState(mMailButton);
+                fragment = new MailFragment();
+                break;
+
+            case SELECTED_FRAGMENT_CALENDAR:
+                changeButtonState(mCalendarButton);
+                fragment = new CalendarFragment();
+                break;
+
+            case SELECTED_FRAGMENT_PRODUCTS:
+                changeButtonState(mProductsButton);
+                fragment = new ProductsFragment();
+                break;
+
+            case SELECTED_FRAGMENT_BRIEFCASE:
+                changeButtonState(mBriefcaseButton);
+                fragment = new BriefcaseFragment();
+                break;
+
+            case SELECTED_FRAGMENT_DOCS:
+                changeButtonState(mDocsButton);
+                fragment = new DocumentsFragment();
+                break;
+
+            case SELECTED_FRAGMENT_STUDY:
+                changeButtonState(mStudyButton);
+                fragment = new StudyFragment();
+                break;
+
+            case SELECTED_FRAGMENT_BROWSER:
+                changeButtonState(mBrowserButton);
+                fragment = new BrowserFragment();
+                break;
+
+            default:
+                break;
+        }
+
+        if (fragment != null) {
+            getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, fragment).commit();
+        }
+        if (isShowMainFragmentContainer) {
             showMainFragmentContainer();
         }
     }
@@ -360,6 +426,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         }
     }
 
+    @SuppressWarnings("NullableProblems")
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putInt(SAVE_FRAGMENT_STATE, currentlySelectedFragment);
+        outState.putBoolean(IS_SHOW_FRAGMENT_CONTAINER, isShowMainFragmentContainer);
+    }
+
     public static ArticlesGetShortDescriptionQuery getShortDescriptionQuery(int limit, int offset) {
         ArticlesGetShortDescriptionQuery query = new ArticlesGetShortDescriptionQuery();
         query.params.limit = limit;
@@ -375,7 +450,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         CalendarGetEventsQuery query = new CalendarGetEventsQuery();
         query.params.start = startTime;
         query.params.end = endTime;
-        Log.d("TAG333_query", query.toString());
+        Log.d(TAG, query.toString());
         return query;
     }
 
@@ -560,8 +635,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public void onBackPressed() {
-        if(BuildConfig.FLAVOR.equals("app")) {
+        if (BuildConfig.FLAVOR.equals("app")) {
             super.onBackPressed();
         }
     }
+
 }
