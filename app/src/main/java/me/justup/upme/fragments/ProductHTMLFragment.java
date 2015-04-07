@@ -268,6 +268,7 @@ public class ProductHTMLFragment extends Fragment {
         @Override
         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
             String content = ApiWrapper.responseBodyToString(responseBody);
+            LOGD(TAG, "content --> " + content);
             JSONObject jsonObject = null;
             String hashStr = "";
             try {

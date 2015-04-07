@@ -135,7 +135,7 @@ public class MailFragment extends Fragment {
                         .replace(R.id.mail_messages_container_frameLayout, MailMessagesFragment.newInstance(yourName, yourJabberId, friendName, friendJabberId, push.getUserId())).commit();
 
             } else if (push.getType() == WEBRTC) {
-                ((MainActivity) getActivity()).prepareAndCallRTC(String.valueOf(push.getRoom()), false, false, 0);
+                ((MainActivity) getActivity()).prepareAndCallRTC(String.valueOf(push.getRoom()), false, false, 0, 0);
             }
 
             ((MainActivity) getActivity()).setPush(null);

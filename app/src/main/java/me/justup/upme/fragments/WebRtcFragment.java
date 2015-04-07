@@ -4,9 +4,11 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +30,8 @@ import me.justup.upme.apprtc.AppRTCClient;
 import me.justup.upme.apprtc.PeerConnectionClient;
 import me.justup.upme.apprtc.UnhandledExceptionHandler;
 import me.justup.upme.apprtc.WebSocketRTCClient;
+import me.justup.upme.entity.WebRtcStartCallQuery;
+import me.justup.upme.services.PushIntentService;
 import me.justup.upme.utils.LooperExecutor;
 
 import static me.justup.upme.utils.LogUtils.LOGE;
@@ -59,6 +63,9 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
     private static final int REMOTE_WIDTH = 100;
     private static final int REMOTE_HEIGHT = 100;
 
+    private static final int TIMER = 20000;
+    private volatile boolean callAccepted = true;
+
     private PeerConnectionClient peerConnectionClient = null;
     private AppRTCClient appRtcClient = null;
     private AppRTCClient.SignalingParameters signalingParameters = null;
@@ -84,11 +91,20 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
 
     private View mContentView = null;
 
+    private String roomId;
+    private int idPerson;
+
     public static WebRtcFragment newInstance(Bundle callParam) {
         WebRtcFragment fragment = new WebRtcFragment();
         fragment.setArguments(callParam);
 
         return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
     }
 
     @Override
@@ -114,7 +130,7 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
         }
     }
 
-    private void initUI(){
+    private void initUI() {
         Thread.setDefaultUncaughtExceptionHandler(new UnhandledExceptionHandler(getActivity()));
 
         iceConnected = false;
@@ -162,11 +178,11 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
             // finish();
 
             return;
-        }else{
+        } else {
             roomUri = Uri.parse(roomUrlString);
         }
 
-        String roomId = args.getString(JustUpApplication.EXTRA_ROOMID);
+        roomId = args.getString(JustUpApplication.EXTRA_ROOMID);
         if (roomId == null || roomId.length() == 0) {
             logAndToast(getString(R.string.missing_url));
             Log.e(TAG, "Incorrect room ID in intent!");
@@ -176,11 +192,12 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
 
             return;
         }
+        idPerson = args.getInt(JustUpApplication.EXTRA_IDPERSON);
 
         boolean loopback = args.getBoolean(JustUpApplication.EXTRA_LOOPBACK, false);
         hwCodecAcceleration = args.getBoolean(JustUpApplication.EXTRA_HWCODEC, true);
 
-        if (args.getString(JustUpApplication.EXTRA_VIDEOCODEC)!=null) {
+        if (args.getString(JustUpApplication.EXTRA_VIDEOCODEC) != null) {
             videoCodec = args.getString(JustUpApplication.EXTRA_VIDEOCODEC);
         } else {
             videoCodec = PeerConnectionClient.VIDEO_CODEC_VP8; // use VP8 by default.
@@ -215,6 +232,18 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
                 }
             }, runTimeMs);
         }
+
+        new CountDownTimer(TIMER, 1000) {
+            public void onTick(long millisUntilFinished) {
+            }
+
+            public void onFinish() {
+                if (callAccepted) {
+                    Toast.makeText(getActivity(), "Пользователь " + idPerson + " не отвечет", Toast.LENGTH_SHORT).show();
+                    disconnect();
+                }
+            }
+        }.start();
     }
 
     @Override
@@ -251,7 +280,7 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
 //    }
 
     @Override
-     public void onDestroy() {
+    public void onDestroy() {
         disconnect();
         super.onDestroy();
         if (logToast != null) {
@@ -409,7 +438,7 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
             LOGE(TAG, "RESULT_CANCELED");
         }
 
-        ((MainActivity)getActivity()).clearDataAfterCallRTC();
+        ((MainActivity) getActivity()).clearDataAfterCallRTC();
     }
 
     private void disconnectWithErrorMessage(final String errorMessage) {
@@ -462,6 +491,11 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
             logAndToast("Creating OFFER...");
             // Create offer. Offer SDP will be sent to answering client in PeerConnectionEvents.onLocalDescription event.
             peerConnectionClient.createOffer();
+            // logAndToast("Person ID -> " + idPerson);
+            if (idPerson != 0)
+                startNotificationIntent(idPerson, Integer.parseInt(roomId));
+            else
+                disconnect();
         } else {
             if (params.offerSdp != null) {
                 peerConnectionClient.setRemoteDescription(params.offerSdp);
@@ -471,12 +505,25 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
             }
 
             if (params.iceCandidates != null) {
+                callAccepted = false;
                 // Add remote ICE candidates from room.
                 for (IceCandidate iceCandidate : params.iceCandidates) {
                     peerConnectionClient.addRemoteIceCandidate(iceCandidate);
                 }
             }
         }
+    }
+
+    public void startNotificationIntent(int userId, int roomNumber) {
+        WebRtcStartCallQuery push = new WebRtcStartCallQuery();
+        push.params.setUserIds(userId);
+        push.params.room_id = String.valueOf(roomNumber);
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(PushIntentService.PUSH_INTENT_QUERY_EXTRA, push);
+
+        Intent intent = new Intent(getActivity().getApplicationContext(), PushIntentService.class);
+        getActivity().getApplicationContext().startService(intent.putExtras(bundle));
     }
 
     @Override
