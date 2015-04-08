@@ -258,47 +258,55 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void reopenFragment(int currentNumberFragment) {
-        Fragment fragment = null;
+        Fragment fragment = getFragmentManager().findFragmentById(R.id.main_fragment_container);
 
         switch (currentNumberFragment) {
             case SELECTED_FRAGMENT_NEWS:
                 changeButtonState(mNewsButton);
-                fragment = new NewsFeedFragmentNew();
+                if (fragment == null)
+                    fragment = new NewsFeedFragmentNew();
                 break;
 
             case SELECTED_FRAGMENT_MAIL:
                 changeButtonState(mMailButton);
-                fragment = new MailFragment();
+                if (fragment == null)
+                    fragment = new MailFragment();
                 break;
 
             case SELECTED_FRAGMENT_CALENDAR:
                 changeButtonState(mCalendarButton);
-                fragment = new CalendarFragment();
+                if (fragment == null)
+                    fragment = new CalendarFragment();
                 break;
 
             case SELECTED_FRAGMENT_PRODUCTS:
                 changeButtonState(mProductsButton);
-                fragment = new ProductsFragment();
+                if (fragment == null)
+                    fragment = new ProductsFragment();
                 break;
 
             case SELECTED_FRAGMENT_BRIEFCASE:
                 changeButtonState(mBriefcaseButton);
-                fragment = new BriefcaseFragment();
+                if (fragment == null)
+                    fragment = new BriefcaseFragment();
                 break;
 
             case SELECTED_FRAGMENT_DOCS:
                 changeButtonState(mDocsButton);
-                fragment = new DocumentsFragment();
+                if (fragment == null)
+                    fragment = new DocumentsFragment();
                 break;
 
             case SELECTED_FRAGMENT_STUDY:
                 changeButtonState(mStudyButton);
-                fragment = new StudyFragment();
+                if (fragment == null)
+                    fragment = new StudyFragment();
                 break;
 
             case SELECTED_FRAGMENT_BROWSER:
                 changeButtonState(mBrowserButton);
-                fragment = new BrowserFragment();
+                if (fragment == null)
+                    fragment = new BrowserFragment();
                 break;
 
             default:
