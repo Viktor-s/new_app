@@ -51,7 +51,7 @@ public class MailContactsAdapter extends CursorAdapter {
     public void bindView(final View view, final Context context, Cursor cur) {
         final int id = cur.getInt(cur.getColumnIndex(DBHelper.MAIL_CONTACT_SERVER_ID));
         //String imagePath = cur.getString(cur.getColumnIndex(DBHelper.MAIL_CONTACT_IMG));
-        String contactName = cur.getString(cur.getColumnIndex(DBHelper.MAIL_CONTACT_NAME));
+        final String contactName = cur.getString(cur.getColumnIndex(DBHelper.MAIL_CONTACT_NAME));
         ViewHolder holder = (ViewHolder) view.getTag();
         if (holder != null) {
             holder.mName.setText(contactName);
@@ -73,7 +73,7 @@ public class MailContactsAdapter extends CursorAdapter {
 
                     final int roomId = JustUpApplication.getApplication().getRandomNum();
 
-                    ((MainActivity) mParentFragment.getActivity()).prepareAndCallRTC(String.valueOf(roomId), false, false, 0, id);
+                    ((MainActivity) mParentFragment.getActivity()).prepareAndCallRTC(String.valueOf(roomId), false, false, 0, id, contactName);
 
 //                    handler.postDelayed(new Runnable() {
 //                        public void run() {

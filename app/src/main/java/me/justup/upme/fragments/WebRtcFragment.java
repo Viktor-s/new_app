@@ -3,8 +3,11 @@ package me.justup.upme.fragments;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.net.Uri;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
@@ -63,7 +66,7 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
     private static final int REMOTE_WIDTH = 100;
     private static final int REMOTE_HEIGHT = 100;
 
-    private static final int TIMER = 20000;
+    private static final int TIMER = 15000;
     private volatile boolean callAccepted = true;
 
     private PeerConnectionClient peerConnectionClient = null;
@@ -93,6 +96,17 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
 
     private String roomId;
     private int idPerson;
+    private String contactName;
+
+    // Audio
+    private SoundPool soundPool;
+    private int soundID;
+    private boolean plays = false;
+    private boolean loaded = false;
+    private float actVolume, maxVolume, volume;
+    private AudioManager audioManagerSing;
+    private int counter;
+
 
     public static WebRtcFragment newInstance(Bundle callParam) {
         WebRtcFragment fragment = new WebRtcFragment();
@@ -104,6 +118,30 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setRetainInstance(true);
+
+        audioManagerSing = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
+        actVolume = (float) audioManagerSing.getStreamVolume(AudioManager.STREAM_MUSIC);
+        maxVolume = (float) audioManagerSing.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        volume = actVolume / maxVolume;
+
+        //Hardware buttons setting to adjust the media sound
+        getActivity().setVolumeControlStream(AudioManager.STREAM_MUSIC);
+
+        // the counter will help us recognize the stream id of the sound played  now
+        counter = 0;
+
+        // Load the sounds
+        soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
+        soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
+            @Override
+            public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
+                loaded = true;
+            }
+        });
+        soundID = soundPool.load(getActivity(), R.raw.beep, 1);
+
 
     }
 
@@ -193,6 +231,7 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
             return;
         }
         idPerson = args.getInt(JustUpApplication.EXTRA_IDPERSON);
+        contactName = args.getString(JustUpApplication.EXTRA_CONTACT_NAME);
 
         boolean loopback = args.getBoolean(JustUpApplication.EXTRA_LOOPBACK, false);
         hwCodecAcceleration = args.getBoolean(JustUpApplication.EXTRA_HWCODEC, true);
@@ -239,7 +278,7 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
 
             public void onFinish() {
                 if (callAccepted) {
-                    Toast.makeText(getActivity(), "Пользователь " + idPerson + " не отвечет", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Пользователь " + contactName + " не отвечет", Toast.LENGTH_SHORT).show();
                     disconnect();
                 }
             }
@@ -412,6 +451,8 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
 
     // Disconnect from remote resources, dispose of local resources, and exit.
     private void disconnect() {
+        callAccepted = false;
+        stopSound();
 
         LOGI(TAG, "Disconnect()");
 
@@ -492,9 +533,10 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
             // Create offer. Offer SDP will be sent to answering client in PeerConnectionEvents.onLocalDescription event.
             peerConnectionClient.createOffer();
             // logAndToast("Person ID -> " + idPerson);
-            if (idPerson != 0)
+            if (idPerson != 0) {
+                playLoop();
                 startNotificationIntent(idPerson, Integer.parseInt(roomId));
-            else
+            } else
                 disconnect();
         } else {
             if (params.offerSdp != null) {
@@ -682,5 +724,23 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
                 }
             }
         });
+    }
+
+    ///////////////////// SOUND ////////////////////////////////////////////
+    public void playLoop() {
+        if (loaded && !plays) {
+            // the sound will play for ever if we put the loop parameter -1
+            soundPool.play(soundID, volume, volume, 1, -1, 1f);
+            counter = counter++;
+            plays = true;
+        }
+    }
+
+    public void stopSound() {
+        if (plays) {
+            soundPool.stop(soundID);
+            soundID = soundPool.load(getActivity(), R.raw.beep, counter);
+            plays = false;
+        }
     }
 }

@@ -467,7 +467,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         setPush(push);
 
         if (push != null && push.getType() == MailFragment.WEBRTC) {
-            prepareAndCallRTC(push.getRoom(), false, false, 1000, 0);
+            prepareAndCallRTC(push.getRoom(), false, false, 1000, 0, "");
 
             setPush(null);
             return;
@@ -625,8 +625,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         dialog.show(getFragmentManager(), OrderDialog.ORDER_DIALOG);
     }
 
-    public void prepareAndCallRTC(Object roomId, Boolean loopback, Boolean commandLineRun, int runTimeMs, int idPerson) {
-        final Bundle callParam = JustUpApplication.getApplication().prepareCallParam(roomId.getClass().equals(String.class) ? (String) roomId : String.valueOf(roomId), loopback, commandLineRun, runTimeMs, idPerson);
+    public void prepareAndCallRTC(Object roomId, Boolean loopback, Boolean commandLineRun, int runTimeMs, int idPerson, String contactName) {
+        final Bundle callParam = JustUpApplication.getApplication().prepareCallParam(roomId.getClass().equals(String.class) ? (String) roomId : String.valueOf(roomId), loopback, commandLineRun, runTimeMs, idPerson, contactName);
 
         mWebRtcFragment = WebRtcFragment.newInstance(callParam);
 
