@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Point;
@@ -81,10 +82,8 @@ public class NewsFeedFragmentNew extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Display display = getActivity().getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        screenWidth = size.x - CommonUtils.convertDpToPixels(getActivity(), 165);
+        setRetainInstance(true);
+
         if (database != null) {
             if (!database.isOpen()) {
                 database = DBAdapter.getInstance().openDatabase();
@@ -173,8 +172,12 @@ public class NewsFeedFragmentNew extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_news_feed_new, container, false);
+        updateScreenWidth();
         layoutInflater = LayoutInflater.from(getActivity());
         gridLayout = (GridLayout) view.findViewById(R.id.newsFeedGridLayout);
+        mProgressBar = (ProgressBar) view.findViewById(R.id.news_feed_progressbar);
+        mProgressBar.setVisibility(View.VISIBLE);
+
         if (mNewsFeedEntityList.size() > 0) {
             int row = mNewsFeedEntityList.size() / column;
             gridLayout.setColumnCount(column);
@@ -209,7 +212,7 @@ public class NewsFeedFragmentNew extends Fragment {
 
 
         mNewsItemContainer = (FrameLayout) view.findViewById(R.id.news_item_container_frameLayout);
-        mProgressBar = (ProgressBar) view.findViewById(R.id.news_feed_progressbar);
+
         if (!ApiWrapper.isOnline()) {
             mProgressBar.setVisibility(View.GONE);
         }
@@ -363,6 +366,22 @@ public class NewsFeedFragmentNew extends Fragment {
         mNewsFeedEntityPartOfList.clear();
         mNewsFeedEntityPartOfList.addAll(mNewsFeedEntityList.subList(0, oldSizeValue));
         updateView();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mProgressBar.setVisibility(View.GONE);
+        gridLayout.removeAllViews();
+        updateScreenWidth();
+        updateView();
+    }
+
+    private void updateScreenWidth() {
+        Display display = getActivity().getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        screenWidth = size.x - CommonUtils.convertDpToPixels(getActivity(), 165);
     }
 
 }
