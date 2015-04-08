@@ -80,7 +80,8 @@ public class DocumentsFragment extends Fragment {
         mFileExplorer = (TableLayout) view.findViewById(R.id.files_panel);
         mProgressBar = (ProgressBar) view.findViewById(R.id.explorer_progressBar);
 
-        getChildFragmentManager().beginTransaction().add(R.id.cloud_explorer_fragment_container, new CloudExplorerFragment()).commit();
+        if (savedInstanceState == null)
+            getChildFragmentManager().beginTransaction().add(R.id.cloud_explorer_fragment_container, new CloudExplorerFragment()).commit();
 
         getLocalFileList();
 
