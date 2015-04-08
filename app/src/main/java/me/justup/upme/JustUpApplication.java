@@ -72,6 +72,7 @@ public class JustUpApplication extends Application {
     public static final String EXTRA_CMDLINE = "org.appspot.apprtc.CMDLINE";
     public static final String EXTRA_RUNTIME = "org.appspot.apprtc.RUNTIME";
     public static final String EXTRA_IDPERSON = "org.appspot.apprtc.IDPERSON";
+    public static final String EXTRA_CONTACT_NAME = "org.appspot.apprtc.CONTACT_NAME";
 
     @Override
     public void onCreate() {
@@ -110,7 +111,7 @@ public class JustUpApplication extends Application {
         DBAdapter.initInstance();
     }
 
-    public Bundle prepareCallParam(String roomId, Boolean loopback, Boolean commandLineRun, int runTimeMs, int idPerson){
+    public Bundle prepareCallParam(String roomId, Boolean loopback, Boolean commandLineRun, int runTimeMs, int idPerson, String contactName){
 
         String roomUrl = mSharedPref.getString(keyprefRoomServerUrl, getString(R.string.pref_room_server_url_default));
 
@@ -185,6 +186,7 @@ public class JustUpApplication extends Application {
             args.putInt(EXTRA_RUNTIME, runTimeMs);
 
             args.putInt(EXTRA_IDPERSON, idPerson);
+            args.putString(EXTRA_CONTACT_NAME, contactName);
 
             return args;
         }
