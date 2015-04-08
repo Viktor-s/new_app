@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -88,6 +89,7 @@ public class NewsItemFragment extends Fragment {
     private ArticleShortCommentEntity mLastShortComment;
     private ScrollView mNewsItemScrollView;
     private ProgressBar mProgressBar;
+    private boolean isScreenOrienrtationChanged = false;
 
 
     public static NewsItemFragment newInstance(int shortNewsId) {
@@ -219,9 +221,6 @@ public class NewsItemFragment extends Fragment {
                 //  Toast.makeText(getActivity(), "Page loaded", Toast.LENGTH_SHORT).show();
             }
         });
-        mNewsItemWebView.getSettings().setLoadWithOverviewMode(true);
-        mNewsItemWebView.getSettings().setUseWideViewPort(true);
-
         mNewsItemWebView.setOnTouchListener(new View.OnTouchListener() {
 
             @Override
@@ -271,6 +270,12 @@ public class NewsItemFragment extends Fragment {
         adapter = new SocialAuthAdapter(new ResponseListener());
         mShareButton = (Button) view.findViewById(R.id.fb_share_Button);
         mShareButton.setOnClickListener(new OnShareFBListener());
+
+        if (isScreenOrienrtationChanged) {
+            fillViewsWithData();
+        }
+
+
         return view;
     }
 
@@ -289,6 +294,9 @@ public class NewsItemFragment extends Fragment {
 
     private void fillViewsWithData() {
         LOGI(TAG, "fillViewsWithData");
+        mNewsItemWebView.getSettings().setLoadWithOverviewMode(true);
+        mNewsItemWebView.getSettings().setUseWideViewPort(true);
+
         mNewsItemWebView.loadDataWithBaseURL("", mArticleFullEntity.getFull_descr(), "text/html", "UTF-8", "");
 
         updateCommentsList();
@@ -392,9 +400,18 @@ public class NewsItemFragment extends Fragment {
         return query;
     }
 
-    private String convertToHtml(String fullDescr) {
-        return "<html><body><h3>Articles title</h3><p>" + fullDescr + "</p></body></html>";
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mProgressBar.setVisibility(View.GONE);
+        isScreenOrienrtationChanged = true;
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            //
+        } else {
+            //
+        }
     }
+
 
     private class OnShareFBListener implements View.OnClickListener {
         @Override
