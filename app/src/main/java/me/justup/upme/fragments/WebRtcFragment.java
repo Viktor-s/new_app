@@ -106,6 +106,7 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
     private float actVolume, maxVolume, volume;
     private AudioManager audioManagerSing;
     private int counter;
+    private boolean isRorated = false;
 
 
     public static WebRtcFragment newInstance(Bundle callParam) {
@@ -402,21 +403,22 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
         // Start room connection.
         logAndToast(getString(R.string.connecting_to, roomConnectionParameters.roomUrl));
         appRtcClient.connectToRoom(roomConnectionParameters);
-
-        // Create and audio manager that will take care of audio routing, audio modes, audio device enumeration etc.
-        audioManager = AppRTCAudioManager.create(getActivity(), new Runnable() {
-                    // This method will be called each time the audio state (number and type of devices) has been changed.
-                    @Override
-                    public void run() {
-                        onAudioManagerChangedState();
-                    }
-                }
-        );
-
-        // Store existing audio settings and change audio mode to
-        // MODE_IN_COMMUNICATION for best possible VoIP performance.
-        Log.d(TAG, "Initializing the audio manager...");
-        audioManager.init();
+        if (!isRorated) {
+            // Create and audio manager that will take care of audio routing, audio modes, audio device enumeration etc.
+//            audioManager = AppRTCAudioManager.create(getActivity(), new Runnable() {
+//                        // This method will be called each time the audio state (number and type of devices) has been changed.
+//                        @Override
+//                        public void run() {
+//                            onAudioManagerChangedState();
+//                        }
+//                    }
+//            );
+//
+//            // Store existing audio settings and change audio mode to
+//            // MODE_IN_COMMUNICATION for best possible VoIP performance.
+//            Log.d(TAG, "Initializing the audio manager...");
+//            audioManager.init();
+        }
     }
 
     // Should be called from UI thread
@@ -554,6 +556,7 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
                 }
             }
         }
+        // isRorated = true;
     }
 
     public void startNotificationIntent(int userId, int roomNumber) {
@@ -649,7 +652,7 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (appRtcClient != null) {
+                if (appRtcClient != null && !isRorated) {
                     logAndToast("Sending " + sdp.type + " ...");
                     if (signalingParameters.initiator) {
                         appRtcClient.sendOfferSdp(sdp);
@@ -742,5 +745,11 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
             soundID = soundPool.load(getActivity(), R.raw.beep, counter);
             plays = false;
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        isRorated = true;
     }
 }

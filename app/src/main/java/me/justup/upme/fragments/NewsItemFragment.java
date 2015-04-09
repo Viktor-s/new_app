@@ -6,7 +6,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -90,6 +89,7 @@ public class NewsItemFragment extends Fragment {
     private ScrollView mNewsItemScrollView;
     private ProgressBar mProgressBar;
     private boolean isScreenOrienrtationChanged = false;
+    private boolean isProgressBarShown = true;
 
 
     public static NewsItemFragment newInstance(int shortNewsId) {
@@ -176,9 +176,13 @@ public class NewsItemFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_news_item, container, false);
         mNewsItemScrollView = (ScrollView) view.findViewById(R.id.news_item_scrollview);
         mProgressBar = (ProgressBar) view.findViewById(R.id.news_feed_progressbar);
-        mNewsItemScrollView.setVisibility(View.INVISIBLE);
-        mProgressBar.setVisibility(View.VISIBLE);
-
+        if (isProgressBarShown) {
+            mNewsItemScrollView.setVisibility(View.INVISIBLE);
+            mProgressBar.setVisibility(View.VISIBLE);
+        } else {
+            mNewsItemScrollView.setVisibility(View.VISIBLE);
+            mProgressBar.setVisibility(View.GONE);
+        }
         mFragmentSliderOut = AnimationUtils.loadAnimation(getActivity(), R.anim.order_slider_out);
         mFragmentSliderOut.setAnimationListener(new Animation.AnimationListener() {
             @Override
@@ -197,6 +201,8 @@ public class NewsItemFragment extends Fragment {
 
         mNewsItemWebView = (WebView) view.findViewById(R.id.news_item_webView);
         mNewsItemWebView.getSettings().setJavaScriptEnabled(true);
+        mNewsItemWebView.getSettings().setLoadWithOverviewMode(true);
+        mNewsItemWebView.getSettings().setUseWideViewPort(true);
         mNewsItemWebView.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
@@ -205,6 +211,7 @@ public class NewsItemFragment extends Fragment {
                 if (newProgress == 100) {
                     mProgressBar.setVisibility(View.GONE);
                     mNewsItemScrollView.setVisibility(View.VISIBLE);
+                    isProgressBarShown = false;
                 }
             }
 
@@ -271,7 +278,7 @@ public class NewsItemFragment extends Fragment {
         mShareButton = (Button) view.findViewById(R.id.fb_share_Button);
         mShareButton.setOnClickListener(new OnShareFBListener());
 
-        if (isScreenOrienrtationChanged) {
+        if (!isProgressBarShown) {
             fillViewsWithData();
         }
 
@@ -296,7 +303,6 @@ public class NewsItemFragment extends Fragment {
         LOGI(TAG, "fillViewsWithData");
         mNewsItemWebView.getSettings().setLoadWithOverviewMode(true);
         mNewsItemWebView.getSettings().setUseWideViewPort(true);
-
         mNewsItemWebView.loadDataWithBaseURL("", mArticleFullEntity.getFull_descr(), "text/html", "UTF-8", "");
 
         updateCommentsList();
@@ -400,17 +406,17 @@ public class NewsItemFragment extends Fragment {
         return query;
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        mProgressBar.setVisibility(View.GONE);
-        isScreenOrienrtationChanged = true;
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            //
-        } else {
-            //
-        }
-    }
+//    @Override
+//    public void onConfigurationChanged(Configuration newConfig) {
+//        super.onConfigurationChanged(newConfig);
+//        mProgressBar.setVisibility(View.GONE);
+//        isScreenOrienrtationChanged = true;
+//        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+//            //
+//        } else {
+//            //
+//        }
+//    }
 
 
     private class OnShareFBListener implements View.OnClickListener {

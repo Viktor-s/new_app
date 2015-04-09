@@ -70,6 +70,7 @@ public class BriefcaseFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
         if (database != null) {
             if (!database.isOpen()) {
                 database = DBAdapter.getInstance().openDatabase();
@@ -203,16 +204,23 @@ public class BriefcaseFragment extends Fragment {
 
 
     private void updatePersonsList() {
+        if (listPerson != null) {
+            mUserContactsCountTextView.setText(listPerson.size() - 1 + " " + "people in your network");
+        }
 
-        listPerson = fillPersonsFromCursor(cursor);
-        mUserContactsCountTextView.setText(listPerson.size() - 1 + " " + "people in your network");
-        LOGI(TAG, listPerson.toString());
-        cursor.close();
+        if (listPerson == null) {
+            listPerson = fillPersonsFromCursor(cursor);
+            mUserContactsCountTextView.setText(listPerson.size() - 1 + " " + "people in your network");
+            LOGI(TAG, listPerson.toString());
+            cursor.close();
+        }
     }
 
     private ImageView createDirection(int resId) {
         ImageView resultView = new ImageView(getActivity());
-        resultView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        // layoutParams.setMarginStart(500);
+        resultView.setLayoutParams(layoutParams);
         resultView.setImageResource(resId);
         return resultView;
     }
