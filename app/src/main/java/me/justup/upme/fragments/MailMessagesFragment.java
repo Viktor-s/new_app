@@ -249,6 +249,7 @@ public class MailMessagesFragment extends Fragment {
 
         mSendButton = (Button) view.findViewById(R.id.mail_messages_add_button);
         mSendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
             public void onClick(View view) {
                 String to = mFriendJabberId;
                 String text = mTextMessage.getText().toString();
@@ -267,15 +268,19 @@ public class MailMessagesFragment extends Fragment {
                     mImageAttachedImageView.setVisibility(View.GONE);
                 }
 
-                text = text.replace("\n", "<br>");
+                if (text != null && text.length() > 0) {
+                    if (text.trim().length() == 0) return;
 
-                LOGI(TAG, "Sending text " + text + " to " + to);
-                Message msg = new Message(to, Message.Type.chat);
-                msg.setBody(text);
-                if (mXMPPConnection != null) {
-                    mXMPPConnection.sendPacket(msg);
-                    mMessages.add(splitName(mXMPPConnection.getUser(), text));
-                    notifyListAdapter();
+                    text = text.replace("\n", "<br>");
+
+                    LOGI(TAG, "Sending text " + text + " to " + to);
+                    Message msg = new Message(to, Message.Type.chat);
+                    msg.setBody(text);
+                    if (mXMPPConnection != null) {
+                        mXMPPConnection.sendPacket(msg);
+                        mMessages.add(splitName(mXMPPConnection.getUser(), text));
+                        notifyListAdapter();
+                    }
                 }
             }
         });

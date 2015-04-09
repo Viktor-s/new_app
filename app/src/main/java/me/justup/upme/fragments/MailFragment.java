@@ -69,6 +69,8 @@ public class MailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setRetainInstance(true);
+
         if (database != null) {
             if (!database.isOpen()) {
                 database = DBAdapter.getInstance().openDatabase();
@@ -87,7 +89,6 @@ public class MailFragment extends Fragment {
             }
         });
     }
-
 
     @Override
     public void onPause() {
