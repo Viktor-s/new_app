@@ -1,5 +1,6 @@
 package me.justup.upme.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
@@ -11,7 +12,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,6 +49,7 @@ import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 public class ProductsFragment extends Fragment implements View.OnClickListener {
     private static final String TAG = makeLogTag(ProductsFragment.class);
+
     private List<ProductCategoryEntity> listCategory;
     private SQLiteDatabase database;
     private BroadcastReceiver mProductsReceiver;
@@ -62,6 +63,8 @@ public class ProductsFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
+        setRetainInstance(true);
 
         colorForProduct = getResources().getStringArray(R.array.color_for_product);
 
@@ -110,6 +113,7 @@ public class ProductsFragment extends Fragment implements View.OnClickListener {
         return view;
     }
 
+    @SuppressLint("InflateParams")
     private void updateView() {
         for (int i = 0; i < listCategory.size(); i++) {
             RelativeLayout categoryProductLayout = (RelativeLayout) layoutInflater.inflate(R.layout.category_product_layout, null, false);
@@ -117,6 +121,7 @@ public class ProductsFragment extends Fragment implements View.OnClickListener {
             categoryProductTitle.setText(listCategory.get(i).getName());
             LinearLayout categoryProductContainer = (LinearLayout) categoryProductLayout.findViewById(R.id.category_product_container);
             categoryProductContainer.setBackgroundColor(Color.parseColor(colorForProduct[i]));
+
             for (int j = 0; j < listCategory.get(i).getBrandList().size(); j++) {
                 RelativeLayout groupProductLayout = (RelativeLayout) layoutInflater.inflate(R.layout.group_product_layout, null, false);
                 TextView idGroupProduct = (TextView) groupProductLayout.findViewById(R.id.id_group_product);
@@ -133,11 +138,11 @@ public class ProductsFragment extends Fragment implements View.OnClickListener {
                 groupProductLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        LOGD("TAG", "-------onClick");
+                        LOGD(TAG, "-------onClick");
                         int idCurrentGroup = Integer.parseInt(((TextView) view.findViewById(R.id.id_group_product)).getText().toString());
                         String categoryName = ((TextView) view.findViewById(R.id.category_name)).getText().toString();
 
-                        LOGD("TAG1", "---idCurrentGroup--- " + String.valueOf(idCurrentGroup));
+                        LOGD(TAG, "---idCurrentGroup--- " + String.valueOf(idCurrentGroup));
                         if (idCurrentGroup == 6) {
                             final FragmentTransaction ft = getFragmentManager().beginTransaction();
                             ft.replace(R.id.main_fragment_container, ProductsCategoryFragment.newInstance(getCurrentBrand(mAllBrandsList, idCurrentGroup), categoryName));
@@ -158,7 +163,7 @@ public class ProductsFragment extends Fragment implements View.OnClickListener {
     private void updateProductsList() {
         cursorProducts = database.rawQuery("SELECT * FROM " + PRODUCTS_CATEGORIES_TABLE_NAME, null);
         listCategory = fillProductsFromCursor(cursorProducts);
-        Log.d("TAG_product", listCategory.toString());
+        LOGD(TAG, listCategory.toString());
         if (cursorProducts != null)
             cursorProducts.close();
     }
@@ -170,6 +175,7 @@ public class ProductsFragment extends Fragment implements View.OnClickListener {
 
     private List<ProductCategoryEntity> fillProductsFromCursor(Cursor cursorProducts) {
         ArrayList<ProductCategoryEntity> categoryEntities = new ArrayList<>();
+
         for (cursorProducts.moveToFirst(); !cursorProducts.isAfterLast(); cursorProducts.moveToNext()) {
             ProductCategoryEntity productCategoryEntity = new ProductCategoryEntity();
             productCategoryEntity.setId(cursorProducts.getInt(cursorProducts.getColumnIndex(PRODUCTS_CATEGORIES_SERVER_ID)));
@@ -178,6 +184,7 @@ public class ProductsFragment extends Fragment implements View.OnClickListener {
             String selectQueryBrands = "SELECT * FROM products_brand_table WHERE category_id=" + category_id;
             Cursor cursorBrands = database.rawQuery(selectQueryBrands, null);
             ArrayList<ProductsCategoryBrandEntity> brandsList = new ArrayList<>();
+
             if (cursorBrands != null) {
                 for (cursorBrands.moveToFirst(); !cursorBrands.isAfterLast(); cursorBrands.moveToNext()) {
                     int brand_id = cursorBrands.getInt(cursorBrands.getColumnIndex(PRODUCTS_BRAND_CATEGORIES_BRAND_ID));
