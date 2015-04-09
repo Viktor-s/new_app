@@ -239,7 +239,7 @@
             android:layout_width="@dimen/base50dp720sw"
             android:layout_height="@dimen/base50dp720sw"
             android:id="@+id/briefcase_close_button"
-            android:visibility="visible"
+            android:visibility="invisible"
             android:background="@drawable/button_close_test"
             android:clickable="false"
             android:layout_alignParentTop="true"

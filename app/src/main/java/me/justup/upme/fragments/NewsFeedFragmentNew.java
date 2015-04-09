@@ -78,6 +78,7 @@ public class NewsFeedFragmentNew extends Fragment {
     private int column = 3;
     private int screenWidth;
     private LayoutInflater layoutInflater;
+    private boolean isProgressBarShown = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -145,6 +146,7 @@ public class NewsFeedFragmentNew extends Fragment {
                             cursorNews.close();
                         }
                         mProgressBar.setVisibility(View.GONE);
+                        isProgressBarShown = false;
                         isFirstArticlesUpdate = false;
                     } else {
                         LOGI(TAG, "onReceive, second update");
@@ -159,6 +161,7 @@ public class NewsFeedFragmentNew extends Fragment {
                     LOGI(TAG, "onReceive, error");
 //                    Toast.makeText(getActivity().getApplicationContext(), "Server error", Toast.LENGTH_SHORT).show();
                     mProgressBar.setVisibility(View.GONE);
+                    isProgressBarShown = false;
                 }
 
             }
@@ -176,8 +179,13 @@ public class NewsFeedFragmentNew extends Fragment {
         layoutInflater = LayoutInflater.from(getActivity());
         gridLayout = (GridLayout) view.findViewById(R.id.newsFeedGridLayout);
         mProgressBar = (ProgressBar) view.findViewById(R.id.news_feed_progressbar);
-        mProgressBar.setVisibility(View.VISIBLE);
 
+        if (isProgressBarShown) {
+            mProgressBar.setVisibility(View.VISIBLE);
+
+        } else {
+            mProgressBar.setVisibility(View.GONE);
+        }
         if (mNewsFeedEntityList.size() > 0) {
             int row = mNewsFeedEntityList.size() / column;
             gridLayout.setColumnCount(column);
@@ -376,6 +384,7 @@ public class NewsFeedFragmentNew extends Fragment {
         updateScreenWidth();
         updateView();
     }
+
 
     private void updateScreenWidth() {
         Display display = getActivity().getWindowManager().getDefaultDisplay();
