@@ -258,64 +258,43 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void reopenFragment(int currentNumberFragment) {
-        Fragment fragment = getFragmentManager().findFragmentById(R.id.main_fragment_container);
-
         switch (currentNumberFragment) {
             case SELECTED_FRAGMENT_NEWS:
                 changeButtonState(mNewsButton);
-                if (fragment == null)
-                    fragment = new NewsFeedFragmentNew();
                 break;
 
             case SELECTED_FRAGMENT_MAIL:
                 changeButtonState(mMailButton);
-                if (fragment == null)
-                    fragment = new MailFragment();
                 break;
 
             case SELECTED_FRAGMENT_CALENDAR:
                 changeButtonState(mCalendarButton);
-                if (fragment == null)
-                    fragment = new CalendarFragment();
                 break;
 
             case SELECTED_FRAGMENT_PRODUCTS:
                 changeButtonState(mProductsButton);
-                if (fragment == null)
-                    fragment = new ProductsFragment();
                 break;
 
             case SELECTED_FRAGMENT_BRIEFCASE:
                 changeButtonState(mBriefcaseButton);
-                if (fragment == null)
-                    fragment = new BriefcaseFragment();
                 break;
 
             case SELECTED_FRAGMENT_DOCS:
                 changeButtonState(mDocsButton);
-                if (fragment == null)
-                    fragment = new DocumentsFragment();
                 break;
 
             case SELECTED_FRAGMENT_STUDY:
                 changeButtonState(mStudyButton);
-                if (fragment == null)
-                    fragment = new StudyFragment();
                 break;
 
             case SELECTED_FRAGMENT_BROWSER:
                 changeButtonState(mBrowserButton);
-                if (fragment == null)
-                    fragment = new BrowserFragment();
                 break;
 
             default:
                 break;
         }
 
-        if (fragment != null) {
-            getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, fragment).commit();
-        }
         if (isShowMainFragmentContainer) {
             showMainFragmentContainer();
         }
