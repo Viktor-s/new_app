@@ -2,6 +2,7 @@ package me.justup.upme;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -16,11 +17,14 @@ import me.justup.upme.fragments.SettingsWifiFragment;
 
 
 public class SettingsActivity extends BaseActivity implements View.OnClickListener {
+    private static final String SAVE_FRAGMENT_TAG = "save_settings_fragment_tag";
+
     private TextView mWiFiMenu;
     private TextView mScreenSoundMenu;
     private TextView mSocialMenu;
     private TextView mMonitoringMenu;
     private TextView mWebRTCMenu;
+    private TextView mCurrentMenu;
     private ArrayList<TextView> mButtonList = new ArrayList<>();
 
     @Override
@@ -48,7 +52,12 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
         mButtonList.add(mSocialMenu);
         mButtonList.add(mMonitoringMenu);
 
-        getFragmentManager().beginTransaction().add(R.id.settings_fragment_container, new SettingsWifiFragment()).commit();
+        if (savedInstanceState == null) {
+            getFragmentManager().beginTransaction().add(R.id.settings_fragment_container, new SettingsWifiFragment()).commit();
+        } else {
+            int currentMenu = savedInstanceState.getInt(SAVE_FRAGMENT_TAG);
+            changeButtonState(mButtonList.get(currentMenu));
+        }
     }
 
     @Override
@@ -96,10 +105,28 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
 
     private void changeButtonState(TextView activeButton) {
         for (TextView button : mButtonList) {
-            button.setBackground(null);
+            button.setBackgroundResource(R.drawable.settings_back_left_trans);
         }
 
         activeButton.setBackgroundResource(R.drawable.settings_back_left);
+        mCurrentMenu = activeButton;
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        int currentMenu = 0;
+
+        if (mCurrentMenu != null) {
+            for (int i = 0; i < mButtonList.size(); i++) {
+                if (mButtonList.get(i).equals(mCurrentMenu)) {
+                    currentMenu = i;
+                }
+            }
+        }
+
+        outState.putInt(SAVE_FRAGMENT_TAG, currentMenu);
     }
 
 }

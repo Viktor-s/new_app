@@ -5,15 +5,14 @@ import android.content.Context;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
-import java.util.List;
-
 
 public class CommonUtils {
 
-    public static int convertDpToPixels(Context context, int dp) {
-        int padding_in_dp = dp;
+    public static int convertDpToPixels(final Context context, final int dp) {
+        if (context == null) return dp;
+
         final float scale = context.getResources().getDisplayMetrics().density;
-        return (int) (padding_in_dp * scale + 0.5f);
+        return (int) (dp * scale + 0.5f);
     }
 
     public static void hideKeyboard(Activity activity) {
@@ -24,7 +23,10 @@ public class CommonUtils {
         }
     }
 
-
+    public static void hideKeyboard(Activity activity, View view) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
 
     public static String convertToUTF8(String s) {
         String out;

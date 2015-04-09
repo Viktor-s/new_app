@@ -12,6 +12,7 @@ import android.widget.EditText;
 
 import me.justup.upme.R;
 import me.justup.upme.fragments.SettingsWifiFragment;
+import me.justup.upme.utils.CommonUtils;
 
 
 public class SetWiFiDialog extends DialogFragment {
@@ -49,11 +50,14 @@ public class SetWiFiDialog extends DialogFragment {
                     public void onClick(DialogInterface dialog, int id) {
                         String password = mNetworkPass.getText().toString();
                         ((SettingsWifiFragment) getTargetFragment()).connect(mNetworkSSID, password != null ? password : "", mSecurityType);
-
+                        CommonUtils.hideKeyboard(getActivity(), mNetworkPass);
+                        dialog.dismiss();
                     }
                 })
                 .setNegativeButton(R.string.settings_wifi_dialog_cancel, new DialogInterface.OnClickListener() {
+                    @Override
                     public void onClick(DialogInterface dialog, int id) {
+                        CommonUtils.hideKeyboard(getActivity(), mNetworkPass);
                         dialog.dismiss();
                     }
                 });
