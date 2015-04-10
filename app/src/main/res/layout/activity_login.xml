@@ -39,6 +39,20 @@
                 android:textSize="@dimen/base19sp720sw"
                 android:background="@drawable/enter_button_selector"
                 android:id="@+id/login_button" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/pin_code_limit"
+                android:textColor="@color/login_pin_code_limit"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:layout_marginTop="@dimen/base5dp720sw"
+                android:visibility="gone"
+                android:textSize="@dimen/base16sp720sw"
+                tools:visibility="visible"
+                android:id="@+id/pin_code_limit_textView" />
         </LinearLayout>
 
         <LinearLayout

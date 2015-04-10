@@ -38,9 +38,11 @@ public class LoginActivity extends BaseActivity {
     private static final String TAG = makeLogTag(LoginActivity.class);
 
     private static final String IS_SHOW_PIN_PANEL = "is_show_pin_panel";
+    private static final String ENTER_PIN_CODE_LIMIT = "ATTEMPTS_TO_LIMIT_EXCEEDED";
 
     private TextView mPhoneField;
     private TextView mPinCodeField;
+    private TextView mPinCodeLimit;
     private LinearLayout mLoginPhonePanel;
     private LinearLayout mLoginPinCodePanel;
 
@@ -71,6 +73,7 @@ public class LoginActivity extends BaseActivity {
 
         mPhoneField = (TextView) findViewById(R.id.phone_number_textView);
         mPinCodeField = (TextView) findViewById(R.id.pin_number_textView);
+        mPinCodeLimit = (TextView) findViewById(R.id.pin_code_limit_textView);
 
         Button mPhoneLoginButton = (Button) findViewById(R.id.login_button);
         mPhoneLoginButton.setOnClickListener(new OnLoginPhoneListener());
@@ -311,6 +314,17 @@ public class LoginActivity extends BaseActivity {
                     LoginActivity.this.finish();
                 }
             } else {
+                if (response != null && response.error != null) {
+                    if (response.error.data.equals(ENTER_PIN_CODE_LIMIT)) {
+                        mPinCodeLimit.setVisibility(View.VISIBLE);
+                        mLoginPhonePanel.setVisibility(View.VISIBLE);
+                        mLoginPinCodePanel.setVisibility(View.GONE);
+
+                        isPhoneVerification = true;
+                        mPinCodeField.setText("");
+                    }
+                }
+
                 showPinError();
             }
         }

@@ -285,5 +285,6 @@
     <string name="web_browser">Веб-браузер</string>
     <string name="file_explorer">Диспетчер файлов</string>
     <string name="contacts">Контакты</string>
+    <string name="pin_code_limit">Превышен лимит ввода\nPIN кода!</string>
 
 </resources>

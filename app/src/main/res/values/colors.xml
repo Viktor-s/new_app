@@ -18,6 +18,7 @@
     <color name="login_pin_button_background">#323034</color>
     <color name="login_enter_button_background">#c8609d</color>
     <color name="login_press_enter_button_background">#ffa05076</color>
+    <color name="login_pin_code_limit">#8f3d41</color>
     <color name="shadow_gradient_right">#252327</color>
 
     <color name="button_back_pink">#c85794</color>
