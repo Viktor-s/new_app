@@ -1,6 +1,7 @@
 package me.justup.upme.fragments;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -38,9 +39,37 @@ public class SettingsWifiFragment extends Fragment {
     private static final String WEP = "WEP";
 
     private LinearLayout mWiFiPanel;
+    private ImageView mWiFiIcon;
     private WifiManager mWifiManager;
     private WifiScanReceiver mWifiScanReceiver;
     private String mCurrentSSID;
+    private int wifiPassCounter = 1;
+
+    private BroadcastReceiver mAuthenticatingReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int authError = intent.getIntExtra(WifiManager.EXTRA_SUPPLICANT_ERROR, 0);
+
+            if (authError == WifiManager.ERROR_AUTHENTICATING) {
+                if (wifiPassCounter++ < 1) {
+                    alert(getString(R.string.settings_wifi_auth_error));
+                }
+            }
+        }
+    };
+
+    private BroadcastReceiver mWiFiServiceReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            boolean isConnected = intent.getBooleanExtra(StatusBarFragment.BROADCAST_EXTRA_IS_CONNECTED, true);
+
+            if (isConnected) {
+                mWiFiIcon.setImageResource(R.drawable.wifi_3);
+            } else {
+                mWiFiIcon.setImageResource(R.drawable.ic_no_wifi);
+            }
+        }
+    };
 
 
     @Override
@@ -56,18 +85,24 @@ public class SettingsWifiFragment extends Fragment {
         mOnOffWiFi.setChecked(mWifiManager.isWifiEnabled());
         mOnOffWiFi.setOnCheckedChangeListener(new OnOffWiFiListener());
 
+        mWiFiIcon = (ImageView) v.findViewById(R.id.settings_wifi_notify_imageView);
+
         return v;
     }
 
     @Override
     public void onResume() {
         getActivity().registerReceiver(mWifiScanReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+        getActivity().registerReceiver(mAuthenticatingReceiver, new IntentFilter(WifiManager.SUPPLICANT_STATE_CHANGED_ACTION));
+        getActivity().registerReceiver(mWiFiServiceReceiver, new IntentFilter(StatusBarFragment.BROADCAST_ACTION));
         super.onResume();
     }
 
     @Override
     public void onPause() {
         getActivity().unregisterReceiver(mWifiScanReceiver);
+        getActivity().unregisterReceiver(mAuthenticatingReceiver);
+        getActivity().unregisterReceiver(mWiFiServiceReceiver);
         super.onPause();
     }
 
@@ -181,6 +216,8 @@ public class SettingsWifiFragment extends Fragment {
                 break;
             }
         }
+
+        wifiPassCounter = 0;
     }
 
     private class OnOffWiFiListener implements CompoundButton.OnCheckedChangeListener {
@@ -192,6 +229,13 @@ public class SettingsWifiFragment extends Fragment {
                 mWifiManager.setWifiEnabled(true);
             }
         }
+    }
+
+    private void alert(String message) {
+        AlertDialog.Builder bld = new AlertDialog.Builder(getActivity());
+        bld.setMessage(message);
+        bld.setNeutralButton(getString(R.string.button_close), null);
+        bld.create().show();
     }
 
 }

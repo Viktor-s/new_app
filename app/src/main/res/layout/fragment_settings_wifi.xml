@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:padding="@dimen/base30dp720sw"
     android:layout_width="match_parent"
@@ -22,6 +23,13 @@
             style="@style/SettingsTitle"
             android:layout_weight="1" />
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:src="@drawable/wifi_3"
+            android:layout_marginEnd="@dimen/base30dp720sw"
+            android:id="@+id/settings_wifi_notify_imageView"
+            android:contentDescription="@string/dummy_string" />
     </LinearLayout>
 
     <ScrollView
@@ -35,5 +43,4 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </ScrollView>
-
 </LinearLayout>
