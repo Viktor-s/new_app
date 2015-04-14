@@ -10,6 +10,7 @@
     <color name="product_description">#adada8</color>
     <color name="base_background">#2f2d30</color>
     <color name="gray">#888888</color>
+    <color name="light_gray">#cccccc</color>
     <color name="blue_gray">#525382</color>
     <color name="pay_panel_button">#c85694</color>
     <color name="pay_panel_button_press">#a04577</color>

@@ -18,18 +18,22 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.gson.JsonSyntaxException;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.apache.http.Header;
 
 import java.io.IOException;
 
+import me.justup.upme.entity.ErrorResponse;
 import me.justup.upme.entity.SetGooglePushIdQuery;
 import me.justup.upme.http.ApiWrapper;
+import me.justup.upme.utils.CommonUtils;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.LOGE;
 import static me.justup.upme.utils.LogUtils.LOGI;
+
 
 public class SplashActivity extends Activity {
     private static final String TAG = SplashActivity.class.getSimpleName();
@@ -57,7 +61,7 @@ public class SplashActivity extends Activity {
             public void run() {
 
                 if (checkConnectingToInternet()) {
-                    if(checkAndRegGCM()) {
+                    if (checkAndRegGCM()) {
                         goToDashboardActivity();
                     }
                 } else {
@@ -69,7 +73,7 @@ public class SplashActivity extends Activity {
         }, 500);
     }
 
-    private boolean checkAndRegGCM(){
+    private boolean checkAndRegGCM() {
         // Check device for Play Services APK. If check succeeds, proceed with GCM registration.
         if (checkPlayServices()) {
             mGCM = GoogleCloudMessaging.getInstance(this);
@@ -77,20 +81,20 @@ public class SplashActivity extends Activity {
 
             if (mRegId.isEmpty()) {
                 registerInBackground();
-            }else {
+            } else {
                 sendAsyncRegistrationIdToBackend(mRegId);
             }
 
             return true;
 
-        }else{
+        } else {
 
             LOGE(TAG, "Warning! This device is not supported GCM now.");
             return false;
         }
     }
 
-    private void goToDashboardActivity(){
+    private void goToDashboardActivity() {
         Intent intent = new Intent(SplashActivity.this, MainActivity.class);
         // Maybe add some param
         startActivity(intent);
@@ -116,7 +120,6 @@ public class SplashActivity extends Activity {
 
                 dialog.show();
             } else {
-                Toast.makeText(this, "Это устройство не поддерживает GCM", Toast.LENGTH_LONG).show();
                 SplashActivity.this.finish();
             }
 
@@ -186,7 +189,7 @@ public class SplashActivity extends Activity {
 
             @Override
             protected String doInBackground(Void... params) {
-                String msg = "";
+                String msg;
 
                 try {
                     if (mGCM == null) {
@@ -222,7 +225,7 @@ public class SplashActivity extends Activity {
 
             @Override
             protected void onPostExecute(String msg) {
-                Toast.makeText(getApplicationContext(), msg + "\n", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), msg + "\n", Toast.LENGTH_SHORT).show();
             }
 
         }.execute(null, null, null);
@@ -230,7 +233,7 @@ public class SplashActivity extends Activity {
 
     /**
      * For works threads
-     *
+     * <p/>
      * Sends the registration ID to your server over HTTP, so it can use GCM/HTTP
      * or CCS to send messages to your app. Not needed for this demo since the
      * device sends upstream messages to a server that echoes back the message
@@ -260,6 +263,17 @@ public class SplashActivity extends Activity {
         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
             String content = ApiWrapper.responseBodyToString(responseBody);
             LOGI(TAG, "OnSuccess : " + content);
+
+            ErrorResponse response = null;
+            try {
+                response = ApiWrapper.gson.fromJson(content, ErrorResponse.class);
+            } catch (JsonSyntaxException e) {
+                LOGE(TAG, "OnPushRegisterResponse gson.fromJson:\n" + content);
+            }
+
+            if (response != null && response.error != null) {
+                CommonUtils.showWarningToast(SplashActivity.this, response.error.data);
+            }
         }
 
         @Override
@@ -291,10 +305,9 @@ public class SplashActivity extends Activity {
     /**
      * true - on / false - off
      */
-    public boolean checkConnectingToInternet(){
+    public boolean checkConnectingToInternet() {
         ConnectivityManager connectivity = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (connectivity != null)
-        {
+        if (connectivity != null) {
             NetworkInfo[] info = connectivity.getAllNetworkInfo();
             if (info != null) {
                 for (NetworkInfo anInfo : info) {
