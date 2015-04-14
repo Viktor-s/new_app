@@ -236,7 +236,6 @@ public class NewsItemFragment extends Fragment {
             }
         });
 
-
         mNewsItemCommentEditText = (EditText) view.findViewById(R.id.news_item_comment_editText);
         mNewsItemAddCommentButton = (Button) view.findViewById(R.id.news_item_button_add_comment);
         mNewsItemAddCommentButton.setOnClickListener(new View.OnClickListener() {
@@ -284,19 +283,6 @@ public class NewsItemFragment extends Fragment {
 
 
         return view;
-    }
-
-
-    private void updateFullNewsCursor() {
-
-        Cursor cursorNews = database.rawQuery(selectQueryFullNews, null);
-        if (cursorNews != null && cursorNews.moveToFirst()) {
-            mArticleFullEntity = fillFullNewsFromCursor(cursorNews);
-            fillViewsWithData();
-        }
-        if (cursorNews != null) {
-            cursorNews.close();
-        }
     }
 
     private void fillViewsWithData() {
@@ -361,7 +347,7 @@ public class NewsItemFragment extends Fragment {
         return articleFullEntity;
     }
 
-    private List<ArticleShortCommentEntity> fillCommentsFromCursor(int newsId) {
+/*    private List<ArticleShortCommentEntity> fillCommentsFromCursor(int newsId) {
         String selectQueryShortNewsComments = QUERY_COMMENTS_PATH + newsId;
         Cursor cursorComments = database.rawQuery(selectQueryShortNewsComments, null);
         ArrayList<ArticleShortCommentEntity> commentsList = new ArrayList<>();
@@ -380,7 +366,7 @@ public class NewsItemFragment extends Fragment {
             cursorComments.close();
         }
         return commentsList;
-    }
+    }*/
 
     private void addComment(String message) {
         mLastShortComment = new ArticleShortCommentEntity();
@@ -405,19 +391,6 @@ public class NewsItemFragment extends Fragment {
         query.params.offset = offset;
         return query;
     }
-
-//    @Override
-//    public void onConfigurationChanged(Configuration newConfig) {
-//        super.onConfigurationChanged(newConfig);
-//        mProgressBar.setVisibility(View.GONE);
-//        isScreenOrienrtationChanged = true;
-//        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-//            //
-//        } else {
-//            //
-//        }
-//    }
-
 
     private class OnShareFBListener implements View.OnClickListener {
         @Override
@@ -459,12 +432,10 @@ public class NewsItemFragment extends Fragment {
     }
 
 
-    // To get status of message after authentication
     private final class MessageListener implements SocialAuthListener<Integer> {
         @Override
         public void onExecute(String provider, Integer t) {
-            Integer status = t;
-            if (status.intValue() == 200 || status.intValue() == 201 || status.intValue() == 204)
+            if (t.intValue() == 200 || t.intValue() == 201 || t.intValue() == 204)
                 Toast.makeText(getActivity(), "Message posted on " + provider, Toast.LENGTH_LONG).show();
             else
                 Toast.makeText(getActivity(), "Message not posted on " + provider, Toast.LENGTH_LONG).show();
