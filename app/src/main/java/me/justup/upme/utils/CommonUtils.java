@@ -1,5 +1,6 @@
 package me.justup.upme.utils;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.view.Gravity;
@@ -59,6 +60,21 @@ public class CommonUtils {
     public static void showWarningToast(Activity activity, String message) {
         LayoutInflater inflater = LayoutInflater.from(JustUpApplication.getApplication());
         View layout = inflater.inflate(R.layout.toast_warning, (ViewGroup) activity.findViewById(R.id.warning_toast_layout_root));
+
+        TextView text = (TextView) layout.findViewById(R.id.toast_text_textView);
+        text.setText(message);
+
+        Toast toast = new Toast(JustUpApplication.getApplication());
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.setDuration(Toast.LENGTH_LONG);
+        toast.setView(layout);
+        toast.show();
+    }
+
+    @SuppressLint("InflateParams")
+    public static void showWarningToast(String message) {
+        LayoutInflater inflater = LayoutInflater.from(JustUpApplication.getApplication());
+        View layout = inflater.inflate(R.layout.toast_warning, null);
 
         TextView text = (TextView) layout.findViewById(R.id.toast_text_textView);
         text.setText(message);
