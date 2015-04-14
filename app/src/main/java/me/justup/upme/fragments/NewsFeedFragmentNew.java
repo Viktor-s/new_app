@@ -72,8 +72,6 @@ public class NewsFeedFragmentNew extends Fragment {
     private BroadcastReceiver mNewsFeedReceiver;
     private ArrayList<Integer> mReadNewsList;
     private SQLiteDatabase database;
-
-
     private GridLayout gridLayout;
     private int column = 3;
     private int screenWidth;
@@ -205,9 +203,7 @@ public class NewsFeedFragmentNew extends Fragment {
 
                         if (isLoading) {
                             if (visibleItemCount >= totalItemCount) {
-                                int oldListSize = mNewsFeedEntityPartOfList.size();
                                 mNewsFeedEntityPartOfList.addAll(getNextArticlesPack());
-                                // mNewsFeedAdapter.notifyItemRangeInserted(oldListSize, mNewsFeedEntityPartOfList.size());
                                 if (totalItemCount >= mNewsFeedEntityPartOfList.size()) {
                                     isLoading = false;
                                 }
@@ -218,14 +214,11 @@ public class NewsFeedFragmentNew extends Fragment {
                 }
         );
 
-
         mNewsItemContainer = (FrameLayout) view.findViewById(R.id.news_item_container_frameLayout);
 
         if (!ApiWrapper.isOnline()) {
             mProgressBar.setVisibility(View.GONE);
         }
-
-
         return view;
     }
 
@@ -238,11 +231,9 @@ public class NewsFeedFragmentNew extends Fragment {
                 }
                 GridLayout.LayoutParams param = new GridLayout.LayoutParams();
                 param.height = LinearLayout.LayoutParams.WRAP_CONTENT;
-                //param.height = 300;
                 param.width = (screenWidth / 3);
                 param.rightMargin = CommonUtils.convertDpToPixels(getActivity(), 30);
                 param.topMargin = CommonUtils.convertDpToPixels(getActivity(), 30);
-                //  param.setGravity(Gravity.CENTER);
                 param.columnSpec = GridLayout.spec(c);
                 param.rowSpec = GridLayout.spec(r);
 
@@ -274,8 +265,6 @@ public class NewsFeedFragmentNew extends Fragment {
                             lastChosenPosition = shortNewsId;
                             ((MainActivity) NewsFeedFragmentNew.this.getActivity()).startHttpIntent(getFullDescriptionQuery(shortNewsId), HttpIntentService.NEWS_PART_FULL);
                         }
-
-
                     }
                 });
                 gridLayout.addView(shortNewsLayout);
@@ -324,7 +313,6 @@ public class NewsFeedFragmentNew extends Fragment {
             if (cursorComments != null) {
                 cursorComments.close();
             }
-
         }
         return newsList;
     }
