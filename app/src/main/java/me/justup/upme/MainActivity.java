@@ -35,6 +35,7 @@ import me.justup.upme.entity.ArticlesGetShortDescriptionQuery;
 import me.justup.upme.entity.BaseHttpQueryEntity;
 import me.justup.upme.entity.BaseMethodEmptyQuery;
 import me.justup.upme.entity.CalendarGetEventsQuery;
+import me.justup.upme.entity.ErrorResponse;
 import me.justup.upme.entity.GetLoggedUserInfoQuery;
 import me.justup.upme.entity.GetLoggedUserInfoResponse;
 import me.justup.upme.entity.GetMailContactQuery;
@@ -542,10 +543,25 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             String content = ApiWrapper.responseBodyToString(responseBody);
             LOGE(TAG, "OnGetLoggedUserInfoResponse onFailure: " + content);
 
+            ErrorResponse response = null;
             try {
-                showWarningDialog(ApiWrapper.getResponseError(content));
-            } catch (Exception e) {
-                LOGE(TAG, "showWarningDialog FAIL", e);
+                response = ApiWrapper.gson.fromJson(content, ErrorResponse.class);
+            } catch (JsonSyntaxException e) {
+                LOGE(TAG, "OnGetLoggedUserInfoResponse onFailure() gson.fromJson:\n" + content);
+            }
+
+            if (response != null && response.error != null) {
+                try {
+                    showWarningDialog(response.error.message);
+                } catch (Exception e) {
+                    LOGE(TAG, "showWarningDialog FAIL", e);
+                }
+            } else {
+                try {
+                    showWarningDialog(ApiWrapper.getResponseError(content));
+                } catch (Exception e) {
+                    LOGE(TAG, "showWarningDialog FAIL", e);
+                }
             }
         }
     }
