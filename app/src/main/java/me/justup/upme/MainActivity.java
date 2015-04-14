@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -642,6 +643,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         if (BuildConfig.FLAVOR.equals("app")) {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        // Add change config
     }
 
 }
