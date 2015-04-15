@@ -6,14 +6,17 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.webkit.WebChromeClient;
@@ -290,7 +293,6 @@ public class NewsItemFragment extends Fragment {
         mNewsItemWebView.getSettings().setLoadWithOverviewMode(true);
         mNewsItemWebView.getSettings().setUseWideViewPort(true);
         mNewsItemWebView.loadDataWithBaseURL("", mArticleFullEntity.getFull_descr(), "text/html", "UTF-8", "");
-
         updateCommentsList();
     }
 
@@ -391,6 +393,14 @@ public class NewsItemFragment extends Fragment {
         query.params.offset = offset;
         return query;
     }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mNewsItemWebView.getSettings().setLoadWithOverviewMode(true);
+        mNewsItemWebView.getSettings().setUseWideViewPort(true);
+    }
+
 
     private class OnShareFBListener implements View.OnClickListener {
         @Override

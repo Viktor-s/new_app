@@ -190,6 +190,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
             case R.id.mail_menu_item:
                 if (currentlySelectedFragment != SELECTED_FRAGMENT_MAIL) {
+                    startHttpIntent(new GetMailContactQuery(), HttpIntentService.MAIL_CONTACT_PART);
                     changeButtonState(mMailButton);
                     fragment = new MailFragment();
                     currentlySelectedFragment = SELECTED_FRAGMENT_MAIL;
@@ -217,6 +218,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
             case R.id.briefcase_menu_item:
                 if (currentlySelectedFragment != SELECTED_FRAGMENT_BRIEFCASE) {
+                    startHttpIntent(new GetMailContactQuery(), HttpIntentService.MAIL_CONTACT_PART);
                     changeButtonState(mBriefcaseButton);
                     fragment = new BriefcaseFragment();
                     currentlySelectedFragment = SELECTED_FRAGMENT_BRIEFCASE;

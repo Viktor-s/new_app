@@ -217,7 +217,7 @@ public class DBAdapter {
         if (!database.isOpen()) {
             DBAdapter.getInstance().openDatabase();
         }
-        
+
         ContentValues values = new ContentValues();
         values.put(IS_SHORT_NEWS_READ_ARTICLE_ID, articleId);
         values.put(IS_SHORT_NEWS_READ_VALUE, 1);
@@ -282,7 +282,7 @@ public class DBAdapter {
     */
 
     public void saveContactsArray(List<GetAllContactsResponse.Result.Parents> userArray) {
-        dropAndCreateTable(MAIL_CONTACT_TABLE_NAME, CREATE_TABLE_MAIL_CONTACT);
+        //dropAndCreateTable(MAIL_CONTACT_TABLE_NAME, CREATE_TABLE_MAIL_CONTACT);
 
         for (GetAllContactsResponse.Result.Parents user : userArray) {
             ContentValues values = new ContentValues();
@@ -301,7 +301,7 @@ public class DBAdapter {
             values.put(MAIL_CONTACT_IN_SYSTEM, user.in_system);
             values.put(MAIL_CONTACT_TOTAL_SUM, user.total_sum);
 
-            database.insert(MAIL_CONTACT_TABLE_NAME, null, values);
+            database.insertWithOnConflict(MAIL_CONTACT_TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
         }
 
         sendBroadcast(MAIL_SQL_BROADCAST_INTENT);

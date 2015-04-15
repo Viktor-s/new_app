@@ -151,14 +151,12 @@ public class BriefcaseFragment extends Fragment {
         TextView mUserNameTextView = (TextView) view.findViewById(R.id.briefcase_fragment_user_name);
         mUserContactsCountTextView = (TextView) view.findViewById(R.id.briefcase_fragment_user_contacts_count);
         mUserContainer = (FrameLayout) view.findViewById(R.id.briefcase_user_info_container_frameLayout);
-        CircularImageView mUserImageImageView = (CircularImageView) view.findViewById(R.id.briefcase_fragment_user_photo);
         mObjectIdTextView.setText("" + new AppPreferences(getActivity().getApplicationContext()).getUserId());
         mUserNameTextView.setText(new AppPreferences(getActivity().getApplicationContext()).getUserName());
         updatePersonsList();
         containerLayout = (LinearLayout) view.findViewById(R.id.containerLayout);
         photoLayout = (RelativeLayout) view.findViewById(R.id.photo_main);
         containerLayout.addView(levelGenerate(photoLayout, listPerson));
-        FrameLayout mNewsItemContainer = (FrameLayout) view.findViewById(R.id.briefcase_item_container_frameLayout);
         mCloseUserFragmentButton = (Button) view.findViewById(R.id.briefcase_close_button);
         mCloseUserFragmentButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -219,7 +217,6 @@ public class BriefcaseFragment extends Fragment {
     private ImageView createDirection(int resId) {
         ImageView resultView = new ImageView(getActivity());
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        // layoutParams.setMarginStart(500);
         resultView.setLayoutParams(layoutParams);
         resultView.setImageResource(resId);
         return resultView;
@@ -259,12 +256,12 @@ public class BriefcaseFragment extends Fragment {
         int column = Integer.parseInt(((TextView) v.findViewById(R.id.column)).getText().toString());
         List<PersonBriefcaseEntity> children = getChildrenOnParent(listPersonInner, id);
         int countChildren = children.size();
-        LOGD("TAG", "countChildren --- " + countChildren);
+        LOGD(TAG, "countChildren --- " + countChildren);
         // definition of the first cell to fill
         int x = (int) Math.round(countChildren / 2 - 0.1);
-        LOGD("TAG", "X --- " + x);
+        LOGD(TAG, "X --- " + x);
         int startPosition = (x >= column) ? 0 : column - x;
-        LOGD("TAG", "START POSITION --- " + startPosition);
+        LOGD(TAG, "START POSITION --- " + startPosition);
         GridLayout gridLayout = new GridLayout(getActivity());
         for (int i = 0; i < startPosition; i++) {
             gridLayout.addView(createDirection(R.drawable.p00));
@@ -329,7 +326,7 @@ public class BriefcaseFragment extends Fragment {
             photoLayoutMain.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    LOGE("pavel", "" + containerLayout.getChildCount() + " " + lastChoosenItem);
+                    LOGE(TAG, "" + containerLayout.getChildCount() + " " + lastChoosenItem);
                     view.findViewById(R.id.briefcase_ellipsis_imageView).setVisibility(View.GONE);
 //
                     if (lastChoosenItem != Integer.parseInt(itemId.getText().toString()) && totalItemCount > 1 && Integer.parseInt(parentId.getText().toString()) == userId) {
@@ -355,7 +352,7 @@ public class BriefcaseFragment extends Fragment {
             rowObject.setText(Integer.toString(row + 1));
             TextView columnObject = (TextView) photoLayoutInner.getChildAt(3);
             columnObject.setText(Integer.toString(startPosition + i));
-            LOGD("TAG", "id - " + personBriefcaseEntity.getId() + "; row - " + (row + 1) + "; column - " + (startPosition + i));
+            LOGD(TAG, "id - " + personBriefcaseEntity.getId() + "; row - " + (row + 1) + "; column - " + (startPosition + i));
             ImageView imageViewInfo = (ImageView) briefcaseItemLayout.getChildAt(1);
             imageViewInfo.setOnClickListener(new View.OnClickListener() {
                 @Override
