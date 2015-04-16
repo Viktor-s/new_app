@@ -24,6 +24,7 @@ import java.io.File;
 import me.justup.upme.MainActivity;
 import me.justup.upme.R;
 import me.justup.upme.dialogs.ViewImageDialog;
+import me.justup.upme.dialogs.ViewPDFDialog;
 import me.justup.upme.services.FileExplorerService;
 
 import static me.justup.upme.services.FileExplorerService.BROADCAST_EXTRA_ACTION_TYPE;
@@ -40,6 +41,7 @@ public class DocumentsFragment extends Fragment {
 
     public static final int IMAGE = 1;
     public static final int DOC = 2;
+    public static final int PDF = 3;
 
     private TableLayout mFileExplorer;
     private LayoutInflater mLayoutInflater;
@@ -113,10 +115,13 @@ public class DocumentsFragment extends Fragment {
         final View item = mLayoutInflater.inflate(R.layout.item_documents_file, null);
 
         final boolean isImage = fileName.contains(".jpg") || fileName.contains(".jpeg") || fileName.contains(".png");
+        final boolean isPDF = fileName.contains(".pdf");
 
         int type;
         if (isImage) {
             type = IMAGE;
+        } else if (isPDF) {
+            type = PDF;
         } else {
             type = DOC;
         }
@@ -130,6 +135,9 @@ public class DocumentsFragment extends Fragment {
 
         if (type == IMAGE) {
             mFileImage.setImageResource(R.drawable.ic_file_image);
+        }
+        if (type == PDF) {
+            mFileImage.setImageResource(R.drawable.ic_file_pdf);
         }
         mFileName.setText(fileName);
         mFileSize.setText((fileLength / SIZE_VALUE) + KB);
@@ -158,6 +166,10 @@ public class DocumentsFragment extends Fragment {
                     showViewImageDialog(mFileName, mFilePath);
                     break;
 
+                case PDF:
+                    showViewPDFDialog(mFileName, mFilePath);
+                    break;
+
                 default:
                     break;
             }
@@ -167,6 +179,11 @@ public class DocumentsFragment extends Fragment {
     private void showViewImageDialog(String mFileName, String mFilePath) {
         ViewImageDialog dialog = ViewImageDialog.newInstance(mFileName, mFilePath);
         dialog.show(getChildFragmentManager(), ViewImageDialog.VIEW_IMAGE_DIALOG);
+    }
+
+    private void showViewPDFDialog(String mFileName, String mFilePath) {
+        ViewPDFDialog dialog = ViewPDFDialog.newInstance(mFileName, mFilePath);
+        dialog.show(getChildFragmentManager(), ViewPDFDialog.VIEW_PDF_DIALOG);
     }
 
     private class OnFileActionListener implements View.OnClickListener {
