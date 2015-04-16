@@ -196,10 +196,11 @@ dependencies {
     compile('ch.acra:acra:4.5.0') {
         exclude group: 'org.json'
     }
-
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'joda-time:joda-time:2.7'
     compile 'com.github.alamkanak:android-week-view:1.2.1'
+    compile 'com.google.apis:google-api-services-youtube:v3-rev133-1.20.0'
+    compile files('libs/YouTubeAndroidPlayerApi.jar')
 }
 
 afterEvaluate {

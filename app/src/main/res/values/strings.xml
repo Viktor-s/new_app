@@ -287,4 +287,6 @@
     <string name="contacts">Контакты</string>
     <string name="pin_code_limit">Превышен лимит ввода\nPIN кода!</string>
 
+
+    <string name="error_player">There was an error initializing the YouTubePlayer (%1$s)</string>
 </resources>
