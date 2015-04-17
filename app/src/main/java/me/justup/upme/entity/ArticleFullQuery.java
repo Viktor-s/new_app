@@ -10,6 +10,6 @@ public class ArticleFullQuery extends BaseHttpQueryEntity {
     public int id = 123;
 
     public class Params implements Serializable {
-        public int id;
+        public int article_id;
     }
 }

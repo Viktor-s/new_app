@@ -4,11 +4,11 @@ import java.io.Serializable;
 import java.util.List;
 
 public class ArticleFullResponse {
-    public Result result;
+   // public Result result;
 
-    public class Result implements Serializable {
+   // public class Result implements Serializable {
         public ResultFull result;
-    }
+  //  }
 
     public class ResultFull implements Serializable {
         public int id;

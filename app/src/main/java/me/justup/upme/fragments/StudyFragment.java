@@ -25,12 +25,16 @@ public class StudyFragment extends Fragment {
         youtubePlayerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getChildFragmentManager().beginTransaction().replace(R.id.youtube_player_container, YouTubePlayerFragment.newInstance("_oEA18Y8gM0")).commit();
+                youtubePlayerButton.setVisibility(View.GONE);
+                //YouTubePlayerFragment youTubePlayerFragment = YouTubePlayerFragment.newInstance("OMOVFvcNfvE");
+                getChildFragmentManager().beginTransaction().replace(R.id.youtube_player_container, YouTubePlayerFragment.newInstance("OMOVFvcNfvE")).addToBackStack(null).commit();
             }
         });
 
 
         return v;
     }
+
+
 
 }
