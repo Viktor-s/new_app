@@ -9,11 +9,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -134,6 +136,23 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
     private int mCurrentUserId;
 
     private ArrayList<Integer> listSharedId = new ArrayList<>();
+
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        Log.d("TAG", "--> onConfigurationChanged");
+
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+           // Toast.makeText(getActivity(), "landscape", Toast.LENGTH_SHORT).show();
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+           // Toast.makeText(getActivity(), "portrait", Toast.LENGTH_SHORT).show();
+        }
+
+        mWeekView.invalidateWeekView(true);
+
+
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -272,9 +291,9 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
     }
 
     private void listEventsForWeek(LocalDateTime startWeek) {
-        String startTime = Long.toString(startWeek.toDateTime(DateTimeZone.UTC).getMillis() / 1000);
+        String startTime = Long.toString(startWeek.toDateTime(DateTimeZone.getDefault()).getMillis() / 1000);
         LocalDateTime lastDayCurrentWeek = startWeek.withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59).withDayOfWeek(DateTimeConstants.SUNDAY);
-        String endTime = Long.toString(lastDayCurrentWeek.toDateTime(DateTimeZone.UTC).getMillis() / 1000);
+        String endTime = Long.toString(lastDayCurrentWeek.toDateTime(DateTimeZone.getDefault()).getMillis() / 1000);
 
         events.clear();
 
@@ -614,8 +633,8 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
             case R.id.previous_week_button:
                 firstDayCurrentWeek = firstDayCurrentWeek.minusDays(Calendar.DAY_OF_WEEK);
                 LOGD("TAG1", "------ previous_week_button " + firstDayCurrentWeek.toString());
-                mWeekView.goToDate(firstDayCurrentWeek.toDateTime(DateTimeZone.UTC).toGregorianCalendar());
-                selectWeekTextView.setText(Integer.toString(currentWeek == 1 ? currentWeek = 52 : --currentWeek) + getResources().getString(R.string.week));
+                mWeekView.goToDate(firstDayCurrentWeek.toDateTime(DateTimeZone.getDefault()).toGregorianCalendar());
+                selectWeekTextView.setText(Integer.toString(firstDayCurrentWeek.getWeekOfWeekyear()) + getResources().getString(R.string.week));
                 String strMonthYearPrev = String.format("%s %d", months[firstDayCurrentWeek.getMonthOfYear() - 1], firstDayCurrentWeek.getYear());
                 selectMonthTextView.setText(strMonthYearPrev);
                 listEventsForWeek(firstDayCurrentWeek);
@@ -624,7 +643,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
             case R.id.next_week_button:
                 firstDayCurrentWeek = firstDayCurrentWeek.plusDays(Calendar.DAY_OF_WEEK);
                 LOGD("TAG1", "------ previous_week_button " + firstDayCurrentWeek.toString());
-                mWeekView.goToDate(firstDayCurrentWeek.toDateTime(DateTimeZone.UTC).toGregorianCalendar());
+                mWeekView.goToDate(firstDayCurrentWeek.toDateTime(DateTimeZone.getDefault()).toGregorianCalendar());
                 selectWeekTextView.setText(Integer.toString(currentWeek == 52 ? currentWeek = 1 : ++currentWeek) + getResources().getString(R.string.week));
                 String strMonthYearNext = String.format("%s %d", months[firstDayCurrentWeek.getMonthOfYear() - 1], firstDayCurrentWeek.getYear());
                 selectMonthTextView.setText(strMonthYearNext);
