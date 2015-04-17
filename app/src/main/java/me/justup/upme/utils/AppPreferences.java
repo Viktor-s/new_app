@@ -3,6 +3,7 @@ package me.justup.upme.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import me.justup.upme.BuildConfig;
 import me.justup.upme.fragments.BrowserFragment;
 
 
@@ -101,7 +102,11 @@ public class AppPreferences {
     }
 
     public boolean isMonitoring() {
-        return mSharedPreferences.getBoolean(TAG_MONITORING, true);
+        if (BuildConfig.FLAVOR.equals(Constance.APP_FLAVOR_LAUNCHER)) {
+            return mSharedPreferences.getBoolean(TAG_MONITORING, false);
+        }else {
+            return mSharedPreferences.getBoolean(TAG_MONITORING, true);
+        }
     }
 
     public void setBrowserUrl(String url) {

@@ -194,6 +194,7 @@
         android:layout_alignParentEnd="true"
         android:layout_width="@dimen/base250dp720sw"
         android:layout_height="@dimen/base250dp720sw"
-        android:layout_below="@+id/status_bar_fragment" />
+        android:layout_below="@+id/status_bar_fragment"
+        android:visibility="gone" />
 
 </RelativeLayout>

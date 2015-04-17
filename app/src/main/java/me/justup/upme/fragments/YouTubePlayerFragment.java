@@ -5,9 +5,10 @@ import android.os.Bundle;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 
-public class YouTubePlayerFragment extends com.google.android.youtube.player.YouTubePlayerFragment  {
+public class YouTubePlayerFragment extends com.google.android.youtube.player.YouTubePlayerFragment {
 
-    public YouTubePlayerFragment() { }
+    public YouTubePlayerFragment() {
+    }
 
     public static YouTubePlayerFragment newInstance(String url) {
 
@@ -23,10 +24,11 @@ public class YouTubePlayerFragment extends com.google.android.youtube.player.You
 
     private void init() {
 
-        initialize("yourapikey", new YouTubePlayer.OnInitializedListener() {
+        initialize("AIzaSyAZYUjtjOyE0I6fsiVSgjtFhjIz1cD3cCQ", new YouTubePlayer.OnInitializedListener() {
 
             @Override
-            public void onInitializationFailure(YouTubePlayer.Provider arg0, YouTubeInitializationResult arg1) { }
+            public void onInitializationFailure(YouTubePlayer.Provider arg0, YouTubeInitializationResult arg1) {
+            }
 
             @Override
             public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player, boolean wasRestored) {
@@ -36,4 +38,8 @@ public class YouTubePlayerFragment extends com.google.android.youtube.player.You
             }
         });
     }
+    // getFragmentManager().popBackStack();/
+
+
+
 }

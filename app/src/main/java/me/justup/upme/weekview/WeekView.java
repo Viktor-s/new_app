@@ -1,6 +1,7 @@
 package me.justup.upme.weekview;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -16,6 +17,7 @@ import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.HapticFeedbackConstants;
@@ -108,6 +110,9 @@ public class WeekView extends View {
     private EmptyViewClickListener mEmptyViewClickListener;
     private EmptyViewLongPressListener mEmptyViewLongPressListener;
     private DateTimeInterpreter mDateTimeInterpreter;
+
+    private boolean orientation = true;
+    int dateDifference = 1;
 
     private final GestureDetector.SimpleOnGestureListener mGestureListener = new GestureDetector.SimpleOnGestureListener() {
 
@@ -333,6 +338,7 @@ public class WeekView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        Log.d("TAG_WeekView", "--> onDraw");
         super.onDraw(canvas);
 
         // Draw the header row.
@@ -349,6 +355,7 @@ public class WeekView extends View {
     }
 
     private void drawTimeColumnAndAxes(Canvas canvas) {
+        Log.d("TAG_WeekView", "--> drawTimeColumnAndAxes");
         // Do not let the view go above/below the limit due to scrolling. Set the max and min limit of the scroll.
         if (mCurrentScrollDirection == Direction.VERTICAL) {
             if (mCurrentOrigin.y - mDistanceY > 0) mCurrentOrigin.y = 0;
@@ -373,33 +380,29 @@ public class WeekView extends View {
     }
 
     private void drawHeaderRowAndEvents(Canvas canvas) {
+        Log.d("TAG_WeekView", "--> drawHeaderRowAndEvents");
         // Calculate the available width for each day.
         mHeaderColumnWidth = mTimeTextWidth + mHeaderColumnPadding * 2;
         mWidthPerDay = getWidth() - mHeaderColumnWidth - mColumnGap * (mNumberOfVisibleDays - 1);
         mWidthPerDay = mWidthPerDay / mNumberOfVisibleDays;
 
         // If the week view is being drawn for the first time, then consider the first day of week.
-//        if (mIsFirstDraw && mNumberOfVisibleDays >= 7) {
-//            if (mToday.get(Calendar.DAY_OF_WEEK) != mFirstDayOfWeek) {
-//                int difference = 7 + (mToday.get(Calendar.DAY_OF_WEEK) - mFirstDayOfWeek);
-//                mCurrentOrigin.x += (mWidthPerDay + mColumnGap) * difference;
-//            }
-//            mIsFirstDraw = false;
-//        }
-
         if (mIsFirstDraw) {
             int dayOfWeek = mToday.get(Calendar.DAY_OF_WEEK);
-            if (dayOfWeek != mFirstDayOfWeek) {
-                mCurrentOrigin.x += (mWidthPerDay + mColumnGap) * (dayOfWeek - 2); //TODO mark1
-            }
+            dayOfWeek = (dayOfWeek == 1) ? 7 : dayOfWeek - 1; // Ru format
+            dateDifference = -(dayOfWeek - 1) ;
             mIsFirstDraw = false;
+        }
+
+        if (orientation) {
+            mCurrentOrigin.x = -dateDifference * (mWidthPerDay + mColumnGap);
+            orientation = false;
         }
 
         // Consider scroll offset.
         if (mCurrentScrollDirection == Direction.HORIZONTAL) mCurrentOrigin.x -= mDistanceX;
         int leftDaysWithGaps = (int) -(Math.ceil(mCurrentOrigin.x / (mWidthPerDay + mColumnGap)));
-        float startFromPixel = mCurrentOrigin.x + (mWidthPerDay + mColumnGap) * leftDaysWithGaps +
-                mHeaderColumnWidth;
+        float startFromPixel = mCurrentOrigin.x + (mWidthPerDay + mColumnGap) * leftDaysWithGaps + mHeaderColumnWidth;
         float startPixel = startFromPixel;
 
         // Prepare to iterate for each day.
@@ -407,8 +410,7 @@ public class WeekView extends View {
         day.add(Calendar.HOUR, 6);
 
         // Prepare to iterate for each hour to draw the hour lines.
-        int lineCount = (int) ((getHeight() - mHeaderTextHeight - mHeaderRowPadding * 2 -
-                mHeaderMarginBottom) / mHourHeight) + 1;
+        int lineCount = (int) ((getHeight() - mHeaderTextHeight - mHeaderRowPadding * 2 - mHeaderMarginBottom) / mHourHeight) + 1;
         lineCount = (lineCount) * (mNumberOfVisibleDays + 1);
         float[] hourLines = new float[lineCount * 4];
 
@@ -497,6 +499,7 @@ public class WeekView extends View {
      * @return The time and date at the clicked position.
      */
     private Calendar getTimeFromPoint(float x, float y) {
+        Log.d("TAG_WeekView", "--> getTimeFromPoint");
         int leftDaysWithGaps = (int) -(Math.ceil(mCurrentOrigin.x / (mWidthPerDay + mColumnGap)));
         float startPixel = mCurrentOrigin.x + (mWidthPerDay + mColumnGap) * leftDaysWithGaps +
                 mHeaderColumnWidth;
@@ -529,6 +532,7 @@ public class WeekView extends View {
      * @param canvas         The canvas to draw upon.
      */
     private void drawEvents(Calendar date, float startFromPixel, Canvas canvas) {
+        Log.d("TAG_WeekView", "--> drawEvents");
         if (mEventRects != null && mEventRects.size() > 0) {
             for (int i = 0; i < mEventRects.size(); i++) {
                 if (isSameDay(mEventRects.get(i).event.getStartTime(), date)) {
@@ -584,6 +588,7 @@ public class WeekView extends View {
      * @param originalLeft The original left position of the rectangle. The rectangle may have some of its portion outside of the visible area.
      */
     private void drawText(String text, RectF rect, Canvas canvas, float originalTop, float originalLeft) {
+        Log.d("TAG_WeekView", "--> drawText");
         if (rect.right - rect.left - mEventPadding * 2 < 0) return;
 
         // Get text dimensions
@@ -655,6 +660,7 @@ public class WeekView extends View {
      * @param day The day where the user is currently is.
      */
     private void getMoreEvents(Calendar day) {
+        Log.d("TAG_WeekView", "--> getMoreEvents");
 
         // Delete all events if its not current month +- 1.
         deleteFarMonths(day);
@@ -739,6 +745,7 @@ public class WeekView extends View {
      * @param event The event to cache.
      */
     private void cacheEvent(WeekViewEvent event) {
+        Log.d("TAG_WeekView", "--> cacheEvent");
         if (!isSameDay(event.getStartTime(), event.getEndTime())) {
             Calendar endTime = (Calendar) event.getStartTime().clone();
             endTime.set(Calendar.HOUR_OF_DAY, 23);
@@ -1393,7 +1400,7 @@ public class WeekView extends View {
         today.set(Calendar.SECOND, 0);
         today.set(Calendar.MILLISECOND, 0);
 
-        int dateDifference = (int) ((date.getTimeInMillis() - today.getTimeInMillis()) / (1000 * 60 * 60 * 24));
+        dateDifference = (int) (date.getTimeInMillis() / (1000 * 60 * 60 * 24) - today.getTimeInMillis() / (1000 * 60 * 60 * 24));
         mCurrentOrigin.x = -dateDifference * (mWidthPerDay + mColumnGap);
 
         invalidate();
@@ -1483,6 +1490,14 @@ public class WeekView extends View {
      */
     private boolean isSameDay(Calendar dayOne, Calendar dayTwo) {
         return dayOne.get(Calendar.YEAR) == dayTwo.get(Calendar.YEAR) && dayOne.get(Calendar.DAY_OF_YEAR) == dayTwo.get(Calendar.DAY_OF_YEAR);
+    }
+
+
+    public void invalidateWeekView(boolean orientation) {
+        this.orientation = orientation;
+        Log.d("TAG_WeekView", "--> invalidateWeekView");
+//        invalidate();
+
     }
 
 }

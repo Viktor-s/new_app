@@ -5,11 +5,11 @@ import java.io.Serializable;
 import java.util.List;
 
 public class ArticlesGetShortDescriptionResponse extends BaseHttpResponseEntity {
-    public Result result;
+ //   public Result result;
 
-    public class Result implements Serializable {
+  //  public class Result implements Serializable {
         public List<ResultList> result;
-    }
+   // }
 
     public class ResultList implements Serializable {
         public int id;
