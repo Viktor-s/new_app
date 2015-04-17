@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/base10dp720sw">
+
+    <com.joanzapata.pdfview.PDFView
+        android:id="@+id/dialog_pdf_panel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/base28sp720sw"
+        tools:text="42"
+        android:layout_marginEnd="@dimen/base5dp720sw"
+        android:id="@+id/pdf_number_page_textView"
+        android:textColor="@color/gray"
+        android:layout_gravity="end|top" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/gray"
+        android:text="@string/file_loaded"
+        android:id="@+id/dialog_pdf_file_loaded"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:layout_gravity="start|bottom" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/base5dp720sw"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/gray"
+        tools:text="82 стр."
+        android:id="@+id/dialog_pdf_file_pages"
+        android:layout_gravity="end|bottom" />
+</FrameLayout>

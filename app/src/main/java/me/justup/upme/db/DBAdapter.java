@@ -20,7 +20,6 @@ import me.justup.upme.entity.GetProductHtmlByIdResponse;
 import me.justup.upme.entity.ProductsGetAllCategoriesResponse;
 import me.justup.upme.entity.Push;
 
-import static me.justup.upme.db.DBHelper.CREATE_TABLE_MAIL_CONTACT;
 import static me.justup.upme.db.DBHelper.CREATE_TABLE_STATUS_BAR_PUSH;
 import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_DESCRIPTION;
 import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_END_DATETIME;
@@ -191,21 +190,21 @@ public class DBAdapter {
     }
 
     public void saveShortNews(ArticlesGetShortDescriptionResponse entity) {
-        for (int i = 0; i < entity.result.result.size(); i++) {
+        for (int i = 0; i < entity.result.size(); i++) {
             ContentValues values = new ContentValues();
-            values.put(SHORT_NEWS_SERVER_ID, entity.result.result.get(i).id);
-            values.put(SHORT_NEWS_TITLE, entity.result.result.get(i).title);
-            values.put(SHORT_NEWS_SHORT_DESCR, entity.result.result.get(i).short_descr);
-            values.put(SHORT_NEWS_THUMBNAIL, entity.result.result.get(i).thumbnail);
-            values.put(SHORT_NEWS_POSTED_AT, entity.result.result.get(i).posted_at);
-            for (int j = 0; j < entity.result.result.get(i).comments.size(); j++) {
+            values.put(SHORT_NEWS_SERVER_ID, entity.result.get(i).id);
+            values.put(SHORT_NEWS_TITLE, entity.result.get(i).title);
+            values.put(SHORT_NEWS_SHORT_DESCR, entity.result.get(i).short_descr);
+            values.put(SHORT_NEWS_THUMBNAIL, entity.result.get(i).thumbnail);
+            values.put(SHORT_NEWS_POSTED_AT, entity.result.get(i).posted_at);
+            for (int j = 0; j < entity.result.get(i).comments.size(); j++) {
                 ContentValues valuesComments = new ContentValues();
-                valuesComments.put(SHORT_NEWS_COMMENTS_SERVER_ID, entity.result.result.get(i).comments.get(j).id);
-                valuesComments.put(SHORT_NEWS_COMMENTS_ARTICLE_ID, entity.result.result.get(i).id);
-                valuesComments.put(SHORT_NEWS_COMMENTS_CONTENT, entity.result.result.get(i).comments.get(j).content);
-                valuesComments.put(SHORT_NEWS_COMMENTS_AUTHOR_ID, entity.result.result.get(i).comments.get(j).author_id);
-                valuesComments.put(SHORT_NEWS_COMMENTS_AUTHOR_NAME, entity.result.result.get(i).comments.get(j).author.name);
-                valuesComments.put(SHORT_NEWS_COMMENTS_AUTHOR_IMAGE, entity.result.result.get(i).comments.get(j).author.img);
+                valuesComments.put(SHORT_NEWS_COMMENTS_SERVER_ID, entity.result.get(i).comments.get(j).id);
+                valuesComments.put(SHORT_NEWS_COMMENTS_ARTICLE_ID, entity.result.get(i).id);
+                valuesComments.put(SHORT_NEWS_COMMENTS_CONTENT, entity.result.get(i).comments.get(j).content);
+                valuesComments.put(SHORT_NEWS_COMMENTS_AUTHOR_ID, entity.result.get(i).comments.get(j).author_id);
+                valuesComments.put(SHORT_NEWS_COMMENTS_AUTHOR_NAME, entity.result.get(i).comments.get(j).author.name);
+                valuesComments.put(SHORT_NEWS_COMMENTS_AUTHOR_IMAGE, entity.result.get(i).comments.get(j).author.img);
                 database.insertWithOnConflict(SHORT_NEWS_COMMENTS_TABLE_NAME, null, valuesComments, SQLiteDatabase.CONFLICT_REPLACE);
             }
             database.insertWithOnConflict(SHORT_NEWS_TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
@@ -217,7 +216,7 @@ public class DBAdapter {
         if (!database.isOpen()) {
             DBAdapter.getInstance().openDatabase();
         }
-        
+
         ContentValues values = new ContentValues();
         values.put(IS_SHORT_NEWS_READ_ARTICLE_ID, articleId);
         values.put(IS_SHORT_NEWS_READ_VALUE, 1);
@@ -228,16 +227,16 @@ public class DBAdapter {
     public void saveFullNews(ArticleFullResponse entity) {
 
         ContentValues values = new ContentValues();
-        values.put(FULL_NEWS_SERVER_ID, entity.result.result.id);
-        values.put(FULL_NEWS_FULL_DESCR, entity.result.result.full_descr);
-        for (int j = 0; j < entity.result.result.comments.size(); j++) {
+        values.put(FULL_NEWS_SERVER_ID, entity.result.id);
+        values.put(FULL_NEWS_FULL_DESCR, entity.result.full_descr);
+        for (int j = 0; j < entity.result.comments.size(); j++) {
             ContentValues valuesComments = new ContentValues();
-            valuesComments.put(SHORT_NEWS_COMMENTS_SERVER_ID, entity.result.result.comments.get(j).id);
-            valuesComments.put(SHORT_NEWS_COMMENTS_ARTICLE_ID, entity.result.result.id);
-            valuesComments.put(SHORT_NEWS_COMMENTS_CONTENT, entity.result.result.comments.get(j).content);
-            valuesComments.put(SHORT_NEWS_COMMENTS_AUTHOR_ID, entity.result.result.comments.get(j).author_id);
-            valuesComments.put(SHORT_NEWS_COMMENTS_AUTHOR_NAME, entity.result.result.comments.get(j).author.name);
-            valuesComments.put(SHORT_NEWS_COMMENTS_AUTHOR_IMAGE, entity.result.result.comments.get(j).author.img);
+            valuesComments.put(SHORT_NEWS_COMMENTS_SERVER_ID, entity.result.comments.get(j).id);
+            valuesComments.put(SHORT_NEWS_COMMENTS_ARTICLE_ID, entity.result.id);
+            valuesComments.put(SHORT_NEWS_COMMENTS_CONTENT, entity.result.comments.get(j).content);
+            valuesComments.put(SHORT_NEWS_COMMENTS_AUTHOR_ID, entity.result.comments.get(j).author_id);
+            valuesComments.put(SHORT_NEWS_COMMENTS_AUTHOR_NAME, entity.result.comments.get(j).author.name);
+            valuesComments.put(SHORT_NEWS_COMMENTS_AUTHOR_IMAGE, entity.result.comments.get(j).author.img);
             database.insertWithOnConflict(SHORT_NEWS_COMMENTS_TABLE_NAME, null, valuesComments, SQLiteDatabase.CONFLICT_REPLACE);
         }
         database.insertWithOnConflict(FULL_NEWS_TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
@@ -282,7 +281,7 @@ public class DBAdapter {
     */
 
     public void saveContactsArray(List<GetAllContactsResponse.Result.Parents> userArray) {
-        dropAndCreateTable(MAIL_CONTACT_TABLE_NAME, CREATE_TABLE_MAIL_CONTACT);
+        //dropAndCreateTable(MAIL_CONTACT_TABLE_NAME, CREATE_TABLE_MAIL_CONTACT);
 
         for (GetAllContactsResponse.Result.Parents user : userArray) {
             ContentValues values = new ContentValues();
@@ -301,7 +300,7 @@ public class DBAdapter {
             values.put(MAIL_CONTACT_IN_SYSTEM, user.in_system);
             values.put(MAIL_CONTACT_TOTAL_SUM, user.total_sum);
 
-            database.insert(MAIL_CONTACT_TABLE_NAME, null, values);
+            database.insertWithOnConflict(MAIL_CONTACT_TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
         }
 
         sendBroadcast(MAIL_SQL_BROADCAST_INTENT);

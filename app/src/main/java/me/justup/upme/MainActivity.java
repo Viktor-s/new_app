@@ -60,6 +60,7 @@ import me.justup.upme.interfaces.OnLoadMailFragment;
 import me.justup.upme.services.GPSTracker;
 import me.justup.upme.utils.AppPreferences;
 import me.justup.upme.utils.CommonUtils;
+import me.justup.upme.utils.Constance;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.LOGE;
@@ -190,6 +191,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
             case R.id.mail_menu_item:
                 if (currentlySelectedFragment != SELECTED_FRAGMENT_MAIL) {
+                    startHttpIntent(new GetMailContactQuery(), HttpIntentService.MAIL_CONTACT_PART);
                     changeButtonState(mMailButton);
                     fragment = new MailFragment();
                     currentlySelectedFragment = SELECTED_FRAGMENT_MAIL;
@@ -217,6 +219,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
             case R.id.briefcase_menu_item:
                 if (currentlySelectedFragment != SELECTED_FRAGMENT_BRIEFCASE) {
+                    startHttpIntent(new GetMailContactQuery(), HttpIntentService.MAIL_CONTACT_PART);
                     changeButtonState(mBriefcaseButton);
                     fragment = new BriefcaseFragment();
                     currentlySelectedFragment = SELECTED_FRAGMENT_BRIEFCASE;
@@ -640,7 +643,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public void onBackPressed() {
-        if (BuildConfig.FLAVOR.equals("app")) {
+        if (BuildConfig.FLAVOR.equals(Constance.APP_FLAVOR_APP)) {
             super.onBackPressed();
         }
     }

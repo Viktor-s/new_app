@@ -143,7 +143,7 @@ android {
             targetSdkVersion 21
             testInstrumentationRunner 'android.test.InstrumentationTestRunner'
             versionCode 1
-            versionName '0.20'
+            versionName '0.21'
             signingConfig signingConfigs.release
 
             applicationVariants.all { variant ->
@@ -196,10 +196,11 @@ dependencies {
     compile('ch.acra:acra:4.5.0') {
         exclude group: 'org.json'
     }
-
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'joda-time:joda-time:2.7'
     compile 'com.github.alamkanak:android-week-view:1.2.1'
+    compile 'com.joanzapata.pdfview:android-pdfview:1.0.2@aar'
+    compile files('libs/YouTubeAndroidPlayerApi.jar')
 }
 
 afterEvaluate {

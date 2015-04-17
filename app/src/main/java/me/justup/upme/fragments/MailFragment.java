@@ -34,6 +34,7 @@ import me.justup.upme.utils.CommonUtils;
 
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_TABLE_NAME;
 import static me.justup.upme.utils.LogUtils.LOGE;
+import static me.justup.upme.utils.LogUtils.LOGI;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 
@@ -112,7 +113,14 @@ public class MailFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                LOGE(TAG, "onReceive mailFragment");
+                cursor = database.rawQuery(selectQuery, null);
+               // mMailContactsAdapter = new MailContactsAdapter(this, getActivity().getApplicationContext(), cursor, 0);
+            }
+        };
         LocalBroadcastManager.getInstance(MailFragment.this.getActivity())
                 .registerReceiver(receiver, new IntentFilter(DBAdapter.MAIL_SQL_BROADCAST_INTENT));
     }

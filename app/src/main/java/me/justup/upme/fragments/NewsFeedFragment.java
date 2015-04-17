@@ -266,7 +266,7 @@ public class NewsFeedFragment extends Fragment {
 
     public static ArticleFullQuery getFullDescriptionQuery(int id) {
         ArticleFullQuery query = new ArticleFullQuery();
-        query.params.id = id;
+      //  query.params.id = id;
         return query;
     }
 

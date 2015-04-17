@@ -63,7 +63,7 @@ public class NewsFeedFragmentNew extends Fragment {
     private FrameLayout mNewsItemContainer;
     private int lastChosenPosition = -1;
     private boolean isLoading = true;
-    private int pastVisibleItems, visibleItemCount, totalItemCount;
+    private int visibleItemCount, totalItemCount;
     private String selectQueryShortNews;
     private int from = 0;
     private int to = 10;
@@ -73,7 +73,8 @@ public class NewsFeedFragmentNew extends Fragment {
     private ArrayList<Integer> mReadNewsList;
     private SQLiteDatabase database;
     private GridLayout gridLayout;
-    private int column = 3;
+    private int columnLandscape = 3;
+    private int columnPortrait = 2;
     private int screenWidth;
     private LayoutInflater layoutInflater;
     private boolean isProgressBarShown = true;
@@ -135,11 +136,17 @@ public class NewsFeedFragmentNew extends Fragment {
                         if (mNewsFeedEntityPartOfList.size() < 10) {
                             mNewsFeedEntityPartOfList.addAll(getNextArticlesPack());
                         }
-                        int row = mNewsFeedEntityList.size() / column;
-                        gridLayout.setColumnCount(column);
-                        gridLayout.setRowCount(row + 1);
-                        updateView();
-
+                        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                            int row = mNewsFeedEntityList.size() / columnLandscape;
+                            gridLayout.setColumnCount(columnLandscape);
+                            gridLayout.setRowCount(row + 1);
+                            updateView(columnLandscape);
+                        } else {
+                            int row = mNewsFeedEntityList.size() / columnPortrait;
+                            gridLayout.setColumnCount(columnPortrait);
+                            gridLayout.setRowCount(row + 1);
+                            updateView(columnPortrait);
+                        }
                         if (cursorNews != null) {
                             cursorNews.close();
                         }
@@ -185,12 +192,20 @@ public class NewsFeedFragmentNew extends Fragment {
             mProgressBar.setVisibility(View.GONE);
         }
         if (mNewsFeedEntityList.size() > 0) {
-            int row = mNewsFeedEntityList.size() / column;
-            gridLayout.setColumnCount(column);
-            gridLayout.setRowCount(row + 1);
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                int row = mNewsFeedEntityList.size() / columnLandscape;
+                gridLayout.setColumnCount(columnLandscape);
+                gridLayout.setRowCount(row + 1);
+                updateView(columnLandscape);
+            } else {
+                int row = mNewsFeedEntityList.size() / columnPortrait;
+                gridLayout.setColumnCount(columnPortrait);
+                gridLayout.setRowCount(row + 1);
+                updateView(columnPortrait);
+            }
+
 
         }
-        updateView();
 
         InteractiveScrollView interactiveScrollView = (InteractiveScrollView) view.findViewById(R.id.interactiveScrollView);
         interactiveScrollView.setOnBottomReachedListener(
@@ -222,16 +237,16 @@ public class NewsFeedFragmentNew extends Fragment {
         return view;
     }
 
-    private void updateView() {
+    private void updateView(int columnNumber) {
         if (mNewsFeedEntityPartOfList != null && mNewsFeedEntityPartOfList.size() > 0) {
             for (int i = 0, c = 0, r = 0; i < mNewsFeedEntityPartOfList.size(); i++, c++) {
-                if (c == column) {
+                if (c == columnNumber) {
                     c = 0;
                     r++;
                 }
                 GridLayout.LayoutParams param = new GridLayout.LayoutParams();
                 param.height = LinearLayout.LayoutParams.WRAP_CONTENT;
-                param.width = (screenWidth / 3);
+                param.width = (screenWidth / columnNumber);
                 param.rightMargin = CommonUtils.convertDpToPixels(getActivity(), 30);
                 param.topMargin = CommonUtils.convertDpToPixels(getActivity(), 30);
                 param.columnSpec = GridLayout.spec(c);
@@ -327,7 +342,7 @@ public class NewsFeedFragmentNew extends Fragment {
 
     public ArticleFullQuery getFullDescriptionQuery(int id) {
         ArticleFullQuery query = new ArticleFullQuery();
-        query.params.id = id;
+        query.params.article_id = id;
         return query;
     }
 
@@ -361,7 +376,12 @@ public class NewsFeedFragmentNew extends Fragment {
         int oldSizeValue = mNewsFeedEntityPartOfList.size();
         mNewsFeedEntityPartOfList.clear();
         mNewsFeedEntityPartOfList.addAll(mNewsFeedEntityList.subList(0, oldSizeValue));
-        updateView();
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            updateView(columnLandscape);
+        } else {
+            updateView(columnPortrait);
+        }
+
     }
 
     @Override
@@ -370,7 +390,18 @@ public class NewsFeedFragmentNew extends Fragment {
         mProgressBar.setVisibility(View.GONE);
         gridLayout.removeAllViews();
         updateScreenWidth();
-        updateView();
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            int row = mNewsFeedEntityList.size() / columnLandscape;
+            gridLayout.setColumnCount(columnLandscape);
+            gridLayout.setRowCount(row + 1);
+            updateView(columnLandscape);
+        } else {
+            int row = mNewsFeedEntityList.size() / columnPortrait;
+            gridLayout.setColumnCount(columnPortrait);
+            gridLayout.setRowCount(row + 1);
+            updateView(columnPortrait);
+        }
+
     }
 
 
@@ -378,7 +409,12 @@ public class NewsFeedFragmentNew extends Fragment {
         Display display = getActivity().getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
-        screenWidth = size.x - CommonUtils.convertDpToPixels(getActivity(), 165);
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            screenWidth = size.x - CommonUtils.convertDpToPixels(getActivity(), 165);
+        } else {
+            screenWidth = size.x - CommonUtils.convertDpToPixels(getActivity(), 135);
+        }
+
     }
 
 }

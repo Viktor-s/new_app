@@ -1,18 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/base_background"
     android:clickable="true">
 
-    <TextView
+    <FrameLayout
+        android:id="@+id/youtube_player_container"
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:layout_alignParentStart="false"
+        android:layout_alignParentTop="false"
+        android:background="@android:color/white"
+  />
+
+    <Button
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="under construction"
-        android:textAllCaps="true"
-        android:textSize="@dimen/base28sp720sw"
-        android:paddingStart="@dimen/base20dp720sw"
-        android:paddingTop="@dimen/base5dp720sw"
-        android:drawablePadding="@dimen/base15dp720sw" />
-</LinearLayout>
+        android:text="youtube player"
+        android:id="@+id/youtube_player_button"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true" />
+
+</RelativeLayout>
