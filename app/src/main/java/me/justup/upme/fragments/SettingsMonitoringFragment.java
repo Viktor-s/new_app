@@ -9,9 +9,11 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
+import me.justup.upme.BuildConfig;
 import me.justup.upme.R;
 import me.justup.upme.services.ApplicationSupervisorService;
 import me.justup.upme.utils.AppPreferences;
+import me.justup.upme.utils.Constance;
 
 
 public class SettingsMonitoringFragment extends Fragment {
@@ -25,7 +27,12 @@ public class SettingsMonitoringFragment extends Fragment {
 
         CheckBox mOnOffMonitoring = (CheckBox) v.findViewById(R.id.monitoring_checkBox);
         mOnOffMonitoring.setChecked(mAppPreferences.isMonitoring());
-        mOnOffMonitoring.setOnCheckedChangeListener(new MonitoringListener());
+
+        if (BuildConfig.FLAVOR.equals(Constance.APP_FLAVOR_LAUNCHER)) {
+            mOnOffMonitoring.setVisibility(View.GONE);
+        }else{
+            mOnOffMonitoring.setOnCheckedChangeListener(new MonitoringListener());
+        }
 
         return v;
     }

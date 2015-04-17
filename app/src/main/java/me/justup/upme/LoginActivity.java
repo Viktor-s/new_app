@@ -27,6 +27,7 @@ import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.services.ApplicationSupervisorService;
 import me.justup.upme.services.StatusBarService;
 import me.justup.upme.utils.AppPreferences;
+import me.justup.upme.utils.Constance;
 import me.justup.upme.utils.ServerSwitcher;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
@@ -62,6 +63,17 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (BuildConfig.FLAVOR.equals(Constance.APP_FLAVOR_LAUNCHER)) {
+            View decorView = getWindow().getDecorView();
+            decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        }
+
         setContentView(R.layout.activity_login);
 
         mAppPreferences = new AppPreferences(JustUpApplication.getApplication().getApplicationContext());
@@ -155,8 +167,10 @@ public class LoginActivity extends BaseActivity {
         mLoginDebug.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                finish();
+                if(BuildConfig.FLAVOR.equals(Constance.APP_FLAVOR_APP)) {
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                    finish();
+                }
             }
         });
     }
@@ -367,7 +381,7 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (BuildConfig.FLAVOR.equals("app")) {
+        if (BuildConfig.FLAVOR.equals(Constance.APP_FLAVOR_APP)) {
             super.onBackPressed();
         }
     }

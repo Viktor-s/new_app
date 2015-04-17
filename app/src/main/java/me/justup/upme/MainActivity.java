@@ -60,6 +60,7 @@ import me.justup.upme.interfaces.OnLoadMailFragment;
 import me.justup.upme.services.GPSTracker;
 import me.justup.upme.utils.AppPreferences;
 import me.justup.upme.utils.CommonUtils;
+import me.justup.upme.utils.Constance;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.LOGE;
@@ -642,7 +643,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public void onBackPressed() {
-        if (BuildConfig.FLAVOR.equals("app")) {
+        if (BuildConfig.FLAVOR.equals(Constance.APP_FLAVOR_APP)) {
             super.onBackPressed();
         }
     }
