@@ -52,6 +52,8 @@ public class PushIntentService extends IntentService {
                 StringBuilder pushMessages = new StringBuilder();
 
                 if (response.result != null) {
+                    if (response.result.success) return;
+
                     if (response.result.error != null) {
                         for (PushQueryResponse.Result.PushError pushError : response.result.error) {
                             pushMessages.append(pushError.message).append("\n");

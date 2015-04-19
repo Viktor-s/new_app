@@ -1,7 +1,9 @@
 package me.justup.upme;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
@@ -60,6 +62,7 @@ public class LoginActivity extends BaseActivity {
     private Animation mNumberPanelFromTop;
 
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -167,7 +170,7 @@ public class LoginActivity extends BaseActivity {
         mLoginDebug.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(BuildConfig.FLAVOR.equals(Constance.APP_FLAVOR_APP)) {
+                if (BuildConfig.FLAVOR.equals(Constance.APP_FLAVOR_APP)) {
                     startActivity(new Intent(LoginActivity.this, MainActivity.class));
                     finish();
                 }
@@ -310,7 +313,7 @@ public class LoginActivity extends BaseActivity {
             }
 
             if (response != null && response.result != null) {
-                if (response.result.PHONE != null) {
+                if (response.result.success && response.result.token == null) {
                     mLoginPhonePanel.startAnimation(mNumberPanelDown);
                     mLoginPhonePanel.setVisibility(View.GONE);
 
