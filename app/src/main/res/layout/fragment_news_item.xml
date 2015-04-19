@@ -45,13 +45,15 @@
                 android:layout_marginBottom="@dimen/base20dp720sw"
                 android:textSize="@dimen/base21sp720sw"
                 android:textColor="@android:color/black"
-                android:textAllCaps="true" />
+                android:textAllCaps="true"
+                android:layout_marginLeft="@dimen/base18dp720sw" />
 
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/base50dp720sw"
-                android:layout_marginBottom="@dimen/base40dp720sw">
+                android:layout_height="@dimen/base70dp720sw"
+                android:layout_marginBottom="@dimen/base40dp720sw"
+                android:layout_marginLeft="@dimen/base18dp720sw">
 
                 <EditText
                     android:layout_width="@dimen/base250dp720sw"
@@ -59,22 +61,28 @@
                     android:id="@+id/news_item_comment_editText"
                     android:layout_marginRight="@dimen/base20dp720sw"
                     android:background="@drawable/news_item_comment_edittext_bg"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black"
+                    android:layout_weight="1"
+                    android:layout_gravity="top"/>
 
                 <Button
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="@dimen/base50dp720sw"
                     android:text="@string/news_item_add_comment_button"
                     android:id="@+id/news_item_button_add_comment"
                     android:textAllCaps="true"
                     android:background="@drawable/pay_panel_button_selector"
-                    android:padding="@dimen/base6dp720sw" />
+                    android:padding="@dimen/base6dp720sw"
+                    android:paddingLeft="@dimen/base10dp720sw"
+                    android:paddingRight="@dimen/base10dp720sw"
+                    android:layout_gravity="center_vertical" />
             </LinearLayout>
 
             <ListView
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/base50dp720sw"
-                android:id="@+id/news_item_comments_listView" />
+                android:id="@+id/news_item_comments_listView"
+                android:layout_marginLeft="@dimen/base55dp720sw" />
         </LinearLayout>
     </ScrollView>
 
