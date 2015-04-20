@@ -55,15 +55,20 @@
                 android:layout_marginRight="@dimen/base12dp720sw" />
 
             <EditText
-                android:layout_width="@dimen/base250dp720sw"
-                android:layout_height="@dimen/base40dp720sw"
+                android:layout_width="@dimen/base350dp720sw"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/base10dp720sw"
                 android:id="@+id/chatET"
                 android:inputType="textMultiLine"
                 android:singleLine="false"
                 android:layout_centerVertical="true"
+                android:background="@drawable/chat_edit_text"
                 android:layout_toEndOf="@+id/button12"
                 android:textColor="@color/black"
-                android:background="@color/white" />
+                tools:ignore="LabelFor">
+
+                <requestFocus />
+            </EditText>
 
             <Button
                 android:layout_width="@dimen/base40dp720sw"
