@@ -592,6 +592,8 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
     }
 
     private void CreateLayoutForNewEvent(Calendar time) {
+        mCalendartypesSpinner.setVisibility(View.VISIBLE);
+
         isEventNeedUpdate = false;
         addNewEventButton.setText("Добавить");
         startTimeEvent = time;
@@ -644,7 +646,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                 firstDayCurrentWeek = firstDayCurrentWeek.plusDays(Calendar.DAY_OF_WEEK);
                 LOGD("TAG1", "------ previous_week_button " + firstDayCurrentWeek.toString());
                 mWeekView.goToDate(firstDayCurrentWeek.toDateTime(DateTimeZone.getDefault()).toGregorianCalendar());
-                selectWeekTextView.setText(Integer.toString(currentWeek == 52 ? currentWeek = 1 : ++currentWeek) + getResources().getString(R.string.week));
+                selectWeekTextView.setText(Integer.toString(firstDayCurrentWeek.getWeekOfWeekyear()) + getResources().getString(R.string.week));
                 String strMonthYearNext = String.format("%s %d", months[firstDayCurrentWeek.getMonthOfYear() - 1], firstDayCurrentWeek.getYear());
                 selectMonthTextView.setText(strMonthYearNext);
                 listEventsForWeek(firstDayCurrentWeek);
@@ -710,12 +712,12 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
 
                 } else {
                     addNewEventButton.setText("Обновить");
-
+                    mCalendartypesSpinner.setVisibility(View.GONE);
                     CalendarUpdateEventQuery calendarUpdateEventQuery = new CalendarUpdateEventQuery();
                     calendarUpdateEventQuery.params.id = currentEventId;
                     calendarUpdateEventQuery.params.name = CommonUtils.convertToUTF8(eventName);
                     calendarUpdateEventQuery.params.description = CommonUtils.convertToUTF8(eventDescription);
-                    calendarUpdateEventQuery.params.type = mCalendartypesSpinner.getSelectedItem().toString();
+//                    calendarUpdateEventQuery.params.type = mCalendartypesSpinner.getSelectedItem().toString();
                     calendarUpdateEventQuery.params.location = CommonUtils.convertToUTF8(eventLocation);
                     calendarUpdateEventQuery.params.start = String.valueOf(startTimeEvent.getTimeInMillis() / 1000);
                     calendarUpdateEventQuery.params.end = String.valueOf(endTimeEvent.getTimeInMillis() / 1000);

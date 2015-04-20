@@ -66,7 +66,7 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
     private static final int REMOTE_WIDTH = 100;
     private static final int REMOTE_HEIGHT = 100;
 
-    private static final int TIMER = 15000;
+    private static final int TIMER = 30000;
     private volatile boolean callAccepted = true;
 
     private PeerConnectionClient peerConnectionClient = null;
@@ -482,6 +482,7 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
         }
 
         ((MainActivity) getActivity()).clearDataAfterCallRTC();
+        getActivity().findViewById(R.id.container_video_chat).setVisibility(View.GONE);
     }
 
     private void disconnectWithErrorMessage(final String errorMessage) {

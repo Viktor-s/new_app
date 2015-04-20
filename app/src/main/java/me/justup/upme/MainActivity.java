@@ -626,9 +626,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     public void prepareAndCallRTC(Object roomId, Boolean loopback, Boolean commandLineRun, int runTimeMs, int idPerson, String contactName) {
         final Bundle callParam = JustUpApplication.getApplication().prepareCallParam(roomId.getClass().equals(String.class) ? (String) roomId : String.valueOf(roomId), loopback, commandLineRun, runTimeMs, idPerson, contactName);
-
+        findViewById(R.id.container_video_chat).setVisibility(View.VISIBLE);
         mWebRtcFragment = WebRtcFragment.newInstance(callParam);
-
         getFragmentManager().beginTransaction().replace(R.id.container_video_chat, mWebRtcFragment).commit();
     }
 

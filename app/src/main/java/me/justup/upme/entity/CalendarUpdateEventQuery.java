@@ -14,7 +14,7 @@ public class CalendarUpdateEventQuery extends BaseHttpQueryEntity {
         public long id;
         public String name;
         public String description;
-        public String type;
+//        public String type;
         public String location;
         public String start;
         public String end;
@@ -26,7 +26,7 @@ public class CalendarUpdateEventQuery extends BaseHttpQueryEntity {
                     "id=" + id +
                     ", name='" + name + '\'' +
                     ", description='" + description + '\'' +
-                    ", type='" + type + '\'' +
+//                    ", type='" + type + '\'' +
                     ", location='" + location + '\'' +
                     ", start='" + start + '\'' +
                     ", end='" + end + '\'' +
