@@ -48,8 +48,10 @@ public class BreakCallDialog extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         Fragment videoFragment = getFragmentManager().findFragmentById(R.id.container_video_chat);
-                        if (videoFragment != null)
+                        if (videoFragment != null) {
+                            getActivity().findViewById(R.id.container_video_chat).setVisibility(View.VISIBLE);
                             getFragmentManager().beginTransaction().remove(videoFragment).commit();
+                        }
                         dialog.dismiss();
                     }
                 });
