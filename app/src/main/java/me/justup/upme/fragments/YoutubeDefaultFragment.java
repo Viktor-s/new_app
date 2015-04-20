@@ -4,15 +4,16 @@ import android.os.Bundle;
 
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerFragment;
 
-public class YouTubePlayerFragment extends com.google.android.youtube.player.YouTubePlayerFragment {
+public class YoutubeDefaultFragment  extends com.google.android.youtube.player.YouTubePlayerFragment {
 
-    public YouTubePlayerFragment() {
+    public YoutubeDefaultFragment() {
     }
 
-    public static YouTubePlayerFragment newInstance(String url) {
+    public static YoutubeDefaultFragment newInstance(String url) {
 
-        YouTubePlayerFragment f = new YouTubePlayerFragment();
+        YoutubeDefaultFragment f = new YoutubeDefaultFragment();
 
         Bundle b = new Bundle();
         b.putString("url", url);

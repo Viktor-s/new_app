@@ -285,9 +285,18 @@
     <string name="web_browser">Веб-браузер</string>
     <string name="file_explorer">Диспетчер файлов</string>
     <string name="contacts">Контакты</string>
+    <string name="study">Обучение</string>
     <string name="pin_code_limit">Превышен лимит ввода\nPIN кода!</string>
     <string name="file_loaded">Файл открыт</string>
 
 
     <string name="error_player">There was an error initializing the YouTubePlayer (%1$s)</string>
+    <string name="play">Play</string>
+    <string name="pause">Pause</string>
+    <string name="skip_to">Skip To</string>
+    <string name="seconds">secs</string>
+    <string name="player_style">Player Style</string>
+    <string name="def">Default</string>
+    <string name="minimal">Minimal</string>
+    <string name="chromeless">Chromeless</string>
 </resources>
