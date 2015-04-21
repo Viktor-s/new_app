@@ -7,6 +7,7 @@ public class PushQueryResponse extends BaseHttpResponseEntity {
     public Result result = new Result();
 
     public class Result extends BaseHttpParams {
+        public boolean success;
         public ArrayList<PushError> error;
 
         public class PushError extends BaseHttpParams {

@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:clickable="true">
 
     <LinearLayout
+        android:id="@+id/documents_action_bar"
         style="@style/ActionBarStyle"
         android:orientation="horizontal">
 
@@ -18,68 +19,33 @@
             android:text="@string/file_explorer" />
     </LinearLayout>
 
-    <LinearLayout
+    <FrameLayout
+        android:id="@+id/documents_content"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:orientation="horizontal"
-        android:baselineAligned="false">
+        android:layout_below="@+id/documents_action_bar">
 
-        <LinearLayout
-            android:layout_width="0dp"
+        <ScrollView
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_weight="1">
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp">
 
-            <TextView
-                android:background="@color/local_drive_title"
-                android:text="@string/local_drive"
-                style="@style/FileExplorerTitle" />
-
-            <ScrollView
+            <TableLayout
+                android:id="@+id/files_panel"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
-                android:background="@color/base_background">
+                android:layout_height="wrap_content" />
+        </ScrollView>
+    </FrameLayout>
 
-                <TableLayout
-                    android:id="@+id/files_panel"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </ScrollView>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_weight="1">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:background="@color/cloud_drive_title"
-                    android:text="@string/cloud"
-                    style="@style/FileExplorerTitle" />
-
-                <ProgressBar
-                    style="?android:attr/progressBarStyle"
-                    android:layout_width="@dimen/base40dp720sw"
-                    android:layout_height="@dimen/base40dp720sw"
-                    android:layout_marginEnd="@dimen/base10dp720sw"
-                    android:id="@+id/explorer_progressBar"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentEnd="true"
-                    android:visibility="gone" />
-            </RelativeLayout>
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/cloud_explorer_fragment_container" />
-        </LinearLayout>
-    </LinearLayout>
-</LinearLayout>
-
+    <ProgressBar
+        style="?android:attr/progressBarStyle"
+        android:layout_width="@dimen/base40dp720sw"
+        android:layout_height="@dimen/base40dp720sw"
+        android:id="@+id/explorer_progressBar"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="400dp" />
+</RelativeLayout>

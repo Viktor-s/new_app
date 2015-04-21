@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
@@ -84,9 +83,6 @@ public class DocumentsFragment extends Fragment {
         mFileExplorer = (TableLayout) view.findViewById(R.id.files_panel);
         mProgressBar = (ProgressBar) view.findViewById(R.id.explorer_progressBar);
 
-        if (savedInstanceState == null)
-            getChildFragmentManager().beginTransaction().add(R.id.cloud_explorer_fragment_container, new CloudExplorerFragment()).commit();
-
         getLocalFileList();
 
         return view;
@@ -131,11 +127,15 @@ public class DocumentsFragment extends Fragment {
             type = DOC;
         }
 
+        ImageView mFileFavorite = (ImageView) item.findViewById(R.id.file_star_imageView);
         ImageView mFileImage = (ImageView) item.findViewById(R.id.file_image_imageView);
         TextView mFileName = (TextView) item.findViewById(R.id.file_name_textView);
         TextView mFileSize = (TextView) item.findViewById(R.id.file_size_textView);
+        TextView mFileDate = (TextView) item.findViewById(R.id.file_date_textView);
+        ImageView mFileInTablet = (ImageView) item.findViewById(R.id.file_tablet_imageView);
+        ImageView mFileInCloud = (ImageView) item.findViewById(R.id.file_cloud_imageView);
 
-        ImageButton mFileActionButton = (ImageButton) item.findViewById(R.id.file_action_button);
+        ImageView mFileActionButton = (ImageView) item.findViewById(R.id.file_action_button);
         mFileActionButton.setOnClickListener(new OnFileActionListener(filePath));
 
         if (type == IMAGE) {

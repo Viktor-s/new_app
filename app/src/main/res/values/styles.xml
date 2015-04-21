@@ -424,4 +424,26 @@
         <item name="android:background">@color/action_bar_background</item>
     </style>
 
+    <style name="DocumentsItemBaseStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_vertical</item>
+    </style>
+
+    <style name="DocumentsItemRightIconStyle" parent="DocumentsItemBaseStyle">
+        <item name="android:layout_marginEnd">@dimen/base25dp720sw</item>
+    </style>
+
+    <style name="DocumentsItemLeftIconStyle" parent="DocumentsItemBaseStyle">
+        <item name="android:layout_marginEnd">@dimen/base15dp720sw</item>
+    </style>
+
+    <style name="DocumentsItemTextStyle" parent="DocumentsItemBaseStyle">
+        <item name="android:layout_marginEnd">@dimen/base25dp720sw</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+        <item name="android:gravity">end</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
 </resources>
