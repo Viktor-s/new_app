@@ -278,7 +278,7 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
             }
 
             public void onFinish() {
-                if (callAccepted) {
+                if (!iceConnected) {
                     Toast.makeText(getActivity(), "Пользователь " + contactName + " не отвечет", Toast.LENGTH_SHORT).show();
                     disconnect();
                 }
@@ -315,7 +315,7 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
 //        if (logToast != null) {
 //            logToast.cancel();
 //        }
-//        
+//
 //        activityRunning = false;
 //    }
 
@@ -453,7 +453,7 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
 
     // Disconnect from remote resources, dispose of local resources, and exit.
     private void disconnect() {
-        callAccepted = false;
+//        callAccepted = false;
         stopSound();
 
         LOGI(TAG, "Disconnect()");
@@ -481,7 +481,7 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
             LOGE(TAG, "RESULT_CANCELED");
         }
 
-        ((MainActivity) getActivity()).clearDataAfterCallRTC();
+//        ((MainActivity) getActivity()).clearDataAfterCallRTC();
         getActivity().findViewById(R.id.container_video_chat).setVisibility(View.GONE);
     }
 
@@ -550,7 +550,7 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
             }
 
             if (params.iceCandidates != null) {
-                callAccepted = false;
+//                callAccepted = false;
                 // Add remote ICE candidates from room.
                 for (IceCandidate iceCandidate : params.iceCandidates) {
                     peerConnectionClient.addRemoteIceCandidate(iceCandidate);
