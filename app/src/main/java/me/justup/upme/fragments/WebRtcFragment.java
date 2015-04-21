@@ -486,8 +486,9 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
 
 //        ((MainActivity) getActivity()).clearDataAfterCallRTC();
         timerCall.cancel();
-        getActivity().getFragmentManager().beginTransaction().remove(this).commit();
         getActivity().findViewById(R.id.container_video_chat).setVisibility(View.GONE);
+        getActivity().getFragmentManager().beginTransaction().remove(this).commit();
+
     }
 
     private void disconnectWithErrorMessage(final String errorMessage) {
