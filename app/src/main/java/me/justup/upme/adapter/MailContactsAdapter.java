@@ -73,14 +73,10 @@ public class MailContactsAdapter extends CursorAdapter {
 
                     final int roomId = JustUpApplication.getApplication().getRandomNum();
 
-                    ((MainActivity) mParentFragment.getActivity()).prepareAndCallRTC(String.valueOf(roomId), false, false, 0, id, contactName);
+                    Fragment fragmentCall = mParentFragment.getActivity().getFragmentManager().findFragmentById(R.id.container_video_chat);
+                    if (fragmentCall == null)
+                        ((MainActivity) mParentFragment.getActivity()).prepareAndCallRTC(String.valueOf(roomId), false, false, 0, id, contactName);
 
-//                    handler.postDelayed(new Runnable() {
-//                        public void run() {
-//                            doStuff();
-//                        }
-//                    }, 5000);
-                    
 //                    startNotificationIntent(id, roomId);
                 }
             });

@@ -66,8 +66,9 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
     private static final int REMOTE_WIDTH = 100;
     private static final int REMOTE_HEIGHT = 100;
 
-    private static final int TIMER = 30000;
+    private static final int TIMER = 15000;
     private volatile boolean callAccepted = true;
+    private CountDownTimer timerCall;
 
     private PeerConnectionClient peerConnectionClient = null;
     private AppRTCClient appRtcClient = null;
@@ -273,7 +274,7 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
             }, runTimeMs);
         }
 
-        new CountDownTimer(TIMER, 1000) {
+        timerCall = new CountDownTimer(TIMER, 1000) {
             public void onTick(long millisUntilFinished) {
             }
 
@@ -284,6 +285,8 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
                 }
             }
         }.start();
+
+
     }
 
     @Override
@@ -482,6 +485,8 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
         }
 
 //        ((MainActivity) getActivity()).clearDataAfterCallRTC();
+        timerCall.cancel();
+        getActivity().getFragmentManager().beginTransaction().remove(this).commit();
         getActivity().findViewById(R.id.container_video_chat).setVisibility(View.GONE);
     }
 
