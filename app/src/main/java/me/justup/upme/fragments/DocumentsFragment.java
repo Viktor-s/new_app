@@ -19,6 +19,8 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import me.justup.upme.MainActivity;
 import me.justup.upme.R;
@@ -26,6 +28,7 @@ import me.justup.upme.dialogs.ViewImageDialog;
 import me.justup.upme.dialogs.ViewPDFDialog;
 import me.justup.upme.dialogs.ViewVideoDialog;
 import me.justup.upme.services.FileExplorerService;
+import me.justup.upme.utils.AppLocale;
 
 import static me.justup.upme.services.FileExplorerService.BROADCAST_EXTRA_ACTION_TYPE;
 import static me.justup.upme.services.FileExplorerService.DOWNLOAD;
@@ -36,8 +39,10 @@ import static me.justup.upme.services.FileExplorerService.UPLOAD;
 
 
 public class DocumentsFragment extends Fragment {
-    public static final String KB = "kB";
+    public static final String KB = " kB";
+    public static final String MB = " MB";
     public static final int SIZE_VALUE = 1024;
+    private static final String DATE_FORMAT = "dd MMMM yyyy, HH:mm";
 
     public static final int IMAGE = 1;
     public static final int DOC = 2;
@@ -60,6 +65,8 @@ public class DocumentsFragment extends Fragment {
             stopProgressBar();
         }
     };
+
+    private SimpleDateFormat mDateFormat = new SimpleDateFormat(DATE_FORMAT, AppLocale.getAppLocale());
 
 
     @Override
@@ -103,13 +110,13 @@ public class DocumentsFragment extends Fragment {
 
         for (File file : mDirList) {
             if (!file.isDirectory()) {
-                setFileItem(file.getName(), file.getAbsolutePath(), file.length());
+                setFileItem(file.getName(), file.getAbsolutePath(), file.length(), file.lastModified());
             }
         }
     }
 
     @SuppressLint("InflateParams")
-    private void setFileItem(final String fileName, final String filePath, final long fileLength) {
+    private void setFileItem(final String fileName, final String filePath, final long fileLength, final long fileDate) {
         final View item = mLayoutInflater.inflate(R.layout.item_documents_file, null);
 
         final boolean isImage = fileName.contains(".jpg") || fileName.contains(".jpeg") || fileName.contains(".png");
@@ -132,8 +139,14 @@ public class DocumentsFragment extends Fragment {
         TextView mFileName = (TextView) item.findViewById(R.id.file_name_textView);
         TextView mFileSize = (TextView) item.findViewById(R.id.file_size_textView);
         TextView mFileDate = (TextView) item.findViewById(R.id.file_date_textView);
+
         ImageView mFileInTablet = (ImageView) item.findViewById(R.id.file_tablet_imageView);
+        // set: If is not in tablet
+        mFileInTablet.setOnClickListener(new OnGetFileListener());
+
         ImageView mFileInCloud = (ImageView) item.findViewById(R.id.file_cloud_imageView);
+        // set: If is not in cloud
+        mFileInCloud.setOnClickListener(new OnSendFileListener());
 
         ImageView mFileActionButton = (ImageView) item.findViewById(R.id.file_action_button);
         mFileActionButton.setOnClickListener(new OnFileActionListener(filePath));
@@ -147,8 +160,14 @@ public class DocumentsFragment extends Fragment {
         if (type == VIDEO) {
             mFileImage.setImageResource(R.drawable.ic_file_video);
         }
+
         mFileName.setText(fileName);
-        mFileSize.setText((fileLength / SIZE_VALUE) + KB);
+
+        String fileSize = (fileLength / SIZE_VALUE) < SIZE_VALUE ?
+                (fileLength / SIZE_VALUE) + KB : (fileLength / SIZE_VALUE / SIZE_VALUE) + MB;
+        mFileSize.setText(fileSize);
+
+        mFileDate.setText(mDateFormat.format(new Date(fileDate)));
 
         mFileImage.setOnClickListener(new OnOpenFileListener(fileName, filePath, type));
         mFileName.setOnClickListener(new OnOpenFileListener(fileName, filePath, type));
@@ -263,6 +282,20 @@ public class DocumentsFragment extends Fragment {
 
     public void setShareFileName(String shareFileName) {
         mShareFileName = shareFileName;
+    }
+
+    private class OnSendFileListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            //
+        }
+    }
+
+    private class OnGetFileListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            //
+        }
     }
 
 }
