@@ -259,7 +259,7 @@ public class RoomParametersFetcher {
         Log.d(TAG, "Request TURN from: " + url);
         URLConnection connection = (new URL(url)).openConnection();
         connection.addRequestProperty("user-agent", "Mozilla/5.0");
-        connection.addRequestProperty("origin", "https://apprtc.appspot.com");
+        connection.addRequestProperty("origin", "http://95.213.170.164:8080");
         String response = drainStream(connection.getInputStream());
         Log.d(TAG, "TURN response: " + response);
         JSONObject responseJSON = new JSONObject(response);
