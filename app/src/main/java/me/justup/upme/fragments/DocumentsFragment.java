@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,8 +20,14 @@ import android.widget.ProgressBar;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
+import com.google.gson.JsonSyntaxException;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+
+import org.apache.http.Header;
+
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import me.justup.upme.MainActivity;
@@ -27,6 +35,10 @@ import me.justup.upme.R;
 import me.justup.upme.dialogs.ViewImageDialog;
 import me.justup.upme.dialogs.ViewPDFDialog;
 import me.justup.upme.dialogs.ViewVideoDialog;
+import me.justup.upme.entity.BaseMethodEmptyQuery;
+import me.justup.upme.entity.FileEntity;
+import me.justup.upme.entity.FileGetAllResponse;
+import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.services.FileExplorerService;
 import me.justup.upme.utils.AppLocale;
 
@@ -36,9 +48,14 @@ import static me.justup.upme.services.FileExplorerService.EXPLORER_SERVICE_ACTIO
 import static me.justup.upme.services.FileExplorerService.EXPLORER_SERVICE_FILE_PATH;
 import static me.justup.upme.services.FileExplorerService.FILE_ACTION_DONE_BROADCAST;
 import static me.justup.upme.services.FileExplorerService.UPLOAD;
+import static me.justup.upme.utils.LogUtils.LOGD;
+import static me.justup.upme.utils.LogUtils.LOGE;
+import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 
 public class DocumentsFragment extends Fragment {
+    private static final String TAG = makeLogTag(DocumentsFragment.class);
+
     public static final String KB = " kB";
     public static final String MB = " MB";
     public static final int SIZE_VALUE = 1024;
@@ -67,6 +84,7 @@ public class DocumentsFragment extends Fragment {
     };
 
     private SimpleDateFormat mDateFormat = new SimpleDateFormat(DATE_FORMAT, AppLocale.getAppLocale());
+    private static FileListHandler mFileListHandler = new FileListHandler();
 
 
     @Override
@@ -91,6 +109,8 @@ public class DocumentsFragment extends Fragment {
         mProgressBar = (ProgressBar) view.findViewById(R.id.explorer_progressBar);
 
         getLocalFileList();
+
+        new GetTotalFileList().start();
 
         return view;
     }
@@ -295,6 +315,112 @@ public class DocumentsFragment extends Fragment {
         @Override
         public void onClick(View v) {
             //
+        }
+    }
+
+    private static class GetTotalFileList extends Thread {
+        private ArrayList<FileEntity> mLocalFileList = new ArrayList<>();
+        private ArrayList<FileEntity> mCloudFileList = new ArrayList<>();
+        private ArrayList<FileEntity> mShareFileList = new ArrayList<>();
+
+        private boolean isListOk = false;
+        private int stage = 0;
+
+        @Override
+        public void run() {
+            if (!isListOk) {
+                getLocalFileList();
+            }
+        }
+
+        private void getLocalFileList() {
+            File mStorageDirectory = Environment.getExternalStorageDirectory();
+            File[] mDirList = mStorageDirectory.listFiles();
+
+            for (File file : mDirList) {
+                if (!file.isDirectory()) {
+                    mLocalFileList.add(
+                            new FileEntity(false, file.getName(), file.getAbsolutePath(), file.length(), file.lastModified(), null, FileEntity.LOCAL_FILE));
+                }
+            }
+
+            getCloudFileList();
+        }
+
+        private void getCloudFileList() {
+            fileQuery(ApiWrapper.FILE_GET_MY_FILES);
+        }
+
+        private void getShareFileList() {
+            fileQuery(ApiWrapper.FILE_GET_ALL_SHARED_WITH_ME);
+        }
+
+        private void fileQuery(String apiMethod) {
+            BaseMethodEmptyQuery query = new BaseMethodEmptyQuery();
+            query.method = apiMethod;
+
+            ApiWrapper.syncQuery(query, new GetFilesResponse());
+        }
+
+        private class GetFilesResponse extends AsyncHttpResponseHandler {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                String content = ApiWrapper.responseBodyToString(responseBody);
+                LOGD(TAG, "onSuccess(): " + content);
+
+                FileGetAllResponse response = null;
+                try {
+                    response = ApiWrapper.gson.fromJson(content, FileGetAllResponse.class);
+                } catch (JsonSyntaxException e) {
+                    LOGE(TAG, "gson.fromJson:\n" + content);
+                }
+
+                if (response != null && response.result != null) {
+                    if (stage == 0) {
+                        stage++;
+
+                        fillArray(response, mCloudFileList, FileEntity.CLOUD_FILE);
+
+                        getShareFileList();
+                    }
+                    if (stage == 1) {
+                        stage++;
+
+                        fillArray(response, mShareFileList, FileEntity.SHARE_FILE);
+
+                        sortArrays();
+                        mFileListHandler.sendEmptyMessage(0);
+
+                        isListOk = true;
+                    }
+                }
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                String content = ApiWrapper.responseBodyToString(responseBody);
+                LOGE(TAG, "onFailure(): " + content);
+
+                isListOk = true;
+            }
+
+            private void fillArray(FileGetAllResponse response, ArrayList<FileEntity> arrayList, int type) {
+                for (FileGetAllResponse.Result file : response.result) {
+                    arrayList.add(new FileEntity(true, file.origin_name, null, file.size, 0, file.hash_name, type));
+                }
+            }
+
+            private void sortArrays() {
+                // sort
+            }
+        }
+    }
+
+    private static class FileListHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            // handle
         }
     }
 
