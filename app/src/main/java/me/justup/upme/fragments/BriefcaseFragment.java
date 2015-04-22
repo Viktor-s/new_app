@@ -79,7 +79,7 @@ public class BriefcaseFragment extends Fragment {
             database = DBAdapter.getInstance().openDatabase();
         }
         selectQuery = "SELECT * FROM " + MAIL_CONTACT_TABLE_NAME;
-        cursor = database.rawQuery(selectQuery, null);
+
         userId = new AppPreferences(getActivity()).getUserId();
 
     }
@@ -102,6 +102,7 @@ public class BriefcaseFragment extends Fragment {
 
     @Override
     public void onDestroy() {
+        cursor.close();
         DBAdapter.getInstance().closeDatabase();
         super.onDestroy();
     }
@@ -112,7 +113,7 @@ public class BriefcaseFragment extends Fragment {
         receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                LOGI(TAG, "onReceive briefcase");
+                LOGE("pavel", "onReceive briefcase");
                 updatePersonsList();
                 containerLayout.removeAllViews();
                 containerLayout.addView(levelGenerate(photoLayout, listPerson));
@@ -202,16 +203,10 @@ public class BriefcaseFragment extends Fragment {
 
 
     private void updatePersonsList() {
-        if (listPerson != null) {
-            mUserContactsCountTextView.setText(listPerson.size() - 1 + " " + "people in your network");
-        }
-
-        if (listPerson == null) {
-            listPerson = fillPersonsFromCursor(cursor);
-            mUserContactsCountTextView.setText(listPerson.size() - 1 + " " + "people in your network");
-            LOGI(TAG, listPerson.toString());
-            cursor.close();
-        }
+        cursor = database.rawQuery(selectQuery, null);
+        listPerson = fillPersonsFromCursor(cursor);
+        mUserContactsCountTextView.setText(listPerson.size() - 1 + " " + "people in your network");
+        LOGI(TAG, listPerson.toString());
     }
 
     private ImageView createDirection(int resId) {
@@ -360,7 +355,7 @@ public class BriefcaseFragment extends Fragment {
                     int idPersonal = Integer.parseInt(itemId.getText().toString());
                     LOGI(TAG, "id personal " + idPersonal);
                     GetAccountPanelInfoQuery getLoggedUserInfoQuery = new GetAccountPanelInfoQuery();
-                    getLoggedUserInfoQuery.params.id = idPersonal;
+                    getLoggedUserInfoQuery.params.user_id = idPersonal;
                     Animation mFragmentSliderFadeIn = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.fragment_item_slide_fade_in);
                     mFragmentSliderFadeIn.setAnimationListener(new Animation.AnimationListener() {
                         @Override

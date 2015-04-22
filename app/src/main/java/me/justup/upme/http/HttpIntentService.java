@@ -17,10 +17,10 @@ import me.justup.upme.db.DBAdapter;
 import me.justup.upme.entity.ArticleFullResponse;
 import me.justup.upme.entity.ArticlesGetShortDescriptionResponse;
 import me.justup.upme.entity.BaseHttpQueryEntity;
+import me.justup.upme.entity.BaseMethodEmptyQuery;
 import me.justup.upme.entity.CalendarGetEventsResponse;
 import me.justup.upme.entity.CommentsArticleFullResponse;
 import me.justup.upme.entity.GetAllContactsResponse;
-import me.justup.upme.entity.GetMailContactQuery;
 import me.justup.upme.entity.GetProductHtmlByIdResponse;
 import me.justup.upme.entity.ProductsGetAllCategoriesResponse;
 import me.justup.upme.fragments.CalendarFragment;
@@ -123,7 +123,9 @@ public class HttpIntentService extends IntentService {
                     break;
 
                 case ADD_REFERAL:
-                    startHttpIntent(new GetMailContactQuery(), HttpIntentService.MAIL_CONTACT_PART);
+                    BaseMethodEmptyQuery query = new BaseMethodEmptyQuery();
+                    query.method = ApiWrapper.ACCOUNT_GET_ALL_CONTACTS;
+                    startHttpIntent(query, HttpIntentService.MAIL_CONTACT_PART);
                     break;
 
                 case CALENDAR_PART:
@@ -359,6 +361,7 @@ public class HttpIntentService extends IntentService {
                 DBAdapter.getInstance().saveContactsArray(allUsers);
             }
         }
+        //  DBAdapter.getInstance().sendBroadcast(DBAdapter.MAIL_SQL_BROADCAST_INTENT);
     }
 
 
