@@ -38,7 +38,7 @@
         style="@style/DocumentsItemTextStyle" />
 
     <TextView
-        android:text="23 февраля 2015, 11:05"
+        tools:text="23 февраля 2015, 11:05"
         android:id="@+id/file_date_textView"
         style="@style/DocumentsItemTextStyle" />
 
@@ -53,7 +53,7 @@
         style="@style/DocumentsItemRightIconStyle" />
 
     <ImageView
-        android:src="@drawable/ic_file_cloud"
+        android:src="@drawable/ic_file_cloud_gray"
         android:id="@+id/file_cloud_imageView"
         style="@style/DocumentsItemBaseStyle" />
 </TableRow>

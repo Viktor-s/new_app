@@ -185,7 +185,7 @@ public class CloudExplorerFragment extends Fragment {
         TextView mFileName = (TextView) item.findViewById(R.id.file_name_textView);
         TextView mFileSize = (TextView) item.findViewById(R.id.file_size_textView);
 
-        ImageButton mFileActionButton = (ImageButton) item.findViewById(R.id.file_action_button);
+        ImageView mFileActionButton = (ImageView) item.findViewById(R.id.file_action_button);
         mFileActionButton.setOnClickListener(new OnFileActionListener(parentLayout, fileHash, fileName));
 
         if (type == IMAGE) {
