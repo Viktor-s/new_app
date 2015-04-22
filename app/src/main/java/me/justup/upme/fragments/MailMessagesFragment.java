@@ -406,7 +406,7 @@ public class MailMessagesFragment extends Fragment {
     }
 
     private Spanned splitName(String fullName, String text) {
-        String[] parts = fullName.split(AT);
+        String[] parts = (fullName != null) ? fullName.split(AT) : new String[]{"unknown"};
 
         mChatLineBuilder.setLength(0);
         String user = parts[0];

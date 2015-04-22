@@ -143,7 +143,7 @@ android {
             targetSdkVersion 21
             testInstrumentationRunner 'android.test.InstrumentationTestRunner'
             versionCode 1
-            versionName '0.23'
+            versionName '0.24'
             signingConfig signingConfigs.release
 
             applicationVariants.all { variant ->

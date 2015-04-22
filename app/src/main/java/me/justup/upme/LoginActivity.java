@@ -61,6 +61,9 @@ public class LoginActivity extends BaseActivity {
     private Animation mNumberPanelDown;
     private Animation mNumberPanelFromTop;
 
+    private Button mPhoneLoginButton;
+    private Button mPinLoginButton;
+
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
     @Override
@@ -90,10 +93,10 @@ public class LoginActivity extends BaseActivity {
         mPinCodeField = (TextView) findViewById(R.id.pin_number_textView);
         mPinCodeLimit = (TextView) findViewById(R.id.pin_code_limit_textView);
 
-        Button mPhoneLoginButton = (Button) findViewById(R.id.login_button);
+        mPhoneLoginButton = (Button) findViewById(R.id.login_button);
         mPhoneLoginButton.setOnClickListener(new OnLoginPhoneListener());
 
-        Button mPinLoginButton = (Button) findViewById(R.id.login_pin_button);
+        mPinLoginButton = (Button) findViewById(R.id.login_pin_button);
         mPinLoginButton.setOnClickListener(new OnLoginPinCodeListener());
 
         mNumberPanelDown = AnimationUtils.loadAnimation(this, R.anim.login_number_panel_down);
@@ -269,6 +272,8 @@ public class LoginActivity extends BaseActivity {
             mPhoneNumber = mPhoneField.getText().toString();
 
             if (mPhoneNumber.length() > minPhoneNumberLength) {
+                mPhoneLoginButton.setEnabled(false);
+
                 LoginPhoneQueryEntity mQueryLoginEntity = new LoginPhoneQueryEntity();
                 mQueryLoginEntity.params.phone = mPhoneNumber;
 
@@ -285,6 +290,8 @@ public class LoginActivity extends BaseActivity {
             String mPinNumber = mPinCodeField.getText().toString();
 
             if (mPinNumber.length() == pinNumberLength) {
+                mPinLoginButton.setEnabled(false);
+
                 LoginPinCodeQueryEntity mLoginPinCodeQueryEntity = new LoginPinCodeQueryEntity();
                 mLoginPinCodeQueryEntity.params.phone = mPhoneNumber;
                 mLoginPinCodeQueryEntity.params.code = mPinNumber;
@@ -342,6 +349,8 @@ public class LoginActivity extends BaseActivity {
                     }
                 }
 
+                mPhoneLoginButton.setEnabled(true);
+                mPinLoginButton.setEnabled(true);
                 showPinError();
             }
         }
@@ -350,6 +359,9 @@ public class LoginActivity extends BaseActivity {
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
             String content = ApiWrapper.responseBodyToString(responseBody);
             LOGE(TAG, "onFailure(): " + content);
+
+            mPhoneLoginButton.setEnabled(true);
+            mPinLoginButton.setEnabled(true);
 
             try {
                 showWarningDialog(ApiWrapper.getResponseError(content));
