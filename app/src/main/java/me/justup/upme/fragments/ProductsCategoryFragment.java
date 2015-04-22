@@ -7,19 +7,15 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.Display;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
-
-import java.util.List;
 
 import me.justup.upme.R;
 import me.justup.upme.entity.BaseHttpQueryEntity;
@@ -102,7 +98,7 @@ public class ProductsCategoryFragment extends Fragment {
             idGroupProduct.setText(Integer.toString(productsCategoryBrandEntiti.getProductEntityList().get(i).getId()));
             ImageView groupProductPhoto = (ImageView) categoryProductLayout.findViewById(R.id.grid_row_imageView);
             String imagePath = (productsCategoryBrandEntiti.getProductEntityList().get(i).getImage() != null && productsCategoryBrandEntiti.getProductEntityList().get(i).getImage().length() > 1) ? productsCategoryBrandEntiti.getProductEntityList().get(i).getImage() : "fake";
-            Picasso.with(getActivity()).load(imagePath).placeholder(R.drawable.ic_launcher).fit().into(groupProductPhoto);
+            Picasso.with(getActivity()).load(imagePath).placeholder(R.color.white).fit().into(groupProductPhoto);
             TextView categoryProductTitle = (TextView) categoryProductLayout.findViewById(R.id.grid_row_name_extView);
             categoryProductTitle.setText(productsCategoryBrandEntiti.getProductEntityList().get(i).getName());
             TextView categoryProductDescr = (TextView) categoryProductLayout.findViewById(R.id.grid_row_description_textView);

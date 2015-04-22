@@ -257,7 +257,7 @@ public class NewsFeedFragmentNew extends Fragment {
                 shortNewsId.setText(Integer.toString(mNewsFeedEntityPartOfList.get(i).getId()));
                 ImageView shortNewsImage = (ImageView) shortNewsLayout.findViewById(R.id.grid_row_imageView);
                 String imagePath = (mNewsFeedEntityPartOfList.get(i).getThumbnail() != null && mNewsFeedEntityPartOfList.get(i).getThumbnail().length() > 1) ? mNewsFeedEntityPartOfList.get(i).getThumbnail() : "fake";
-                Picasso.with(getActivity()).load(imagePath).placeholder(R.drawable.ic_launcher).fit().centerCrop().into(shortNewsImage);
+                Picasso.with(getActivity()).load(imagePath).placeholder(R.color.white).fit().centerCrop().into(shortNewsImage);
                 TextView shortNewsDate = (TextView) shortNewsLayout.findViewById(R.id.grid_row_date_textView);
                 TextView shortNewsCommentsLenght = (TextView) shortNewsLayout.findViewById(R.id.grid_row_comments_lenght_textView);
                 shortNewsDate.setText(mNewsFeedEntityPartOfList.get(i).getPosted_at());

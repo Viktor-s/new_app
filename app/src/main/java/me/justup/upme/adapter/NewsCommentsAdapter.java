@@ -47,8 +47,8 @@ public class NewsCommentsAdapter extends ArrayAdapter<ArticleShortCommentEntity>
         }
         String imagePath = (newsCommentEntity.getAuthor_img() != null && newsCommentEntity.getAuthor_img().length() > 1) ? newsCommentEntity.getAuthor_img() : "fake";
         Picasso.with(context).load(imagePath).placeholder(R.drawable.ic_launcher).into(viewHolder.mImageView);
-        //viewHolder.mTitle.setText(newsCommentEntity.getAuthor_name() + " " + newsCommentEntity.getPosted_at());
-        viewHolder.mTitle.setText(newsCommentEntity.getAuthor_name() );
+        viewHolder.mTitle.setText(newsCommentEntity.getAuthor_name() + " " + newsCommentEntity.getPosted_at());
+       // viewHolder.mTitle.setText(newsCommentEntity.getAuthor_name() );
         viewHolder.mMainText.setText(newsCommentEntity.getContent());
         return convertView;
     }

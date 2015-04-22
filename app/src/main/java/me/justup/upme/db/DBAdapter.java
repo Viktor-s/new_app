@@ -80,6 +80,7 @@ import static me.justup.upme.db.DBHelper.SHORT_NEWS_COMMENTS_AUTHOR_ID;
 import static me.justup.upme.db.DBHelper.SHORT_NEWS_COMMENTS_AUTHOR_IMAGE;
 import static me.justup.upme.db.DBHelper.SHORT_NEWS_COMMENTS_AUTHOR_NAME;
 import static me.justup.upme.db.DBHelper.SHORT_NEWS_COMMENTS_CONTENT;
+import static me.justup.upme.db.DBHelper.SHORT_NEWS_COMMENTS_POSTED_AT;
 import static me.justup.upme.db.DBHelper.SHORT_NEWS_COMMENTS_SERVER_ID;
 import static me.justup.upme.db.DBHelper.SHORT_NEWS_COMMENTS_TABLE_NAME;
 import static me.justup.upme.db.DBHelper.SHORT_NEWS_POSTED_AT;
@@ -205,6 +206,7 @@ public class DBAdapter {
                 valuesComments.put(SHORT_NEWS_COMMENTS_AUTHOR_ID, entity.result.get(i).comments.get(j).author_id);
                 valuesComments.put(SHORT_NEWS_COMMENTS_AUTHOR_NAME, entity.result.get(i).comments.get(j).author.name);
                 valuesComments.put(SHORT_NEWS_COMMENTS_AUTHOR_IMAGE, entity.result.get(i).comments.get(j).author.img);
+                valuesComments.put(SHORT_NEWS_COMMENTS_POSTED_AT, entity.result.get(i).comments.get(j).posted_at);
                 database.insertWithOnConflict(SHORT_NEWS_COMMENTS_TABLE_NAME, null, valuesComments, SQLiteDatabase.CONFLICT_REPLACE);
             }
             database.insertWithOnConflict(SHORT_NEWS_TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
@@ -237,6 +239,7 @@ public class DBAdapter {
             valuesComments.put(SHORT_NEWS_COMMENTS_AUTHOR_ID, entity.result.comments.get(j).author_id);
             valuesComments.put(SHORT_NEWS_COMMENTS_AUTHOR_NAME, entity.result.comments.get(j).author.name);
             valuesComments.put(SHORT_NEWS_COMMENTS_AUTHOR_IMAGE, entity.result.comments.get(j).author.img);
+            valuesComments.put(SHORT_NEWS_COMMENTS_POSTED_AT, entity.result.comments.get(j).posted_at);
             database.insertWithOnConflict(SHORT_NEWS_COMMENTS_TABLE_NAME, null, valuesComments, SQLiteDatabase.CONFLICT_REPLACE);
         }
         database.insertWithOnConflict(FULL_NEWS_TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);

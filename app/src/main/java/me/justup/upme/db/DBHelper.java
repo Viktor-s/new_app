@@ -8,7 +8,7 @@ import android.provider.BaseColumns;
 
 public class DBHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "upme.db";
-    private static final int DATABASE_VERSION = 18;
+    private static final int DATABASE_VERSION = 19;
 
     public static final String BASE_TABLE_NAME = "base_table";
     public static final String BASE_ID = BaseColumns._ID;
@@ -38,6 +38,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String SHORT_NEWS_COMMENTS_AUTHOR_ID = "author_id";
     public static final String SHORT_NEWS_COMMENTS_AUTHOR_NAME = "author_name";
     public static final String SHORT_NEWS_COMMENTS_AUTHOR_IMAGE = "author_image";
+    public static final String SHORT_NEWS_COMMENTS_POSTED_AT = "posted_at";
 
     public static final String IS_SHORT_NEWS_READ_TABLE_NAME = "is_short_news_read_table";
     public static final String IS_SHORT_NEWS_READ_ID = BaseColumns._ID;
@@ -144,6 +145,7 @@ public class DBHelper extends SQLiteOpenHelper {
             + SHORT_NEWS_COMMENTS_AUTHOR_ID + " INTEGER, "
             + SHORT_NEWS_COMMENTS_AUTHOR_NAME + " TEXT, "
             + SHORT_NEWS_COMMENTS_AUTHOR_IMAGE + " TEXT, "
+            + SHORT_NEWS_COMMENTS_POSTED_AT + " TEXT, "
             + SHORT_NEWS_IS_READED + " INTEGER" + ")";
 
 

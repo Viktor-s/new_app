@@ -11,12 +11,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.webkit.WebChromeClient;
@@ -59,6 +57,7 @@ import static me.justup.upme.db.DBHelper.SHORT_NEWS_COMMENTS_AUTHOR_ID;
 import static me.justup.upme.db.DBHelper.SHORT_NEWS_COMMENTS_AUTHOR_IMAGE;
 import static me.justup.upme.db.DBHelper.SHORT_NEWS_COMMENTS_AUTHOR_NAME;
 import static me.justup.upme.db.DBHelper.SHORT_NEWS_COMMENTS_CONTENT;
+import static me.justup.upme.db.DBHelper.SHORT_NEWS_COMMENTS_POSTED_AT;
 import static me.justup.upme.db.DBHelper.SHORT_NEWS_COMMENTS_SERVER_ID;
 import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.LOGE;
@@ -338,6 +337,7 @@ public class NewsItemFragment extends Fragment {
                     articleShortCommentEntity.setAuthor_id(cursorComments.getInt(cursorComments.getColumnIndex(SHORT_NEWS_COMMENTS_AUTHOR_ID)));
                     articleShortCommentEntity.setAuthor_name(cursorComments.getString(cursorComments.getColumnIndex(SHORT_NEWS_COMMENTS_AUTHOR_NAME)));
                     articleShortCommentEntity.setAuthor_img(cursorComments.getString(cursorComments.getColumnIndex(SHORT_NEWS_COMMENTS_AUTHOR_IMAGE)));
+                    articleShortCommentEntity.setPosted_at(cursorComments.getString(cursorComments.getColumnIndex(SHORT_NEWS_COMMENTS_POSTED_AT)));
                     commentsList.add(articleShortCommentEntity);
                 }
                 articleFullEntity.setComments(commentsList);

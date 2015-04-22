@@ -349,16 +349,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private class OnCornerButtonListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            if (isShowMainFragmentContainer) {
-                mMainFragmentContainer.startAnimation(mFragmentSliderOut);
-                mMainFragmentContainer.setVisibility(View.GONE);
+            if (currentlySelectedFragment != 0) {
+                if (isShowMainFragmentContainer) {
+                    mMainFragmentContainer.startAnimation(mFragmentSliderOut);
+                    mMainFragmentContainer.setVisibility(View.GONE);
 
-                isShowMainFragmentContainer = false;
+                    isShowMainFragmentContainer = false;
 
-                mLogoParams.gravity = Gravity.CENTER;
-                mUPMELogo.setLayoutParams(mLogoParams);
-            } else {
-                showMainFragmentContainer();
+                    mLogoParams.gravity = Gravity.CENTER;
+                    mUPMELogo.setLayoutParams(mLogoParams);
+                } else {
+                    showMainFragmentContainer();
+                }
             }
         }
     }
