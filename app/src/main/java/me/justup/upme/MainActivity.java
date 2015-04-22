@@ -51,6 +51,7 @@ import me.justup.upme.fragments.DocumentsFragment;
 import me.justup.upme.fragments.MailFragment;
 import me.justup.upme.fragments.NewsFeedFragmentNew;
 import me.justup.upme.fragments.ProductsFragment;
+import me.justup.upme.fragments.SettingsFragment;
 import me.justup.upme.fragments.StudyFragment;
 import me.justup.upme.fragments.WebRtcFragment;
 import me.justup.upme.http.ApiWrapper;
@@ -82,6 +83,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private static final int SELECTED_FRAGMENT_DOCS = 6;
     private static final int SELECTED_FRAGMENT_STUDY = 7;
     private static final int SELECTED_FRAGMENT_BROWSER = 8;
+    private static final int SELECTED_FRAGMENT_SETTINGS = 9;
     private int currentlySelectedFragment;
 
     private FrameLayout mMainFragmentContainer;
@@ -90,7 +92,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private boolean isShowMainFragmentContainer;
 
     private ArrayList<Button> mButtonList = new ArrayList<>();
-    private Button mNewsButton, mMailButton, mCalendarButton, mProductsButton, mBriefcaseButton, mDocsButton, mStudyButton, mBrowserButton;
+    private Button mNewsButton, mMailButton, mCalendarButton, mProductsButton, mBriefcaseButton, mDocsButton, mStudyButton, mBrowserButton, mSettingsButton;
     private Push push;
     private String shareFileName;
 
@@ -144,8 +146,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mFragmentSliderOut = AnimationUtils.loadAnimation(this, R.anim.fragment_slider_out);
         mFragmentSliderIn = AnimationUtils.loadAnimation(this, R.anim.fragment_slider_in);
 
-        Button mSettingButton = (Button) findViewById(R.id.settings_menu_item);
-        mSettingButton.setOnClickListener(new OnLoadSettingsListener());
+//        Button mSettingButton = (Button) findViewById(R.id.settings_menu_item);
+//        mSettingButton.setOnClickListener(new OnLoadSettingsListener());
 
         mUPMELogo = (ImageView) findViewById(R.id.upme_brick_logo);
         mUserName = (TextView) findViewById(R.id.ab_user_name_textView);
@@ -250,6 +252,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 }
                 break;
 
+            case R.id.settings_menu_item:
+                if (currentlySelectedFragment != SELECTED_FRAGMENT_SETTINGS) {
+                    changeButtonState(mSettingsButton);
+                    fragment = new SettingsFragment();
+                    currentlySelectedFragment = SELECTED_FRAGMENT_SETTINGS;
+                }
+                break;
+
             default:
                 break;
         }
@@ -296,6 +306,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 changeButtonState(mBrowserButton);
                 break;
 
+            case SELECTED_FRAGMENT_SETTINGS:
+                changeButtonState(mSettingsButton);
+                break;
+
             default:
                 break;
         }
@@ -314,6 +328,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mDocsButton = (Button) findViewById(R.id.docs_menu_item);
         mStudyButton = (Button) findViewById(R.id.study_menu_item);
         mBrowserButton = (Button) findViewById(R.id.browser_menu_item);
+        mSettingsButton = (Button) findViewById(R.id.settings_menu_item);
 
         mNewsButton.setOnClickListener(this);
         mMailButton.setOnClickListener(this);
@@ -323,6 +338,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mDocsButton.setOnClickListener(this);
         mStudyButton.setOnClickListener(this);
         mBrowserButton.setOnClickListener(this);
+        mSettingsButton.setOnClickListener(this);
 
         if (mButtonList != null) {
             mButtonList.add(mNewsButton);
@@ -333,6 +349,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             mButtonList.add(mDocsButton);
             mButtonList.add(mStudyButton);
             mButtonList.add(mBrowserButton);
+            mButtonList.add(mSettingsButton);
         }
     }
 
@@ -375,12 +392,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         isShowMainFragmentContainer = true;
     }
 
-    private class OnLoadSettingsListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-        }
-    }
+//    private class OnLoadSettingsListener implements View.OnClickListener {
+//        @Override
+//        public void onClick(View v) {
+//            startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+//        }
+//    }
 
     private class OnOpenStatusBarListener implements View.OnClickListener {
         @Override
