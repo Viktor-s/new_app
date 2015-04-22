@@ -39,7 +39,6 @@ import me.justup.upme.entity.CalendarGetEventsQuery;
 import me.justup.upme.entity.ErrorResponse;
 import me.justup.upme.entity.GetLoggedUserInfoQuery;
 import me.justup.upme.entity.GetLoggedUserInfoResponse;
-import me.justup.upme.entity.GetMailContactQuery;
 import me.justup.upme.entity.ProductsGetAllCategoriesQuery;
 import me.justup.upme.entity.ProductsOrderGetFormQuery;
 import me.justup.upme.entity.ProductsOrderGetFormResponse;
@@ -191,7 +190,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
             case R.id.mail_menu_item:
                 if (currentlySelectedFragment != SELECTED_FRAGMENT_MAIL) {
-                    startHttpIntent(new GetMailContactQuery(), HttpIntentService.MAIL_CONTACT_PART);
+                    BaseMethodEmptyQuery query = new BaseMethodEmptyQuery();
+                    query.method = ApiWrapper.ACCOUNT_GET_ALL_CONTACTS;
+                    startHttpIntent(query, HttpIntentService.MAIL_CONTACT_PART);
                     changeButtonState(mMailButton);
                     fragment = new MailFragment();
                     currentlySelectedFragment = SELECTED_FRAGMENT_MAIL;
@@ -219,7 +220,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
             case R.id.briefcase_menu_item:
                 if (currentlySelectedFragment != SELECTED_FRAGMENT_BRIEFCASE) {
-                    startHttpIntent(new GetMailContactQuery(), HttpIntentService.MAIL_CONTACT_PART);
+                    BaseMethodEmptyQuery query = new BaseMethodEmptyQuery();
+                    query.method = ApiWrapper.ACCOUNT_GET_ALL_CONTACTS;
+                    startHttpIntent(query, HttpIntentService.MAIL_CONTACT_PART);
                     changeButtonState(mBriefcaseButton);
                     fragment = new BriefcaseFragment();
                     currentlySelectedFragment = SELECTED_FRAGMENT_BRIEFCASE;
@@ -466,7 +469,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             return;
         }
 
-        startHttpIntent(new GetMailContactQuery(), HttpIntentService.MAIL_CONTACT_PART);
+        BaseMethodEmptyQuery query = new BaseMethodEmptyQuery();
+        query.method = ApiWrapper.ACCOUNT_GET_ALL_CONTACTS;
+        startHttpIntent(query, HttpIntentService.MAIL_CONTACT_PART);
         Fragment fragment = new MailFragment();
         getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, fragment).commit();
 
