@@ -239,7 +239,7 @@
     <string name="pref_room_server_url_title">URL сигнального сервера</string>
     <string name="pref_room_server_url_dlg_en">Enter a room server URL.</string>
     <string name="pref_room_server_url_dlg">Введите URL сигнального сервера</string>
-    <string name="pref_room_server_url_default" translatable="false">https://apprtc.appspot.com</string>
+    <string name="pref_room_server_url_default" translatable="false">http://95.213.170.164:8080</string>
 
     <string name="pref_displayhud_key">displayhud_preference</string>
     <string name="pref_displayhud_title_en">Display call statistics.</string>

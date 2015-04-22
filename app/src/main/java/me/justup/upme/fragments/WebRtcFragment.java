@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -66,7 +67,7 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
     private static final int REMOTE_WIDTH = 100;
     private static final int REMOTE_HEIGHT = 100;
 
-    private static final int TIMER = 15000;
+    private static final int TIMER = 35000;
     private volatile boolean callAccepted = true;
     private CountDownTimer timerCall;
 
@@ -458,6 +459,7 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
     private void disconnect() {
 //        callAccepted = false;
         stopSound();
+        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         LOGI(TAG, "Disconnect()");
 
@@ -689,6 +691,10 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
             @Override
             public void run() {
                 logAndToast("ICE connected");
+
+                stopSound();
+                getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
                 iceConnected = true;
                 callConnected();
             }
