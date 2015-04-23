@@ -19,6 +19,7 @@ import me.justup.upme.entity.GetAllContactsResponse;
 import me.justup.upme.entity.GetProductHtmlByIdResponse;
 import me.justup.upme.entity.ProductsGetAllCategoriesResponse;
 import me.justup.upme.entity.Push;
+import me.justup.upme.view.dashboard.TileItem;
 
 import static me.justup.upme.db.DBHelper.CREATE_TABLE_STATUS_BAR_PUSH;
 import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_DESCRIPTION;
@@ -175,7 +176,6 @@ public class DBAdapter {
 
         }
     }
-
 
 //    public void open() {
 //        database = dbHelper.getWritableDatabase();
@@ -464,6 +464,63 @@ public class DBAdapter {
 
     public void deleteAllPush() {
         dropAndCreateTable(STATUS_BAR_PUSH_TABLE_NAME, CREATE_TABLE_STATUS_BAR_PUSH);
+    }
+
+    // Title Menu
+    public void saveTileMenu(List<TileItem>  tileItemList) {
+
+        for (int i = 0; i < tileItemList.size(); i++) {
+            ContentValues values = new ContentValues();
+
+            values.put(DBHelper.TILE_ID, i);
+
+            values.put(DBHelper.TILE_WIDTH, tileItemList.get(i).getWSpans());
+            values.put(DBHelper.TILE_HEIGHT, tileItemList.get(i).getHSpans());
+            values.put(DBHelper.TILE_TITLE, tileItemList.get(i).getTitle());
+            values.put(DBHelper.TILE_STITLE, tileItemList.get(i).getSecondTitle());
+            values.put(DBHelper.TILE_RES_ID, tileItemList.get(i).getResId());
+            values.put(DBHelper.TILE_BACKGROUND, tileItemList.get(i).getBackground());
+            values.put(DBHelper.TILE_IS_ADD_ITEM, tileItemList.get(i).isAddItemButton() ? 0 : 1);
+            values.put(DBHelper.TILE_IS_REDACTED, tileItemList.get(i).isRedacted() ? 0 : 1);
+            values.put(DBHelper.TILE_IS_IMAGE, tileItemList.get(i).isImage() ? 0 : 1);
+
+            database.insertWithOnConflict(DBHelper.TILE_TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+        }
+    }
+
+    public ArrayList<TileItem> getListTile() {
+        ArrayList<TileItem> tileItems = new ArrayList<>();
+
+        String selectQuery = "SELECT * FROM " + DBHelper.TILE_TABLE_NAME;
+        Cursor cursor;
+        try{
+            cursor = database.rawQuery(selectQuery, null);
+        }catch (NullPointerException e){
+            return null;
+        }
+
+        if (cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+
+
+                int width = cursor.getInt(cursor.getColumnIndex(DBHelper.TILE_WIDTH));
+                int height = cursor.getInt(cursor.getColumnIndex(DBHelper.TILE_HEIGHT));
+
+                String title = cursor.getString(cursor.getColumnIndex(DBHelper.TILE_TITLE));
+                String secondTitle = cursor.getString(cursor.getColumnIndex(DBHelper.TILE_STITLE));
+                int resId = cursor.getInt(cursor.getColumnIndex(DBHelper.TILE_RES_ID));
+                int background = cursor.getInt(cursor.getColumnIndex(DBHelper.TILE_BACKGROUND));
+
+                boolean isAddItemButton = cursor.getInt(cursor.getColumnIndex(DBHelper.TILE_IS_ADD_ITEM)) == 0; // + button
+                boolean isRedacted = cursor.getInt(cursor.getColumnIndex(DBHelper.TILE_IS_REDACTED)) == 0; // Redacted now
+                boolean isImage = cursor.getInt(cursor.getColumnIndex(DBHelper.TILE_IS_IMAGE)) == 0;
+
+                tileItems.add(new TileItem(height, width, title, secondTitle, resId, background, isAddItemButton, isRedacted, isImage));
+            }
+        }
+
+        cursor.close();
+        return tileItems;
     }
 
 }

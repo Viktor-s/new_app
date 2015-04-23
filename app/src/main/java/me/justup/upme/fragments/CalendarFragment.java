@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -124,6 +125,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
     private Spinner mCalendartypesSpinner;
     private SQLiteDatabase database;
     private Button addNewEventButton;
+    private Button chooseReferralButton;
 
     private List<PersonBriefcaseEntity> listPerson;
 
@@ -144,9 +146,9 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
         Log.d("TAG", "--> onConfigurationChanged");
 
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-           // Toast.makeText(getActivity(), "landscape", Toast.LENGTH_SHORT).show();
-        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
-           // Toast.makeText(getActivity(), "portrait", Toast.LENGTH_SHORT).show();
+            // Toast.makeText(getActivity(), "landscape", Toast.LENGTH_SHORT).show();
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            // Toast.makeText(getActivity(), "portrait", Toast.LENGTH_SHORT).show();
         }
 
         mWeekView.invalidateWeekView(true);
@@ -209,6 +211,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
         View v = inflater.inflate(R.layout.fragment_calendar, container, false);
 
         mWeekView = (WeekView) v.findViewById(R.id.weekView);
+        mWeekView.goToHour(6);
 
         TextView currentDateTextView = (TextView) v.findViewById(R.id.current_date_textView);
         currentDateTextView.setText(currentDate.toString("d MMMM yyyy", new Locale("ru")));
@@ -218,7 +221,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
         selectWeekTextView = (TextView) v.findViewById(R.id.select_week_textView);
         selectWeekTextView.setText(Integer.toString(currentWeek) + getResources().getString(R.string.week));
 
-        final Button chooseReferralButton = (Button) v.findViewById(R.id.choose_referral_button);
+        chooseReferralButton = (Button) v.findViewById(R.id.choose_referral_button);
         chooseReferralButton.setOnClickListener(this);
         mCalendartypesSpinner = (Spinner) v.findViewById(R.id.calendar_fragment_types_spinner);
         mCalendartypesSpinner.setAdapter(new ArrayAdapter<>(CalendarFragment.this.getActivity(), R.layout.calendar_spinner_item, CalendarEventTypes.values()));
@@ -458,6 +461,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                 Animation mFragmentSliderFadeIn = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.fragment_item_slide_fade_in);
                 panelAddEvent.setVisibility(View.VISIBLE);
                 panelAddEvent.startAnimation(mFragmentSliderFadeIn);
+
                 chooseDateLayout.setVisibility(View.VISIBLE);
 
                 startDateEvent.setText(String.format("%02d/%02d/%d", time.get(Calendar.DAY_OF_MONTH), time.get(Calendar.MONTH) + 1, time.get(Calendar.YEAR)));
@@ -472,15 +476,18 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                 etNewEventDescription.setText(event.getDescription());
                 etNewEventLocation.setText(event.getLocation());
 
+                mCalendartypesSpinner.setVisibility(View.GONE);
                 listSharedId.clear();
-                if (event.getmSharedWith().equals(""))
-                    mCalendartypesSpinner.setSelection(0);
-                else {
-                    mCalendartypesSpinner.setSelection(1);
-                    String[] array = event.getmSharedWith().split(",");
-                    for (String i : array)
-                        listSharedId.add(Integer.parseInt(i));
-                }
+                if (event.getType().equals("task")) {
+                    chooseReferralButton.setVisibility(View.VISIBLE);
+                    if (!event.getmSharedWith().equals("")) {
+                        String[] array = event.getmSharedWith().split(",");
+                        for (String i : array)
+                            listSharedId.add(Integer.parseInt(i));
+                    }
+                } else
+                    chooseReferralButton.setVisibility(View.GONE);
+
                 dialogInfoEvent.dismiss();
             }
         });
@@ -592,10 +599,17 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
     }
 
     private void CreateLayoutForNewEvent(Calendar time) {
+
+        etNewEventName.requestFocus();
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(etNewEventName, InputMethodManager.SHOW_IMPLICIT);
+
         mCalendartypesSpinner.setVisibility(View.VISIBLE);
 
         isEventNeedUpdate = false;
         addNewEventButton.setText("Добавить");
+
+        time.set(Calendar.MINUTE, 0); // task #327 по наименьшему значению
         startTimeEvent = time;
 
         Animation mFragmentSliderFadeIn = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.fragment_item_slide_fade_in);
@@ -608,8 +622,8 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
         durationEventMin = 30;
         tvDurationEvent.setText("00:30");
 
-        remindEventMin = 0;
-        tvRemindEvent.setText("00:00");
+        remindEventMin = 30;
+        tvRemindEvent.setText("00:30");
 
         etNewEventName.setText("");
         etNewEventDescription.setText("");
@@ -672,10 +686,10 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                 chooseReferralDialog.show(getChildFragmentManager(), "choose_referral_dialog");
                 break;
             case R.id.add_new_event_button:
-                if (startTimeEvent.getTimeInMillis() < Calendar.getInstance().getTimeInMillis()) {
-                    Toast.makeText(getActivity(), "Событие не может быть установлено в прошлом", Toast.LENGTH_SHORT).show();
-                    break;
-                }
+//                if (startTimeEvent.getTimeInMillis() < Calendar.getInstance().getTimeInMillis()) {
+//                    Toast.makeText(getActivity(), "Событие не может быть установлено в прошлом", Toast.LENGTH_SHORT).show();
+//                    break;
+//                }
 
                 Calendar endTimeEvent = (Calendar) startTimeEvent.clone();
                 String eventName = etNewEventName.getText().toString();
@@ -691,7 +705,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                 endTimeEvent.add(Calendar.HOUR_OF_DAY, hour);
                 endTimeEvent.add(Calendar.MINUTE, minute);
                 if (!isEventNeedUpdate) {
-                    addNewEventButton.setText("Добавить");
+//                    addNewEventButton.setText("Добавить");
                     CalendarAddEventQuery calendarAddEventsQuery = new CalendarAddEventQuery();
                     calendarAddEventsQuery.params.name = CommonUtils.convertToUTF8(eventName);
                     calendarAddEventsQuery.params.description = CommonUtils.convertToUTF8(eventDescription);
@@ -707,12 +721,12 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                         calendarAddEventsQuery.params.shared_with = sharedWith;
                     }
 
+                    Log.d("TAG", "--->" + calendarAddEventsQuery.toString());
                     ((MainActivity) getActivity()).startHttpIntent(calendarAddEventsQuery, HttpIntentService.CALENDAR_ADD_EVENT);
                     panelAddEvent.setVisibility(View.GONE);
 
                 } else {
-                    addNewEventButton.setText("Обновить");
-                    mCalendartypesSpinner.setVisibility(View.GONE);
+//                    addNewEventButton.setText("Обновить");
                     CalendarUpdateEventQuery calendarUpdateEventQuery = new CalendarUpdateEventQuery();
                     calendarUpdateEventQuery.params.id = currentEventId;
                     calendarUpdateEventQuery.params.name = CommonUtils.convertToUTF8(eventName);
@@ -722,7 +736,6 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                     calendarUpdateEventQuery.params.start = String.valueOf(startTimeEvent.getTimeInMillis() / 1000);
                     calendarUpdateEventQuery.params.end = String.valueOf(endTimeEvent.getTimeInMillis() / 1000);
                     calendarUpdateEventQuery.params.shared_with = listSharedId.toString().replaceAll("(^\\[|\\]$)", "").replace(", ", ",");
-                    LOGE("pavel", calendarUpdateEventQuery.toString());
                     ((MainActivity) getActivity()).startHttpIntent(calendarUpdateEventQuery, HttpIntentService.CALENDAR_UPDATE_EVENT);
                     isEventNeedUpdate = false;
                     panelAddEvent.setVisibility(View.GONE);

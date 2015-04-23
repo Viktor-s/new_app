@@ -69,4 +69,11 @@
     <dimen name="base28sp720sw">18sp</dimen>
     <dimen name="base42sp720sw">26.9sp</dimen>
 
+    <!--Dashboard-->
+    <dimen name="tile_menu_margin_left">215dp</dimen>
+    <dimen name="tile_rotate_menu_height">800dp</dimen>
+
+    <dimen name="del_setting_menu_height">90dp</dimen>
+    <dimen name="tile_width">146dp</dimen>
+
 </resources>

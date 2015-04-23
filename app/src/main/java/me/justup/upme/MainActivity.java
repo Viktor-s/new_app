@@ -12,6 +12,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -52,6 +53,7 @@ import me.justup.upme.fragments.NewsFeedFragmentNew;
 import me.justup.upme.fragments.ProductsFragment;
 import me.justup.upme.fragments.SettingsFragment;
 import me.justup.upme.fragments.StudyFragment;
+import me.justup.upme.fragments.TiledMenuFragment;
 import me.justup.upme.fragments.WebRtcFragment;
 import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.http.HttpIntentService;
@@ -67,8 +69,10 @@ import static me.justup.upme.utils.LogUtils.LOGE;
 import static me.justup.upme.utils.LogUtils.LOGI;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
+public class MainActivity extends BaseActivity implements View.OnClickListener,
+        OnLoadMailFragment,
+        OnDownloadCloudFile{
 
-public class MainActivity extends BaseActivity implements View.OnClickListener, OnLoadMailFragment, OnDownloadCloudFile {
     private static final String TAG = makeLogTag(MainActivity.class);
 
     private static final String SAVE_FRAGMENT_STATE = "save_fragment_state";
@@ -132,11 +136,24 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         registerReceiver(mBreakCallReceiver, new IntentFilter(BROADCAST_ACTION_BREAK_CALL));
     }
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        hideNavBar();
         setContentView(R.layout.activity_main);
+
+//        new CountDownTimer(10000, 1000) {
+//            public void onTick(long millisUntilFinished) {
+//            }
+//            public void onFinish() {
+//                Toast.makeText(getBaseContext(), "Сработал таймер", Toast.LENGTH_SHORT).show();
+//                PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+//                PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "My Tag");
+//                wl.acquire();
+//                wl.release();
+//                getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+//            }
+//        }.start();
 
         mMainFragmentContainer = (FrameLayout) findViewById(R.id.main_fragment_container);
         FrameLayout mCornerButton = (FrameLayout) findViewById(R.id.include_corner);
@@ -173,6 +190,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             isShowMainFragmentContainer = savedInstanceState.getBoolean(IS_SHOW_FRAGMENT_CONTAINER, false);
             reopenFragment(currentlySelectedFragment);
         }
+
+        initTiledMenuFragment();
+    }
+
+    /**
+     * Init Tiled Menu Fragment
+     */
+    private void initTiledMenuFragment(){
+        removeCurrentFragment(R.id.main_tiled_fragment_container);
+        replaceFragment( TiledMenuFragment.newInstance(), R.id.main_tiled_fragment_container);
     }
 
     @Override
@@ -374,11 +401,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 if (isShowMainFragmentContainer) {
                     mMainFragmentContainer.startAnimation(mFragmentSliderOut);
                     mMainFragmentContainer.setVisibility(View.GONE);
-
                     isShowMainFragmentContainer = false;
-
                     mLogoParams.gravity = Gravity.CENTER;
-                    mUPMELogo.setLayoutParams(mLogoParams);
+                    // mUPMELogo.setLayoutParams(mLogoParams);
+                    Animation animation = new TranslateAnimation(-100, 0, 0, 0);
+                    animation.setDuration(1000);
+                    animation.setFillAfter(true);
+                    mUPMELogo.startAnimation(animation);
                 } else {
                     showMainFragmentContainer();
                 }
@@ -388,11 +417,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     private void showMainFragmentContainer() {
         mLogoParams.gravity = Gravity.CENTER | Gravity.START;
-        mUPMELogo.setLayoutParams(mLogoParams);
-
+        // mUPMELogo.setLayoutParams(mLogoParams);
+        Animation animation = new TranslateAnimation(0, -100, 0, 0);
+        animation.setDuration(1000);
+        animation.setFillAfter(true);
+        mUPMELogo.startAnimation(animation);
         mMainFragmentContainer.setVisibility(View.VISIBLE);
         mMainFragmentContainer.startAnimation(mFragmentSliderIn);
-
         isShowMainFragmentContainer = true;
     }
 
@@ -521,7 +552,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     public void onDownloadCloudFile(final String fileHash, final String fileName) {
         setShareFileName(fileName);
 
-        getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new DocumentsFragment()).commit();
+        getFragmentManager().beginTransaction().replace(R.id.main_tiled_fragment_container, new DocumentsFragment()).commit();
 
         changeButtonState(mDocsButton);
         if (!isShowMainFragmentContainer) {
@@ -597,7 +628,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     private void showWarningDialog(String message) {
         WarningDialog dialog = WarningDialog.newInstance(getString(R.string.network_error), message);
-        dialog.show(getFragmentManager(), WarningDialog.WARNING_DIALOG);
+        try {
+            dialog.show(getFragmentManager(), WarningDialog.WARNING_DIALOG);
+        }catch (IllegalStateException e){
+            LOGE(TAG, e.getMessage());
+        }
     }
 
     private void getOrderFormQuery(String formId) {
@@ -657,26 +692,40 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     public void clearDataAfterCallRTC() {
-        if (mWebRtcFragment != null) {
-            getFragmentManager().beginTransaction().remove(mWebRtcFragment).commit();
-            mWebRtcFragment = null;
-        } else {
-            LOGI(TAG, "WebRTCFragment is NULL");
-        }
+        Fragment videoFragment = getFragmentManager().findFragmentById(R.id.container_video_chat);
+        if (videoFragment != null)
+            getFragmentManager().beginTransaction().remove(videoFragment).commit();
+        findViewById(R.id.container_video_chat).setVisibility(View.GONE);
     }
 
     @Override
     public void onBackPressed() {
         if (BuildConfig.FLAVOR.equals(Constance.APP_FLAVOR_APP)) {
-            super.onBackPressed();
+            if (getFragmentManager().getBackStackEntryCount() >= 1){
+                finish();
+            }else {
+                super.onBackPressed();
+            }
         }
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
+        try {
+            super.onConfigurationChanged(newConfig);
 
-        // Add change config
+            if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                LOGI(TAG, "ORIENTATION_LANDSCAPE");
+
+                initTiledMenuFragment();
+            } else if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                LOGI(TAG, "ORIENTATION_PORTRAIT");
+
+                initTiledMenuFragment();
+            }
+        } catch (Exception e) {
+            LOGE(TAG, e.getMessage());
+        }
     }
 
 }

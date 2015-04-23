@@ -254,6 +254,34 @@ public class DBHelper extends SQLiteOpenHelper {
             + STATUS_BAR_PUSH_PUSH_DESCRIPTION + " TEXT, "
             + STATUS_BAR_PUSH_ROOM + " TEXT" + ")";
 
+    // Tile Menu
+
+    public static final String TILE_TABLE_NAME = "tile_table";
+
+    public static final String TILE_ID = BaseColumns._ID;
+
+    public static final String TILE_WIDTH= "width";
+    public static final String TILE_HEIGHT = "height";
+    public static final String TILE_TITLE = "title";
+    public static final String TILE_STITLE = "stitle";
+    public static final String TILE_RES_ID = "res_id";
+    public static final String TILE_BACKGROUND = "background";
+    public static final String TILE_IS_ADD_ITEM = "is_plus";
+    public static final String TILE_IS_REDACTED = "is_redacted";
+    public static final String TILE_IS_IMAGE = "is_img";
+
+    private static final String CREATE_TABLE_TILE_MENU= "CREATE TABLE "
+            + TILE_TABLE_NAME + "("
+            + TILE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + TILE_WIDTH + " INTEGER, "
+            + TILE_HEIGHT + " INTEGER, "
+            + TILE_TITLE + " TEXT, "
+            + TILE_STITLE + " TEXT, "
+            + TILE_RES_ID + " INTEGER, "
+            + TILE_BACKGROUND + " INTEGER, "
+            + TILE_IS_ADD_ITEM + " INTEGER, "
+            + TILE_IS_REDACTED + " INTEGER, "
+            + TILE_IS_IMAGE + " INTEGER" + ")";
 
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -273,6 +301,7 @@ public class DBHelper extends SQLiteOpenHelper {
         database.execSQL(CREATE_TABLE_PRODUCTS_PRODUCT);
         database.execSQL(CREATE_TABLE_PRODUCTS_HTML);
         database.execSQL(CREATE_TABLE_STATUS_BAR_PUSH);
+        database.execSQL(CREATE_TABLE_TILE_MENU);
     }
 
     @Override
@@ -289,6 +318,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + PRODUCTS_BRAND_CATEGORIES_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + PRODUCTS_PRODUCT_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + PRODUCTS_HTML_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + TILE_TABLE_NAME);
         onCreate(db);
     }
 
