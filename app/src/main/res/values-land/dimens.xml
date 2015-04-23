@@ -1,0 +1,10 @@
+<resources>
+
+    <!--Dashboard-->
+    <dimen name="tile_menu_margin_left">215dp</dimen>
+    <dimen name="tile_rotate_menu_height">400dp</dimen>
+
+    <dimen name="del_setting_menu_height">90dp</dimen>
+    <dimen name="tile_width">120dp</dimen>
+
+</resources>

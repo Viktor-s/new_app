@@ -7,13 +7,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.os.PowerManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
@@ -21,7 +17,6 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.JsonSyntaxException;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -58,6 +53,7 @@ import me.justup.upme.fragments.NewsFeedFragmentNew;
 import me.justup.upme.fragments.ProductsFragment;
 import me.justup.upme.fragments.SettingsFragment;
 import me.justup.upme.fragments.StudyFragment;
+import me.justup.upme.fragments.TiledMenuFragment;
 import me.justup.upme.fragments.WebRtcFragment;
 import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.http.HttpIntentService;
@@ -73,8 +69,10 @@ import static me.justup.upme.utils.LogUtils.LOGE;
 import static me.justup.upme.utils.LogUtils.LOGI;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
+public class MainActivity extends BaseActivity implements View.OnClickListener,
+        OnLoadMailFragment,
+        OnDownloadCloudFile{
 
-public class MainActivity extends BaseActivity implements View.OnClickListener, OnLoadMailFragment, OnDownloadCloudFile {
     private static final String TAG = makeLogTag(MainActivity.class);
 
     private static final String SAVE_FRAGMENT_STATE = "save_fragment_state";
@@ -138,10 +136,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         registerReceiver(mBreakCallReceiver, new IntentFilter(BROADCAST_ACTION_BREAK_CALL));
     }
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        hideNavBar();
         setContentView(R.layout.activity_main);
 
 //        new CountDownTimer(10000, 1000) {
@@ -191,6 +189,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             isShowMainFragmentContainer = savedInstanceState.getBoolean(IS_SHOW_FRAGMENT_CONTAINER, false);
             reopenFragment(currentlySelectedFragment);
         }
+
+        initTiledMenuFragment();
+    }
+
+    /**
+     * Init Tiled Menu Fragment
+     */
+    private void initTiledMenuFragment(){
+        removeCurrentFragment(R.id.main_tiled_fragment_container);
+        replaceFragment( TiledMenuFragment.newInstance(), R.id.main_tiled_fragment_container);
     }
 
     @Override
@@ -543,7 +551,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     public void onDownloadCloudFile(final String fileHash, final String fileName) {
         setShareFileName(fileName);
 
-        getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new DocumentsFragment()).commit();
+        getFragmentManager().beginTransaction().replace(R.id.main_tiled_fragment_container, new DocumentsFragment()).commit();
 
         changeButtonState(mDocsButton);
         if (!isShowMainFragmentContainer) {
@@ -619,7 +627,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     private void showWarningDialog(String message) {
         WarningDialog dialog = WarningDialog.newInstance(getString(R.string.network_error), message);
-        dialog.show(getFragmentManager(), WarningDialog.WARNING_DIALOG);
+        try {
+            dialog.show(getFragmentManager(), WarningDialog.WARNING_DIALOG);
+        }catch (IllegalStateException e){
+            LOGE(TAG, e.getMessage());
+        }
     }
 
     private void getOrderFormQuery(String formId) {
@@ -688,15 +700,31 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public void onBackPressed() {
         if (BuildConfig.FLAVOR.equals(Constance.APP_FLAVOR_APP)) {
-            super.onBackPressed();
+            if (getFragmentManager().getBackStackEntryCount() >= 1){
+                finish();
+            }else {
+                super.onBackPressed();
+            }
         }
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
+        try {
+            super.onConfigurationChanged(newConfig);
 
-        // Add change config
+            if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                LOGI(TAG, "ORIENTATION_LANDSCAPE");
+
+                initTiledMenuFragment();
+            } else if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                LOGI(TAG, "ORIENTATION_PORTRAIT");
+
+                initTiledMenuFragment();
+            }
+        } catch (Exception e) {
+            LOGE(TAG, e.getMessage());
+        }
     }
 
 }

@@ -62,4 +62,14 @@
         <attr name="xScrollingSpeed" format="float"/>
     </declare-styleable>
 
+    <declare-styleable name="RotateLayout_Layout">
+        <attr name="layout_angle" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="SpanVariableGridView">
+        <attr name="animation" format="boolean" />
+        <attr name="numColumns" format="integer" />
+        <attr name="itemMargin" format="dimension" />
+    </declare-styleable>
+
 </resources>

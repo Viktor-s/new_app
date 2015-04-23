@@ -1,199 +1,295 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black">
+
+    <FrameLayout
+        android:id="@+id/main_tiled_fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible" />
 
     <LinearLayout
         android:id="@+id/main_content_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_toEndOf="@+id/left_main_menu"
-        android:orientation="vertical"
         android:layout_below="@+id/main_action_bar"
         android:layout_marginTop="@dimen/base5dp720sw"
-        android:paddingBottom="@dimen/base120dp720sw"
-        android:baselineAligned="false">
+        android:layout_toEndOf="@+id/left_main_menu"
+        android:baselineAligned="false"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/base120dp720sw">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="@dimen/base75dp720sw"
-            android:layout_margin="@dimen/base25dp720sw"
             android:layout_gravity="center"
-            android:src="@drawable/test_top_info_main_title"
-            android:contentDescription="@string/settings_name" />
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="@dimen/base25dp720sw"
+            android:layout_marginRight="@dimen/base25dp720sw"
+            android:layout_marginTop="15dp"
+            android:contentDescription="@string/settings_name"
+            android:src="@drawable/test_top_info_main_title" />
 
-        <include layout="@layout/layout_for_test_and_trash" />
+        <LinearLayout
+            android:id="@+id/delete_setting_menu"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/del_setting_menu_height"
+            android:layout_above="@+id/flat_menu"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="@dimen/base25dp720sw"
+            android:layout_marginRight="@dimen/base25dp720sw"
+            android:orientation="horizontal"
+            android:visibility="invisible">
+
+            <Button
+                android:id="@+id/btn_setting"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:drawableBottom="@android:color/transparent"
+                android:drawableStart="@drawable/action_settings"
+                android:text="НАСТРОЙКИ"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:layout_width="10dp"
+                android:layout_height="match_parent" />
+
+            <Button
+                android:id="@+id/btn_delete"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:drawableBottom="@android:color/transparent"
+                android:drawableStart="@drawable/content_discard"
+                android:text="УДАЛИТЬ"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <!--<include layout="@layout/layout_for_test_and_trash" />-->
+
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/left_main_menu"
-        android:orientation="vertical"
         android:layout_width="@dimen/base210dp720sw"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/include_corner">
+        android:layout_below="@+id/include_corner"
+        android:orientation="vertical">
 
         <Button
             android:id="@+id/news_menu_item"
-            android:text="@string/menu_item_title_news"
+            style="@style/MainMenuItemLayout"
             android:drawableStart="@drawable/ic_main_news"
-            style="@style/MainMenuItemLayout" />
+            android:text="@string/menu_item_title_news" />
 
         <Button
             android:id="@+id/mail_menu_item"
-            android:text="@string/menu_item_title_mail"
+            style="@style/MainMenuItemLayout"
             android:drawableStart="@drawable/ic_main_mail"
-            style="@style/MainMenuItemLayout" />
+            android:text="@string/menu_item_title_mail" />
 
         <Button
             android:id="@+id/calendar_menu_item"
-            android:text="@string/menu_item_title_calendar"
+            style="@style/MainMenuItemLayout"
             android:drawableStart="@drawable/ic_main_cal"
-            style="@style/MainMenuItemLayout" />
+            android:text="@string/menu_item_title_calendar" />
 
         <Button
             android:id="@+id/products_menu_item"
-            android:text="@string/menu_item_title_products"
+            style="@style/MainMenuItemLayout"
             android:drawableStart="@drawable/ic_main_prod"
-            style="@style/MainMenuItemLayout" />
+            android:text="@string/menu_item_title_products" />
 
         <Button
             android:id="@+id/briefcase_menu_item"
-            android:text="@string/menu_item_title_briefcase"
+            style="@style/MainMenuItemLayout"
             android:drawableStart="@drawable/ic_main_brief"
-            style="@style/MainMenuItemLayout" />
+            android:text="@string/menu_item_title_briefcase" />
 
         <Button
             android:id="@+id/docs_menu_item"
-            android:text="@string/menu_item_title_docs"
+            style="@style/MainMenuItemLayout"
             android:drawableStart="@drawable/ic_main_docs"
-            style="@style/MainMenuItemLayout" />
+            android:text="@string/menu_item_title_docs" />
 
         <Button
             android:id="@+id/study_menu_item"
-            android:text="@string/menu_item_title_study"
+            style="@style/MainMenuItemLayout"
             android:drawableStart="@drawable/ic_main_study"
-            style="@style/MainMenuItemLayout" />
+            android:text="@string/menu_item_title_study" />
 
         <Button
             android:id="@+id/browser_menu_item"
-            android:text="@string/menu_item_title_browser"
+            style="@style/MainMenuItemLayout"
             android:drawableStart="@drawable/ic_main_browser"
-            style="@style/MainMenuItemLayout" />
+            android:text="@string/menu_item_title_browser" />
 
         <Button
             android:id="@+id/settings_menu_item"
-            android:text="@string/menu_item_title_settings"
+            style="@style/MainMenuItemLayout"
             android:drawableStart="@drawable/ic_main_settings"
-            style="@style/MainMenuItemLayout" />
+            android:text="@string/menu_item_title_settings" />
 
         <Button
             android:id="@+id/demo_menu_item"
-            android:text="@string/menu_item_title_demo"
-            android:drawableStart="@drawable/ic_main_demo"
             style="@style/MainMenuItemLayout"
-            android:background="@drawable/main_menu_demo_background" />
+            android:background="@drawable/main_menu_demo_background"
+            android:drawableStart="@drawable/ic_main_demo"
+            android:text="@string/menu_item_title_demo" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/main_action_bar"
-        android:orientation="horizontal"
-        android:layout_toEndOf="@+id/left_main_menu"
+        style="@style/ActionBarStyle"
         android:layout_below="@+id/status_bar_fragment"
-        style="@style/ActionBarStyle">
+        android:layout_toEndOf="@+id/left_main_menu"
+        android:orientation="horizontal">
 
-        <me.justup.upme.utils.CircularImageView
-            android:layout_width="@dimen/base80dp720sw"
-            android:layout_height="@dimen/base80dp720sw"
-            android:id="@+id/ab_user_image_imageView"
-            android:src="@drawable/protection"
-            android:layout_marginTop="@dimen/base5dp720sw"
-            app:civ_border="true"
-            app:civ_border_color="@color/white"
-            app:civ_border_width="@dimen/base3dp720sw" />
+        <LinearLayout
+            android:id="@+id/save_cancel_menu"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:visibility="gone">
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:layout_marginStart="@dimen/base15dp720sw"
-            tools:text="User Name"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:id="@+id/ab_user_name_textView" />
+            <Button
+                android:id="@+id/btn_save"
+                android:layout_width="@dimen/base150dp720sw"
+                android:layout_height="@dimen/base50dp720sw"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/pay_panel_button_selector"
+                android:text="СОХРАНИТЬ"
+                android:textAllCaps="true"
+                android:textSize="@dimen/base20sp720sw"
+                android:visibility="invisible" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/online_dots"
-            android:textColor="@color/ab_text_online_color"
-            android:layout_marginEnd="@dimen/base5dp720sw"
-            android:layout_gravity="center_vertical" />
+            <Button
+                android:id="@+id/btn_cancel"
+                android:layout_width="@dimen/base150dp720sw"
+                android:layout_height="@dimen/base50dp720sw"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/pay_panel_button_selector"
+                android:text="ОТМЕНИТЬ"
+                android:textAllCaps="true"
+                android:textSize="@dimen/base20sp720sw" />
+        </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            tools:text="1 год 2 месяца 3 недели"
-            android:layout_marginEnd="@dimen/base15dp720sw"
-            android:layout_gravity="center_vertical"
-            android:id="@+id/ab_user_in_system_textView" />
+        <LinearLayout
+            android:id="@+id/user_info_abar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
-        <Button
-            android:layout_width="@dimen/base150dp720sw"
-            android:layout_height="@dimen/base50dp720sw"
-            android:background="@drawable/pay_panel_button_selector"
-            android:layout_gravity="center_vertical"
-            android:textSize="@dimen/base20sp720sw"
-            android:textAllCaps="true"
-            android:text="@string/ordering" />
+            <me.justup.upme.utils.CircularImageView
+                android:id="@+id/ab_user_image_imageView"
+                android:layout_width="@dimen/base80dp720sw"
+                android:layout_height="@dimen/base80dp720sw"
+                android:layout_marginTop="@dimen/base5dp720sw"
+                android:src="@drawable/protection"
+                app:civ_border="true"
+                app:civ_border_color="@color/white"
+                app:civ_border_width="@dimen/base3dp720sw" />
+
+            <TextView
+                android:id="@+id/ab_user_name_textView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/base15dp720sw"
+                android:layout_weight="1"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                tools:text="User Name" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="@dimen/base5dp720sw"
+                android:text="@string/online_dots"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/ab_text_online_color" />
+
+            <TextView
+                android:id="@+id/ab_user_in_system_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="@dimen/base15dp720sw"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                tools:text="1 год 2 месяца 3 недели" />
+
+            <Button
+                android:layout_width="@dimen/base150dp720sw"
+                android:layout_height="@dimen/base50dp720sw"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/pay_panel_button_selector"
+                android:text="@string/ordering"
+                android:textAllCaps="true"
+                android:textSize="@dimen/base20sp720sw" />
+        </LinearLayout>
 
     </LinearLayout>
 
     <FrameLayout
         android:id="@+id/include_corner"
-        android:layout_below="@+id/status_bar_fragment"
         android:layout_width="@dimen/base210dp720sw"
         android:layout_height="@dimen/base90dp720sw"
+        android:layout_below="@+id/status_bar_fragment"
         android:background="@drawable/upme_main_logo_background">
 
         <ImageView
             android:id="@+id/upme_brick_logo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="@dimen/base3dp720sw"
-            android:src="@drawable/upme_main_logo"
             android:layout_gravity="center"
-            android:contentDescription="@string/app_name" />
+            android:contentDescription="@string/app_name"
+            android:padding="@dimen/base3dp720sw"
+            android:src="@drawable/upme_main_logo" />
     </FrameLayout>
 
     <FrameLayout
         android:id="@+id/main_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
-        android:layout_below="@+id/status_bar_fragment"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="@dimen/base75dp720sw" />
+        android:layout_below="@+id/status_bar_fragment"
+        android:layout_marginStart="@dimen/base75dp720sw"
+        android:visibility="gone" />
 
     <fragment
+        android:id="@+id/status_bar_fragment"
+        android:name="me.justup.upme.fragments.StatusBarFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:name="me.justup.upme.fragments.StatusBarFragment"
-        android:id="@+id/status_bar_fragment"
-        tools:layout="@layout/fragment_status_bar"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true" />
+        tools:layout="@layout/fragment_status_bar" />
 
     <RelativeLayout
         android:id="@+id/container_video_chat"
-        android:layout_alignParentEnd="true"
         android:layout_width="@dimen/base250dp720sw"
         android:layout_height="@dimen/base250dp720sw"
+        android:layout_alignParentEnd="true"
         android:layout_below="@+id/status_bar_fragment"
         android:visibility="invisible" />
 

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:dragAndDrop="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <me.justup.upme.view.dashboard.RotateLayout
+        android:id="@+id/flat_menu"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tile_rotate_menu_height"
+        android:layout_marginLeft="@dimen/tile_menu_margin_left"
+        android:layout_marginTop="320dp">
+
+        <me.justup.upme.view.dashboard.SlowlyScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none"
+            app:layout_angle="90">
+
+            <me.justup.upme.view.dashboard.CoolDragAndDropGridView
+                android:id="@+id/coolDragAndDropGridView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                dragAndDrop:animation="false"
+                dragAndDrop:itemMargin="0dp"
+                dragAndDrop:numColumns="3" />
+        </me.justup.upme.view.dashboard.SlowlyScrollView>
+
+    </me.justup.upme.view.dashboard.RotateLayout>
+
+
+</LinearLayout>
