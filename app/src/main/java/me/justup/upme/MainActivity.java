@@ -12,6 +12,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -356,11 +357,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 if (isShowMainFragmentContainer) {
                     mMainFragmentContainer.startAnimation(mFragmentSliderOut);
                     mMainFragmentContainer.setVisibility(View.GONE);
-
                     isShowMainFragmentContainer = false;
-
                     mLogoParams.gravity = Gravity.CENTER;
-                    mUPMELogo.setLayoutParams(mLogoParams);
+                    // mUPMELogo.setLayoutParams(mLogoParams);
+                    Animation animation = new TranslateAnimation(-100, 0, 0, 0);
+                    animation.setDuration(1000);
+                    animation.setFillAfter(true);
+                    mUPMELogo.startAnimation(animation);
                 } else {
                     showMainFragmentContainer();
                 }
@@ -370,11 +373,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     private void showMainFragmentContainer() {
         mLogoParams.gravity = Gravity.CENTER | Gravity.START;
-        mUPMELogo.setLayoutParams(mLogoParams);
-
+        // mUPMELogo.setLayoutParams(mLogoParams);
+        Animation animation = new TranslateAnimation(0, -100, 0, 0);
+        animation.setDuration(1000);
+        animation.setFillAfter(true);
+        mUPMELogo.startAnimation(animation);
         mMainFragmentContainer.setVisibility(View.VISIBLE);
         mMainFragmentContainer.startAnimation(mFragmentSliderIn);
-
         isShowMainFragmentContainer = true;
     }
 

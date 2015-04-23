@@ -203,8 +203,12 @@ public class NewsItemFragment extends Fragment {
 
         mNewsItemWebView = (WebView) view.findViewById(R.id.news_item_webView);
         mNewsItemWebView.getSettings().setJavaScriptEnabled(true);
-        mNewsItemWebView.getSettings().setLoadWithOverviewMode(true);
-        mNewsItemWebView.getSettings().setUseWideViewPort(true);
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            mNewsItemWebView.setInitialScale(100);
+        } else {
+            mNewsItemWebView.setInitialScale(60);
+        }
+
         mNewsItemWebView.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
@@ -289,8 +293,9 @@ public class NewsItemFragment extends Fragment {
 
     private void fillViewsWithData() {
         LOGI(TAG, "fillViewsWithData");
-        mNewsItemWebView.getSettings().setLoadWithOverviewMode(true);
-        mNewsItemWebView.getSettings().setUseWideViewPort(true);
+        //mNewsItemWebView.getSettings().setUseWideViewPort(true);
+        //mNewsItemWebView.getSettings().setLoadWithOverviewMode(true);
+        //mNewsItemWebView.getSettings().setUseWideViewPort(true);
         mNewsItemWebView.loadDataWithBaseURL("", mArticleFullEntity.getFull_descr(), "text/html", "UTF-8", "");
         updateCommentsList();
     }
@@ -397,8 +402,16 @@ public class NewsItemFragment extends Fragment {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        mNewsItemWebView.getSettings().setLoadWithOverviewMode(true);
-        mNewsItemWebView.getSettings().setUseWideViewPort(true);
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            //mNewsItemWebView.getSettings().setLoadWithOverviewMode(true);
+            //mNewsItemWebView.getSettings().setUseWideViewPort(false);
+            mNewsItemWebView.setInitialScale(100);
+        } else {
+            //mNewsItemWebView.getSettings().setLoadWithOverviewMode(true);
+            //mNewsItemWebView.getSettings().setUseWideViewPort(true);
+            mNewsItemWebView.setInitialScale(60);
+        }
+
     }
 
 
