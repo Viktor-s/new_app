@@ -34,6 +34,11 @@ public class BreakCallDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final String userName = getArguments().getString(BREAK_CALL_USER);
 
+        Fragment videoFragment = getFragmentManager().findFragmentById(R.id.container_video_chat);
+        if (videoFragment != null)
+            getFragmentManager().beginTransaction().remove(videoFragment).commit();
+        getActivity().findViewById(R.id.container_video_chat).setVisibility(View.GONE);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_push_break_call, null);
@@ -47,11 +52,6 @@ public class BreakCallDialog extends DialogFragment {
                 .setPositiveButton(R.string.button_close, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        Fragment videoFragment = getFragmentManager().findFragmentById(R.id.container_video_chat);
-                        if (videoFragment != null) {
-                            getActivity().findViewById(R.id.container_video_chat).setVisibility(View.VISIBLE);
-                            getFragmentManager().beginTransaction().remove(videoFragment).commit();
-                        }
                         dialog.dismiss();
                     }
                 });

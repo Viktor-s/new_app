@@ -7,15 +7,20 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.os.PowerManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.JsonSyntaxException;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -137,6 +142,19 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+//        new CountDownTimer(10000, 1000) {
+//            public void onTick(long millisUntilFinished) {
+//            }
+//            public void onFinish() {
+//                Toast.makeText(getBaseContext(), "Сработал таймер", Toast.LENGTH_SHORT).show();
+//                PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+//                PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "My Tag");
+//                wl.acquire();
+//                wl.release();
+//                getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+//            }
+//        }.start();
 
         mMainFragmentContainer = (FrameLayout) findViewById(R.id.main_fragment_container);
         FrameLayout mCornerButton = (FrameLayout) findViewById(R.id.include_corner);
@@ -656,12 +674,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     public void clearDataAfterCallRTC() {
-        if (mWebRtcFragment != null) {
-            getFragmentManager().beginTransaction().remove(mWebRtcFragment).commit();
-            mWebRtcFragment = null;
-        } else {
-            LOGI(TAG, "WebRTCFragment is NULL");
-        }
+        Fragment videoFragment = getFragmentManager().findFragmentById(R.id.container_video_chat);
+        if (videoFragment != null)
+            getFragmentManager().beginTransaction().remove(videoFragment).commit();
+        findViewById(R.id.container_video_chat).setVisibility(View.GONE);
     }
 
     @Override

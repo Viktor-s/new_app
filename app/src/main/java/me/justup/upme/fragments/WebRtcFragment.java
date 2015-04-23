@@ -68,7 +68,6 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
     private static final int REMOTE_HEIGHT = 100;
 
     private static final int TIMER = 35000;
-    private volatile boolean callAccepted = true;
     private CountDownTimer timerCall;
 
     private PeerConnectionClient peerConnectionClient = null;
@@ -190,13 +189,8 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
             }
         });
 
-        remoteRender = VideoRendererGui.create(
-                REMOTE_X, REMOTE_Y,
-                REMOTE_WIDTH, REMOTE_HEIGHT, scalingType, false);
-
-        localRender = VideoRendererGui.create(
-                LOCAL_X_CONNECTING, LOCAL_Y_CONNECTING,
-                LOCAL_WIDTH_CONNECTING, LOCAL_HEIGHT_CONNECTING, scalingType, true);
+        remoteRender = VideoRendererGui.create(REMOTE_X, REMOTE_Y, REMOTE_WIDTH, REMOTE_HEIGHT, scalingType, false);
+        localRender = VideoRendererGui.create(LOCAL_X_CONNECTING, LOCAL_Y_CONNECTING, LOCAL_WIDTH_CONNECTING, LOCAL_HEIGHT_CONNECTING, scalingType, true);
 
         // Show/hide call control fragment on view click.
         videoView.setOnClickListener(new View.OnClickListener() {
@@ -310,29 +304,25 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
         }
     }
 
-//    @Override
-//    public void onStop() {
-//        super.onStop();
-//
-//        disconnect();
-//
-//        if (logToast != null) {
-//            logToast.cancel();
-//        }
-//
-//        activityRunning = false;
-//    }
-
     @Override
-    public void onDestroy() {
+    public void onStop() {
+        super.onStop();
         disconnect();
-        super.onDestroy();
         if (logToast != null) {
             logToast.cancel();
         }
-
         activityRunning = false;
     }
+
+//    @Override
+//    public void onDestroy() {
+//        disconnect();
+//        super.onDestroy();
+//        if (logToast != null) {
+//            logToast.cancel();
+//        }
+//        activityRunning = false;
+//    }
 
     // CallFragment.OnCallEvents interface implementation.
     @Override
@@ -457,11 +447,13 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
 
     // Disconnect from remote resources, dispose of local resources, and exit.
     private void disconnect() {
-//        callAccepted = false;
-        stopSound();
-        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         LOGI(TAG, "Disconnect()");
+
+        stopSound();
+        if (timerCall != null)
+            timerCall.cancel();
+        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         if (appRtcClient != null) {
             appRtcClient.disconnectFromRoom();
@@ -487,7 +479,6 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
         }
 
 //        ((MainActivity) getActivity()).clearDataAfterCallRTC();
-        timerCall.cancel();
         getActivity().findViewById(R.id.container_video_chat).setVisibility(View.GONE);
         getActivity().getFragmentManager().beginTransaction().remove(this).commit();
 
@@ -558,14 +549,12 @@ public class WebRtcFragment extends Fragment implements AppRTCClient.SignalingEv
             }
 
             if (params.iceCandidates != null) {
-//                callAccepted = false;
                 // Add remote ICE candidates from room.
                 for (IceCandidate iceCandidate : params.iceCandidates) {
                     peerConnectionClient.addRemoteIceCandidate(iceCandidate);
                 }
             }
         }
-        // isRorated = true;
     }
 
     public void startNotificationIntent(int userId, int roomNumber) {
