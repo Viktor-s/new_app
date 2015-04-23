@@ -65,6 +65,7 @@ public class DocumentsFragment extends Fragment {
     public static final int DOC = 2;
     public static final int PDF = 3;
     public static final int VIDEO = 4;
+    private static final String FILE_ARRAY_MESSAGE = "file_array_thread_message";
 
     private TableLayout mFileExplorer;
     private LayoutInflater mLayoutInflater;
@@ -76,7 +77,7 @@ public class DocumentsFragment extends Fragment {
         public void onReceive(Context context, Intent intent) {
             int actionType = intent.getIntExtra(BROADCAST_EXTRA_ACTION_TYPE, 0);
             if (actionType == DOWNLOAD) {
-                getLocalFileList();
+                //getLocalFileList();
             }
 
             stopProgressBar();
@@ -84,7 +85,7 @@ public class DocumentsFragment extends Fragment {
     };
 
     private SimpleDateFormat mDateFormat = new SimpleDateFormat(DATE_FORMAT, AppLocale.getAppLocale());
-    private static FileListHandler mFileListHandler = new FileListHandler();
+    private FileListHandler mFileListHandler = new FileListHandler();
 
 
     @Override
@@ -108,9 +109,7 @@ public class DocumentsFragment extends Fragment {
         mFileExplorer = (TableLayout) view.findViewById(R.id.files_panel);
         mProgressBar = (ProgressBar) view.findViewById(R.id.explorer_progressBar);
 
-        getLocalFileList();
-
-        new GetTotalFileList().start();
+        getTotalFileList();
 
         return view;
     }
@@ -122,26 +121,13 @@ public class DocumentsFragment extends Fragment {
         getActivity().unregisterReceiver(mFileActionDoneReceiver);
     }
 
-    private void getLocalFileList() {
-        mFileExplorer.removeAllViews();
-
-        File mStorageDirectory = Environment.getExternalStorageDirectory();
-        File[] mDirList = mStorageDirectory.listFiles();
-
-        for (File file : mDirList) {
-            if (!file.isDirectory()) {
-                setFileItem(file.getName(), file.getAbsolutePath(), file.length(), file.lastModified());
-            }
-        }
-    }
-
     @SuppressLint("InflateParams")
-    private void setFileItem(final String fileName, final String filePath, final long fileLength, final long fileDate) {
+    private void setFileItem(final FileEntity file) {
         final View item = mLayoutInflater.inflate(R.layout.item_documents_file, null);
 
-        final boolean isImage = fileName.contains(".jpg") || fileName.contains(".jpeg") || fileName.contains(".png");
-        final boolean isPDF = fileName.contains(".pdf");
-        final boolean isVideo = fileName.contains(".mp4") || fileName.contains(".avi") || fileName.contains(".3gp");
+        final boolean isImage = file.getName().contains(".jpg") || file.getName().contains(".jpeg") || file.getName().contains(".png");
+        final boolean isPDF = file.getName().contains(".pdf");
+        final boolean isVideo = file.getName().contains(".mp4") || file.getName().contains(".avi") || file.getName().contains(".3gp");
 
         int type;
         if (isImage) {
@@ -155,21 +141,44 @@ public class DocumentsFragment extends Fragment {
         }
 
         ImageView mFileFavorite = (ImageView) item.findViewById(R.id.file_star_imageView);
+        if (file.isFavorite()) {
+            mFileFavorite.setImageResource(R.drawable.ic_file_star);
+        }
+
         ImageView mFileImage = (ImageView) item.findViewById(R.id.file_image_imageView);
         TextView mFileName = (TextView) item.findViewById(R.id.file_name_textView);
         TextView mFileSize = (TextView) item.findViewById(R.id.file_size_textView);
         TextView mFileDate = (TextView) item.findViewById(R.id.file_date_textView);
 
         ImageView mFileInTablet = (ImageView) item.findViewById(R.id.file_tablet_imageView);
-        // set: If is not in tablet
-        mFileInTablet.setOnClickListener(new OnGetFileListener());
-
         ImageView mFileInCloud = (ImageView) item.findViewById(R.id.file_cloud_imageView);
-        // set: If is not in cloud
-        mFileInCloud.setOnClickListener(new OnSendFileListener());
+
+        switch (file.getType()) {
+            case FileEntity.CLOUD_FILE:
+                mFileInTablet.setImageResource(R.drawable.ic_file_tab_gray);
+                mFileInCloud.setImageResource(R.drawable.ic_file_cloud);
+
+                mFileInTablet.setOnClickListener(new OnGetFileListener());
+                break;
+
+            case FileEntity.SHARE_FILE:
+                mFileInTablet.setImageResource(R.drawable.ic_file_tab_gray);
+                mFileInCloud.setImageResource(R.drawable.ic_file_cloud_gray);
+                // TODO fix or add listeners
+                mFileInTablet.setOnClickListener(new OnSendFileListener());
+                mFileInCloud.setOnClickListener(new OnSendFileListener());
+                break;
+
+            case FileEntity.LOCAL_AND_CLOUD_FILE:
+                mFileInCloud.setImageResource(R.drawable.ic_file_cloud);
+                break;
+
+            default:
+                break;
+        }
 
         ImageView mFileActionButton = (ImageView) item.findViewById(R.id.file_action_button);
-        mFileActionButton.setOnClickListener(new OnFileActionListener(filePath));
+        mFileActionButton.setOnClickListener(new OnFileActionListener(file.getPath()));
 
         if (type == IMAGE) {
             mFileImage.setImageResource(R.drawable.ic_file_image);
@@ -181,16 +190,18 @@ public class DocumentsFragment extends Fragment {
             mFileImage.setImageResource(R.drawable.ic_file_video);
         }
 
-        mFileName.setText(fileName);
+        mFileName.setText(file.getName());
 
-        String fileSize = (fileLength / SIZE_VALUE) < SIZE_VALUE ?
-                (fileLength / SIZE_VALUE) + KB : (fileLength / SIZE_VALUE / SIZE_VALUE) + MB;
+        String fileSize = (file.getSize() / SIZE_VALUE) < SIZE_VALUE ?
+                (file.getSize() / SIZE_VALUE) + KB : (file.getSize() / SIZE_VALUE / SIZE_VALUE) + MB;
         mFileSize.setText(fileSize);
 
-        mFileDate.setText(mDateFormat.format(new Date(fileDate)));
+        mFileDate.setText(mDateFormat.format(new Date(file.getDate())));
 
-        mFileImage.setOnClickListener(new OnOpenFileListener(fileName, filePath, type));
-        mFileName.setOnClickListener(new OnOpenFileListener(fileName, filePath, type));
+        if (file.getType() == FileEntity.LOCAL_FILE || file.getType() == FileEntity.LOCAL_AND_CLOUD_FILE) {
+            mFileImage.setOnClickListener(new OnOpenFileListener(file.getName(), file.getPath(), type));
+            mFileName.setOnClickListener(new OnOpenFileListener(file.getName(), file.getPath(), type));
+        }
 
         mFileExplorer.addView(item);
     }
@@ -263,10 +274,10 @@ public class DocumentsFragment extends Fragment {
                             return true;
 
                         case R.id.file_local_delete:
-                            File file = new File(filePath);
+                            /* File file = new File(filePath);
                             if (file.delete()) {
                                 getLocalFileList();
-                            }
+                            } */
                             return true;
 
                         default:
@@ -315,16 +326,23 @@ public class DocumentsFragment extends Fragment {
         @Override
         public void onClick(View v) {
             //
+            getTotalFileList();
         }
     }
 
-    private static class GetTotalFileList extends Thread {
+    private void getTotalFileList() {
+        startProgressBar();
+        new GetTotalFileList().start();
+    }
+
+    private class GetTotalFileList extends Thread {
         private ArrayList<FileEntity> mLocalFileList = new ArrayList<>();
         private ArrayList<FileEntity> mCloudFileList = new ArrayList<>();
         private ArrayList<FileEntity> mShareFileList = new ArrayList<>();
 
         private boolean isListOk = false;
         private int stage = 0;
+
 
         @Override
         public void run() {
@@ -389,12 +407,10 @@ public class DocumentsFragment extends Fragment {
                         fillArray(response, mShareFileList, FileEntity.SHARE_FILE);
 
                         sortArrays();
-                        mFileListHandler.sendEmptyMessage(0);
 
                         isListOk = true;
                     }
                 }
-
             }
 
             @Override
@@ -412,15 +428,58 @@ public class DocumentsFragment extends Fragment {
             }
 
             private void sortArrays() {
-                // sort
+                if (mCloudFileList.size() > 0 && mLocalFileList.size() != 0)
+                    for (int i = 0; i < mLocalFileList.size(); i++) {
+                        for (int j = 0; j < mCloudFileList.size(); j++) {
+                            if (mLocalFileList.get(i).getName().equals(mCloudFileList.get(j).getName())) {
+                                mLocalFileList.get(i).setType(FileEntity.LOCAL_AND_CLOUD_FILE);
+                                mCloudFileList.remove(j);
+                            }
+                        }
+                    }
+
+                mLocalFileList.addAll(mCloudFileList);
+
+
+                if (mShareFileList.size() > 0 && mLocalFileList.size() != 0)
+                    for (int i = 0; i < mLocalFileList.size(); i++) {
+                        for (int j = 0; j < mShareFileList.size(); j++) {
+                            if (mLocalFileList.get(i).getName().equals(mShareFileList.get(j).getName())) {
+                                mShareFileList.remove(j);
+                            }
+                        }
+                    }
+
+                mLocalFileList.addAll(mShareFileList);
+
+                sendFileArray(mLocalFileList);
             }
+        }
+
+        private void sendFileArray(ArrayList<FileEntity> array) {
+            Message msg = mFileListHandler.obtainMessage();
+            Bundle b = new Bundle();
+            b.putSerializable(FILE_ARRAY_MESSAGE, array);
+            msg.setData(b);
+            mFileListHandler.sendMessage(msg);
         }
     }
 
-    private static class FileListHandler extends Handler {
+    private class FileListHandler extends Handler {
+        @SuppressWarnings("unchecked")
         @Override
         public void handleMessage(Message msg) {
-            // handle
+            stopProgressBar();
+
+            ArrayList<FileEntity> array = (ArrayList<FileEntity>) msg.getData().getSerializable(FILE_ARRAY_MESSAGE);
+
+            if ((null != array)) {
+                mFileExplorer.removeAllViews();
+
+                for (FileEntity file : array) {
+                    setFileItem(file);
+                }
+            }
         }
     }
 

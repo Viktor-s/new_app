@@ -1,10 +1,15 @@
 package me.justup.upme.entity;
 
+import java.io.Serializable;
 
-public class FileEntity {
+
+public class FileEntity implements Serializable {
+    private static final long serialVersionUID = 0L;
+
     public static final int LOCAL_FILE = 1;
     public static final int CLOUD_FILE = 2;
     public static final int SHARE_FILE = 3;
+    public static final int LOCAL_AND_CLOUD_FILE = 4;
 
     private boolean isFavorite;
     private String name;
@@ -51,6 +56,10 @@ public class FileEntity {
 
     public int getType() {
         return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 
     @Override

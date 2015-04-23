@@ -11,7 +11,7 @@
     tools:ignore="ContentDescription">
 
     <ImageView
-        android:src="@drawable/ic_file_star"
+        android:src="@drawable/ic_file_star_gray"
         android:id="@+id/file_star_imageView"
         style="@style/DocumentsItemLeftIconStyle" />
 
