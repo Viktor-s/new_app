@@ -13,6 +13,8 @@ import android.widget.Toast;
 
 import me.justup.upme.JustUpApplication;
 import me.justup.upme.R;
+import me.justup.upme.SplashActivity;
+import me.justup.upme.db.DBHelper;
 
 
 public class CommonUtils {
@@ -84,6 +86,12 @@ public class CommonUtils {
         toast.setDuration(Toast.LENGTH_LONG);
         toast.setView(layout);
         toast.show();
+    }
+
+    public static void clearAllAppData() {
+        new AppPreferences(JustUpApplication.getApplication()).clearPreferences();
+        JustUpApplication.getApplication().deleteDatabase(DBHelper.DATABASE_NAME);
+        JustUpApplication.getApplication().getSharedPreferences(SplashActivity.class.getSimpleName(), Context.MODE_PRIVATE).edit().clear().apply();
     }
 
 }

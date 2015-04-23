@@ -29,6 +29,7 @@ import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.services.ApplicationSupervisorService;
 import me.justup.upme.services.StatusBarService;
 import me.justup.upme.utils.AppPreferences;
+import me.justup.upme.utils.CommonUtils;
 import me.justup.upme.utils.Constance;
 import me.justup.upme.utils.ServerSwitcher;
 
@@ -146,6 +147,7 @@ public class LoginActivity extends BaseActivity {
                 if (newUrl != null && newUrl.length() > 2) {
                     mNewUrlString.setText("");
                     ServerSwitcher.getInstance().setEasyUrl(newUrl);
+                    CommonUtils.clearAllAppData();
                 }
             }
         });
@@ -158,10 +160,11 @@ public class LoginActivity extends BaseActivity {
                     case R.id.server1_radioButton:
                         ServerSwitcher.getInstance().setUrl("http://test.justup.me/uptabinterface/jsonrpc/");
                         ServerSwitcher.getInstance().setCloudStorageUrl("http://test.justup.me/CloudStorage");
+                        CommonUtils.clearAllAppData();
                         break;
                     case R.id.server2_radioButton:
-                        ServerSwitcher.getInstance().setUrl("http://justup.me/");
-                        ServerSwitcher.getInstance().setCloudStorageUrl("http://justup.me/");
+                        ServerSwitcher.getInstance().setEasyUrl("pre-prod.justup.me");
+                        CommonUtils.clearAllAppData();
                         break;
                     default:
                         break;

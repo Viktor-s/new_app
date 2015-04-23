@@ -67,13 +67,11 @@ public class AppPreferences {
         return mSharedPreferences.getInt(TAG_USER_ID, 0);
     }
 
-    /*
     public void clearPreferences() {
         mEditor = mSharedPreferences.edit();
         mEditor.clear();
         mEditor.apply();
     }
-    */
 
     public void setPhoneNumber(String phoneNumber) {
         mEditor = mSharedPreferences.edit();
@@ -104,7 +102,7 @@ public class AppPreferences {
     public boolean isMonitoring() {
         if (BuildConfig.FLAVOR.equals(Constance.APP_FLAVOR_LAUNCHER)) {
             return mSharedPreferences.getBoolean(TAG_MONITORING, false);
-        }else {
+        } else {
             return mSharedPreferences.getBoolean(TAG_MONITORING, true);
         }
     }

@@ -219,11 +219,10 @@
             <RadioButton
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="другой"
+                android:text="pre-prod.justup.me"
                 android:textColor="@color/black"
                 android:padding="@dimen/base10dp720sw"
-                android:id="@+id/server2_radioButton"
-                android:visibility="gone" />
+                android:id="@+id/server2_radioButton" />
         </RadioGroup>
 
         <LinearLayout

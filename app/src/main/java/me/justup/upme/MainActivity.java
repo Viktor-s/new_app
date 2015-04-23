@@ -156,6 +156,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mExitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                CommonUtils.clearAllAppData();
                 finish();
             }
         });

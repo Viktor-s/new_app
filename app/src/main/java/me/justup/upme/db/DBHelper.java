@@ -7,7 +7,7 @@ import android.provider.BaseColumns;
 
 
 public class DBHelper extends SQLiteOpenHelper {
-    private static final String DATABASE_NAME = "upme.db";
+    public static final String DATABASE_NAME = "upme.db";
     private static final int DATABASE_VERSION = 19;
 
     public static final String BASE_TABLE_NAME = "base_table";
