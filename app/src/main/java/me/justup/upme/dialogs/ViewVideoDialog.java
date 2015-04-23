@@ -8,7 +8,8 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.MediaController;
+import android.widget.Button;
+import android.widget.SeekBar;
 import android.widget.VideoView;
 
 import me.justup.upme.R;
@@ -18,6 +19,12 @@ public class ViewVideoDialog extends DialogFragment {
     public static final String VIEW_VIDEO_DIALOG = "view_video_dialog";
     private static final String VIEW_VIDEO_FILE_NAME = "view_video_file_name";
     private static final String VIEW_VIDEO_FILE_PATH = "view_video_file_path";
+
+    private Button mPlayButton;
+    private SeekBar mVideoSeekBar;
+    private VideoView mVideoView;
+
+    private boolean isPlaying = true;
 
 
     public static ViewVideoDialog newInstance(final String fileName, final String filePath) {
@@ -41,14 +48,15 @@ public class ViewVideoDialog extends DialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_view_video, null);
 
-        VideoView mVideoView = (VideoView) dialogView.findViewById(R.id.dialog_videoView);
+        mPlayButton = (Button) dialogView.findViewById(R.id.video_dialog_play_button);
+        mPlayButton.setOnClickListener(new OnPlayPauseListener());
+
+        mVideoSeekBar = (SeekBar) dialogView.findViewById(R.id.video_dialog_seekBar);
+
+        mVideoView = (VideoView) dialogView.findViewById(R.id.dialog_videoView);
 
         mVideoView.setZOrderOnTop(true);
         mVideoView.setVideoPath(filePath);
-
-        MediaController mediaController = new MediaController(getActivity());
-        mediaController.setMediaPlayer(mVideoView);
-        mVideoView.setMediaController(mediaController);
 
         mVideoView.requestFocus();
         mVideoView.start();
@@ -61,6 +69,23 @@ public class ViewVideoDialog extends DialogFragment {
         });
 
         return builder.create();
+    }
+
+    private class OnPlayPauseListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            if (isPlaying) {
+                mVideoView.pause();
+
+                mPlayButton.setText("Play");
+                isPlaying = false;
+            } else {
+                mVideoView.start();
+
+                mPlayButton.setText("Pause");
+                isPlaying = true;
+            }
+        }
     }
 
 }
