@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FilterQueryProvider;
 import android.widget.ListView;
@@ -45,7 +46,7 @@ public class MailFragment extends Fragment {
     private MailContactsAdapter mMailContactsAdapter;
     private String selectQuery;
     private Cursor cursor;
-
+    private EditText mSearchFieldEditText;
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -118,7 +119,7 @@ public class MailFragment extends Fragment {
             public void onReceive(Context context, Intent intent) {
                 LOGE(TAG, "onReceive mailFragment");
                 cursor = database.rawQuery(selectQuery, null);
-               // mMailContactsAdapter = new MailContactsAdapter(this, getActivity().getApplicationContext(), cursor, 0);
+                // mMailContactsAdapter = new MailContactsAdapter(this, getActivity().getApplicationContext(), cursor, 0);
             }
         };
         LocalBroadcastManager.getInstance(MailFragment.this.getActivity())
@@ -179,7 +180,7 @@ public class MailFragment extends Fragment {
             }
         });
 
-        EditText mSearchFieldEditText = (EditText) view.findViewById(R.id.mail_fragment_search_editText);
+        mSearchFieldEditText = (EditText) view.findViewById(R.id.mail_fragment_search_editText);
         mSearchFieldEditText.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable s) {
@@ -193,6 +194,13 @@ public class MailFragment extends Fragment {
             }
         });
 
+        Button clearEditTextButton = (Button) view.findViewById(R.id.clear_search_text_button);
+        clearEditTextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mSearchFieldEditText.setText("");
+            }
+        });
         return view;
     }
 

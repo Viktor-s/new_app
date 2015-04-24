@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import me.justup.upme.MainActivity;
 import me.justup.upme.R;
 import me.justup.upme.utils.AppPreferences;
 
@@ -99,7 +100,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
                 break;
 
             case R.id.close_settings_activity_imageView:
-//                finish();
+                ((MainActivity) getActivity()).closeSettingsFragment();
                 break;
 
             default:

@@ -71,7 +71,7 @@ import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener,
         OnLoadMailFragment,
-        OnDownloadCloudFile{
+        OnDownloadCloudFile {
 
     private static final String TAG = makeLogTag(MainActivity.class);
 
@@ -103,6 +103,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
     private ImageView mUPMELogo;
     private TextView mUserName;
     private TextView mUserInSystem;
+    private FrameLayout mCornerButton;
 
     private WebRtcFragment mWebRtcFragment = null;
 
@@ -156,7 +157,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
 //        }.start();
 
         mMainFragmentContainer = (FrameLayout) findViewById(R.id.main_fragment_container);
-        FrameLayout mCornerButton = (FrameLayout) findViewById(R.id.include_corner);
+        mCornerButton = (FrameLayout) findViewById(R.id.include_corner);
         mCornerButton.setOnClickListener(new OnCornerButtonListener());
 
         mFragmentSliderOut = AnimationUtils.loadAnimation(this, R.anim.fragment_slider_out);
@@ -197,9 +198,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
     /**
      * Init Tiled Menu Fragment
      */
-    private void initTiledMenuFragment(){
+    private void initTiledMenuFragment() {
         removeCurrentFragment(R.id.main_tiled_fragment_container);
-        replaceFragment( TiledMenuFragment.newInstance(), R.id.main_tiled_fragment_container);
+        replaceFragment(TiledMenuFragment.newInstance(), R.id.main_tiled_fragment_container);
     }
 
     @Override
@@ -630,7 +631,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
         WarningDialog dialog = WarningDialog.newInstance(getString(R.string.network_error), message);
         try {
             dialog.show(getFragmentManager(), WarningDialog.WARNING_DIALOG);
-        }catch (IllegalStateException e){
+        } catch (IllegalStateException e) {
             LOGE(TAG, e.getMessage());
         }
     }
@@ -701,9 +702,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
     @Override
     public void onBackPressed() {
         if (BuildConfig.FLAVOR.equals(Constance.APP_FLAVOR_APP)) {
-            if (getFragmentManager().getBackStackEntryCount() >= 1){
+            if (getFragmentManager().getBackStackEntryCount() >= 1) {
                 finish();
-            }else {
+            } else {
                 super.onBackPressed();
             }
         }
@@ -728,4 +729,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
         }
     }
 
+    public void closeSettingsFragment() {
+        mCornerButton.performClick();
+    }
 }

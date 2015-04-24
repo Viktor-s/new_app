@@ -48,7 +48,6 @@ import static me.justup.upme.utils.LogUtils.LOGE;
 import static me.justup.upme.utils.LogUtils.LOGI;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
-
 public class BriefcaseFragment extends Fragment {
     private static final String TAG = makeLogTag(BriefcaseFragment.class);
     private List<PersonBriefcaseEntity> listPerson;
@@ -66,6 +65,7 @@ public class BriefcaseFragment extends Fragment {
     private int lastChoosenItem;
     private int userId;
     private int totalItemCount;
+    View viewId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -113,7 +113,7 @@ public class BriefcaseFragment extends Fragment {
         receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                LOGE("pavel", "onReceive briefcase");
+                lastChoosenItem = -1;
                 updatePersonsList();
                 containerLayout.removeAllViews();
                 containerLayout.addView(levelGenerate(photoLayout, listPerson));
@@ -201,7 +201,6 @@ public class BriefcaseFragment extends Fragment {
         return view;
     }
 
-
     private void updatePersonsList() {
         cursor = database.rawQuery(selectQuery, null);
         listPerson = fillPersonsFromCursor(cursor);
@@ -211,7 +210,8 @@ public class BriefcaseFragment extends Fragment {
 
     private ImageView createDirection(int resId) {
         ImageView resultView = new ImageView(getActivity());
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams layoutParams = new
+                LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         resultView.setLayoutParams(layoutParams);
         resultView.setImageResource(resId);
         return resultView;
@@ -251,12 +251,12 @@ public class BriefcaseFragment extends Fragment {
         int column = Integer.parseInt(((TextView) v.findViewById(R.id.column)).getText().toString());
         List<PersonBriefcaseEntity> children = getChildrenOnParent(listPersonInner, id);
         int countChildren = children.size();
-        LOGD(TAG, "countChildren --- " + countChildren);
-        // definition of the first cell to fill
+        LOGD(TAG, "countChildren —- " + countChildren);
+// definition of the first cell to fill
         int x = (int) Math.round(countChildren / 2 - 0.1);
-        LOGD(TAG, "X --- " + x);
+        LOGD(TAG, "X —- " + x);
         int startPosition = (x >= column) ? 0 : column - x;
-        LOGD(TAG, "START POSITION --- " + startPosition);
+        LOGD(TAG, "START POSITION —- " + startPosition);
         GridLayout gridLayout = new GridLayout(getActivity());
         for (int i = 0; i < startPosition; i++) {
             gridLayout.addView(createDirection(R.drawable.p00));
@@ -297,7 +297,8 @@ public class BriefcaseFragment extends Fragment {
 
         RelativeLayout briefcaseItemLayout;
         LayoutInflater inflater = LayoutInflater.from(v.getContext());
-        for (int i = 0; i < countChildren; i++) {
+        for (int i = 0; i <
+                countChildren; i++) {
             PersonBriefcaseEntity personBriefcaseEntity = children.get(i);
             briefcaseItemLayout = (RelativeLayout) inflater.inflate(R.layout.item_briefcase, null, false);
 
@@ -321,26 +322,44 @@ public class BriefcaseFragment extends Fragment {
             photoLayoutMain.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    LOGE(TAG, "" + containerLayout.getChildCount() + " " + lastChoosenItem);
-                    view.findViewById(R.id.briefcase_ellipsis_imageView).setVisibility(View.GONE);
-//
-                    if (lastChoosenItem != Integer.parseInt(itemId.getText().toString()) && totalItemCount > 1 && Integer.parseInt(parentId.getText().toString()) == userId) {
-                        containerLayout.removeAllViews();
-                        containerLayout.addView(levelGenerate(photoLayout, listPersonInner));
-                        containerLayout.addView(levelGenerate(view, listPersonInner));
-                        totalItemCount = 1;
-                    } else {
+                    LOGE("pavel", "" + containerLayout.getChildCount());
+                    LOGE("pavel", "" + lastChoosenItem + " " + Integer.parseInt(itemId.getText().toString()));
 
-                        int row = Integer.parseInt(((TextView) v.findViewById(R.id.row)).getText().toString());
-                        for (int i = containerLayout.getChildCount() - 1; i > row; i--) {
-                            containerLayout.removeViewAt(i);
+                    if (lastChoosenItem != Integer.parseInt(itemId.getText().toString())) {
+
+                        if (totalItemCount > 1 && Integer.parseInt(parentId.getText().toString()) == userId) {
+                            containerLayout.removeAllViews();
+                            containerLayout.addView(levelGenerate(photoLayout, listPersonInner));
+                            containerLayout.addView(levelGenerate(view, listPersonInner));
+                            totalItemCount = 1;
+                        } else {
+                            int row = Integer.parseInt(((TextView) v.findViewById(R.id.row)).getText().toString());
+                            for (int i = containerLayout.getChildCount() - 1; i > row; i--) {
+                                containerLayout.removeViewAt(i);
+                            }
+                            viewId = levelGenerate(view, listPersonInner);
+                            containerLayout.addView(viewId);
+
+                            totalItemCount = containerLayout.getChildCount();
                         }
-                        containerLayout.addView(levelGenerate(view, listPersonInner));
-                        totalItemCount = containerLayout.getChildCount();
-                    }
-                    if (Integer.parseInt(parentId.getText().toString()) == userId) {
                         lastChoosenItem = Integer.parseInt(itemId.getText().toString());
+                        view.findViewById(R.id.briefcase_ellipsis_imageView).setVisibility(View.GONE);
+                    } else {
+                        //view.findViewById(R.id.briefcase_ellipsis_imageView).setVisibility(View.VISIBLE);
+                        if (totalItemCount > 1) {
+//containerLayout.removeViewAt(containerLayout.getChildCount() - 1);
+                            for (int i = containerLayout.getChildCount() - 1; i > Integer.parseInt(((TextView) v.findViewById(R.id.row)).getText().toString()); i--) {
+                                containerLayout.removeViewAt(i);
+                            }
+                            totalItemCount = containerLayout.getChildCount();
+                            view.findViewById(R.id.briefcase_ellipsis_imageView).setVisibility(View.VISIBLE);
+                        }
+                        lastChoosenItem = -1;
+                        LOGE("pavel", "" + "need to remove :" + " ");
                     }
+//if (Integer.parseInt(parentId.getText().toString()) == userId) {
+
+// }
                 }
             });
             TextView rowObject = (TextView) photoLayoutInner.getChildAt(2);
@@ -376,7 +395,6 @@ public class BriefcaseFragment extends Fragment {
                     Fragment fragment = UserFragment.newInstance(getLoggedUserInfoQuery, false);
                     getChildFragmentManager().beginTransaction().replace(R.id.briefcase_user_info_container_frameLayout, fragment, "UserFragmentBriefcase").commit();
                     mUserContainer.startAnimation(mFragmentSliderFadeIn);
-
 
                 }
             });
