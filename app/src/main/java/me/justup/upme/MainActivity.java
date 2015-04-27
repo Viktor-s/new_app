@@ -140,7 +140,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        hideNavBar();
+        // hideNavBar();
         setContentView(R.layout.activity_main);
 
 //        new CountDownTimer(10000, 1000) {
@@ -553,7 +553,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
     public void onDownloadCloudFile(final String fileHash, final String fileName) {
         setShareFileName(fileName);
 
-        getFragmentManager().beginTransaction().replace(R.id.main_tiled_fragment_container, new DocumentsFragment()).commit();
+        getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new DocumentsFragment()).commit();
 
         changeButtonState(mDocsButton);
         if (!isShowMainFragmentContainer) {

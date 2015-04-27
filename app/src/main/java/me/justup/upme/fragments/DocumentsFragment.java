@@ -35,6 +35,7 @@ import me.justup.upme.R;
 import me.justup.upme.dialogs.ViewImageDialog;
 import me.justup.upme.dialogs.ViewPDFDialog;
 import me.justup.upme.dialogs.ViewVideoDialog;
+import me.justup.upme.dialogs.WarningDialog;
 import me.justup.upme.entity.BaseMethodEmptyQuery;
 import me.justup.upme.entity.FileEntity;
 import me.justup.upme.entity.FileGetAllResponse;
@@ -43,8 +44,14 @@ import me.justup.upme.services.FileExplorerService;
 import me.justup.upme.utils.AppLocale;
 
 import static me.justup.upme.services.FileExplorerService.BROADCAST_EXTRA_ACTION_TYPE;
+import static me.justup.upme.services.FileExplorerService.BROADCAST_EXTRA_ERROR;
+import static me.justup.upme.services.FileExplorerService.COPY;
+import static me.justup.upme.services.FileExplorerService.DELETE;
 import static me.justup.upme.services.FileExplorerService.DOWNLOAD;
+import static me.justup.upme.services.FileExplorerService.ERROR;
 import static me.justup.upme.services.FileExplorerService.EXPLORER_SERVICE_ACTION_TYPE;
+import static me.justup.upme.services.FileExplorerService.EXPLORER_SERVICE_FILE_HASH;
+import static me.justup.upme.services.FileExplorerService.EXPLORER_SERVICE_FILE_NAME;
 import static me.justup.upme.services.FileExplorerService.EXPLORER_SERVICE_FILE_PATH;
 import static me.justup.upme.services.FileExplorerService.FILE_ACTION_DONE_BROADCAST;
 import static me.justup.upme.services.FileExplorerService.UPLOAD;
@@ -76,11 +83,12 @@ public class DocumentsFragment extends Fragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             int actionType = intent.getIntExtra(BROADCAST_EXTRA_ACTION_TYPE, 0);
-            if (actionType == DOWNLOAD) {
-                //getLocalFileList();
+            String error = intent.getStringExtra(BROADCAST_EXTRA_ERROR);
+            if (actionType == ERROR && error != null) {
+                showWarningDialog(error);
             }
 
-            stopProgressBar();
+            getTotalFileList();
         }
     };
 
@@ -154,19 +162,23 @@ public class DocumentsFragment extends Fragment {
         ImageView mFileInCloud = (ImageView) item.findViewById(R.id.file_cloud_imageView);
 
         switch (file.getType()) {
+            case FileEntity.LOCAL_FILE:
+                mFileInCloud.setOnClickListener(new OnUploadFileListener(file.getPath()));
+                break;
+
             case FileEntity.CLOUD_FILE:
                 mFileInTablet.setImageResource(R.drawable.ic_file_tab_gray);
                 mFileInCloud.setImageResource(R.drawable.ic_file_cloud);
 
-                mFileInTablet.setOnClickListener(new OnGetFileListener());
+                mFileInTablet.setOnClickListener(new OnDownloadFileListener(file.getHash(), file.getName()));
                 break;
 
             case FileEntity.SHARE_FILE:
                 mFileInTablet.setImageResource(R.drawable.ic_file_tab_gray);
                 mFileInCloud.setImageResource(R.drawable.ic_file_cloud_gray);
-                // TODO fix or add listeners
-                mFileInTablet.setOnClickListener(new OnSendFileListener());
-                mFileInCloud.setOnClickListener(new OnSendFileListener());
+
+                mFileInTablet.setOnClickListener(new OnDownloadFileListener(file.getHash(), file.getName()));
+                mFileInCloud.setOnClickListener(new OnCloudCopyFileListener(file.getHash()));
                 break;
 
             case FileEntity.LOCAL_AND_CLOUD_FILE:
@@ -178,7 +190,7 @@ public class DocumentsFragment extends Fragment {
         }
 
         ImageView mFileActionButton = (ImageView) item.findViewById(R.id.file_action_button);
-        mFileActionButton.setOnClickListener(new OnFileActionListener(file.getPath()));
+        mFileActionButton.setOnClickListener(new OnFileActionListener(file.getHash(), file.getPath()));
 
         if (type == IMAGE) {
             mFileImage.setImageResource(R.drawable.ic_file_image);
@@ -255,9 +267,11 @@ public class DocumentsFragment extends Fragment {
 
     private class OnFileActionListener implements View.OnClickListener {
         private final String filePath;
+        private final String fileHash;
 
-        public OnFileActionListener(String filePath) {
+        public OnFileActionListener(final String fileHash, final String filePath) {
             this.filePath = filePath;
+            this.fileHash = fileHash;
         }
 
         @Override
@@ -268,16 +282,17 @@ public class DocumentsFragment extends Fragment {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
                     switch (item.getItemId()) {
-                        case R.id.file_local_upload:
-                            startProgressBar();
-                            startExplorerService(filePath, UPLOAD);
+                        case R.id.file_local_delete:
+                            if (filePath != null) {
+                                File file = new File(filePath);
+                                if (file.delete()) {
+                                    getTotalFileList();
+                                }
+                            }
                             return true;
 
-                        case R.id.file_local_delete:
-                            /* File file = new File(filePath);
-                            if (file.delete()) {
-                                getLocalFileList();
-                            } */
+                        case R.id.file_cloud_delete:
+                            startExplorerService(fileHash, null, null, DELETE);
                             return true;
 
                         default:
@@ -290,8 +305,13 @@ public class DocumentsFragment extends Fragment {
         }
     }
 
-    private void startExplorerService(final String filePath, final int actionType) {
+    private void startExplorerService(final String fileHash, final String filePath, final String fileName, final int actionType) {
+        LOGD(TAG, "startExplorerService() - fileHash:" + fileHash + " filePath:" + filePath + " fileName:" + fileName);
+        startProgressBar();
+
         Bundle bundle = new Bundle();
+        bundle.putString(EXPLORER_SERVICE_FILE_HASH, fileHash);
+        bundle.putString(EXPLORER_SERVICE_FILE_NAME, fileName);
         bundle.putString(EXPLORER_SERVICE_FILE_PATH, filePath);
         bundle.putInt(EXPLORER_SERVICE_ACTION_TYPE, actionType);
 
@@ -315,18 +335,44 @@ public class DocumentsFragment extends Fragment {
         mShareFileName = shareFileName;
     }
 
-    private class OnSendFileListener implements View.OnClickListener {
+    private class OnDownloadFileListener implements View.OnClickListener {
+        private final String fileHash;
+        private final String fileName;
+
+        public OnDownloadFileListener(final String fileHash, final String fileName) {
+            this.fileHash = fileHash;
+            this.fileName = fileName;
+        }
+
         @Override
         public void onClick(View v) {
-            //
+            startExplorerService(fileHash, null, fileName, DOWNLOAD);
         }
     }
 
-    private class OnGetFileListener implements View.OnClickListener {
+    private class OnUploadFileListener implements View.OnClickListener {
+        private final String filePath;
+
+        public OnUploadFileListener(final String filePath) {
+            this.filePath = filePath;
+        }
+
         @Override
         public void onClick(View v) {
-            //
-            getTotalFileList();
+            startExplorerService(null, filePath, null, UPLOAD);
+        }
+    }
+
+    private class OnCloudCopyFileListener implements View.OnClickListener {
+        private final String fileHash;
+
+        public OnCloudCopyFileListener(final String fileHash) {
+            this.fileHash = fileHash;
+        }
+
+        @Override
+        public void onClick(View v) {
+            startExplorerService(fileHash, null, null, COPY);
         }
     }
 
@@ -418,6 +464,7 @@ public class DocumentsFragment extends Fragment {
                 String content = ApiWrapper.responseBodyToString(responseBody);
                 LOGE(TAG, "onFailure(): " + content);
 
+                sendFileArray(mLocalFileList);
                 isListOk = true;
             }
 
@@ -433,6 +480,7 @@ public class DocumentsFragment extends Fragment {
                         for (int j = 0; j < mCloudFileList.size(); j++) {
                             if (mLocalFileList.get(i).getName().equals(mCloudFileList.get(j).getName())) {
                                 mLocalFileList.get(i).setType(FileEntity.LOCAL_AND_CLOUD_FILE);
+                                mLocalFileList.get(i).setHash(mCloudFileList.get(j).getHash());
                                 mCloudFileList.remove(j);
                             }
                         }
@@ -445,6 +493,7 @@ public class DocumentsFragment extends Fragment {
                     for (int i = 0; i < mLocalFileList.size(); i++) {
                         for (int j = 0; j < mShareFileList.size(); j++) {
                             if (mLocalFileList.get(i).getName().equals(mShareFileList.get(j).getName())) {
+                                mLocalFileList.get(i).setHash(mShareFileList.get(j).getHash());
                                 mShareFileList.remove(j);
                             }
                         }
@@ -481,6 +530,11 @@ public class DocumentsFragment extends Fragment {
                 }
             }
         }
+    }
+
+    private void showWarningDialog(final String message) {
+        WarningDialog dialog = WarningDialog.newInstance(getString(R.string.network_error), message);
+        dialog.show(getChildFragmentManager(), WarningDialog.WARNING_DIALOG);
     }
 
 }

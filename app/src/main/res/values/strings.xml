@@ -267,7 +267,8 @@
     <string name="share_with_me">Доступные мне</string>
     <string name="share_access_grant">Доступ предоставлен</string>
     <string name="file_download">Скачать</string>
-    <string name="file_delete">Удалить</string>
+    <string name="file_delete">Удалить на устройстве</string>
+    <string name="file_cloud_delete">Удалить в облаке</string>
     <string name="file_share_for">Разрешить доступ…</string>
     <string name="file_remove_share_for">Удалить доступ…</string>
     <string name="file_remove_share">Отписатся</string>

@@ -54,6 +54,10 @@ public class FileEntity implements Serializable {
         return hash;
     }
 
+    public void setHash(String hash) {
+        this.hash = hash;
+    }
+
     public int getType() {
         return type;
     }
