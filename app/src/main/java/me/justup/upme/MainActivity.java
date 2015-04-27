@@ -37,6 +37,7 @@ import me.justup.upme.entity.ArticlesGetShortDescriptionQuery;
 import me.justup.upme.entity.BaseHttpQueryEntity;
 import me.justup.upme.entity.BaseMethodEmptyQuery;
 import me.justup.upme.entity.CalendarGetEventsQuery;
+import me.justup.upme.entity.EducationGetProgramsQuery;
 import me.justup.upme.entity.ErrorResponse;
 import me.justup.upme.entity.GetLoggedUserInfoQuery;
 import me.justup.upme.entity.GetLoggedUserInfoResponse;
@@ -48,11 +49,11 @@ import me.justup.upme.fragments.BriefcaseFragment;
 import me.justup.upme.fragments.BrowserFragment;
 import me.justup.upme.fragments.CalendarFragment;
 import me.justup.upme.fragments.DocumentsFragment;
+import me.justup.upme.fragments.EducationFragment;
 import me.justup.upme.fragments.MailFragment;
 import me.justup.upme.fragments.NewsFeedFragmentNew;
 import me.justup.upme.fragments.ProductsFragment;
 import me.justup.upme.fragments.SettingsFragment;
-import me.justup.upme.fragments.StudyFragment;
 import me.justup.upme.fragments.TiledMenuFragment;
 import me.justup.upme.fragments.WebRtcFragment;
 import me.justup.upme.http.ApiWrapper;
@@ -270,8 +271,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
 
             case R.id.study_menu_item:
                 if (currentlySelectedFragment != SELECTED_FRAGMENT_STUDY) {
+                    startHttpIntent(new EducationGetProgramsQuery(), HttpIntentService.EDUCATION_GET_PRODUCTS);
                     changeButtonState(mStudyButton);
-                    fragment = new StudyFragment();
+                    fragment = new EducationFragment();
                     currentlySelectedFragment = SELECTED_FRAGMENT_STUDY;
                 }
                 break;

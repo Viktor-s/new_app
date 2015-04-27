@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/youtube_button_container"
+    android:layout_width="@dimen/base300dp720sw"
+    android:layout_height="@dimen/base160dp720sw"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentEnd="true"
+    android:background="@android:color/white">
+
+    <ImageView
+        android:id="@+id/education_module_item_image_view"
+        android:layout_width="@dimen/base60dp720sw"
+        android:layout_height="@dimen/base50dp720sw"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/video_play" />
+
+    <TextView
+        android:id="@+id/education_module_item_main_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/education_module_item_image_view"
+        android:text="Видео. Трейлер Star Wars"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/base22sp720sw"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/education_module_item_description_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/education_module_item_image_view"
+        android:layout_marginTop="-3dp"
+        android:layout_toEndOf="@+id/education_module_item_image_view"
+        android:text="Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/base19sp720sw" />
+</RelativeLayout>

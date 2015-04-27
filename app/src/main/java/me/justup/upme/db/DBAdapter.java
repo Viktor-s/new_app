@@ -15,93 +15,15 @@ import me.justup.upme.entity.ArticleFullResponse;
 import me.justup.upme.entity.ArticlesGetShortDescriptionResponse;
 import me.justup.upme.entity.CalendarGetEventsResponse;
 import me.justup.upme.entity.CommentsArticleFullResponse;
+import me.justup.upme.entity.EducationGetModulesByProgramIdResponse;
+import me.justup.upme.entity.EducationGetProgramsResponse;
 import me.justup.upme.entity.GetAllContactsResponse;
 import me.justup.upme.entity.GetProductHtmlByIdResponse;
 import me.justup.upme.entity.ProductsGetAllCategoriesResponse;
 import me.justup.upme.entity.Push;
 import me.justup.upme.view.dashboard.TileItem;
 
-import static me.justup.upme.db.DBHelper.CREATE_TABLE_STATUS_BAR_PUSH;
-import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_DESCRIPTION;
-import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_END_DATETIME;
-import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_LOCATION;
-import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_NAME;
-import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_OWNER_ID;
-import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_SERVER_ID;
-import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_SHARED_WITH;
-import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_START_DATETIME;
-import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_TABLE_NAME;
-import static me.justup.upme.db.DBHelper.EVENT_CALENDAR_TYPE;
-import static me.justup.upme.db.DBHelper.FULL_NEWS_FULL_DESCR;
-import static me.justup.upme.db.DBHelper.FULL_NEWS_SERVER_ID;
-import static me.justup.upme.db.DBHelper.FULL_NEWS_TABLE_NAME;
-import static me.justup.upme.db.DBHelper.IS_SHORT_NEWS_READ_ARTICLE_ID;
-import static me.justup.upme.db.DBHelper.IS_SHORT_NEWS_READ_TABLE_NAME;
-import static me.justup.upme.db.DBHelper.IS_SHORT_NEWS_READ_VALUE;
-import static me.justup.upme.db.DBHelper.MAIL_CONTACT_DATE_ADD;
-import static me.justup.upme.db.DBHelper.MAIL_CONTACT_IMG;
-import static me.justup.upme.db.DBHelper.MAIL_CONTACT_IN_SYSTEM;
-import static me.justup.upme.db.DBHelper.MAIL_CONTACT_JABBER_ID;
-import static me.justup.upme.db.DBHelper.MAIL_CONTACT_LATITUDE;
-import static me.justup.upme.db.DBHelper.MAIL_CONTACT_LEVEL;
-import static me.justup.upme.db.DBHelper.MAIL_CONTACT_LOGIN;
-import static me.justup.upme.db.DBHelper.MAIL_CONTACT_LONGITUDE;
-import static me.justup.upme.db.DBHelper.MAIL_CONTACT_NAME;
-import static me.justup.upme.db.DBHelper.MAIL_CONTACT_NAME_LOWER_CASE;
-import static me.justup.upme.db.DBHelper.MAIL_CONTACT_PARENT_ID;
-import static me.justup.upme.db.DBHelper.MAIL_CONTACT_PHONE;
-import static me.justup.upme.db.DBHelper.MAIL_CONTACT_SERVER_ID;
-import static me.justup.upme.db.DBHelper.MAIL_CONTACT_TABLE_NAME;
-import static me.justup.upme.db.DBHelper.MAIL_CONTACT_TOTAL_SUM;
-import static me.justup.upme.db.DBHelper.PRODUCTS_BRAND_CATEGORIES_BRAND_ID;
-import static me.justup.upme.db.DBHelper.PRODUCTS_BRAND_CATEGORIES_BRAND_ITEM_DESCRIPTION;
-import static me.justup.upme.db.DBHelper.PRODUCTS_BRAND_CATEGORIES_BRAND_ITEM_ID;
-import static me.justup.upme.db.DBHelper.PRODUCTS_BRAND_CATEGORIES_BRAND_ITEM_NAME;
-import static me.justup.upme.db.DBHelper.PRODUCTS_BRAND_CATEGORIES_CATEGORY_ID;
-import static me.justup.upme.db.DBHelper.PRODUCTS_BRAND_CATEGORIES_FULL_DESCRIPTION;
-import static me.justup.upme.db.DBHelper.PRODUCTS_BRAND_CATEGORIES_IMAGE;
-import static me.justup.upme.db.DBHelper.PRODUCTS_BRAND_CATEGORIES_NAME;
-import static me.justup.upme.db.DBHelper.PRODUCTS_BRAND_CATEGORIES_SERVER_ID;
-import static me.justup.upme.db.DBHelper.PRODUCTS_BRAND_CATEGORIES_SHORT_DESCRIPTION;
-import static me.justup.upme.db.DBHelper.PRODUCTS_BRAND_CATEGORIES_TABLE_NAME;
-import static me.justup.upme.db.DBHelper.PRODUCTS_CATEGORIES_NAME;
-import static me.justup.upme.db.DBHelper.PRODUCTS_CATEGORIES_SERVER_ID;
-import static me.justup.upme.db.DBHelper.PRODUCTS_CATEGORIES_TABLE_NAME;
-import static me.justup.upme.db.DBHelper.PRODUCTS_HTML_CONTENT;
-import static me.justup.upme.db.DBHelper.PRODUCTS_HTML_SERVER_ID;
-import static me.justup.upme.db.DBHelper.PRODUCTS_HTML_TABLE_NAME;
-import static me.justup.upme.db.DBHelper.PRODUCTS_PRODUCT_BRAND_ID;
-import static me.justup.upme.db.DBHelper.PRODUCTS_PRODUCT_IMAGE;
-import static me.justup.upme.db.DBHelper.PRODUCTS_PRODUCT_NAME;
-import static me.justup.upme.db.DBHelper.PRODUCTS_PRODUCT_SERVER_ID;
-import static me.justup.upme.db.DBHelper.PRODUCTS_PRODUCT_SHORT_DESCRIPTION;
-import static me.justup.upme.db.DBHelper.PRODUCTS_PRODUCT_TABLE_NAME;
-import static me.justup.upme.db.DBHelper.SHORT_NEWS_COMMENTS_ARTICLE_ID;
-import static me.justup.upme.db.DBHelper.SHORT_NEWS_COMMENTS_AUTHOR_ID;
-import static me.justup.upme.db.DBHelper.SHORT_NEWS_COMMENTS_AUTHOR_IMAGE;
-import static me.justup.upme.db.DBHelper.SHORT_NEWS_COMMENTS_AUTHOR_NAME;
-import static me.justup.upme.db.DBHelper.SHORT_NEWS_COMMENTS_CONTENT;
-import static me.justup.upme.db.DBHelper.SHORT_NEWS_COMMENTS_POSTED_AT;
-import static me.justup.upme.db.DBHelper.SHORT_NEWS_COMMENTS_SERVER_ID;
-import static me.justup.upme.db.DBHelper.SHORT_NEWS_COMMENTS_TABLE_NAME;
-import static me.justup.upme.db.DBHelper.SHORT_NEWS_POSTED_AT;
-import static me.justup.upme.db.DBHelper.SHORT_NEWS_SERVER_ID;
-import static me.justup.upme.db.DBHelper.SHORT_NEWS_SHORT_DESCR;
-import static me.justup.upme.db.DBHelper.SHORT_NEWS_TABLE_NAME;
-import static me.justup.upme.db.DBHelper.SHORT_NEWS_THUMBNAIL;
-import static me.justup.upme.db.DBHelper.SHORT_NEWS_TITLE;
-import static me.justup.upme.db.DBHelper.STATUS_BAR_PUSH_DATE;
-import static me.justup.upme.db.DBHelper.STATUS_BAR_PUSH_FILE_NAME;
-import static me.justup.upme.db.DBHelper.STATUS_BAR_PUSH_FORM_ID;
-import static me.justup.upme.db.DBHelper.STATUS_BAR_PUSH_ID;
-import static me.justup.upme.db.DBHelper.STATUS_BAR_PUSH_JABBER;
-import static me.justup.upme.db.DBHelper.STATUS_BAR_PUSH_LINK;
-import static me.justup.upme.db.DBHelper.STATUS_BAR_PUSH_PUSH_DESCRIPTION;
-import static me.justup.upme.db.DBHelper.STATUS_BAR_PUSH_ROOM;
-import static me.justup.upme.db.DBHelper.STATUS_BAR_PUSH_TABLE_NAME;
-import static me.justup.upme.db.DBHelper.STATUS_BAR_PUSH_TYPE;
-import static me.justup.upme.db.DBHelper.STATUS_BAR_PUSH_USER_ID;
-import static me.justup.upme.db.DBHelper.STATUS_BAR_PUSH_USER_NAME;
+import static me.justup.upme.db.DBHelper.*;
 
 /**
  * <b>Use:</b>:
@@ -125,7 +47,8 @@ public class DBAdapter {
     public static final String CALENDAR_SQL_BROADCAST_INTENT = "calendar_sql_broadcast_intent";
     public static final String PRODUCTS_SQL_BROADCAST_INTENT = "products_sql_broadcast_intent";
     public static final String PRODUCT_HTML_SQL_BROADCAST_INTENT = "products_html_sql_broadcast_intent";
-
+    public static final String EDUCATION_GET_PRODUCTS_SQL_BROADCAST_INTENT = "education_get_products_sql_broadcast_intent";
+    public static final String EDUCATION_GET_PRODUCT_MODULES_SQL_BROADCAST_INTENT = "education_get_product_modules_sql_broadcast_intent";
     // private DBHelper dbHelper;
 
     public static final String EMPTY_VALUE = "-";
@@ -372,6 +295,48 @@ public class DBAdapter {
         sendBroadcast(PRODUCT_HTML_SQL_BROADCAST_INTENT);
     }
 
+    public void saveEducationProducts(EducationGetProgramsResponse entity) {
+
+        for (int i = 0; i < entity.result.size(); i++) {
+            ContentValues values = new ContentValues();
+            values.put(EDUCATION_PRODUCTS_SERVER_ID, entity.result.get(i).id);
+            values.put(EDUCATION_PRODUCTS_NAME, entity.result.get(i).name);
+            values.put(EDUCATION_PRODUCTS_NAME_LOWER_CASE, entity.result.get(i).name.toLowerCase());
+            database.insertWithOnConflict(EDUCATION_PRODUCTS_TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+        }
+        sendBroadcast(EDUCATION_GET_PRODUCTS_SQL_BROADCAST_INTENT);
+    }
+
+
+    public void saveEducationProductModules(EducationGetModulesByProgramIdResponse entity) {
+        for (int i = 0; i < entity.result.size(); i++) {
+            ContentValues values = new ContentValues();
+            values.put(EDUCATION_PRODUCT_MODULE_SERVER_ID, entity.result.get(i).id);
+            values.put(EDUCATION_PRODUCT_MODULE_PROGRAM_ID, entity.result.get(i).program_id);
+            values.put(EDUCATION_PRODUCT_MODULE_NAME, entity.result.get(i).name);
+            values.put(EDUCATION_PRODUCT_MODULE_DESCRIPTION, entity.result.get(i).description);
+            values.put(EDUCATION_PRODUCT_MODULE_CREATED_AT, entity.result.get(i).created_at);
+            values.put(EDUCATION_PRODUCT_MODULE_UPDATED_AT, entity.result.get(i).updated_at);
+            for (int j = 0; j < entity.result.get(i).materials.size(); j++) {
+                ContentValues valuesComments = new ContentValues();
+                valuesComments.put(EDUCATION_MODULES_MATERIAL_SERVER_ID, entity.result.get(i).materials.get(j).id);
+                valuesComments.put(EDUCATION_MODULES_MATERIAL_MODULE_ID, entity.result.get(i).materials.get(j).module_id);
+                valuesComments.put(EDUCATION_MODULES_MATERIAL_CONTENT_TYPE, entity.result.get(i).materials.get(j).content_type);
+                valuesComments.put(EDUCATION_MODULES_MATERIAL_PRIORITY_TYPE, entity.result.get(i).materials.get(j).priority_type);
+                valuesComments.put(EDUCATION_MODULES_MATERIAL_EXTRA_SOURCE, entity.result.get(i).materials.get(j).extradata.source);
+                valuesComments.put(EDUCATION_MODULES_MATERIAL_EXTRA_LINK, entity.result.get(i).materials.get(j).extradata.link);
+                valuesComments.put(EDUCATION_MODULES_MATERIAL_SORT_WEIGHT, entity.result.get(i).materials.get(j).sort_weight);
+                valuesComments.put(EDUCATION_MODULES_MATERIAL_CREATED_AT, entity.result.get(i).materials.get(j).created_at);
+                valuesComments.put(EDUCATION_MODULES_MATERIAL_UPDATED_AT, entity.result.get(i).materials.get(j).updated_at);
+
+                database.insertWithOnConflict(EDUCATION_MODULES_MATERIAL_TABLE_NAME, null, valuesComments, SQLiteDatabase.CONFLICT_REPLACE);
+            }
+            database.insertWithOnConflict(EDUCATION_PRODUCT_MODULE_TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+        }
+        sendBroadcast(EDUCATION_GET_PRODUCT_MODULES_SQL_BROADCAST_INTENT);
+    }
+
+
     public void sendBroadcast(String type) {
         Intent intent = new Intent(type);
         LocalBroadcastManager.getInstance(JustUpApplication.getApplication().getApplicationContext()).sendBroadcast(intent);
@@ -467,7 +432,7 @@ public class DBAdapter {
     }
 
     // Title Menu
-    public void saveTileMenu(List<TileItem>  tileItemList) {
+    public void saveTileMenu(List<TileItem> tileItemList) {
 
         for (int i = 0; i < tileItemList.size(); i++) {
             ContentValues values = new ContentValues();
@@ -493,9 +458,9 @@ public class DBAdapter {
 
         String selectQuery = "SELECT * FROM " + DBHelper.TILE_TABLE_NAME;
         Cursor cursor;
-        try{
+        try {
             cursor = database.rawQuery(selectQuery, null);
-        }catch (NullPointerException e){
+        } catch (NullPointerException e) {
             return null;
         }
 

@@ -20,6 +20,8 @@ import me.justup.upme.entity.BaseHttpQueryEntity;
 import me.justup.upme.entity.BaseMethodEmptyQuery;
 import me.justup.upme.entity.CalendarGetEventsResponse;
 import me.justup.upme.entity.CommentsArticleFullResponse;
+import me.justup.upme.entity.EducationGetModulesByProgramIdResponse;
+import me.justup.upme.entity.EducationGetProgramsResponse;
 import me.justup.upme.entity.GetAllContactsResponse;
 import me.justup.upme.entity.GetProductHtmlByIdResponse;
 import me.justup.upme.entity.ProductsGetAllCategoriesResponse;
@@ -38,6 +40,7 @@ public class HttpIntentService extends IntentService {
     public static final String HTTP_INTENT_QUERY_EXTRA = "http_intent_query_extra";
     public static final String HTTP_INTENT_PART_EXTRA = "http_intent_part_extra";
     public static final String BROADCAST_INTENT_NEWS_FEED_SERVER_ERROR = "broadcast_intent_news_feed_server_error";
+    public static final String BROADCAST_INTENT_EDUCATION_MODULE_SERVER_ERROR = "broadcast_intent_education_module_server_error";
 
     public static final int NEWS_PART_SHORT = 1;
     public static final int NEWS_PART_FULL = 2;
@@ -54,6 +57,8 @@ public class HttpIntentService extends IntentService {
     public static final int PRODUCTS_GET_ALL_CATEGORIES = 13;
     public static final int PRODUCTS_GET_HTML_BY_ID = 14;
     public static final int PRODUCTS_CREATE_ORDER = 15;
+    public static final int EDUCATION_GET_PRODUCTS = 16;
+    public static final int EDUCATION_GET_PRODUCT_MODULES = 17;
 
 
     //private DBAdapter mDBAdapter;
@@ -156,6 +161,15 @@ public class HttpIntentService extends IntentService {
                 case PRODUCTS_CREATE_ORDER:
 
                     break;
+
+                case EDUCATION_GET_PRODUCTS:
+                    fillEducationProductsDB(content);
+                    break;
+
+                case EDUCATION_GET_PRODUCT_MODULES:
+                    fillEducationProductModulesDB(content);
+                    break;
+
                 default:
                     break;
             }
@@ -405,5 +419,32 @@ public class HttpIntentService extends IntentService {
         }
     }
 
+    private void fillEducationProductsDB(String content) {
+        EducationGetProgramsResponse response = null;
+        try {
+            response = ApiWrapper.gson.fromJson(content, EducationGetProgramsResponse.class);
+        } catch (JsonSyntaxException e) {
+            LOGE(TAG, "gson.fromJson:\n" + content);
+        }
+
+        if (response != null && response.result != null) {
+            DBAdapter.getInstance().saveEducationProducts(response);
+        }
+    }
+
+    private void fillEducationProductModulesDB(String content) {
+        EducationGetModulesByProgramIdResponse response = null;
+        try {
+            response = ApiWrapper.gson.fromJson(content, EducationGetModulesByProgramIdResponse.class);
+        } catch (JsonSyntaxException e) {
+            LOGE(TAG, "gson.fromJson:\n" + content);
+        }
+
+        if (response != null && response.result != null) {
+            DBAdapter.getInstance().saveEducationProductModules(response);
+        } else {
+            DBAdapter.getInstance().sendBroadcast(BROADCAST_INTENT_EDUCATION_MODULE_SERVER_ERROR);
+        }
+    }
 
 }

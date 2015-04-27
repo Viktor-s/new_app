@@ -136,7 +136,7 @@ public class NewsFeedFragmentNew extends Fragment {
                         if (mNewsFeedEntityPartOfList.size() < 10) {
                             mNewsFeedEntityPartOfList.addAll(getNextArticlesPack());
                         }
-                        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                        if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
                             int row = mNewsFeedEntityList.size() / columnLandscape;
                             gridLayout.setColumnCount(columnLandscape);
                             gridLayout.setRowCount(row + 1);
