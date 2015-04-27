@@ -8,7 +8,7 @@ import android.provider.BaseColumns;
 
 public class DBHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "upme.db";
-    private static final int DATABASE_VERSION = 20;
+    private static final int DATABASE_VERSION = 22;
 
     public static final String BASE_TABLE_NAME = "base_table";
     public static final String BASE_ID = BaseColumns._ID;
@@ -122,6 +122,32 @@ public class DBHelper extends SQLiteOpenHelper {
     protected static final String STATUS_BAR_PUSH_FORM_ID = "form_id";
     protected static final String STATUS_BAR_PUSH_PUSH_DESCRIPTION = "push_description";
 
+    public static final String EDUCATION_PRODUCTS_TABLE_NAME = "education_products_table";
+    public static final String EDUCATION_PRODUCTS_ID = BaseColumns._ID;
+    public static final String EDUCATION_PRODUCTS_SERVER_ID = "server_id";
+    public static final String EDUCATION_PRODUCTS_NAME = "name";
+    public static final String EDUCATION_PRODUCTS_NAME_LOWER_CASE = "name_lc";
+
+    public static final String EDUCATION_PRODUCT_MODULE_TABLE_NAME = "education_product_module_table";
+    public static final String EDUCATION_PRODUCT_MODULE_ID = BaseColumns._ID;
+    public static final String EDUCATION_PRODUCT_MODULE_SERVER_ID = "server_id";
+    public static final String EDUCATION_PRODUCT_MODULE_PROGRAM_ID = "program_id";
+    public static final String EDUCATION_PRODUCT_MODULE_NAME = "name";
+    public static final String EDUCATION_PRODUCT_MODULE_DESCRIPTION = "description";
+    public static final String EDUCATION_PRODUCT_MODULE_CREATED_AT = "created_at";
+    public static final String EDUCATION_PRODUCT_MODULE_UPDATED_AT = "updated_at";
+
+    public static final String EDUCATION_MODULES_MATERIAL_TABLE_NAME = "education_modules_material_table";
+    public static final String EDUCATION_MODULES_MATERIAL_ID = BaseColumns._ID;
+    public static final String EDUCATION_MODULES_MATERIAL_SERVER_ID = "server_id";
+    public static final String EDUCATION_MODULES_MATERIAL_MODULE_ID = "module_id";
+    public static final String EDUCATION_MODULES_MATERIAL_CONTENT_TYPE = "content_type";
+    public static final String EDUCATION_MODULES_MATERIAL_PRIORITY_TYPE = "priority_type";
+    public static final String EDUCATION_MODULES_MATERIAL_EXTRA_SOURCE = "extra_source";
+    public static final String EDUCATION_MODULES_MATERIAL_EXTRA_LINK = "extra_link";
+    public static final String EDUCATION_MODULES_MATERIAL_SORT_WEIGHT = "sort_weight";
+    public static final String EDUCATION_MODULES_MATERIAL_CREATED_AT = "created_at";
+    public static final String EDUCATION_MODULES_MATERIAL_UPDATED_AT = "updated_at";
 
     private static final String CREATE_TABLE_BASE = "CREATE TABLE "
             + BASE_TABLE_NAME + "("
@@ -254,13 +280,43 @@ public class DBHelper extends SQLiteOpenHelper {
             + STATUS_BAR_PUSH_PUSH_DESCRIPTION + " TEXT, "
             + STATUS_BAR_PUSH_ROOM + " TEXT" + ")";
 
+    protected static final String CREATE_TABLE_EDUCATION_PRODUCTS = "CREATE TABLE "
+            + EDUCATION_PRODUCTS_TABLE_NAME + "("
+            + EDUCATION_PRODUCTS_ID + " INTEGER, "
+            + EDUCATION_PRODUCTS_SERVER_ID + " INTEGER PRIMARY KEY, "
+            + EDUCATION_PRODUCTS_NAME_LOWER_CASE + " TEXT, "
+            + EDUCATION_PRODUCTS_NAME + " TEXT" + ")";
+
+    protected static final String CREATE_TABLE_EDUCATION_PRODUCT_MODULE = "CREATE TABLE "
+            + EDUCATION_PRODUCT_MODULE_TABLE_NAME + "("
+            + EDUCATION_PRODUCT_MODULE_ID + " INTEGER, "
+            + EDUCATION_PRODUCT_MODULE_SERVER_ID + " INTEGER PRIMARY KEY, "
+            + EDUCATION_PRODUCT_MODULE_PROGRAM_ID + " INTEGER, "
+            + EDUCATION_PRODUCT_MODULE_NAME + " TEXT, "
+            + EDUCATION_PRODUCT_MODULE_DESCRIPTION + " TEXT, "
+            + EDUCATION_PRODUCT_MODULE_CREATED_AT + " TEXT, "
+            + EDUCATION_PRODUCT_MODULE_UPDATED_AT + " TEXT" + ")";
+
+    protected static final String CREATE_TABLE_EDUCATION_MODULES_MATERIAL = "CREATE TABLE "
+            + EDUCATION_MODULES_MATERIAL_TABLE_NAME + "("
+            + EDUCATION_MODULES_MATERIAL_ID + " INTEGER, "
+            + EDUCATION_MODULES_MATERIAL_SERVER_ID + " INTEGER PRIMARY KEY, "
+            + EDUCATION_MODULES_MATERIAL_MODULE_ID + " INTEGER, "
+            + EDUCATION_MODULES_MATERIAL_CONTENT_TYPE + " TEXT, "
+            + EDUCATION_MODULES_MATERIAL_PRIORITY_TYPE + " TEXT, "
+            + EDUCATION_MODULES_MATERIAL_EXTRA_SOURCE + " TEXT, "
+            + EDUCATION_MODULES_MATERIAL_EXTRA_LINK + " TEXT, "
+            + EDUCATION_MODULES_MATERIAL_SORT_WEIGHT + " INTEGER, "
+            + EDUCATION_MODULES_MATERIAL_CREATED_AT + " TEXT, "
+            + EDUCATION_MODULES_MATERIAL_UPDATED_AT + " TEXT" + ")";
+
     // Tile Menu
 
     public static final String TILE_TABLE_NAME = "tile_table";
 
     public static final String TILE_ID = BaseColumns._ID;
 
-    public static final String TILE_WIDTH= "width";
+    public static final String TILE_WIDTH = "width";
     public static final String TILE_HEIGHT = "height";
     public static final String TILE_TITLE = "title";
     public static final String TILE_STITLE = "stitle";
@@ -270,7 +326,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String TILE_IS_REDACTED = "is_redacted";
     public static final String TILE_IS_IMAGE = "is_img";
 
-    private static final String CREATE_TABLE_TILE_MENU= "CREATE TABLE "
+    private static final String CREATE_TABLE_TILE_MENU = "CREATE TABLE "
             + TILE_TABLE_NAME + "("
             + TILE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
             + TILE_WIDTH + " INTEGER, "
@@ -302,6 +358,10 @@ public class DBHelper extends SQLiteOpenHelper {
         database.execSQL(CREATE_TABLE_PRODUCTS_HTML);
         database.execSQL(CREATE_TABLE_STATUS_BAR_PUSH);
         database.execSQL(CREATE_TABLE_TILE_MENU);
+        database.execSQL(CREATE_TABLE_EDUCATION_PRODUCTS);
+        database.execSQL(CREATE_TABLE_EDUCATION_PRODUCT_MODULE);
+        database.execSQL(CREATE_TABLE_EDUCATION_MODULES_MATERIAL);
+
     }
 
     @Override
@@ -319,6 +379,9 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + PRODUCTS_PRODUCT_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + PRODUCTS_HTML_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + TILE_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + EDUCATION_PRODUCTS_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + EDUCATION_PRODUCT_MODULE_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + EDUCATION_MODULES_MATERIAL_TABLE_NAME);
         onCreate(db);
     }
 

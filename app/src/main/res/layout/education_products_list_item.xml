@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/base60dp720sw"
+    android:descendantFocusability="blocksDescendants"
+    android:orientation="vertical"
+    android:background="@color/education_list_color">
+
+
+
+    <TextView
+        android:id="@+id/education_products_item_textView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/mail_contacts_item_imageView"
+        android:text="New Text"
+        android:textColor="#4C576E"
+        android:layout_marginLeft="@dimen/base15dp720sw"
+        android:gravity="center|left"
+        android:textSize="@dimen/base24sp720sw"
+        android:paddingLeft="@dimen/base15dp720sw" />
+
+
+</RelativeLayout>

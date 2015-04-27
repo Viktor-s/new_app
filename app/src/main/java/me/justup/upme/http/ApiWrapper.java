@@ -89,6 +89,9 @@ public class ApiWrapper {
     public static final String FILE_UNLINK_SHARED_FILE = "File.unlinkSharedFile";
     public static final String FILE_DROP_SHARE_WITH = "File.dropShareWith";
 
+    public static final String EDUCATION_GET_PROGRAMS = "Education.getPrograms";
+    public static final String EDUCATION_GET_MODELES_BY_PROGRAM_ID = "Education.getModulesByProgramId";
+
 
     private static void post(final StringEntity se, AsyncHttpResponseHandler responseHandler) {
         addClientHeader();
