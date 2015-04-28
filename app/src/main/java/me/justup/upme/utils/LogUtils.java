@@ -4,9 +4,8 @@ import android.util.Log;
 
 import me.justup.upme.BuildConfig;
 
-
 public class LogUtils {
-    public static final boolean DEVELOPER_MODE = false;
+    public static final boolean DEVELOPER_MODE = BuildConfig.DEBUG;
 
     private static final String LOG_PREFIX = "upme_";
     private static final int LOG_PREFIX_LENGTH = LOG_PREFIX.length();
@@ -25,22 +24,50 @@ public class LogUtils {
     }
 
     public static void LOGD(final String tag, String message) {
-        if (BuildConfig.FLAVOR.equals(Constance.APP_FLAVOR_LAUNCHER) || BuildConfig.DEBUG) {
+        if(DEVELOPER_MODE && message!=null) {
             Log.d(tag, message);
         }
     }
 
+    public static void LOGD(final String tag, String message, Throwable cause) {
+        if(DEVELOPER_MODE && message!=null) {
+            Log.d(tag, message, cause);
+        }
+    }
+
     public static void LOGI(final String tag, String message) {
-        if (BuildConfig.FLAVOR.equals(Constance.APP_FLAVOR_LAUNCHER) || BuildConfig.DEBUG) {
+        if(DEVELOPER_MODE && message!=null) {
             Log.i(tag, message);
         }
     }
 
+    public static void LOGI(final String tag, String message, Throwable cause) {
+        if(DEVELOPER_MODE && message!=null) {
+            Log.i(tag, message, cause);
+        }
+    }
+
     public static void LOGE(final String tag, String message) {
-        Log.e(tag, message);
+        if(DEVELOPER_MODE && message!=null) {
+            Log.e(tag, message);
+        }
     }
 
     public static void LOGE(final String tag, String message, Throwable cause) {
-        Log.e(tag, message, cause);
+        if(DEVELOPER_MODE && message!=null) {
+            Log.e(tag, message, cause);
+        }
+    }
+
+    public static void LOGW(final String tag, String message) {
+        if(DEVELOPER_MODE && message!=null) {
+            Log.w(tag, message);
+        }
+    }
+
+    public static void LOGW(final String tag, String message, Throwable cause) {
+        if(DEVELOPER_MODE && message!=null) {
+            Log.w(tag, message, cause);
+        }
     }
 }

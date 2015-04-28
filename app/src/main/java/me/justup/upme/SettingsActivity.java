@@ -15,7 +15,6 @@ import me.justup.upme.fragments.SettingsSocialFragment;
 import me.justup.upme.fragments.SettingsWebRtcFragment;
 import me.justup.upme.fragments.SettingsWifiFragment;
 
-
 public class SettingsActivity extends BaseActivity implements View.OnClickListener {
     private static final String SAVE_FRAGMENT_TAG = "save_settings_fragment_tag";
 
