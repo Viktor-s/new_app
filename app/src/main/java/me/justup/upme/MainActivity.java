@@ -88,6 +88,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
     private static final int SELECTED_FRAGMENT_STUDY = 7;
     private static final int SELECTED_FRAGMENT_BROWSER = 8;
     private static final int SELECTED_FRAGMENT_SETTINGS = 9;
+    private static final int UP_ME_ANIMATION_VALUE = 114;
     private int currentlySelectedFragment;
 
     private FrameLayout mMainFragmentContainer;
@@ -407,7 +408,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
                     isShowMainFragmentContainer = false;
                     mLogoParams.gravity = Gravity.CENTER;
                     // mUPMELogo.setLayoutParams(mLogoParams);
-                    Animation animation = new TranslateAnimation(-100, 0, 0, 0);
+                    Animation animation = new TranslateAnimation(-UP_ME_ANIMATION_VALUE, 0, 0, 0);
                     animation.setDuration(1000);
                     animation.setFillAfter(true);
                     mUPMELogo.startAnimation(animation);
@@ -421,7 +422,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
     private void showMainFragmentContainer() {
         mLogoParams.gravity = Gravity.CENTER | Gravity.START;
         // mUPMELogo.setLayoutParams(mLogoParams);
-        Animation animation = new TranslateAnimation(0, -100, 0, 0);
+        Animation animation = new TranslateAnimation(0, -UP_ME_ANIMATION_VALUE, 0, 0);
         animation.setDuration(1000);
         animation.setFillAfter(true);
         mUPMELogo.startAnimation(animation);

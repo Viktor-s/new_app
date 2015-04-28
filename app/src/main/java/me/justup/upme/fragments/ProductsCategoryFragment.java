@@ -27,7 +27,7 @@ import me.justup.upme.utils.CommonUtils;
 public class ProductsCategoryFragment extends Fragment {
     private static final String ARG_PRODUCTS_LIST = "products_list";
     private static final String ARG_CATEGORY_NAME = "category_name";
-    private ProductsCategoryBrandEntity productsCategoryBrandEntiti;
+    private ProductsCategoryBrandEntity productsCategoryBrandEntity;
     private GridLayout gridLayout;
     private LayoutInflater layoutInflater;
     private int column = 3;
@@ -49,7 +49,7 @@ public class ProductsCategoryFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            productsCategoryBrandEntiti = (ProductsCategoryBrandEntity) bundle.getSerializable(ARG_PRODUCTS_LIST);
+            productsCategoryBrandEntity = (ProductsCategoryBrandEntity) bundle.getSerializable(ARG_PRODUCTS_LIST);
             categoryName = bundle.getString(ARG_CATEGORY_NAME);
         }
         Display display = getActivity().getWindowManager().getDefaultDisplay();
@@ -66,11 +66,11 @@ public class ProductsCategoryFragment extends Fragment {
         TextView tvTitleMain = (TextView) view.findViewById(R.id.prod_category_top_title_main_textView);
         TextView tvTitle = (TextView) view.findViewById(R.id.prod_category_top_title_textView);
         tvTitleMain.setText("Продукты /" + " " + categoryName);
-        tvTitle.setText(productsCategoryBrandEntiti.getName());
-        namePath = "Продукты / " + categoryName + " / " + productsCategoryBrandEntiti.getName();
+        tvTitle.setText(productsCategoryBrandEntity.getName());
+        namePath = "Продукты / " + categoryName + " / " + productsCategoryBrandEntity.getName();
 
         gridLayout = (GridLayout) view.findViewById(R.id.productItemsGridLayout);
-        int row = productsCategoryBrandEntiti.getProductEntityList().size() / column;
+        int row = productsCategoryBrandEntity.getProductEntityList().size() / column;
         gridLayout.setColumnCount(column);
         gridLayout.setRowCount(row + 1);
         updateView();
@@ -79,7 +79,7 @@ public class ProductsCategoryFragment extends Fragment {
 
 
     private void updateView() {
-        for (int i = 0, c = 0, r = 0; i < productsCategoryBrandEntiti.getProductEntityList().size(); i++, c++) {
+        for (int i = 0, c = 0, r = 0; i < productsCategoryBrandEntity.getProductEntityList().size(); i++, c++) {
             if (c == column) {
                 c = 0;
                 r++;
@@ -95,14 +95,14 @@ public class ProductsCategoryFragment extends Fragment {
 
             LinearLayout categoryProductLayout = (LinearLayout) layoutInflater.inflate(R.layout.product_category_grid_row, null, false);
             TextView idGroupProduct = (TextView) categoryProductLayout.findViewById(R.id.grid_hide_id);
-            idGroupProduct.setText(Integer.toString(productsCategoryBrandEntiti.getProductEntityList().get(i).getId()));
+            idGroupProduct.setText(Integer.toString(productsCategoryBrandEntity.getProductEntityList().get(i).getId()));
             ImageView groupProductPhoto = (ImageView) categoryProductLayout.findViewById(R.id.grid_row_imageView);
-            String imagePath = (productsCategoryBrandEntiti.getProductEntityList().get(i).getImage() != null && productsCategoryBrandEntiti.getProductEntityList().get(i).getImage().length() > 1) ? productsCategoryBrandEntiti.getProductEntityList().get(i).getImage() : "fake";
+            String imagePath = (productsCategoryBrandEntity.getProductEntityList().get(i).getImage() != null && productsCategoryBrandEntity.getProductEntityList().get(i).getImage().length() > 1) ? productsCategoryBrandEntity.getProductEntityList().get(i).getImage() : "fake";
             Picasso.with(getActivity()).load(imagePath).placeholder(R.color.white).fit().into(groupProductPhoto);
             TextView categoryProductTitle = (TextView) categoryProductLayout.findViewById(R.id.grid_row_name_extView);
-            categoryProductTitle.setText(productsCategoryBrandEntiti.getProductEntityList().get(i).getName());
+            categoryProductTitle.setText(productsCategoryBrandEntity.getProductEntityList().get(i).getName());
             TextView categoryProductDescr = (TextView) categoryProductLayout.findViewById(R.id.grid_row_description_textView);
-            categoryProductDescr.setText(productsCategoryBrandEntiti.getProductEntityList().get(i).getDescription());
+            categoryProductDescr.setText(productsCategoryBrandEntity.getProductEntityList().get(i).getDescription());
             categoryProductLayout.setLayoutParams(param);
             categoryProductLayout.setOnClickListener(new View.OnClickListener() {
                 @Override

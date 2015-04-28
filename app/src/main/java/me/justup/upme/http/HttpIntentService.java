@@ -184,6 +184,10 @@ public class HttpIntentService extends IntentService {
                 case NEWS_PART_SHORT:
                     DBAdapter.getInstance().sendBroadcast(BROADCAST_INTENT_NEWS_FEED_SERVER_ERROR);
                     break;
+                case EDUCATION_GET_PRODUCT_MODULES:
+                    DBAdapter.getInstance().sendBroadcast(BROADCAST_INTENT_EDUCATION_MODULE_SERVER_ERROR);
+                    break;
+
                 default:
                     break;
             }

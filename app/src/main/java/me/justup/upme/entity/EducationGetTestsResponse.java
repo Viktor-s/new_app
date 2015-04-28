@@ -3,7 +3,7 @@ package me.justup.upme.entity;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class EducationGetModulesByProgramIdResponse extends BaseHttpResponseEntity {
+public class EducationGetTestsResponse extends BaseHttpResponseEntity {
     public ArrayList<Result> result = new ArrayList<>();
 
     public class Result extends BaseHttpParams {

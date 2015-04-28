@@ -1,4 +1,4 @@
-package me.justup.upme.fragments;
+package me.justup.upme.entity;
 
 import java.io.Serializable;
 import java.util.ArrayList;

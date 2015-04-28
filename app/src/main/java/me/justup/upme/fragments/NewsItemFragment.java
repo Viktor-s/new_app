@@ -203,11 +203,11 @@ public class NewsItemFragment extends Fragment {
 
         mNewsItemWebView = (WebView) view.findViewById(R.id.news_item_webView);
         mNewsItemWebView.getSettings().setJavaScriptEnabled(true);
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            mNewsItemWebView.setInitialScale(100);
-        } else {
-            mNewsItemWebView.setInitialScale(60);
-        }
+//        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+//            mNewsItemWebView.setInitialScale(100);
+//        } else {
+//            mNewsItemWebView.setInitialScale(60);
+//        }
 
         mNewsItemWebView.setWebChromeClient(new WebChromeClient() {
             @Override
@@ -402,15 +402,15 @@ public class NewsItemFragment extends Fragment {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            //mNewsItemWebView.getSettings().setLoadWithOverviewMode(true);
-            //mNewsItemWebView.getSettings().setUseWideViewPort(false);
-            mNewsItemWebView.setInitialScale(100);
-        } else {
-            //mNewsItemWebView.getSettings().setLoadWithOverviewMode(true);
-            //mNewsItemWebView.getSettings().setUseWideViewPort(true);
-            mNewsItemWebView.setInitialScale(60);
-        }
+//        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+//            //mNewsItemWebView.getSettings().setLoadWithOverviewMode(true);
+//            //mNewsItemWebView.getSettings().setUseWideViewPort(false);
+//            mNewsItemWebView.setInitialScale(100);
+//        } else {
+//            //mNewsItemWebView.getSettings().setLoadWithOverviewMode(true);
+//            //mNewsItemWebView.getSettings().setUseWideViewPort(true);
+//            mNewsItemWebView.setInitialScale(60);
+//        }
 
     }
 

@@ -18,10 +18,61 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center|top"
-            android:layout_marginTop="@dimen/base20dp720sw"
+            android:layout_marginTop="@dimen/base10dp720sw"
             android:text="@string/study"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/base24sp720sw" />
+
+        <LinearLayout
+            android:id="@+id/education_module_pass_workbook"
+            android:orientation="horizontal"
+            android:layout_width="@dimen/base140dp720sw"
+            android:layout_height="fill_parent"
+            android:layout_marginRight="@dimen/base10dp720sw"
+
+            android:layout_toStartOf="@+id/education_module_pass_test"
+            android:layout_marginBottom="@dimen/base6dp720sw"
+            android:layout_marginTop="@dimen/base35dp720sw">
+
+            <ImageView
+                android:layout_width="@dimen/base50dp720sw"
+                android:layout_height="match_parent"
+                android:id="@+id/imageView4"
+                android:background="@drawable/education_workbook" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Сдать тетрадь"
+                android:id="@+id/textView12"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/base19sp720sw" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="@dimen/base140dp720sw"
+            android:layout_height="fill_parent"
+
+            android:layout_alignParentRight="true"
+            android:id="@+id/education_module_pass_test"
+            android:layout_alignTop="@+id/education_module_pass_workbook"
+            android:layout_marginBottom="@dimen/base6dp720sw">
+
+            <ImageView
+                android:layout_width="@dimen/base50dp720sw"
+                android:layout_height="match_parent"
+                android:id="@+id/imageView3"
+                android:background="@drawable/education_test" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Пройти тест"
+                android:id="@+id/textView11"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/base19sp720sw" />
+        </LinearLayout>
     </RelativeLayout>
 
     <ProgressBar
@@ -38,13 +89,63 @@
         android:id="@+id/fragment_education_module_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="#4C576E"
         android:layout_gravity="left"
         android:layout_below="@+id/fragment_education_module_action_bar"
         android:layout_alignParentStart="true"
-        android:layout_marginLeft="@dimen/base15dp720sw"
-        android:layout_marginTop="@dimen/base20dp720sw" />
+        android:layout_marginLeft="@dimen/base25dp720sw"
+        android:layout_marginTop="@dimen/base20dp720sw"
+        android:textSize="@dimen/base22sp720sw" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Основной материал"
+        android:id="@+id/education_module_main_textView"
+        android:layout_below="@+id/fragment_education_module_description"
+        android:textSize="@dimen/base24sp720sw"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:layout_marginTop="@dimen/base30dp720sw"
+        android:layout_marginLeft="@dimen/base25dp720sw" />
+
+    <GridLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/education_module_main_textView"
+        android:id="@+id/educ_module_main_material_container"
+        android:rowCount="3"
+        android:columnCount="3"
+        android:layout_marginTop="@dimen/base30dp720sw"
+        android:layout_marginLeft="@dimen/base25dp720sw"></GridLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Дополнительный материал"
+        android:id="@+id/education_module_secondary_textView"
+        android:layout_below="@+id/educ_module_main_material_container"
+        android:layout_marginTop="@dimen/base30dp720sw"
+        android:textSize="@dimen/base24sp720sw"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        android:layout_marginLeft="@dimen/base25dp720sw" />
+
+    <GridLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/education_module_secondary_textView"
+        android:id="@+id/educ_module_secondary_material_container"
+        android:rowCount="3"
+        android:columnCount="3"
+        android:layout_marginTop="@dimen/base30dp720sw"
+        android:layout_marginLeft="@dimen/base25dp720sw"></GridLayout>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:id="@+id/fragment_module_youtube_container"
+        android:layout_below="@+id/fragment_education_module_action_bar"></FrameLayout>
 
 
 </RelativeLayout>

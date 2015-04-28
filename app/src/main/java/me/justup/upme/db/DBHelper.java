@@ -8,7 +8,7 @@ import android.provider.BaseColumns;
 
 public class DBHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "upme.db";
-    private static final int DATABASE_VERSION = 22;
+    private static final int DATABASE_VERSION = 23;
 
     public static final String BASE_TABLE_NAME = "base_table";
     public static final String BASE_ID = BaseColumns._ID;
@@ -148,6 +148,8 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String EDUCATION_MODULES_MATERIAL_SORT_WEIGHT = "sort_weight";
     public static final String EDUCATION_MODULES_MATERIAL_CREATED_AT = "created_at";
     public static final String EDUCATION_MODULES_MATERIAL_UPDATED_AT = "updated_at";
+    public static final String EDUCATION_MODULES_MATERIAL_NAME = "name";
+    public static final String EDUCATION_MODULES_MATERIAL_DESCRIPTION = "description";
 
     private static final String CREATE_TABLE_BASE = "CREATE TABLE "
             + BASE_TABLE_NAME + "("
@@ -308,6 +310,8 @@ public class DBHelper extends SQLiteOpenHelper {
             + EDUCATION_MODULES_MATERIAL_EXTRA_LINK + " TEXT, "
             + EDUCATION_MODULES_MATERIAL_SORT_WEIGHT + " INTEGER, "
             + EDUCATION_MODULES_MATERIAL_CREATED_AT + " TEXT, "
+            + EDUCATION_MODULES_MATERIAL_NAME + " TEXT, "
+            + EDUCATION_MODULES_MATERIAL_DESCRIPTION + " TEXT, "
             + EDUCATION_MODULES_MATERIAL_UPDATED_AT + " TEXT" + ")";
 
     // Tile Menu
