@@ -7,4 +7,20 @@
     <item
         android:id="@+id/file_cloud_delete"
         android:title="@string/file_cloud_delete" />
+
+    <item
+        android:id="@+id/file_share_for"
+        android:title="@string/file_share_for" />
+
+    <item
+        android:id="@+id/file_remove_share_for"
+        android:title="@string/file_remove_share_for" />
+
+    <item
+        android:id="@+id/file_remove_share"
+        android:title="@string/file_remove_share" />
+
+    <item
+        android:id="@+id/file_share_properties"
+        android:title="@string/file_properties" />
 </menu>

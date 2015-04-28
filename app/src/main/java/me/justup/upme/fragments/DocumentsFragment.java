@@ -11,6 +11,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,9 @@ import java.util.Date;
 
 import me.justup.upme.MainActivity;
 import me.justup.upme.R;
+import me.justup.upme.dialogs.FilePropertiesDialog;
+import me.justup.upme.dialogs.FileRemoveShareDialog;
+import me.justup.upme.dialogs.FileShareDialog;
 import me.justup.upme.dialogs.ViewImageDialog;
 import me.justup.upme.dialogs.ViewPDFDialog;
 import me.justup.upme.dialogs.ViewVideoDialog;
@@ -54,6 +58,7 @@ import static me.justup.upme.services.FileExplorerService.EXPLORER_SERVICE_FILE_
 import static me.justup.upme.services.FileExplorerService.EXPLORER_SERVICE_FILE_NAME;
 import static me.justup.upme.services.FileExplorerService.EXPLORER_SERVICE_FILE_PATH;
 import static me.justup.upme.services.FileExplorerService.FILE_ACTION_DONE_BROADCAST;
+import static me.justup.upme.services.FileExplorerService.UNSUBSCRIBE;
 import static me.justup.upme.services.FileExplorerService.UPLOAD;
 import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.LOGE;
@@ -94,6 +99,13 @@ public class DocumentsFragment extends Fragment {
 
     private SimpleDateFormat mDateFormat = new SimpleDateFormat(DATE_FORMAT, AppLocale.getAppLocale());
     private FileListHandler mFileListHandler = new FileListHandler();
+
+    private static final int FILE_LOCAL_DELETE = 1;
+    private static final int FILE_CLOUD_DELETE = 2;
+    private static final int FILE_SHARE_FOR = 3;
+    private static final int FILE_REMOVE_SHARE_FOR = 4;
+    private static final int FILE_REMOVE_SHARE = 5;
+    private static final int FILE_SHARE_PROPERTIES = 6;
 
 
     @Override
@@ -189,9 +201,6 @@ public class DocumentsFragment extends Fragment {
                 break;
         }
 
-        ImageView mFileActionButton = (ImageView) item.findViewById(R.id.file_action_button);
-        mFileActionButton.setOnClickListener(new OnFileActionListener(file.getHash(), file.getPath()));
-
         if (type == IMAGE) {
             mFileImage.setImageResource(R.drawable.ic_file_image);
         }
@@ -212,8 +221,10 @@ public class DocumentsFragment extends Fragment {
 
         if (file.getType() == FileEntity.LOCAL_FILE || file.getType() == FileEntity.LOCAL_AND_CLOUD_FILE) {
             mFileImage.setOnClickListener(new OnOpenFileListener(file.getName(), file.getPath(), type));
-            mFileName.setOnClickListener(new OnOpenFileListener(file.getName(), file.getPath(), type));
+            // mFileName.setOnClickListener(new OnOpenFileListener(file.getName(), file.getPath(), type));
         }
+
+        item.setOnLongClickListener(new OnContextMenuListener(file.getHash(), file.getPath(), file.getType()));
 
         mFileExplorer.addView(item);
     }
@@ -265,24 +276,55 @@ public class DocumentsFragment extends Fragment {
         dialog.show(getChildFragmentManager(), ViewVideoDialog.VIEW_VIDEO_DIALOG);
     }
 
-    private class OnFileActionListener implements View.OnClickListener {
+    private class OnContextMenuListener implements View.OnLongClickListener {
         private final String filePath;
         private final String fileHash;
+        private final int type;
 
-        public OnFileActionListener(final String fileHash, final String filePath) {
+        public OnContextMenuListener(final String fileHash, final String filePath, final int type) {
             this.filePath = filePath;
             this.fileHash = fileHash;
+            this.type = type;
         }
 
         @Override
-        public void onClick(View v) {
+        public boolean onLongClick(View v) {
             PopupMenu popup = new PopupMenu(getActivity(), v);
-            popup.inflate(R.menu.file_local_popup_menu);
+
+            switch (type) {
+                case FileEntity.LOCAL_FILE:
+                    popup.getMenu().add(Menu.NONE, FILE_LOCAL_DELETE, Menu.NONE, getString(R.string.file_delete));
+                    break;
+
+                case FileEntity.CLOUD_FILE:
+                    popup.getMenu().add(Menu.NONE, FILE_CLOUD_DELETE, Menu.NONE, getString(R.string.file_cloud_delete));
+                    popup.getMenu().add(Menu.NONE, FILE_SHARE_FOR, Menu.NONE, getString(R.string.file_share_for));
+                    popup.getMenu().add(Menu.NONE, FILE_REMOVE_SHARE_FOR, Menu.NONE, getString(R.string.file_remove_share_for));
+                    popup.getMenu().add(Menu.NONE, FILE_SHARE_PROPERTIES, Menu.NONE, getString(R.string.file_properties));
+                    break;
+
+                case FileEntity.LOCAL_AND_CLOUD_FILE:
+                    popup.getMenu().add(Menu.NONE, FILE_LOCAL_DELETE, Menu.NONE, getString(R.string.file_delete));
+                    popup.getMenu().add(Menu.NONE, FILE_CLOUD_DELETE, Menu.NONE, getString(R.string.file_cloud_delete));
+                    popup.getMenu().add(Menu.NONE, FILE_SHARE_FOR, Menu.NONE, getString(R.string.file_share_for));
+                    popup.getMenu().add(Menu.NONE, FILE_REMOVE_SHARE_FOR, Menu.NONE, getString(R.string.file_remove_share_for));
+                    popup.getMenu().add(Menu.NONE, FILE_SHARE_PROPERTIES, Menu.NONE, getString(R.string.file_properties));
+                    break;
+
+                case FileEntity.SHARE_FILE:
+                    popup.getMenu().add(Menu.NONE, FILE_REMOVE_SHARE, Menu.NONE, getString(R.string.file_remove_share));
+                    popup.getMenu().add(Menu.NONE, FILE_SHARE_PROPERTIES, Menu.NONE, getString(R.string.file_properties));
+                    break;
+
+                default:
+                    break;
+            }
+
             popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
                     switch (item.getItemId()) {
-                        case R.id.file_local_delete:
+                        case FILE_LOCAL_DELETE:
                             if (filePath != null) {
                                 File file = new File(filePath);
                                 if (file.delete()) {
@@ -291,8 +333,27 @@ public class DocumentsFragment extends Fragment {
                             }
                             return true;
 
-                        case R.id.file_cloud_delete:
+                        case FILE_CLOUD_DELETE:
                             startExplorerService(fileHash, null, null, DELETE);
+                            return true;
+
+                        case FILE_SHARE_FOR:
+                            FileShareDialog shareDialog = FileShareDialog.newInstance(fileHash);
+                            shareDialog.show(getChildFragmentManager(), FileShareDialog.FILE_SHARE_DIALOG);
+                            return true;
+
+                        case FILE_REMOVE_SHARE_FOR:
+                            FileRemoveShareDialog removeShareDialog = FileRemoveShareDialog.newInstance(fileHash);
+                            removeShareDialog.show(getChildFragmentManager(), FileRemoveShareDialog.FILE_REMOVE_SHARE_DIALOG);
+                            return true;
+
+                        case FILE_REMOVE_SHARE:
+                            startExplorerService(fileHash, null, null, UNSUBSCRIBE);
+                            return true;
+
+                        case FILE_SHARE_PROPERTIES:
+                            FilePropertiesDialog dialog = FilePropertiesDialog.newInstance(fileHash);
+                            dialog.show(getChildFragmentManager(), FilePropertiesDialog.FILE_PROPERTIES_DIALOG);
                             return true;
 
                         default:
@@ -302,6 +363,8 @@ public class DocumentsFragment extends Fragment {
             });
 
             popup.show();
+
+            return true;
         }
     }
 
