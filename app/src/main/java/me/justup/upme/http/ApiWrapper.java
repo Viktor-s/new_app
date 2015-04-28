@@ -172,6 +172,11 @@ public class ApiWrapper {
         client.post(serverSwitcher.getCloudStorageUrl() + CALL_CLOUD_UPLOAD, params, responseHandler);
     }
 
+    public static void downloadFileFromUrl(String url, FileAsyncHttpResponseHandler fileResponseHandler) {
+        client.addHeader(AUTHORIZATION_HEADER, getToken());
+        client.get(url, fileResponseHandler);
+    }
+
     public static void syncDownloadFileFromCloud(String fileHash, FileAsyncHttpResponseHandler fileResponseHandler) {
         // downloads bug
         AsyncHttpClient localClient = new SyncHttpClient();

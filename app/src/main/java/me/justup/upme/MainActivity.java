@@ -70,11 +70,12 @@ import static me.justup.upme.utils.LogUtils.LOGE;
 import static me.justup.upme.utils.LogUtils.LOGI;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
-public class MainActivity extends BaseActivity implements View.OnClickListener,
+public class MainActivity extends LauncherActivity implements View.OnClickListener,
         OnLoadMailFragment,
-        OnDownloadCloudFile {
+        OnDownloadCloudFile
+    {
 
-    private static final String TAG = makeLogTag(MainActivity.class);
+    public static final String TAG = makeLogTag(MainActivity.class);
 
     private static final String SAVE_FRAGMENT_STATE = "save_fragment_state";
     private static final String IS_SHOW_FRAGMENT_CONTAINER = "is_show_fragment_container";
@@ -133,6 +134,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
     @Override
     protected void onResume() {
         super.onResume();
+        // Launcher
+        onResumeLA();
 
         startService(new Intent(this, GPSTracker.class));
         registerReceiver(mCallPushReceiver, new IntentFilter(BROADCAST_ACTION_CALL));
@@ -144,6 +147,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
         super.onCreate(savedInstanceState);
         hideNavBar();
         setContentView(R.layout.activity_main);
+
+        // Launcher Setup
+        onCreateLA(savedInstanceState);
 
 //        new CountDownTimer(10000, 1000) {
 //            public void onTick(long millisUntilFinished) {
@@ -302,9 +308,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
         if (fragment != null) {
             getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, fragment).commit();
         }
+
         if (!isShowMainFragmentContainer) {
             showMainFragmentContainer();
         }
+
     }
 
     private void reopenFragment(int currentNumberFragment) {
@@ -479,7 +487,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
     @SuppressWarnings("NullableProblems")
     @Override
     protected void onSaveInstanceState(Bundle outState) {
+        // Launcher
+        outState.putInt(RUNTIME_STATE_CURRENT_SCREEN, mWorkspace.getNextPage());
         super.onSaveInstanceState(outState);
+
+        // Launcher
+        onSaveInstanceStateLA(outState);
 
         outState.putInt(SAVE_FRAGMENT_STATE, currentlySelectedFragment);
         outState.putBoolean(IS_SHOW_FRAGMENT_CONTAINER, isShowMainFragmentContainer);
@@ -556,7 +569,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
     public void onDownloadCloudFile(final String fileHash, final String fileName) {
         setShareFileName(fileName);
 
-        getFragmentManager().beginTransaction().replace(R.id.main_tiled_fragment_container, new DocumentsFragment()).commit();
+        getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new DocumentsFragment()).commit();
 
         changeButtonState(mDocsButton);
         if (!isShowMainFragmentContainer) {
@@ -705,7 +718,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
     @Override
     public void onBackPressed() {
         if (BuildConfig.FLAVOR.equals(Constance.APP_FLAVOR_APP)) {
-            if (getFragmentManager().getBackStackEntryCount() >= 1) {
+            // Launcher
+            onBackPressedLA();
+
+            if (getFragmentManager().getBackStackEntryCount() >= 1){
                 finish();
             } else {
                 super.onBackPressed();
@@ -730,6 +746,27 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
         } catch (Exception e) {
             LOGE(TAG, e.getMessage());
         }
+    }
+
+    @Override
+    protected void onPause() {
+        // Launcher
+        // NOTE: We want all transitions from launcher to act as if the
+        // wallpaper were enabled
+        // to be consistent. So re-enable the flag here, and we will re-disable
+        // it as necessary
+        // when Launcher resumes and we are still in AllApps.
+        updateWallpaperVisibility(true);
+        super.onPause();
+
+        // Launcher
+        onPauseLA();
+    }
+
+        @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Launcher
+        onActivityResultLA(requestCode, resultCode, data);
     }
 
     public void closeSettingsFragment() {

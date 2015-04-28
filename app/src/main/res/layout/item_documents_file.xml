@@ -43,11 +43,6 @@
         style="@style/DocumentsItemTextStyle" />
 
     <ImageView
-        android:src="@drawable/ic_file_action"
-        android:id="@+id/file_action_button"
-        style="@style/DocumentsItemRightIconStyle" />
-
-    <ImageView
         android:src="@drawable/ic_file_tab"
         android:id="@+id/file_tablet_imageView"
         style="@style/DocumentsItemRightIconStyle" />

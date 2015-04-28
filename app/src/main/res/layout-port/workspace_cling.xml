@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<me.justup.upme.launcher.Cling xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:launcher="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    launcher:drawIdentifier="workspace_portrait">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="90dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/ClingTitleText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/workspace_cling_title" />
+
+            <TextView
+                style="@style/ClingText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/workspace_cling_move_item" />
+        </LinearLayout>
+    </FrameLayout>
+
+    <TextView
+        style="@style/ClingText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="130dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:gravity="center"
+        android:text="@string/workspace_cling_open_all_apps" />
+
+    <Button
+        style="@style/ClingButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_marginBottom="15dp"
+        android:layout_marginRight="10dp"
+        android:onClick="dismissWorkspaceCling" />
+</me.justup.upme.launcher.Cling>

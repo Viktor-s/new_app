@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<me.justup.upme.launcher.Cling
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:launcher="http://schemas.android.com/apk/res-auto"
+    launcher:drawIdentifier="folder_large">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/cling_text_block_offset_x"
+        android:layout_marginTop="@dimen/cling_text_block_offset_y">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                style="@style/ClingTitleText"
+                android:id="@+id/folder_cling_title"
+                android:text="@string/folder_cling_title" />
+            <TextView
+                style="@style/ClingText"
+                android:id="@+id/folder_cling_create_folder"
+                android:layout_width="480dp"
+                android:layout_height="wrap_content"
+                android:text="@string/folder_cling_create_folder" />
+            <Button
+                style="@style/ClingButton"
+                android:id="@+id/cling_dismiss"
+                android:layout_marginTop="15dp"
+                android:onClick="dismissFolderCling" />
+        </LinearLayout>
+    </FrameLayout>
+</me.justup.upme.launcher.Cling>

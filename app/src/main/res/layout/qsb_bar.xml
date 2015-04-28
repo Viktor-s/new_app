@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<me.justup.upme.launcher.SearchDropTargetBar
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/QSBBar"
+    android:focusable="false">
+
+    <!-- Search buttons container TODO Google Search -->
+    <include android:id="@+id/qsb_search_bar"
+            android:visibility="gone"
+            layout="@layout/search_bar" />
+
+    <!-- Drag specific targets container -->
+    <LinearLayout
+            style="@style/SearchDropTargetBar"
+            android:id="@+id/drag_target_bar">
+
+        <include
+            layout="@layout/drop_target_bar" />
+    </LinearLayout>
+</me.justup.upme.launcher.SearchDropTargetBar>

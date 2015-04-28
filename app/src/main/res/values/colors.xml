@@ -53,10 +53,24 @@
     <color name="cloud_drive_gray_text">#979797</color>
 
     <color name="ab_text_online_color">#828b9d</color>
-
+    <color name="education_list_color">#DCDEE2</color>
+    
     <!--Till dummy color-->
     <color name="avio_sales_green">#60bb46</color>
     <color name="avio_sales_yellow">#d2c26e</color>
 
-    <color name="education_list_color">#DCDEE2</color>
+    <!--Launcher-->
+    <!-- The color tints to apply to the text and drag view when hovering
+         over the delete target or the info target -->
+    <color name="delete_target_hover_tint">#DAFF0000</color>
+    <color name="info_target_hover_tint">#DA0099CC</color>
+
+    <color name="bubble_dark_background">#20000000</color>
+
+    <color name="appwidget_error_color">#FCCC</color>
+
+    <color name="workspace_all_apps_and_delete_zone_text_color">#CCFFFFFF</color>
+    <color name="workspace_all_apps_and_delete_zone_text_shadow_color">#A0000000</color>
+    <color name="workspace_icon_text_color">#FFF</color>
+
 </resources>

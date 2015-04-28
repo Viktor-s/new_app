@@ -1,10 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/file_local_upload"
-        android:title="@string/file_local_to_cloud" />
-
-    <item
         android:id="@+id/file_local_delete"
         android:title="@string/file_delete" />
+
+    <item
+        android:id="@+id/file_cloud_delete"
+        android:title="@string/file_cloud_delete" />
+
+    <item
+        android:id="@+id/file_share_for"
+        android:title="@string/file_share_for" />
+
+    <item
+        android:id="@+id/file_remove_share_for"
+        android:title="@string/file_remove_share_for" />
+
+    <item
+        android:id="@+id/file_remove_share"
+        android:title="@string/file_remove_share" />
+
+    <item
+        android:id="@+id/file_share_properties"
+        android:title="@string/file_properties" />
 </menu>
