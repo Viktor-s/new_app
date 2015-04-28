@@ -1,5 +1,6 @@
 package me.justup.upme.launcher;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -145,7 +146,7 @@ public class WallpaperChooserDialogFragment extends DialogFragment implements
 
     private void selectWallpaper(int position) {
         try {
-            WallpaperManager wpm = (WallpaperManager) getActivity().getSystemService(
+            @SuppressLint("ServiceCast") WallpaperManager wpm = (WallpaperManager) getActivity().getSystemService(
                     Context.WALLPAPER_SERVICE);
             wpm.setResource(mImages.get(position));
             Activity activity = getActivity();

@@ -1,5 +1,6 @@
 package me.justup.upme.launcher;
 
+import android.annotation.SuppressLint;
 import android.app.WallpaperManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -31,7 +32,7 @@ public class UserInitializeReceiver extends BroadcastReceiver {
         ArrayList<Integer> list = new ArrayList<Integer>();
         addWallpapers(resources, packageName, R.array.wallpapers, list);
         addWallpapers(resources, packageName, R.array.extra_wallpapers, list);
-        WallpaperManager wpm = (WallpaperManager) context.getSystemService(
+        @SuppressLint("ServiceCast") WallpaperManager wpm = (WallpaperManager) context.getSystemService(
                 Context.WALLPAPER_SERVICE);
         for (int i=1; i<list.size(); i++) {
             int resid = list.get(i);
