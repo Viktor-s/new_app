@@ -1,4 +1,4 @@
-package me.justup.upme.fragments;
+package me.justup.upme.entity;
 
 import java.io.Serializable;
 
@@ -12,6 +12,8 @@ public class EducationMaterialEntity implements Serializable {
     private String updated_at;
     private String extraSource;
     private String extraLink;
+    private String name;
+    private String description;
 
     public int getId() {
         return id;
@@ -83,5 +85,21 @@ public class EducationMaterialEntity implements Serializable {
 
     public void setExtraLink(String extraLink) {
         this.extraLink = extraLink;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

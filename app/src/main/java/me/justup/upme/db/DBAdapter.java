@@ -328,6 +328,8 @@ public class DBAdapter {
                 valuesComments.put(EDUCATION_MODULES_MATERIAL_SORT_WEIGHT, entity.result.get(i).materials.get(j).sort_weight);
                 valuesComments.put(EDUCATION_MODULES_MATERIAL_CREATED_AT, entity.result.get(i).materials.get(j).created_at);
                 valuesComments.put(EDUCATION_MODULES_MATERIAL_UPDATED_AT, entity.result.get(i).materials.get(j).updated_at);
+                valuesComments.put(EDUCATION_MODULES_MATERIAL_NAME, entity.result.get(i).materials.get(j).name);
+                valuesComments.put(EDUCATION_MODULES_MATERIAL_DESCRIPTION, entity.result.get(i).materials.get(j).description);
 
                 database.insertWithOnConflict(EDUCATION_MODULES_MATERIAL_TABLE_NAME, null, valuesComments, SQLiteDatabase.CONFLICT_REPLACE);
             }

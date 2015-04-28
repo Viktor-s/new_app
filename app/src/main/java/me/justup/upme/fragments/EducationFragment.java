@@ -181,4 +181,5 @@ public class EducationFragment extends Fragment {
         }
         return mCursor;
     }
-}
+
+   }
