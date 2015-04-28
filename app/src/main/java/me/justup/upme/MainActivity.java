@@ -55,6 +55,7 @@ import me.justup.upme.fragments.NewsFeedFragmentNew;
 import me.justup.upme.fragments.ProductsFragment;
 import me.justup.upme.fragments.SettingsFragment;
 import me.justup.upme.fragments.TiledMenuFragment;
+import me.justup.upme.fragments.UserFragment;
 import me.justup.upme.fragments.WebRtcFragment;
 import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.http.HttpIntentService;
@@ -72,8 +73,7 @@ import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 public class MainActivity extends LauncherActivity implements View.OnClickListener,
         OnLoadMailFragment,
-        OnDownloadCloudFile
-    {
+        OnDownloadCloudFile {
 
     public static final String TAG = makeLogTag(MainActivity.class);
 
@@ -106,6 +106,8 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
     private TextView mUserName;
     private TextView mUserInSystem;
     private FrameLayout mCornerButton;
+    private FrameLayout mOrderingPanel;
+    private boolean isOrderingPanelOpen;
 
     private WebRtcFragment mWebRtcFragment = null;
 
@@ -200,6 +202,10 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
         }
 
         initTiledMenuFragment();
+
+        mOrderingPanel = (FrameLayout) findViewById(R.id.mapAndUserFragment);
+        Button mOrderingButton = (Button) findViewById(R.id.main_screen_ordering_button);
+        mOrderingButton.setOnClickListener(new OpenOrderingPanel());
     }
 
     /**
@@ -720,7 +726,7 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
             // Launcher
             onBackPressedLA();
 
-            if (getFragmentManager().getBackStackEntryCount() >= 1){
+            if (getFragmentManager().getBackStackEntryCount() >= 1) {
                 finish();
             } else {
                 super.onBackPressed();
@@ -762,7 +768,7 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
         onPauseLA();
     }
 
-        @Override
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Launcher
         onActivityResultLA(requestCode, resultCode, data);
@@ -771,4 +777,25 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
     public void closeSettingsFragment() {
         mCornerButton.performClick();
     }
+
+    private class OpenOrderingPanel implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            if (!isOrderingPanelOpen) {
+                isOrderingPanelOpen = true;
+
+                mOrderingPanel.setVisibility(View.VISIBLE);
+                mOrderingPanel.startAnimation(mFragmentSliderIn);
+
+                Fragment fragment = UserFragment.newInstance(new GetLoggedUserInfoQuery(), true);
+                getFragmentManager().beginTransaction().replace(R.id.mapAndUserFragment, fragment).commit();
+            } else {
+                isOrderingPanelOpen = false;
+
+                mOrderingPanel.startAnimation(mFragmentSliderOut);
+                mOrderingPanel.setVisibility(View.GONE);
+            }
+        }
+    }
+
 }

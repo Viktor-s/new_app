@@ -239,6 +239,7 @@
                 tools:text="1 год 2 месяца 3 недели" />
 
             <Button
+                android:id="@+id/main_screen_ordering_button"
                 android:layout_width="@dimen/base150dp720sw"
                 android:layout_height="@dimen/base50dp720sw"
                 android:layout_gravity="center_vertical"
@@ -249,6 +250,16 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/mapAndUserFragment"
+        android:layout_width="wrap_content"
+        tools:layout_width="@dimen/base420dp720sw"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
+        tools:background="@color/blue_gray"
+        android:layout_below="@+id/main_action_bar"
+        android:visibility="gone" />
 
     <FrameLayout
         android:id="@+id/include_corner"
