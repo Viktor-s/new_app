@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        style="@style/DropTargetButtonContainer"
+        android:layout_weight="1">
+
+        <!-- Delete target -->
+        <me.justup.upme.launcher.DeleteDropTarget
+            style="@style/DropTargetButton"
+            android:id="@+id/delete_target_text"
+            android:text="@string/delete_zone_label_workspace"
+            android:drawableLeft="@drawable/remove_target_selector" />
+    </FrameLayout>
+
+    <FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        style="@style/DropTargetButtonContainer"
+        android:layout_weight="1">
+        <!-- Info target -->
+        <me.justup.upme.launcher.InfoDropTarget
+            style="@style/DropTargetButton"
+            android:id="@+id/info_target_text"
+            android:text="@string/info_target_label"
+            android:drawableLeft="@drawable/info_target_selector" />
+    </FrameLayout>
+
+</merge>

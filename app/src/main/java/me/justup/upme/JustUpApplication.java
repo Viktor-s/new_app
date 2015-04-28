@@ -2,9 +2,17 @@ package me.justup.upme;
 
 import android.app.AlertDialog;
 import android.app.Application;
+import android.app.SearchManager;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.database.ContentObserver;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.webkit.URLUtil;
 
@@ -13,9 +21,14 @@ import org.acra.ReportField;
 import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
 
+import java.lang.ref.WeakReference;
 import java.util.Random;
 
 import me.justup.upme.db.DBAdapter;
+import me.justup.upme.launcher.IconCache;
+import me.justup.upme.launcher.LauncherModel;
+import me.justup.upme.launcher.LauncherProvider;
+import me.justup.upme.launcher.LauncherSettings;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.LOGE;
@@ -42,6 +55,18 @@ public class JustUpApplication extends Application {
     synchronized public static JustUpApplication getApplication() {
         return mJustUpApplication;
     }
+
+    // Launcher
+    public LauncherModel mModel = null;
+    private IconCache mIconCache = null;
+
+    private static final String sSharedPreferencesKey = "com.android.launcher2.prefs";
+
+    private static boolean sIsScreenLarge;
+    private static int sLongPressTimeout = 300;
+    private static float sScreenDensity;
+
+    private WeakReference<LauncherProvider> mLauncherProvider = null;
 
     // Room random
     private static final int min = 1000000000;
@@ -92,6 +117,43 @@ public class JustUpApplication extends Application {
     }
 
     private void initApplication(){
+        // Launcher
+        sIsScreenLarge = getResources().getBoolean(R.bool.is_large_screen);
+        sScreenDensity = getResources().getDisplayMetrics().density;
+
+        mIconCache = new IconCache(this);
+        mModel = new LauncherModel(this, mIconCache);
+
+        // Register intent receivers
+        IntentFilter filter = new IntentFilter(Intent.ACTION_PACKAGE_ADDED);
+        filter.addAction(Intent.ACTION_PACKAGE_REMOVED);
+        filter.addAction(Intent.ACTION_PACKAGE_CHANGED);
+        filter.addDataScheme("package");
+
+        registerReceiver(mModel, filter);
+
+        filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE);
+        filter.addAction(Intent.ACTION_EXTERNAL_APPLICATIONS_UNAVAILABLE);
+        filter.addAction(Intent.ACTION_LOCALE_CHANGED);
+        filter.addAction(Intent.ACTION_CONFIGURATION_CHANGED);
+
+        registerReceiver(mModel, filter);
+
+        filter = new IntentFilter();
+        filter.addAction(SearchManager.INTENT_GLOBAL_SEARCH_ACTIVITY_CHANGED);
+
+        registerReceiver(mModel, filter);
+
+        filter = new IntentFilter();
+        filter.addAction(SearchManager.INTENT_ACTION_SEARCHABLES_CHANGED);
+
+        registerReceiver(mModel, filter);
+
+        // Register for changes to the favorites
+        ContentResolver resolver = getContentResolver();
+        resolver.registerContentObserver(LauncherSettings.Favorites.CONTENT_URI, true, mFavoritesObserver);
+
         mJustUpApplication = JustUpApplication.this;
 
         // Init Pref
@@ -214,6 +276,76 @@ public class JustUpApplication extends Application {
 
     public int getRandomNum(){
         return new Random().nextInt((max - min) + 1) + min;
+    }
+
+    // Launcher
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+
+        if(mModel!=null) {
+            unregisterReceiver(mModel);
+        }
+
+        if(mFavoritesObserver!=null) {
+            ContentResolver resolver = getContentResolver();
+            resolver.unregisterContentObserver(mFavoritesObserver);
+        }
+    }
+
+    /**
+     * Receives notifications whenever the user favorites have changed.
+     */
+    private final ContentObserver mFavoritesObserver = new ContentObserver(new Handler()) {
+        @Override
+        public void onChange(boolean selfChange) {
+            // If the database has ever changed, then we really need to force a
+            // reload of the
+            // workspace on the next load
+            mModel.resetLoadedState(false, true);
+            mModel.startLoaderFromBackground();
+        }
+    };
+
+    public LauncherModel setLauncher(LauncherActivity launcher) {
+        mModel.initialize(launcher);
+        return mModel;
+    }
+
+    public IconCache getIconCache() {
+        return mIconCache;
+    }
+
+    public LauncherModel getModel() {
+        return mModel;
+    }
+
+    public  void setLauncherProvider(LauncherProvider provider) {
+        mLauncherProvider = new WeakReference<LauncherProvider>(provider);
+    }
+
+    public LauncherProvider getLauncherProvider() {
+        return mLauncherProvider.get();
+    }
+
+    public static String getSharedPreferencesKey() {
+        return sSharedPreferencesKey;
+    }
+
+    public static boolean isScreenLarge() {
+        return sIsScreenLarge;
+    }
+
+    public static boolean isScreenLandscape(Context context) {
+        return context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+    }
+
+    public static float getScreenDensity() {
+        return sScreenDensity;
+    }
+
+    public static int getLongPressTimeout() {
+        return sLongPressTimeout;
     }
 
 }

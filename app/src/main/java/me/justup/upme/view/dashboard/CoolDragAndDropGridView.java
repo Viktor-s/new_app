@@ -14,6 +14,8 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 
+import static me.justup.upme.utils.LogUtils.LOGI;
+
 public class CoolDragAndDropGridView extends SpanVariableGridView implements View.OnTouchListener {
     private static final String TAG = CoolDragAndDropGridView.class.getSimpleName();
 
@@ -108,7 +110,7 @@ public class CoolDragAndDropGridView extends SpanVariableGridView implements Vie
         }
     }
 
-    private ImageView createDragImageView(final View v, final int x, final int y, final int rawY) {
+    private ImageView createDragImageView(final View v, final int x, final int y) {
         v.destroyDrawingCache();
         v.setDrawingCacheEnabled(true);
 
@@ -118,18 +120,36 @@ public class CoolDragAndDropGridView extends SpanVariableGridView implements Vie
         // matrix.postRotate(270);
         Bitmap bm1 = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), matrix, true);
 
-        mDragPointX = x - v.getLeft();
-        mDragPointY = y - v.getTop();
+        int orientation = this.getResources().getConfiguration().orientation;
+
+        if(orientation==Configuration.ORIENTATION_PORTRAIT) {
+            // Portrait
+            mDragPointX = y - v.getTop();
+
+            if(((v.getBottom() - v.getTop())/(v.getRight() - v.getLeft()))>=2){
+                mDragPointY = (int) ((v.getRight() - v.getLeft())*1.5 - (x - v.getLeft()));
+            }else{
+                mDragPointY = (v.getRight() - v.getLeft()) - (x - v.getLeft());
+            }
+        }else {
+            // Landscape
+            mDragPointX = y - v.getTop();
+            int height = v.getRight() - v.getLeft();
+
+            if(((v.getBottom() - v.getTop())/(v.getRight() - v.getLeft()))>=3){
+                mDragPointY = (int) ((height - (x - v.getLeft())) + height * 1.25);
+            }else{
+                mDragPointY = (v.getRight() - v.getLeft()) - (x - v.getLeft()) + height/3;
+            }
+        }
+
+        LOGI(TAG, "createDragImageView : Start data : x " + x + ", y " + y + ", View button : " + v.getLeft() + ", View left : " + v.getTop() + ", View Top : " + v.getRight() + ", View Right : " + v.getBottom());
 
         mWindowParams = new WindowManager.LayoutParams();
         mWindowParams.gravity = Gravity.TOP | Gravity.LEFT;
 
-        // Old
-        // mWindowParams.x = x - mDragPointX + mDragOffsetX;
-        // mWindowParams.y = y - mDragPointY + mDragOffsetY;
-
-        mWindowParams.x = y - bm1.getHeight() / 2;
-        mWindowParams.y = rawY - (bm1.getHeight() / 4 * 3);
+        mWindowParams.x = x - mDragPointX + mDragOffsetX;
+        mWindowParams.y = y + mDragOffsetY - mDragPointY;
 
         // Old
         // mWindowParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
@@ -158,12 +178,12 @@ public class CoolDragAndDropGridView extends SpanVariableGridView implements Vie
         return iv;
     }
 
-    private void startDrag(final int x, final int y, final int rawY) {
+    private void startDrag(final int x, final int y) {
         View v = getChildAt(mDragPosition);
 
         destroyDragImageView();
 
-        mDragImageView = createDragImageView(v, x, y, rawY);
+        mDragImageView = createDragImageView(v, x, y);
         v.setVisibility(View.INVISIBLE);
 
         if (mDragAndDropListener != null) {
@@ -243,16 +263,11 @@ public class CoolDragAndDropGridView extends SpanVariableGridView implements Vie
             }
         }
 
-        int orientation = this.getResources().getConfiguration().orientation;
-
         if (mDragImageView != null) {
-            if(orientation== Configuration.ORIENTATION_PORTRAIT) {
-                mWindowParams.x = x - mDragPointX + mDragOffsetX;
-                mWindowParams.y = y - mDragPointY + mDragOffsetY;
-            }else {
-                mWindowParams.x = (x - mDragPointX + mDragOffsetX) - (mDragImageView.getHeight()/3);
-                mWindowParams.y = (y - mDragPointY + mDragOffsetY) - (mDragImageView.getWidth()/4);
-            }
+            LOGI(TAG, "onDrag : mDragOffsetX : " + mDragOffsetX + ", mDragOffsetY : " + mDragOffsetY + ", X : " + x + ", Y : " + y);
+
+            mWindowParams.x = x - mDragPointX + mDragOffsetX;
+            mWindowParams.y = y + mDragOffsetY - mDragPointY;
 
             mWindowManager.updateViewLayout(mDragImageView, mWindowParams);
         }
@@ -308,7 +323,7 @@ public class CoolDragAndDropGridView extends SpanVariableGridView implements Vie
             mDragOffsetX = (int) (event.getRawX() - x);
             mDragOffsetY = (int) (event.getRawY() - y);
 
-            startDrag(x, y, (int)event.getRawY());
+            startDrag(x, y);
 
             return true;
         }
