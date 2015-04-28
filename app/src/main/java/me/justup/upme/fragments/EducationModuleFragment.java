@@ -21,12 +21,19 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.loopj.android.http.FileAsyncHttpResponseHandler;
+
+import org.apache.http.Header;
+
+import java.io.File;
 import java.util.ArrayList;
 
 import me.justup.upme.R;
 import me.justup.upme.db.DBAdapter;
+import me.justup.upme.dialogs.ViewPDFDialog;
 import me.justup.upme.entity.EducationMaterialEntity;
 import me.justup.upme.entity.EducationModuleEntity;
+import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.http.HttpIntentService;
 import me.justup.upme.utils.CommonUtils;
 
@@ -304,6 +311,9 @@ public class EducationModuleFragment extends Fragment {
                     String contentType = ((TextView) v.findViewById(R.id.education_module_item_content_type)).getText().toString();
                     if (contentType.equals("Video")) {
                         getChildFragmentManager().beginTransaction().replace(R.id.fragment_module_youtube_container, YoutubeDefaultFragment.newInstance("OMOVFvcNfvE")).addToBackStack(null).commit();
+                    } else {
+                        ApiWrapper.downloadFileFromUrl("http://www.education.gov.yk.ca/pdf/pdf-test.pdf", new OnDownloadFileResponse(getActivity()));
+                        mProgressBar.setVisibility(View.VISIBLE);
                     }
                 }
             });
@@ -311,4 +321,28 @@ public class EducationModuleFragment extends Fragment {
         }
     }
 
+    private void showViewPDFDialog(String mFileName, String mFilePath) {
+        ViewPDFDialog dialog = ViewPDFDialog.newInstance(mFileName, mFilePath);
+        dialog.show(getChildFragmentManager(), ViewPDFDialog.VIEW_PDF_DIALOG);
+    }
+
+
+    private class OnDownloadFileResponse extends FileAsyncHttpResponseHandler {
+
+        public OnDownloadFileResponse(Context context) {
+            super(context);
+        }
+
+        @Override
+        public void onSuccess(int statusCode, Header[] headers, File file) {
+            mProgressBar.setVisibility(View.GONE);
+            showViewPDFDialog("PDF", file.getAbsolutePath());
+        }
+
+        @Override
+        public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
+            mProgressBar.setVisibility(View.GONE);
+
+        }
+    }
 }

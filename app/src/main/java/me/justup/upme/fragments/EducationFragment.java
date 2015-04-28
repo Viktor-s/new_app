@@ -182,7 +182,4 @@ public class EducationFragment extends Fragment {
         return mCursor;
     }
 
-    public void openYoutubeFragment(){
-
-    }
-}
+   }
