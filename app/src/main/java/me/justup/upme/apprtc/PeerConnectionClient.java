@@ -216,7 +216,7 @@ public class PeerConnectionClient {
 
             // If HW video encoder is supported and video resolution is not
             // specified force it to HD.
-            if ((videoWidth == 0 || videoHeight == 0) && videoCodecHwAcceleration && MediaCodecVideoEncoder.isPlatformSupported()) {
+            if ((videoWidth == 0 || videoHeight == 0) && videoCodecHwAcceleration && MediaCodecVideoEncoder.isVp8HwSupported()) {
                 videoWidth = HD_VIDEO_WIDTH;
                 videoHeight = HD_VIDEO_HEIGHT;
             }
