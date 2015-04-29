@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Large Text"
+        android:id="@+id/education_test_question_name_textView"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/base100dp720sw"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textSize="@dimen/base28sp720sw"
+        android:textColor="@android:color/black" />
+
+    <Button
+        android:layout_width="@dimen/base130dp720sw"
+        android:layout_height="@dimen/base50dp720sw"
+        android:text="PREVIOUS"
+        android:id="@+id/education_test_previous_button"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true"
+        android:background="@color/button_back_gray"
+        android:layout_marginLeft="@dimen/base12dp720sw"
+        android:textSize="@dimen/base20sp720sw" />
+
+    <Button
+        android:layout_width="@dimen/base130dp720sw"
+        android:layout_height="@dimen/base50dp720sw"
+        android:text="NEXT"
+        android:id="@+id/education_test_next_button"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:background="@color/button_back_gray"
+        android:layout_marginRight="@dimen/base12dp720sw"
+        android:textSize="@dimen/base20sp720sw" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/education_test_question_content_textView"
+        android:layout_below="@+id/education_test_question_name_textView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/base20dp720sw"
+        android:textSize="@dimen/base21sp720sw"
+        android:textColor="@android:color/black" />
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/education_test_previous_button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/base12dp720sw"
+        android:id="@+id/scrollView5">
+
+        <GridLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/education_test_answers_container"></GridLayout>
+    </ScrollView>
+</RelativeLayout>

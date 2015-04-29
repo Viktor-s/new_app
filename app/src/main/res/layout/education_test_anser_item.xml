@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="@dimen/base150dp720sw"
+    android:layout_height="@dimen/base50dp720sw">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:text="New Button"
+        android:id="@+id/education_test_item_button"
+        android:background="@drawable/button_pink_bg"
+        android:textColor="@android:color/white"
+        android:paddingLeft="@dimen/base12dp720sw"
+        android:paddingRight="@dimen/base12dp720sw" />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text="New Text"
+        android:id="@+id/education_test_item_hash" />
+</LinearLayout>

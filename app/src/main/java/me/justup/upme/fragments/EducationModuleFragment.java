@@ -80,6 +80,7 @@ public class EducationModuleFragment extends Fragment {
     private ArrayList<EducationMaterialEntity> primaryMaterialsList;
     private ArrayList<EducationMaterialEntity> secondaryMaterialsList;
     private TextView moduleMainTextView, moduleSecondaryTextView;
+    private LinearLayout passTestLayout;
 
     public static EducationModuleFragment newInstance(String productName, int productId) {
         EducationModuleFragment fragment = new EducationModuleFragment();
@@ -158,6 +159,7 @@ public class EducationModuleFragment extends Fragment {
                     if (secondaryMaterialsList.size() > 0) {
                         moduleSecondaryTextView.setVisibility(View.VISIBLE);
                     }
+                    passTestLayout.setVisibility(View.VISIBLE);
 
                 }
                 if (HttpIntentService.BROADCAST_INTENT_EDUCATION_MODULE_SERVER_ERROR.equals(intent.getAction())) {
@@ -182,7 +184,17 @@ public class EducationModuleFragment extends Fragment {
         mProgressBar = (ProgressBar) view.findViewById(R.id.education_module_progressbar);
         mMainMaterialContainer = (GridLayout) view.findViewById(R.id.educ_module_main_material_container);
         mSecondaryMaterialContainer = (GridLayout) view.findViewById(R.id.educ_module_secondary_material_container);
-
+        passTestLayout = (LinearLayout) view.findViewById(R.id.education_module_pass_test);
+        passTestLayout.setVisibility(View.INVISIBLE);
+        passTestLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (educationModuleEntity.getId() > 0) {
+                    getChildFragmentManager().beginTransaction().replace(R.id.fragment_module_youtube_container, EducationTestFragment.newInstance(educationModuleEntity.getId())).addToBackStack(null).commit();
+                    passTestLayout.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
         mModuleDescriptionTitle = (TextView) view.findViewById(R.id.fragment_education_module_description);
         if (isProgressBarShown) {
             mProgressBar.setVisibility(View.VISIBLE);

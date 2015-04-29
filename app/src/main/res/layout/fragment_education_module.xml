@@ -32,7 +32,8 @@
 
             android:layout_toStartOf="@+id/education_module_pass_test"
             android:layout_marginBottom="@dimen/base6dp720sw"
-            android:layout_marginTop="@dimen/base35dp720sw">
+            android:layout_marginTop="@dimen/base35dp720sw"
+            android:visibility="invisible">
 
             <ImageView
                 android:layout_width="@dimen/base50dp720sw"
