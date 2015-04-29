@@ -107,6 +107,8 @@ public class DocumentsFragment extends Fragment {
     private static final int FILE_REMOVE_SHARE = 5;
     private static final int FILE_SHARE_PROPERTIES = 6;
 
+    private ArrayList<FileEntity> mFileArray;
+
 
     @Override
     public void onResume() {
@@ -128,6 +130,8 @@ public class DocumentsFragment extends Fragment {
         mLayoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mFileExplorer = (TableLayout) view.findViewById(R.id.files_panel);
         mProgressBar = (ProgressBar) view.findViewById(R.id.explorer_progressBar);
+
+        getChildFragmentManager().beginTransaction().add(R.id.doc_sort_panel_fragment, new DocumentsSortPanelFragment()).commit();
 
         getTotalFileList();
 
@@ -182,12 +186,20 @@ public class DocumentsFragment extends Fragment {
                 mFileInTablet.setImageResource(R.drawable.ic_file_tab_gray);
                 mFileInCloud.setImageResource(R.drawable.ic_file_cloud);
 
+                mFileName.setTextColor(getResources().getColor(R.color.cloud_drive_gray_text));
+                mFileSize.setTextColor(getResources().getColor(R.color.cloud_drive_gray_text));
+                mFileDate.setTextColor(getResources().getColor(R.color.cloud_drive_gray_text));
+
                 mFileInTablet.setOnClickListener(new OnDownloadFileListener(file.getHash(), file.getName()));
                 break;
 
             case FileEntity.SHARE_FILE:
                 mFileInTablet.setImageResource(R.drawable.ic_file_tab_gray);
                 mFileInCloud.setImageResource(R.drawable.ic_file_cloud_gray);
+
+                mFileName.setTextColor(getResources().getColor(R.color.cloud_drive_gray_text));
+                mFileSize.setTextColor(getResources().getColor(R.color.cloud_drive_gray_text));
+                mFileDate.setTextColor(getResources().getColor(R.color.cloud_drive_gray_text));
 
                 mFileInTablet.setOnClickListener(new OnDownloadFileListener(file.getHash(), file.getName()));
                 mFileInCloud.setOnClickListener(new OnCloudCopyFileListener(file.getHash()));
@@ -202,13 +214,25 @@ public class DocumentsFragment extends Fragment {
         }
 
         if (type == IMAGE) {
-            mFileImage.setImageResource(R.drawable.ic_file_image);
+            if (file.getType() == FileEntity.CLOUD_FILE || file.getType() == FileEntity.SHARE_FILE) {
+                mFileImage.setImageResource(R.drawable.ic_file_image_gray);
+            } else {
+                mFileImage.setImageResource(R.drawable.ic_file_image);
+            }
         }
         if (type == PDF) {
-            mFileImage.setImageResource(R.drawable.ic_file_pdf);
+            if (file.getType() == FileEntity.CLOUD_FILE || file.getType() == FileEntity.SHARE_FILE) {
+                mFileImage.setImageResource(R.drawable.ic_file_pdf_gray);
+            } else {
+                mFileImage.setImageResource(R.drawable.ic_file_pdf);
+            }
         }
         if (type == VIDEO) {
-            mFileImage.setImageResource(R.drawable.ic_file_video);
+            if (file.getType() == FileEntity.CLOUD_FILE || file.getType() == FileEntity.SHARE_FILE) {
+                mFileImage.setImageResource(R.drawable.ic_file_video_gray);
+            } else {
+                mFileImage.setImageResource(R.drawable.ic_file_video);
+            }
         }
 
         mFileName.setText(file.getName());
@@ -586,11 +610,8 @@ public class DocumentsFragment extends Fragment {
             ArrayList<FileEntity> array = (ArrayList<FileEntity>) msg.getData().getSerializable(FILE_ARRAY_MESSAGE);
 
             if ((null != array)) {
-                mFileExplorer.removeAllViews();
-
-                for (FileEntity file : array) {
-                    setFileItem(file);
-                }
+                setFileArray(array);
+                updateFileExplorer();
             }
         }
     }
@@ -598,6 +619,23 @@ public class DocumentsFragment extends Fragment {
     private void showWarningDialog(final String message) {
         WarningDialog dialog = WarningDialog.newInstance(getString(R.string.network_error), message);
         dialog.show(getChildFragmentManager(), WarningDialog.WARNING_DIALOG);
+    }
+
+    public void setFileArray(ArrayList<FileEntity> array) {
+        // mFileArray = sort(array);
+        mFileArray = array;
+    }
+
+    public ArrayList<FileEntity> getFileArray() {
+        return mFileArray;
+    }
+
+    public void updateFileExplorer() {
+        mFileExplorer.removeAllViews();
+
+        for (FileEntity file : getFileArray()) {
+            setFileItem(file);
+        }
     }
 
 }

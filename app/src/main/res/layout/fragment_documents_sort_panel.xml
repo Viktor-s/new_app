@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:src="@drawable/ic_file_star_gray"
+        android:id="@+id/sort_column_favorite"
+        android:contentDescription="@string/dummy_string"
+        style="@style/DocumentsSortPanelIcon" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:text="@string/type"
+        android:id="@+id/sort_column_type"
+        style="@style/DocumentsSortPanelText" />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_weight="3"
+        tools:drawableStart="@drawable/ic_sort_arrow_desc"
+        android:text="@string/name"
+        android:id="@+id/sort_column_name"
+        style="@style/DocumentsSortPanelText" />
+
+    <TextView
+        android:layout_width="0dp"
+        android:text="@string/size"
+        android:layout_weight="0.9"
+        android:id="@+id/sort_column_size"
+        style="@style/DocumentsSortPanelText" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:text="@string/date"
+        android:layout_weight="0.4"
+        android:id="@+id/sort_column_date"
+        style="@style/DocumentsSortPanelText" />
+
+    <ImageView
+        android:src="@drawable/ic_file_tab_gray"
+        android:id="@+id/sort_column_tab"
+        android:contentDescription="@string/dummy_string"
+        style="@style/DocumentsSortPanelIcon" />
+
+    <ImageView
+        android:src="@drawable/ic_file_cloud_gray"
+        android:id="@+id/sort_column_cloud"
+        android:contentDescription="@string/dummy_string"
+        style="@style/DocumentsSortPanelIcon" />
+</LinearLayout>
