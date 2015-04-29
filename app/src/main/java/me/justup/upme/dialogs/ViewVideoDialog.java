@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +26,19 @@ public class ViewVideoDialog extends DialogFragment {
     private VideoView mVideoView;
 
     private boolean isPlaying = true;
+
+    private Runnable onEverySecond = new Runnable() {
+        @Override
+        public void run() {
+            if (mVideoSeekBar != null) {
+                mVideoSeekBar.setProgress(mVideoView.getCurrentPosition());
+            }
+
+            if (mVideoView != null && mVideoView.isPlaying() && mVideoSeekBar != null) {
+                mVideoSeekBar.postDelayed(onEverySecond, 1000);
+            }
+        }
+    };
 
 
     public static ViewVideoDialog newInstance(final String fileName, final String filePath) {
@@ -65,6 +79,31 @@ public class ViewVideoDialog extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialog, int id) {
                 dialog.dismiss();
+            }
+        });
+
+        mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                mVideoSeekBar.setMax(mVideoView.getDuration());
+                mVideoSeekBar.postDelayed(onEverySecond, 1000);
+            }
+        });
+
+        mVideoSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (fromUser) {
+                    mVideoView.seekTo(progress);
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
             }
         });
 
