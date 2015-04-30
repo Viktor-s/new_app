@@ -14,6 +14,7 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -81,6 +82,7 @@ public class EducationModuleFragment extends Fragment {
     private ArrayList<EducationMaterialEntity> secondaryMaterialsList;
     private TextView moduleMainTextView, moduleSecondaryTextView;
     private LinearLayout passTestLayout;
+    private Button closeYoutubeFragmentButton;
 
     public static EducationModuleFragment newInstance(String productName, int productId) {
         EducationModuleFragment fragment = new EducationModuleFragment();
@@ -209,6 +211,14 @@ public class EducationModuleFragment extends Fragment {
         moduleMainTextView.setVisibility(View.INVISIBLE);
         moduleSecondaryTextView.setVisibility(View.INVISIBLE);
 
+        closeYoutubeFragmentButton = (Button) view.findViewById(R.id.education_module_close_button);
+        closeYoutubeFragmentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getChildFragmentManager().popBackStack();
+                closeYoutubeFragmentButton.setVisibility(View.GONE);
+            }
+        });
         return view;
     }
 
@@ -320,6 +330,7 @@ public class EducationModuleFragment extends Fragment {
                     String contentType = ((TextView) v.findViewById(R.id.education_module_item_content_type)).getText().toString();
                     if (contentType.equals("Video")) {
                         getChildFragmentManager().beginTransaction().replace(R.id.fragment_module_youtube_container, YoutubeDefaultFragment.newInstance("OMOVFvcNfvE")).addToBackStack(null).commit();
+                        closeYoutubeFragmentButton.setVisibility(View.VISIBLE);
                     } else {
                         String link = ((TextView) v.findViewById(R.id.education_module_item_link)).getText().toString();
                         ApiWrapper.downloadFileFromUrl(link, new OnDownloadFileResponse(getActivity()));
