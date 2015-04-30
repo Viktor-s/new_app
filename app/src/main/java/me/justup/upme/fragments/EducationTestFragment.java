@@ -1,8 +1,10 @@
 package me.justup.upme.fragments;
 
 import android.app.Fragment;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,6 +54,8 @@ public class EducationTestFragment extends Fragment {
 
     private int currentQuestionListPosition;
 
+    private ArrayList<Boolean> arrayBoolean = new ArrayList<>();
+
     public static EducationTestFragment newInstance(int moduleId) {
         EducationTestFragment fragment = new EducationTestFragment();
         Bundle args = new Bundle();
@@ -72,6 +76,10 @@ public class EducationTestFragment extends Fragment {
             display.getSize(size);
             screenWidth = size.x - CommonUtils.convertDpToPixels(getActivity(), 440);
         }
+
+        for (int i=1; i < 20; i++)
+            arrayBoolean.add(false);
+
     }
 
     @Override
@@ -93,6 +101,7 @@ public class EducationTestFragment extends Fragment {
         previousQuestionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                setAnswerArr();
                 currentQuestionListPosition = currentQuestionListPosition - 1;
                 updateQuestion(currentQuestionListPosition);
             }
@@ -101,9 +110,9 @@ public class EducationTestFragment extends Fragment {
         nextQuestionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                setAnswerArr();
                 currentQuestionListPosition = currentQuestionListPosition + 1;
                 updateQuestion(currentQuestionListPosition);
-
             }
         });
         EducationGetTestsQuery testsQuery = new EducationGetTestsQuery();
@@ -111,6 +120,18 @@ public class EducationTestFragment extends Fragment {
         ApiWrapper.query(testsQuery, new OnTestResponse());
 
         return view;
+    }
+
+    private void setAnswerArr() {
+        int index = hourRadioGroup.getCheckedRadioButtonId()-1;
+        Log.d("TAG2", "index - " + index);
+        Log.d("TAG2", "currentQuestionListPosition - " + currentQuestionListPosition);
+        EducationTestQuestionEntity questionEntity = educationTestEntity.getQuestions().get(currentQuestionListPosition);
+        if (questionEntity.getQuestion_hash().equals(questionEntity.getAnswers().get(index).getAnswer_hash()))
+            arrayBoolean.set(currentQuestionListPosition, true);
+        else
+            arrayBoolean.set(currentQuestionListPosition, false);
+        Toast.makeText(getActivity(), arrayBoolean.toString(), Toast.LENGTH_SHORT).show();
     }
 
     private void updateQuestion(int positionInList) {
@@ -136,7 +157,7 @@ public class EducationTestFragment extends Fragment {
 
 
     private void generateAnswersView(final String rightHash, ArrayList<EducationTestAnswerEntity> testAnswerEntities) {
-//        hourRadioGroup.removeAllViews();
+        hourRadioGroup.removeAllViews();
         for (EducationTestAnswerEntity itemAnswer : testAnswerEntities) {
 
             LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(
@@ -147,6 +168,7 @@ public class EducationTestFragment extends Fragment {
             RadioButton radioButtonView = new RadioButton(getActivity());
             radioButtonView.setText(itemAnswer.getAnswer_text());
             radioButtonView.setLayoutParams(p);
+            radioButtonView.setTextColor(Color.BLACK);
             hourRadioGroup.addView(radioButtonView);
 
         }
