@@ -330,11 +330,12 @@ public class EducationModuleFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     String contentType = ((TextView) v.findViewById(R.id.education_module_item_content_type)).getText().toString();
+                    String link = ((TextView) v.findViewById(R.id.education_module_item_link)).getText().toString();
                     if (contentType.equals("Video")) {
-                        getChildFragmentManager().beginTransaction().replace(R.id.fragment_module_youtube_container, YoutubeDefaultFragment.newInstance("OMOVFvcNfvE")).addToBackStack(null).commit();
+                        getChildFragmentManager().beginTransaction().replace(R.id.fragment_module_youtube_container, YoutubeDefaultFragment.newInstance(link)).addToBackStack(null).commit();
                         closeYoutubeFragmentButton.setVisibility(View.VISIBLE);
                     } else {
-                        String link = ((TextView) v.findViewById(R.id.education_module_item_link)).getText().toString();
+
                         ApiWrapper.downloadFileFromUrl(link, new OnDownloadFileResponse(getActivity()));
                         mProgressBar.setVisibility(View.VISIBLE);
                         //showViewPDFDialog("The fast forward mba in project management", "file:///android_asset/mba.pdf");
