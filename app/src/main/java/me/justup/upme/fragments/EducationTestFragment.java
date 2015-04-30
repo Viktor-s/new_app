@@ -103,7 +103,7 @@ public class EducationTestFragment extends Fragment {
         });
         EducationGetTestsQuery testsQuery = new EducationGetTestsQuery();
         testsQuery.params.module_id = currentModuleId;
-        ApiWrapper.syncQuery(testsQuery, new OnTestResponse());
+        ApiWrapper.query(testsQuery, new OnTestResponse());
 
         return view;
     }
@@ -113,17 +113,16 @@ public class EducationTestFragment extends Fragment {
         if (positionInList == 0) {
             previousQuestionButton.setVisibility(View.INVISIBLE);
             nextQuestionButton.setVisibility(View.VISIBLE);
-        } else if (positionInList == educationTestEntity.getQuestions().size()-1) {
+        } else if (positionInList == educationTestEntity.getQuestions().size() - 1) {
             nextQuestionButton.setVisibility(View.INVISIBLE);
             previousQuestionButton.setVisibility(View.VISIBLE);
         } else {
             nextQuestionButton.setVisibility(View.VISIBLE);
             previousQuestionButton.setVisibility(View.VISIBLE);
         }
-        if (positionInList <= educationTestEntity.getQuestions().size() -1) {
+        if (positionInList <= educationTestEntity.getQuestions().size() - 1) {
             EducationTestQuestionEntity questionEntity = educationTestEntity.getQuestions().get(positionInList);
             questionContentTextView.setText(questionEntity.getQuestion_text());
-            //answersContainerLayout.removeAllViews();
             generateAnswersView(questionEntity.getQuestion_hash(), questionEntity.getAnswers());
         }
 

@@ -317,21 +317,21 @@ public class EducationModuleFragment extends Fragment {
             categoryProductLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int idCurrentGroup = Integer.parseInt(((TextView) v.findViewById(R.id.education_module_item_id)).getText().toString());
-                    // String nameCurrentGroup = ((TextView) v.findViewById(R.id.grid_row_name_extView)).getText().toString();
-                    // showProductHtmlFragment(idCurrentGroup, nameCurrentGroup, namePath);
                     String contentType = ((TextView) v.findViewById(R.id.education_module_item_content_type)).getText().toString();
                     if (contentType.equals("Video")) {
                         getChildFragmentManager().beginTransaction().replace(R.id.fragment_module_youtube_container, YoutubeDefaultFragment.newInstance("OMOVFvcNfvE")).addToBackStack(null).commit();
                     } else {
-                        ApiWrapper.downloadFileFromUrl("http://www.education.gov.yk.ca/pdf/pdf-test.pdf", new OnDownloadFileResponse(getActivity()));
+                        String link = ((TextView) v.findViewById(R.id.education_module_item_link)).getText().toString();
+                        ApiWrapper.downloadFileFromUrl(link, new OnDownloadFileResponse(getActivity()));
                         mProgressBar.setVisibility(View.VISIBLE);
+                        //showViewPDFDialog("The fast forward mba in project management", "file:///android_asset/mba.pdf");
                     }
                 }
             });
             gridLayout.addView(categoryProductLayout);
         }
     }
+
 
     private void showViewPDFDialog(String mFileName, String mFilePath) {
         ViewPDFDialog dialog = ViewPDFDialog.newInstance(mFileName, mFilePath);
