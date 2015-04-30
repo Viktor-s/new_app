@@ -12,13 +12,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TabHost;
 import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
 
 import com.google.gson.JsonSyntaxException;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -37,11 +33,6 @@ import me.justup.upme.entity.FileGetAllResponse;
 import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.services.FileExplorerService;
 
-import static me.justup.upme.fragments.DocumentsFragment.DOC;
-import static me.justup.upme.fragments.DocumentsFragment.IMAGE;
-import static me.justup.upme.fragments.DocumentsFragment.KB;
-import static me.justup.upme.fragments.DocumentsFragment.SIZE_VALUE;
-import static me.justup.upme.services.FileExplorerService.*;
 import static me.justup.upme.services.FileExplorerService.BROADCAST_EXTRA_ACTION_TYPE;
 import static me.justup.upme.services.FileExplorerService.BROADCAST_EXTRA_ERROR;
 import static me.justup.upme.services.FileExplorerService.COPY;
@@ -52,6 +43,7 @@ import static me.justup.upme.services.FileExplorerService.EXPLORER_SERVICE_ACTIO
 import static me.justup.upme.services.FileExplorerService.EXPLORER_SERVICE_FILE_HASH;
 import static me.justup.upme.services.FileExplorerService.EXPLORER_SERVICE_FILE_NAME;
 import static me.justup.upme.services.FileExplorerService.FILE_ACTION_DONE_BROADCAST;
+import static me.justup.upme.services.FileExplorerService.UNSUBSCRIBE;
 import static me.justup.upme.services.FileExplorerService.UPLOAD;
 import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.LOGE;
@@ -168,7 +160,7 @@ public class CloudExplorerFragment extends Fragment {
         if (fileName != null) {
             isImage = fileName.contains(".jpg") || fileName.contains(".jpeg") || fileName.contains(".png");
         }
-
+/*
         int type;
         if (isImage) {
             type = IMAGE;
@@ -191,9 +183,10 @@ public class CloudExplorerFragment extends Fragment {
         if (type == IMAGE) {
             mFileImage.setImageResource(R.drawable.ic_file_image);
         }
+
         mFileName.setText(fileName);
         mFileSize.setText((fileLength / SIZE_VALUE) + KB);
-
+*/
         parentLayout.addView(item);
     }
 

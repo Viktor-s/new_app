@@ -46,6 +46,7 @@ import me.justup.upme.entity.FileGetAllResponse;
 import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.services.FileExplorerService;
 import me.justup.upme.utils.AppLocale;
+import me.justup.upme.utils.ExplorerUtils;
 
 import static me.justup.upme.services.FileExplorerService.BROADCAST_EXTRA_ACTION_TYPE;
 import static me.justup.upme.services.FileExplorerService.BROADCAST_EXTRA_ERROR;
@@ -73,10 +74,6 @@ public class DocumentsFragment extends Fragment {
     public static final int SIZE_VALUE = 1024;
     private static final String DATE_FORMAT = "dd MMMM yyyy, HH:mm";
 
-    public static final int IMAGE = 1;
-    public static final int DOC = 2;
-    public static final int PDF = 3;
-    public static final int VIDEO = 4;
     private static final String FILE_ARRAY_MESSAGE = "file_array_thread_message";
 
     private TableLayout mFileExplorer;
@@ -149,20 +146,7 @@ public class DocumentsFragment extends Fragment {
     private void setFileItem(final FileEntity file) {
         final View item = mLayoutInflater.inflate(R.layout.item_documents_file, null);
 
-        final boolean isImage = file.getName().contains(".jpg") || file.getName().contains(".jpeg") || file.getName().contains(".png");
-        final boolean isPDF = file.getName().contains(".pdf");
-        final boolean isVideo = file.getName().contains(".mp4") || file.getName().contains(".avi") || file.getName().contains(".3gp");
-
-        int type;
-        if (isImage) {
-            type = IMAGE;
-        } else if (isPDF) {
-            type = PDF;
-        } else if (isVideo) {
-            type = VIDEO;
-        } else {
-            type = DOC;
-        }
+        final int type = file.getFileType();
 
         ImageView mFileFavorite = (ImageView) item.findViewById(R.id.file_star_imageView);
         if (file.isFavorite()) {
@@ -178,11 +162,11 @@ public class DocumentsFragment extends Fragment {
         ImageView mFileInCloud = (ImageView) item.findViewById(R.id.file_cloud_imageView);
 
         switch (file.getType()) {
-            case FileEntity.LOCAL_FILE:
+            case ExplorerUtils.LOCAL_FILE:
                 mFileInCloud.setOnClickListener(new OnUploadFileListener(file.getPath()));
                 break;
 
-            case FileEntity.CLOUD_FILE:
+            case ExplorerUtils.CLOUD_FILE:
                 mFileInTablet.setImageResource(R.drawable.ic_file_tab_gray);
                 mFileInCloud.setImageResource(R.drawable.ic_file_cloud);
 
@@ -193,7 +177,7 @@ public class DocumentsFragment extends Fragment {
                 mFileInTablet.setOnClickListener(new OnDownloadFileListener(file.getHash(), file.getName()));
                 break;
 
-            case FileEntity.SHARE_FILE:
+            case ExplorerUtils.SHARE_FILE:
                 mFileInTablet.setImageResource(R.drawable.ic_file_tab_gray);
                 mFileInCloud.setImageResource(R.drawable.ic_file_cloud_gray);
 
@@ -205,7 +189,7 @@ public class DocumentsFragment extends Fragment {
                 mFileInCloud.setOnClickListener(new OnCloudCopyFileListener(file.getHash()));
                 break;
 
-            case FileEntity.LOCAL_AND_CLOUD_FILE:
+            case ExplorerUtils.LOCAL_AND_CLOUD_FILE:
                 mFileInCloud.setImageResource(R.drawable.ic_file_cloud);
                 break;
 
@@ -213,22 +197,22 @@ public class DocumentsFragment extends Fragment {
                 break;
         }
 
-        if (type == IMAGE) {
-            if (file.getType() == FileEntity.CLOUD_FILE || file.getType() == FileEntity.SHARE_FILE) {
+        if (type == ExplorerUtils.IMAGE) {
+            if (file.getType() == ExplorerUtils.CLOUD_FILE || file.getType() == ExplorerUtils.SHARE_FILE) {
                 mFileImage.setImageResource(R.drawable.ic_file_image_gray);
             } else {
                 mFileImage.setImageResource(R.drawable.ic_file_image);
             }
         }
-        if (type == PDF) {
-            if (file.getType() == FileEntity.CLOUD_FILE || file.getType() == FileEntity.SHARE_FILE) {
+        if (type == ExplorerUtils.PDF) {
+            if (file.getType() == ExplorerUtils.CLOUD_FILE || file.getType() == ExplorerUtils.SHARE_FILE) {
                 mFileImage.setImageResource(R.drawable.ic_file_pdf_gray);
             } else {
                 mFileImage.setImageResource(R.drawable.ic_file_pdf);
             }
         }
-        if (type == VIDEO) {
-            if (file.getType() == FileEntity.CLOUD_FILE || file.getType() == FileEntity.SHARE_FILE) {
+        if (type == ExplorerUtils.VIDEO) {
+            if (file.getType() == ExplorerUtils.CLOUD_FILE || file.getType() == ExplorerUtils.SHARE_FILE) {
                 mFileImage.setImageResource(R.drawable.ic_file_video_gray);
             } else {
                 mFileImage.setImageResource(R.drawable.ic_file_video);
@@ -243,7 +227,7 @@ public class DocumentsFragment extends Fragment {
 
         mFileDate.setText(mDateFormat.format(new Date(file.getDate())));
 
-        if (file.getType() == FileEntity.LOCAL_FILE || file.getType() == FileEntity.LOCAL_AND_CLOUD_FILE) {
+        if (file.getType() == ExplorerUtils.LOCAL_FILE || file.getType() == ExplorerUtils.LOCAL_AND_CLOUD_FILE) {
             mFileImage.setOnClickListener(new OnOpenFileListener(file.getName(), file.getPath(), type));
             // mFileName.setOnClickListener(new OnOpenFileListener(file.getName(), file.getPath(), type));
         }
@@ -267,15 +251,15 @@ public class DocumentsFragment extends Fragment {
         @Override
         public void onClick(View v) {
             switch (fileType) {
-                case IMAGE:
+                case ExplorerUtils.IMAGE:
                     showViewImageDialog(mFileName, mFilePath);
                     break;
 
-                case PDF:
+                case ExplorerUtils.PDF:
                     showViewPDFDialog(mFileName, mFilePath);
                     break;
 
-                case VIDEO:
+                case ExplorerUtils.VIDEO:
                     showViewVideoDialog(mFileName, mFilePath);
                     break;
 
@@ -316,18 +300,18 @@ public class DocumentsFragment extends Fragment {
             PopupMenu popup = new PopupMenu(getActivity(), v);
 
             switch (type) {
-                case FileEntity.LOCAL_FILE:
+                case ExplorerUtils.LOCAL_FILE:
                     popup.getMenu().add(Menu.NONE, FILE_LOCAL_DELETE, Menu.NONE, getString(R.string.file_delete));
                     break;
 
-                case FileEntity.CLOUD_FILE:
+                case ExplorerUtils.CLOUD_FILE:
                     popup.getMenu().add(Menu.NONE, FILE_CLOUD_DELETE, Menu.NONE, getString(R.string.file_cloud_delete));
                     popup.getMenu().add(Menu.NONE, FILE_SHARE_FOR, Menu.NONE, getString(R.string.file_share_for));
                     popup.getMenu().add(Menu.NONE, FILE_REMOVE_SHARE_FOR, Menu.NONE, getString(R.string.file_remove_share_for));
                     popup.getMenu().add(Menu.NONE, FILE_SHARE_PROPERTIES, Menu.NONE, getString(R.string.file_properties));
                     break;
 
-                case FileEntity.LOCAL_AND_CLOUD_FILE:
+                case ExplorerUtils.LOCAL_AND_CLOUD_FILE:
                     popup.getMenu().add(Menu.NONE, FILE_LOCAL_DELETE, Menu.NONE, getString(R.string.file_delete));
                     popup.getMenu().add(Menu.NONE, FILE_CLOUD_DELETE, Menu.NONE, getString(R.string.file_cloud_delete));
                     popup.getMenu().add(Menu.NONE, FILE_SHARE_FOR, Menu.NONE, getString(R.string.file_share_for));
@@ -335,7 +319,7 @@ public class DocumentsFragment extends Fragment {
                     popup.getMenu().add(Menu.NONE, FILE_SHARE_PROPERTIES, Menu.NONE, getString(R.string.file_properties));
                     break;
 
-                case FileEntity.SHARE_FILE:
+                case ExplorerUtils.SHARE_FILE:
                     popup.getMenu().add(Menu.NONE, FILE_REMOVE_SHARE, Menu.NONE, getString(R.string.file_remove_share));
                     popup.getMenu().add(Menu.NONE, FILE_SHARE_PROPERTIES, Menu.NONE, getString(R.string.file_properties));
                     break;
@@ -491,7 +475,7 @@ public class DocumentsFragment extends Fragment {
             for (File file : mDirList) {
                 if (!file.isDirectory()) {
                     mLocalFileList.add(
-                            new FileEntity(false, file.getName(), file.getAbsolutePath(), file.length(), file.lastModified(), null, FileEntity.LOCAL_FILE));
+                            new FileEntity(false, file.getName(), file.getAbsolutePath(), file.length(), file.lastModified(), null, ExplorerUtils.LOCAL_FILE));
                 }
             }
 
@@ -530,14 +514,14 @@ public class DocumentsFragment extends Fragment {
                     if (stage == 0) {
                         stage++;
 
-                        fillArray(response, mCloudFileList, FileEntity.CLOUD_FILE);
+                        fillArray(response, mCloudFileList, ExplorerUtils.CLOUD_FILE);
 
                         getShareFileList();
                     }
                     if (stage == 1) {
                         stage++;
 
-                        fillArray(response, mShareFileList, FileEntity.SHARE_FILE);
+                        fillArray(response, mShareFileList, ExplorerUtils.SHARE_FILE);
 
                         sortArrays();
 
@@ -566,7 +550,8 @@ public class DocumentsFragment extends Fragment {
                     for (int i = 0; i < mLocalFileList.size(); i++) {
                         for (int j = 0; j < mCloudFileList.size(); j++) {
                             if (mLocalFileList.get(i).getName().equals(mCloudFileList.get(j).getName())) {
-                                mLocalFileList.get(i).setType(FileEntity.LOCAL_AND_CLOUD_FILE);
+                                mLocalFileList.get(i).setType(ExplorerUtils.LOCAL_AND_CLOUD_FILE);
+                                mLocalFileList.get(i).setOnCloud(true);
                                 mLocalFileList.get(i).setHash(mCloudFileList.get(j).getHash());
                                 mCloudFileList.remove(j);
                             }

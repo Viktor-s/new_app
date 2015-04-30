@@ -53,6 +53,6 @@
         android:id="@+id/doc_sort_panel_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/base45dp720sw"
+        android:layout_marginTop="@dimen/base60dp720sw"
         android:layout_above="@+id/documents_content" />
 </RelativeLayout>

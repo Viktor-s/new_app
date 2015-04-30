@@ -9,15 +9,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import me.justup.upme.R;
-
-import static me.justup.upme.utils.LogUtils.makeLogTag;
+import me.justup.upme.entity.FileEntity;
+import me.justup.upme.utils.ExplorerUtils;
 
 
 public class DocumentsSortPanelFragment extends Fragment implements View.OnClickListener {
-    private static final String TAG = makeLogTag(DocumentsSortPanelFragment.class);
-
     private DocumentsFragment mParentFragment;
 
     private ImageView mColumnFavorite;
@@ -73,30 +73,44 @@ public class DocumentsSortPanelFragment extends Fragment implements View.OnClick
         switch (v.getId()) {
             case R.id.sort_column_favorite:
                 selectIconButton(mColumnFavorite, ICON_FAVORITE);
+                FileSort.sort(mParentFragment.getFileArray(), FileSort.SORT_BY_FAVOR, isDesc);
+                mParentFragment.updateFileExplorer();
                 break;
 
             case R.id.sort_column_type:
                 selectTextButton(mColumnType);
+                FileSort.sort(mParentFragment.getFileArray(), FileSort.SORT_BY_TYPE, isDesc);
+                mParentFragment.updateFileExplorer();
                 break;
 
             case R.id.sort_column_name:
                 selectTextButton(mColumnName);
+                FileSort.sort(mParentFragment.getFileArray(), FileSort.SORT_BY_NAME, isDesc);
+                mParentFragment.updateFileExplorer();
                 break;
 
             case R.id.sort_column_size:
                 selectTextButton(mColumnSize);
+                FileSort.sort(mParentFragment.getFileArray(), FileSort.SORT_BY_SIZE, isDesc);
+                mParentFragment.updateFileExplorer();
                 break;
 
             case R.id.sort_column_date:
                 selectTextButton(mColumnDate);
+                FileSort.sort(mParentFragment.getFileArray(), FileSort.SORT_BY_DATE, isDesc);
+                mParentFragment.updateFileExplorer();
                 break;
 
             case R.id.sort_column_tab:
                 selectIconButton(mColumnTablet, ICON_TABLET);
+                FileSort.sort(mParentFragment.getFileArray(), FileSort.SORT_BY_IN_TABLET, isDesc);
+                mParentFragment.updateFileExplorer();
                 break;
 
             case R.id.sort_column_cloud:
                 selectIconButton(mColumnCloud, ICON_CLOUD);
+                FileSort.sort(mParentFragment.getFileArray(), FileSort.SORT_BY_IN_CLOUD, isDesc);
+                mParentFragment.updateFileExplorer();
                 break;
 
             default:
@@ -144,6 +158,59 @@ public class DocumentsSortPanelFragment extends Fragment implements View.OnClick
         mColumnFavorite.setImageResource(R.drawable.ic_file_star_gray);
         mColumnTablet.setImageResource(R.drawable.ic_file_tab_gray);
         mColumnCloud.setImageResource(R.drawable.ic_file_cloud_gray);
+    }
+
+    static class FileSort {
+        public static final int SORT_BY_FAVOR = 1;
+        public static final int SORT_BY_TYPE = 2;
+        public static final int SORT_BY_NAME = 3;
+        public static final int SORT_BY_SIZE = 4;
+        public static final int SORT_BY_DATE = 5;
+        public static final int SORT_BY_IN_TABLET = 6;
+        public static final int SORT_BY_IN_CLOUD = 7;
+
+        public static void sort(final ArrayList<FileEntity> array, final int sortType, final boolean isDesk) {
+            switch (sortType) {
+                case SORT_BY_FAVOR:
+                    compare(array, ExplorerUtils.COMPARE_BY_FAVOR_ASC, ExplorerUtils.COMPARE_BY_FAVOR_DESC, isDesk);
+                    break;
+
+                case SORT_BY_TYPE:
+                    compare(array, ExplorerUtils.COMPARE_BY_TYPE_ASC, ExplorerUtils.COMPARE_BY_TYPE_DESC, isDesk);
+                    break;
+
+                case SORT_BY_NAME:
+                    compare(array, ExplorerUtils.COMPARE_BY_NAME_ASC, ExplorerUtils.COMPARE_BY_NAME_DESC, isDesk);
+                    break;
+
+                case SORT_BY_SIZE:
+                    compare(array, ExplorerUtils.COMPARE_BY_SIZE_ASC, ExplorerUtils.COMPARE_BY_SIZE_DESC, isDesk);
+                    break;
+
+                case SORT_BY_DATE:
+                    compare(array, ExplorerUtils.COMPARE_BY_DATE_ASC, ExplorerUtils.COMPARE_BY_DATE_DESC, isDesk);
+                    break;
+
+                case SORT_BY_IN_TABLET:
+                    compare(array, ExplorerUtils.COMPARE_BY_IN_TAB_ASC, ExplorerUtils.COMPARE_BY_IN_TAB_DESC, isDesk);
+                    break;
+
+                case SORT_BY_IN_CLOUD:
+                    compare(array, ExplorerUtils.COMPARE_BY_IN_CLOUD_ASC, ExplorerUtils.COMPARE_BY_IN_CLOUD_DESC, isDesk);
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+        private static void compare(final ArrayList<FileEntity> array, final Comparator<FileEntity> compareByAsc,
+                                    final Comparator<FileEntity> compareByDesc, final boolean isDesk) {
+            if (!isDesk)
+                Collections.sort(array, compareByAsc);
+            else
+                Collections.sort(array, compareByDesc);
+        }
     }
 
 }

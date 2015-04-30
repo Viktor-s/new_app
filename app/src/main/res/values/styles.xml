@@ -622,7 +622,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:textSize">@dimen/base18sp720sw</item>
-        <item name="android:layout_marginStart">@dimen/base20dp720sw</item>
+        <item name="android:layout_marginStart">@dimen/base15dp720sw</item>
         <item name="android:layout_marginEnd">@dimen/base20dp720sw</item>
     </style>
 
@@ -630,7 +630,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginStart">@dimen/base20dp720sw</item>
-        <item name="android:layout_marginEnd">@dimen/base20dp720sw</item>
+        <item name="android:layout_marginEnd">@dimen/base15dp720sw</item>
     </style>
 
 </resources>

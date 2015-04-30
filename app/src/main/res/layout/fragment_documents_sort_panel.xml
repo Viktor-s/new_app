@@ -28,14 +28,14 @@
     <TextView
         android:layout_width="0dp"
         android:text="@string/size"
-        android:layout_weight="0.9"
+        android:layout_weight="0.8"
         android:id="@+id/sort_column_size"
         style="@style/DocumentsSortPanelText" />
 
     <TextView
         android:layout_width="wrap_content"
         android:text="@string/date"
-        android:layout_weight="0.4"
+        android:layout_weight="0.3"
         android:id="@+id/sort_column_date"
         style="@style/DocumentsSortPanelText" />
 
