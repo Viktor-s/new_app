@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +42,7 @@ public class EducationTestFragment extends Fragment {
     private TextView questionNameTextview, questionContentTextView;
     private Button previousQuestionButton, nextQuestionButton;
     private GridLayout answersContainerLayout;
+    private RadioGroup hourRadioGroup;
     private int column = 3;
     private int screenWidth;
     private LayoutInflater layoutInflater;
@@ -84,7 +87,9 @@ public class EducationTestFragment extends Fragment {
         previousQuestionButton.setVisibility(View.INVISIBLE);
         nextQuestionButton.setVisibility(View.INVISIBLE);
 
-        answersContainerLayout = (GridLayout) view.findViewById(R.id.education_test_answers_container);
+//        answersContainerLayout = (GridLayout) view.findViewById(R.id.education_test_answers_container);
+        hourRadioGroup = (RadioGroup) view.findViewById(R.id.hour_radio_group);
+
         previousQuestionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -123,7 +128,7 @@ public class EducationTestFragment extends Fragment {
         if (positionInList <= educationTestEntity.getQuestions().size() -1) {
             EducationTestQuestionEntity questionEntity = educationTestEntity.getQuestions().get(positionInList);
             questionContentTextView.setText(questionEntity.getQuestion_text());
-            //answersContainerLayout.removeAllViews();
+
             generateAnswersView(questionEntity.getQuestion_hash(), questionEntity.getAnswers());
         }
 
@@ -131,6 +136,24 @@ public class EducationTestFragment extends Fragment {
 
 
     private void generateAnswersView(final String rightHash, ArrayList<EducationTestAnswerEntity> testAnswerEntities) {
+//        hourRadioGroup.removeAllViews();
+        for (EducationTestAnswerEntity itemAnswer : testAnswerEntities) {
+
+            LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+
+            RadioButton radioButtonView = new RadioButton(getActivity());
+            radioButtonView.setText(itemAnswer.getAnswer_text());
+            radioButtonView.setLayoutParams(p);
+            hourRadioGroup.addView(radioButtonView);
+
+        }
+
+    }
+
+    private void generateAnswersViewOld(final String rightHash, ArrayList<EducationTestAnswerEntity> testAnswerEntities) {
         answersContainerLayout.removeAllViews();
         for (int i = 0, c = 0, r = 0; i < testAnswerEntities.size(); i++, c++) {
             if (c == column) {
