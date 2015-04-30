@@ -173,8 +173,9 @@ public class ApiWrapper {
     }
 
     public static void downloadFileFromUrl(String url, FileAsyncHttpResponseHandler fileResponseHandler) {
-        client.addHeader(AUTHORIZATION_HEADER, getToken());
-        client.get(url, fileResponseHandler);
+        AsyncHttpClient localClient = new AsyncHttpClient();
+        localClient.addHeader(AUTHORIZATION_HEADER, getToken());
+        localClient.get(url, fileResponseHandler);
     }
 
     public static void syncDownloadFileFromCloud(String fileHash, FileAsyncHttpResponseHandler fileResponseHandler) {
