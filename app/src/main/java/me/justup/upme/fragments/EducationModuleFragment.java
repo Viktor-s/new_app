@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import me.justup.upme.R;
 import me.justup.upme.db.DBAdapter;
 import me.justup.upme.dialogs.ViewPDFDialog;
+import me.justup.upme.dialogs.WarningDialog;
 import me.justup.upme.entity.EducationMaterialEntity;
 import me.justup.upme.entity.EducationModuleEntity;
 import me.justup.upme.http.ApiWrapper;
@@ -343,6 +344,12 @@ public class EducationModuleFragment extends Fragment {
         }
     }
 
+
+    public void closeTest() {
+        getChildFragmentManager().popBackStack();
+        WarningDialog dialog = WarningDialog.newInstance("Отправлено", "Ваш тест отправлен на сервер");
+        dialog.show(getChildFragmentManager(), WarningDialog.WARNING_DIALOG);
+    }
 
     private void showViewPDFDialog(String mFileName, String mFilePath) {
         ViewPDFDialog dialog = ViewPDFDialog.newInstance(mFileName, mFilePath);

@@ -3,7 +3,8 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:background="@android:color/white"
+    android:clickable="true">
 
     <TextView
         android:layout_width="wrap_content"
@@ -40,6 +41,18 @@
         android:layout_marginRight="@dimen/base12dp720sw"
         android:textSize="@dimen/base20sp720sw" />
 
+    <Button
+        android:layout_width="@dimen/base130dp720sw"
+        android:layout_height="@dimen/base50dp720sw"
+        android:text="SEND"
+        android:id="@+id/education_test_send_button"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:background="@color/button_back_gray"
+        android:layout_marginRight="@dimen/base12dp720sw"
+        android:textSize="@dimen/base20sp720sw"
+        android:visibility="gone"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -49,14 +62,16 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/base20dp720sw"
         android:textSize="@dimen/base21sp720sw"
-        android:textColor="@android:color/black" />
+        android:textColor="@android:color/black"
+        android:gravity="center"/>
 
         <RadioGroup
             android:id="@+id/hour_radio_group"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_below="@+id/education_test_previous_button">
+            android:layout_below="@+id/education_test_previous_button"
+            android:layout_marginTop="@dimen/base30dp720sw">
         </RadioGroup>
 
 </RelativeLayout>

@@ -4,7 +4,6 @@ import android.app.Fragment;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +25,7 @@ import java.util.ArrayList;
 
 import me.justup.upme.R;
 import me.justup.upme.dialogs.EducationChoseTestDialog;
+import me.justup.upme.dialogs.WarningDialog;
 import me.justup.upme.entity.EducationGetTestsQuery;
 import me.justup.upme.entity.EducationGetTestsResponse;
 import me.justup.upme.entity.EducationTestAnswerEntity;
@@ -43,7 +43,7 @@ public class EducationTestFragment extends Fragment {
     private static final String ARG_MODULE_ID = "module_id";
     private int currentModuleId;
     private TextView questionNameTextview, questionContentTextView;
-    private Button previousQuestionButton, nextQuestionButton;
+    private Button previousQuestionButton, nextQuestionButton, sendButton;
     private GridLayout answersContainerLayout;
     private RadioGroup hourRadioGroup;
     private int column = 3;
@@ -55,7 +55,7 @@ public class EducationTestFragment extends Fragment {
 
     private int currentQuestionListPosition;
 
-    private ArrayList<Boolean> arrayBoolean = new ArrayList<>();
+    private ArrayList<String> answeredQuestions = new ArrayList<>();
 
     public static EducationTestFragment newInstance(int moduleId) {
         EducationTestFragment fragment = new EducationTestFragment();
@@ -78,8 +78,6 @@ public class EducationTestFragment extends Fragment {
             screenWidth = size.x - CommonUtils.convertDpToPixels(getActivity(), 440);
         }
 
-        for (int i=1; i < 20; i++)
-            arrayBoolean.add(false);
 
     }
 
@@ -91,6 +89,7 @@ public class EducationTestFragment extends Fragment {
         questionContentTextView = (TextView) view.findViewById(R.id.education_test_question_content_textView);
         previousQuestionButton = (Button) view.findViewById(R.id.education_test_previous_button);
         nextQuestionButton = (Button) view.findViewById(R.id.education_test_next_button);
+        sendButton = (Button) view.findViewById(R.id.education_test_send_button);
         questionNameTextview.setVisibility(View.INVISIBLE);
         questionContentTextView.setVisibility(View.INVISIBLE);
         previousQuestionButton.setVisibility(View.INVISIBLE);
@@ -105,6 +104,7 @@ public class EducationTestFragment extends Fragment {
                 setAnswerArr();
                 currentQuestionListPosition = currentQuestionListPosition - 1;
                 updateQuestion(currentQuestionListPosition);
+
             }
         });
 
@@ -114,6 +114,21 @@ public class EducationTestFragment extends Fragment {
                 setAnswerArr();
                 currentQuestionListPosition = currentQuestionListPosition + 1;
                 updateQuestion(currentQuestionListPosition);
+
+            }
+        });
+
+        sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setAnswerArr();
+                for (String str : answeredQuestions)
+                    if (str.equals("")) {
+                        WarningDialog dialog = WarningDialog.newInstance(getString(R.string.test_warning), "Вы не ответили на все вопросы!");
+                        dialog.show(getChildFragmentManager(), WarningDialog.WARNING_DIALOG);
+                        return;
+                    }
+                ((EducationModuleFragment) getParentFragment()).closeTest();
             }
         });
         EducationGetTestsQuery testsQuery = new EducationGetTestsQuery();
@@ -124,15 +139,12 @@ public class EducationTestFragment extends Fragment {
     }
 
     private void setAnswerArr() {
-        int index = hourRadioGroup.getCheckedRadioButtonId()-1;
-        Log.d("TAG2", "index - " + index);
-        Log.d("TAG2", "currentQuestionListPosition - " + currentQuestionListPosition);
+        int radioButtonID = hourRadioGroup.getCheckedRadioButtonId();
+        View radioButton = hourRadioGroup.findViewById(radioButtonID);
+        int index = hourRadioGroup.indexOfChild(radioButton);
         EducationTestQuestionEntity questionEntity = educationTestEntity.getQuestions().get(currentQuestionListPosition);
-        if (questionEntity.getQuestion_hash().equals(questionEntity.getAnswers().get(index).getAnswer_hash()))
-            arrayBoolean.set(currentQuestionListPosition, true);
-        else
-            arrayBoolean.set(currentQuestionListPosition, false);
-        Toast.makeText(getActivity(), arrayBoolean.toString(), Toast.LENGTH_SHORT).show();
+        String currentHash = (index == -1) ? "" : questionEntity.getAnswers().get(index).getAnswer_hash();
+        answeredQuestions.set(currentQuestionListPosition, currentHash);
     }
 
     private void updateQuestion(int positionInList) {
@@ -143,23 +155,28 @@ public class EducationTestFragment extends Fragment {
         } else if (positionInList == educationTestEntity.getQuestions().size() - 1) {
             nextQuestionButton.setVisibility(View.INVISIBLE);
             previousQuestionButton.setVisibility(View.VISIBLE);
+            sendButton.setVisibility(View.VISIBLE);
         } else {
             nextQuestionButton.setVisibility(View.VISIBLE);
             previousQuestionButton.setVisibility(View.VISIBLE);
+            sendButton.setVisibility(View.GONE);
         }
         if (positionInList <= educationTestEntity.getQuestions().size() - 1) {
             EducationTestQuestionEntity questionEntity = educationTestEntity.getQuestions().get(positionInList);
             questionContentTextView.setText(questionEntity.getQuestion_text());
 
-            generateAnswersView(questionEntity.getQuestion_hash(), questionEntity.getAnswers());
+            generateAnswersView(positionInList, questionEntity.getAnswers());
         }
-
     }
 
 
-    private void generateAnswersView(final String rightHash, ArrayList<EducationTestAnswerEntity> testAnswerEntities) {
+    private void generateAnswersView(final int questionNumber, ArrayList<EducationTestAnswerEntity> testAnswerEntities) {
         hourRadioGroup.removeAllViews();
+        String answerNumber = answeredQuestions.get(questionNumber);
+        int index = -1;
+        int i = -1;
         for (EducationTestAnswerEntity itemAnswer : testAnswerEntities) {
+            i++;
 
             LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -170,10 +187,15 @@ public class EducationTestFragment extends Fragment {
             radioButtonView.setText(itemAnswer.getAnswer_text());
             radioButtonView.setLayoutParams(p);
             radioButtonView.setTextColor(Color.BLACK);
-            hourRadioGroup.addView(radioButtonView);
+            radioButtonView.setTextSize(27);
+            if (itemAnswer.getAnswer_hash().equals(answerNumber))
+                index = i;
 
+            hourRadioGroup.addView(radioButtonView);
         }
 
+        if (index != -1)
+            ((RadioButton) hourRadioGroup.getChildAt(index)).setChecked(true);
     }
 
     private void generateAnswersViewOld(final String rightHash, ArrayList<EducationTestAnswerEntity> testAnswerEntities) {
@@ -265,6 +287,7 @@ public class EducationTestFragment extends Fragment {
             }
             questionEntity.setAnswers(answerEntities);
             testQuestionEntities.add(questionEntity);
+            answeredQuestions.add("");
         }
         educationTestEntity.setQuestions(testQuestionEntities);
         LOGE("pavel", educationTestEntity.toString());

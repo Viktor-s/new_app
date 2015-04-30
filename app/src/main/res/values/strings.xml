@@ -13,6 +13,7 @@
     <string name="login_button">подтвердить</string>
     <string name="enter_button">войти</string>
     <string name="network_error">Ошибка сети</string>
+    <string name="test_warning">Предупреждение</string>
     <string name="warning">Внимание</string>
     <string name="enter_phone_number">Введите\nномер телефона</string>
     <string name="enter_pin_code">Введите код\nподтверждения</string>
