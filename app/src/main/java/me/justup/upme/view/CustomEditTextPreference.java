@@ -28,8 +28,6 @@ public class CustomEditTextPreference extends EditTextPreference {
         super(context);
     }
 
-
-
     @Override
     protected void onDialogClosed(boolean positiveResult) {
         super.onDialogClosed(positiveResult);

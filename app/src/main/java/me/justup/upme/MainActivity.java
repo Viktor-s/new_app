@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -104,7 +105,9 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
     private FrameLayout mCornerButton;
 
     private WebRtcFragment mWebRtcFragment = null;
-    private UserFragment mUserFragment = null;
+    private Fragment mUserFragment = null;
+    private Fragment mNewsFeedFragmentNew = null;
+    private Fragment mProductsFragment = null;
 
     // broadcast push
     public static final String BROADCAST_ACTION_CALL = "me.justup.upme.broadcast.call.call";
@@ -203,6 +206,47 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
         // Init User Fragment
         mUserFragment = UserFragment.newInstance(new GetLoggedUserInfoQuery(), true);
         getFragmentManager().beginTransaction().replace(R.id.mapAndUserFragment, mUserFragment).commit();
+
+        // Init News Fragment
+        mNewsFeedFragmentNew = NewsFeedFragmentNew.newInstance();
+        // Init Product Panel
+        mProductsFragment = new ProductsFragment();
+
+        setAnimationOpenFragmentListener(new AnimationOpenFragmentListener() {
+            @Override
+            public void onStartAnim() {
+                if(currentlySelectedFragment==SELECTED_FRAGMENT_NEWS) {
+                    new Handler().postDelayed(new Runnable() {
+                        public void run() {
+                            ((NewsFeedFragmentNew) mNewsFeedFragmentNew).showFullNews();
+                        }
+                    }, 500);
+                }
+            }
+
+            @Override
+            public void onEndAnim() {
+
+            }
+        });
+
+        setAnimationCloseFragmentListener(new AnimationCloseFragmentListener() {
+            @Override
+            public void onStartAnim() {
+                if (currentlySelectedFragment == SELECTED_FRAGMENT_NEWS) {
+                    new Handler().postDelayed(new Runnable() {
+                        public void run() {
+                            ((NewsFeedFragmentNew) mNewsFeedFragmentNew).closeFullNews();
+                        }
+                    }, 300);
+                }
+            }
+
+            @Override
+            public void onEndAnim() {
+
+            }
+        });
     }
 
     /**
@@ -224,9 +268,11 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
                     startHttpIntent(getShortDescriptionQuery(100, 0), HttpIntentService.NEWS_PART_SHORT);
                     //startHttpIntent(getShortDescriptionQuery(500, 20), HttpIntentService.NEWS_PART_SHORT);
                     changeButtonState(mNewsButton);
-                    fragment = new NewsFeedFragmentNew();
+
+                    fragment = mNewsFeedFragmentNew;
                     currentlySelectedFragment = SELECTED_FRAGMENT_NEWS;
                 }
+
                 break;
 
             case R.id.mail_menu_item:
@@ -235,9 +281,11 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
                     query.method = ApiWrapper.ACCOUNT_GET_ALL_CONTACTS;
                     startHttpIntent(query, HttpIntentService.MAIL_CONTACT_PART);
                     changeButtonState(mMailButton);
+
                     fragment = new MailFragment();
                     currentlySelectedFragment = SELECTED_FRAGMENT_MAIL;
                 }
+
                 break;
 
             case R.id.calendar_menu_item:
@@ -245,18 +293,22 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
                     LocalDateTime firstDayCurrentWeek = new LocalDateTime().withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0).withDayOfWeek(DateTimeConstants.MONDAY);
                     startHttpIntent(getEventCalendarQuery(firstDayCurrentWeek), HttpIntentService.CALENDAR_PART);
                     changeButtonState(mCalendarButton);
+
                     fragment = new CalendarFragment();
                     currentlySelectedFragment = SELECTED_FRAGMENT_CALENDAR;
                 }
+
                 break;
 
             case R.id.products_menu_item:
                 if (currentlySelectedFragment != SELECTED_FRAGMENT_PRODUCTS) {
                     startHttpIntent(new ProductsGetAllCategoriesQuery(), HttpIntentService.PRODUCTS_PART);
                     changeButtonState(mProductsButton);
-                    fragment = new ProductsFragment();
+
+                    fragment = mProductsFragment;
                     currentlySelectedFragment = SELECTED_FRAGMENT_PRODUCTS;
                 }
+
                 break;
 
             case R.id.briefcase_menu_item:
@@ -265,42 +317,52 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
                     query.method = ApiWrapper.ACCOUNT_GET_ALL_CONTACTS;
                     startHttpIntent(query, HttpIntentService.MAIL_CONTACT_PART);
                     changeButtonState(mBriefcaseButton);
+
                     fragment = new BriefcaseFragment();
                     currentlySelectedFragment = SELECTED_FRAGMENT_BRIEFCASE;
                 }
+
                 break;
 
             case R.id.docs_menu_item:
                 if (currentlySelectedFragment != SELECTED_FRAGMENT_DOCS) {
                     changeButtonState(mDocsButton);
+
                     fragment = new DocumentsFragment();
                     currentlySelectedFragment = SELECTED_FRAGMENT_DOCS;
                 }
+
                 break;
 
             case R.id.study_menu_item:
                 if (currentlySelectedFragment != SELECTED_FRAGMENT_STUDY) {
                     startHttpIntent(new EducationGetProgramsQuery(), HttpIntentService.EDUCATION_GET_PRODUCTS);
                     changeButtonState(mStudyButton);
+
                     fragment = new EducationFragment();
                     currentlySelectedFragment = SELECTED_FRAGMENT_STUDY;
                 }
+
                 break;
 
             case R.id.browser_menu_item:
                 if (currentlySelectedFragment != SELECTED_FRAGMENT_BROWSER) {
                     changeButtonState(mBrowserButton);
+
                     fragment = new BrowserFragment();
                     currentlySelectedFragment = SELECTED_FRAGMENT_BROWSER;
                 }
+
                 break;
 
             case R.id.settings_menu_item:
                 if (currentlySelectedFragment != SELECTED_FRAGMENT_SETTINGS) {
                     changeButtonState(mSettingsButton);
+
                     fragment = new SettingsFragment();
                     currentlySelectedFragment = SELECTED_FRAGMENT_SETTINGS;
                 }
+
                 break;
 
             default:
@@ -314,7 +376,6 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
         if (isShowMainFragmentContainer!=null && !isShowMainFragmentContainer) {
             showMainFragmentContainer();
         }
-
     }
 
     private void reopenFragment(int currentNumberFragment) {

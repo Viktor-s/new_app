@@ -3,29 +3,29 @@
     xmlns:tool="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="1dp"
-    android:background="@android:color/white">
+    android:background="@android:color/white"
+    android:padding="1dp">
 
     <ScrollView
-        android:layout_width="@dimen/base200dp720sw"
+        android:layout_width="@dimen/base230dp720sw"
         android:layout_height="wrap_content">
 
         <LinearLayout
             android:id="@+id/category_product_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@color/gray">
+            android:background="@color/gray"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/category_product_title"
                 style="@style/ProductMainTitle"
-                tool:text="@string/product_title_credit"/>
+                tool:text="@string/product_title_credit" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@android:color/white"/>
+                android:background="@android:color/white" />
 
             <!--
             <include layout="@layout/group_product_layout"/>

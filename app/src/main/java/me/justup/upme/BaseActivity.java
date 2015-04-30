@@ -40,11 +40,19 @@ public abstract class BaseActivity extends Activity {
             @Override
             public void onAnimationStart(Animation animation) {
                 isShowMainFragmentContainer = null;
+
+                if(mAnimationOpenFragmentListener!=null){
+                    mAnimationOpenFragmentListener.onStartAnim();
+                }
             }
 
             @Override
             public void onAnimationEnd(Animation animation) {
                 isShowMainFragmentContainer = false;
+
+                if(mAnimationOpenFragmentListener!=null){
+                    mAnimationOpenFragmentListener.onEndAnim();
+                }
             }
 
             @Override
@@ -72,11 +80,19 @@ public abstract class BaseActivity extends Activity {
             @Override
             public void onAnimationStart(Animation animation) {
                 isShowMainFragmentContainer = null;
+
+                if(mAnimationCloseFragmentListener!=null){
+                    mAnimationCloseFragmentListener.onStartAnim();
+                }
             }
 
             @Override
             public void onAnimationEnd(Animation animation) {
                 isShowMainFragmentContainer = true;
+
+                if(mAnimationCloseFragmentListener!=null){
+                    mAnimationCloseFragmentListener.onEndAnim();
+                }
             }
 
             @Override
@@ -203,6 +219,30 @@ public abstract class BaseActivity extends Activity {
             ft.addToBackStack(backStateName);
             ft.commit();
         }
+    }
+
+    // Animation Listener
+
+    public AnimationOpenFragmentListener mAnimationOpenFragmentListener = null;
+    public AnimationCloseFragmentListener mAnimationCloseFragmentListener = null;
+
+    public void setAnimationOpenFragmentListener(AnimationOpenFragmentListener listener) {
+        mAnimationOpenFragmentListener = listener;
+    }
+    public void setAnimationCloseFragmentListener(AnimationCloseFragmentListener listener) {
+        mAnimationCloseFragmentListener = listener;
+    }
+
+    public interface AnimationOpenFragmentListener {
+        void onStartAnim();
+
+        void onEndAnim();
+    }
+
+    public interface AnimationCloseFragmentListener {
+        void onStartAnim();
+
+        void onEndAnim();
     }
 
 }

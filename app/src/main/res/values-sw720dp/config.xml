@@ -1,4 +1,7 @@
 <resources>
+    <!--CWView-->
+    <integer name="web_view_txt_size">112</integer>
+
     <integer name="cell_count_x">8</integer>
     <integer name="cell_count_y">5</integer>
     <integer name="hotseat_cell_count">9</integer>

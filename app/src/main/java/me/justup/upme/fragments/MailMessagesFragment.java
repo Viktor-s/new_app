@@ -93,6 +93,7 @@ public class MailMessagesFragment extends Fragment {
     private static final String CHOOSE_FROM_GALLERY = "Выбрать из галереи";
     private static final String DIALOG_CANCEL = "Отмена";
     private static final String TITLE_CHAT = " - чат";
+    private static final int TIME_ANIM = 250;
 
     private RelativeLayout mAddFileContainer;
     private String mCurrentPhotoPath;
@@ -190,7 +191,7 @@ public class MailMessagesFragment extends Fragment {
             }
         });
 
-        AnimateButtonClose.animateButtonClose(mMailMessageCloseButton);
+        AnimateButtonClose.animateButtonClose(mMailMessageCloseButton, TIME_ANIM);
         Button mAddPhotoButton = (Button) view.findViewById(R.id.mail_messages_add_photo_button);
         Button mAddAudioButton = (Button) view.findViewById(R.id.mail_messages_add_audio_button);
         Button mAddDocumentButton = (Button) view.findViewById(R.id.mail_messages_add_document_button);

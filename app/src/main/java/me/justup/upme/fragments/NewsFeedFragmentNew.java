@@ -1,5 +1,6 @@
 package me.justup.upme.fragments;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -10,6 +11,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -26,6 +28,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,63 +62,147 @@ import static me.justup.upme.utils.LogUtils.makeLogTag;
 public class NewsFeedFragmentNew extends Fragment {
     private static final String TAG = makeLogTag(NewsFeedFragmentNew.class);
 
-    private List<ArticleShortEntity> mNewsFeedEntityList;
+    private List<ArticleShortEntity> mNewsFeedEntityList = null;
     private List<ArticleShortEntity> mNewsFeedEntityPartOfList = new ArrayList<>();
-    private FrameLayout mNewsItemContainer;
-    private int lastChosenPosition = -1;
+    private FrameLayout mNewsItemContainer = null;
+    private int mLastChosenPosition = -1;
     private boolean isLoading = true;
-    private int visibleItemCount, totalItemCount;
-    private String selectQueryShortNews;
-    private int from = 0;
-    private int to = 10;
-    private ProgressBar mProgressBar;
+    private int mVisibleItemCount, mTotalItemCount;
+    private String mSelectQueryShortNews = null;
+    private int mFrom = 0;
+    private int mTo = 10;
+    private ProgressBar mProgressBar = null;
     private boolean isFirstArticlesUpdate = true;
-    private BroadcastReceiver mNewsFeedReceiver;
-    private ArrayList<Integer> mReadNewsList;
-    private SQLiteDatabase database;
-    private GridLayout gridLayout;
-    private int columnLandscape = 3;
-    private int columnPortrait = 2;
-    private int screenWidth;
-    private LayoutInflater layoutInflater;
+    private BroadcastReceiver mNewsFeedReceiver = null;
+    private ArrayList<Integer> mReadNewsList = null;
+    private SQLiteDatabase mDatabase = null;
+    private GridLayout mGridLayout = null;
+    private int mColumnLandscape = 3;
+    private int mColumnPortrait = 2;
+    private int mScreenWidth;
+    private LayoutInflater mLayoutInflater = null;
     private boolean isProgressBarShown = true;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setRetainInstance(true);
+    // Children Fragment Param
+    private boolean isChildFragmentShow = false;
+    private Animation mFragmentSliderOut = null;
+    private Animation mFadeIn = null;
+    private Animation mFadeOut = null;
 
-        if (database != null) {
-            if (!database.isOpen()) {
-                database = DBAdapter.getInstance().openDatabase();
+    private View mContentView = null;
+    private NewsItemFragment mNewsItemFragment = null;
+
+    // Instance
+    public static NewsFeedFragmentNew newInstance() {
+        return new NewsFeedFragmentNew();
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        if (mDatabase != null) {
+            if (!mDatabase.isOpen()) {
+                mDatabase = DBAdapter.getInstance().openDatabase();
             }
         } else {
-            database = DBAdapter.getInstance().openDatabase();
+            mDatabase = DBAdapter.getInstance().openDatabase();
         }
-        //  Cursor cursorReadNews = database.rawQuery("SELECT * FROM " + IS_SHORT_NEWS_READ_TABLE_NAME, null);
-        //   mReadNewsList = getAllReadNewsFromCursor(cursorReadNews);
+
+        //  Cursor cursorReadNews = mDatabase.rawQuery("SELECT * FROM " + IS_SHORT_NEWS_READ_TABLE_NAME, null);
+        //  mReadNewsList = getAllReadNewsFromCursor(cursorReadNews);
         //  if (cursorReadNews != null)
         //      cursorReadNews.close();
-        selectQueryShortNews = "SELECT * FROM " + SHORT_NEWS_TABLE_NAME;
-        Cursor cursorNews = database.rawQuery(selectQueryShortNews, null);
+        mSelectQueryShortNews = "SELECT * FROM " + SHORT_NEWS_TABLE_NAME;
+        Cursor cursorNews = mDatabase.rawQuery(mSelectQueryShortNews, null);
         // mNewsFeedEntityList = fillNewsFromCursor(cursorNews, mReadNewsList);
         mNewsFeedEntityList = fillNewsFromCursor(cursorNews);
         if (mNewsFeedEntityList.size() >= 10) {
             mNewsFeedEntityPartOfList = getNextArticlesPack();
         }
-        if (cursorNews != null)
+
+        if (cursorNews != null) {
             cursorNews.close();
+        }
+
+        mFragmentSliderOut = AnimationUtils.loadAnimation(getActivity(), R.anim.order_slider_out);
+        mFragmentSliderOut.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                new Handler().postDelayed(new Runnable() {
+                    public void run() {
+                        mNewsItemContainer.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fade_out_fast));
+                    }
+                }, 500);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mNewsItemContainer.setVisibility(View.INVISIBLE);
+
+                isChildFragmentShow = false;
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        mFadeIn = AnimationUtils.loadAnimation(getActivity(), R.anim.fade_out_fast);
+        mFadeIn.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mNewsItemContainer.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        mFadeOut = AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in_fast);
+        mFadeOut.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mNewsItemContainer.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        setRetainInstance(true);
     }
 
     @Override
     public void onPause() {
         super.onPause();
         LocalBroadcastManager.getInstance(NewsFeedFragmentNew.this.getActivity()).unregisterReceiver(mNewsFeedReceiver);
-        LOGI(TAG, "unregisterRecNewsFeed");
+        LOGI(TAG, "UnregisterRecNewsFeed");
     }
 
     @Override
     public void onDestroy() {
+        LOGI(TAG, "Fragment Destroy");
         DBAdapter.getInstance().closeDatabase();
         super.onDestroy();
     }
@@ -131,32 +218,35 @@ public class NewsFeedFragmentNew extends Fragment {
                 if (DBAdapter.NEWS_FEED_SQL_BROADCAST_INTENT.equals(intent.getAction())) {
                     if (isFirstArticlesUpdate) {
                         LOGI(TAG, "onReceive, first update");
-                        Cursor cursorNews = database.rawQuery(selectQueryShortNews, null);
+                        Cursor cursorNews = mDatabase.rawQuery(mSelectQueryShortNews, null);
                         //  mNewsFeedEntityList = fillNewsFromCursor(cursorNews, mReadNewsList);
                         mNewsFeedEntityList = fillNewsFromCursor(cursorNews);
                         if (mNewsFeedEntityPartOfList.size() < 10) {
                             mNewsFeedEntityPartOfList.addAll(getNextArticlesPack());
                         }
+
                         if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                            int row = mNewsFeedEntityList.size() / columnLandscape;
-                            gridLayout.setColumnCount(columnLandscape);
-                            gridLayout.setRowCount(row + 1);
-                            updateView(columnLandscape);
+                            int row = mNewsFeedEntityList.size() / mColumnLandscape;
+                            mGridLayout.setColumnCount(mColumnLandscape);
+                            mGridLayout.setRowCount(row + 1);
+                            updateView(mColumnLandscape);
                         } else {
-                            int row = mNewsFeedEntityList.size() / columnPortrait;
-                            gridLayout.setColumnCount(columnPortrait);
-                            gridLayout.setRowCount(row + 1);
-                            updateView(columnPortrait);
+                            int row = mNewsFeedEntityList.size() / mColumnPortrait;
+                            mGridLayout.setColumnCount(mColumnPortrait);
+                            mGridLayout.setRowCount(row + 1);
+                            updateView(mColumnPortrait);
                         }
+
                         if (cursorNews != null) {
                             cursorNews.close();
                         }
+
                         mProgressBar.setVisibility(View.GONE);
                         isProgressBarShown = false;
                         isFirstArticlesUpdate = false;
                     } else {
                         LOGI(TAG, "onReceive, second update");
-                        Cursor cursorNews = database.rawQuery(selectQueryShortNews, null);
+                        Cursor cursorNews = mDatabase.rawQuery(mSelectQueryShortNews, null);
                         //mNewsFeedEntityList = fillNewsFromCursor(cursorNews, mReadNewsList);
                         mNewsFeedEntityList = fillNewsFromCursor(cursorNews);
                         cursorNews.close();
@@ -172,69 +262,88 @@ public class NewsFeedFragmentNew extends Fragment {
 
             }
         };
+
         IntentFilter filter = new IntentFilter(DBAdapter.NEWS_FEED_SQL_BROADCAST_INTENT);
         filter.addAction(HttpIntentService.BROADCAST_INTENT_NEWS_FEED_SERVER_ERROR);
-        LocalBroadcastManager.getInstance(NewsFeedFragmentNew.this.getActivity())
-                .registerReceiver(mNewsFeedReceiver, filter);
+        LocalBroadcastManager.getInstance(NewsFeedFragmentNew.this.getActivity()).registerReceiver(mNewsFeedReceiver, filter);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_news_feed_new, container, false);
+        mContentView = super.onCreateView(inflater, container, savedInstanceState);
+        mLayoutInflater = LayoutInflater.from(getActivity());
+
+        if (mContentView == null) {
+            mContentView = inflater.inflate(R.layout.fragment_news_feed_new, container, false);
+        }
+
+        return mContentView;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // Init UI
+        if (getActivity() != null) {
+            initUI();
+        }
+    }
+
+    private void initUI(){
         updateScreenWidth();
-        layoutInflater = LayoutInflater.from(getActivity());
-        gridLayout = (GridLayout) view.findViewById(R.id.newsFeedGridLayout);
-        mProgressBar = (ProgressBar) view.findViewById(R.id.news_feed_progressbar);
+
+        mGridLayout = (GridLayout) mContentView.findViewById(R.id.newsFeedGridLayout);
+        mProgressBar = (ProgressBar) mContentView.findViewById(R.id.news_feed_progressbar);
 
         if (isProgressBarShown) {
             mProgressBar.setVisibility(View.VISIBLE);
-
         } else {
             mProgressBar.setVisibility(View.GONE);
         }
+
         if (mNewsFeedEntityList.size() > 0) {
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                int row = mNewsFeedEntityList.size() / columnLandscape;
-                gridLayout.setColumnCount(columnLandscape);
-                gridLayout.setRowCount(row + 1);
-                updateView(columnLandscape);
+                int row = mNewsFeedEntityList.size() / mColumnLandscape;
+                mGridLayout.setColumnCount(mColumnLandscape);
+                mGridLayout.setRowCount(row + 1);
+                updateView(mColumnLandscape);
             } else {
-                int row = mNewsFeedEntityList.size() / columnPortrait;
-                gridLayout.setColumnCount(columnPortrait);
-                gridLayout.setRowCount(row + 1);
-                updateView(columnPortrait);
+                int row = mNewsFeedEntityList.size() / mColumnPortrait;
+                mGridLayout.setColumnCount(mColumnPortrait);
+                mGridLayout.setRowCount(row + 1);
+                updateView(mColumnPortrait);
             }
-
         }
 
-        InteractiveScrollView interactiveScrollView = (InteractiveScrollView) view.findViewById(R.id.interactiveScrollView);
+        InteractiveScrollView interactiveScrollView = (InteractiveScrollView) mContentView.findViewById(R.id.interactiveScrollView);
         interactiveScrollView.setOnBottomReachedListener(
                 new InteractiveScrollView.OnBottomReachedListener() {
                     @Override
                     public void onBottomReached() {
-                        visibleItemCount = gridLayout.getChildCount();
-                        totalItemCount = mNewsFeedEntityList.size();
-                        LOGI(TAG, "scrollview on bottom reached");
+                        mVisibleItemCount = mGridLayout.getChildCount();
+                        mTotalItemCount = mNewsFeedEntityList.size();
+                        LOGI(TAG, "Scrollview on bottom reached");
 
                         if (isLoading) {
-                            if (visibleItemCount >= totalItemCount) {
+                            if (mVisibleItemCount >= mTotalItemCount) {
                                 mNewsFeedEntityPartOfList.addAll(getNextArticlesPack());
-                                if (totalItemCount >= mNewsFeedEntityPartOfList.size()) {
+                                if (mTotalItemCount >= mNewsFeedEntityPartOfList.size()) {
                                     isLoading = false;
                                 }
-                                LOGI(TAG, mNewsFeedEntityPartOfList.size() + " " + visibleItemCount + " " + totalItemCount);
+
+                                LOGI(TAG, mNewsFeedEntityPartOfList.size() + " " + mVisibleItemCount + " " + mTotalItemCount);
                             }
                         }
                     }
                 }
         );
 
-        mNewsItemContainer = (FrameLayout) view.findViewById(R.id.news_item_container_frameLayout);
+        mNewsItemContainer = (FrameLayout) mContentView.findViewById(R.id.news_item_container_frameLayout);
 
         if (!ApiWrapper.isOnline()) {
             mProgressBar.setVisibility(View.GONE);
         }
-        return view;
     }
 
     private void updateView(int columnNumber) {
@@ -244,15 +353,16 @@ public class NewsFeedFragmentNew extends Fragment {
                     c = 0;
                     r++;
                 }
+
                 GridLayout.LayoutParams param = new GridLayout.LayoutParams();
                 param.height = LinearLayout.LayoutParams.WRAP_CONTENT;
-                param.width = (screenWidth / columnNumber);
+                param.width = (mScreenWidth / columnNumber);
                 param.rightMargin = CommonUtils.convertDpToPixels(getActivity(), 30);
                 param.topMargin = CommonUtils.convertDpToPixels(getActivity(), 30);
                 param.columnSpec = GridLayout.spec(c);
                 param.rowSpec = GridLayout.spec(r);
 
-                LinearLayout shortNewsLayout = (LinearLayout) layoutInflater.inflate(R.layout.news_feed_grid_row, null, false);
+                LinearLayout shortNewsLayout = (LinearLayout) mLayoutInflater.inflate(R.layout.news_feed_grid_row, null, false);
                 TextView shortNewsId = (TextView) shortNewsLayout.findViewById(R.id.grid_hide_id);
                 shortNewsId.setText(Integer.toString(mNewsFeedEntityPartOfList.get(i).getId()));
                 ImageView shortNewsImage = (ImageView) shortNewsLayout.findViewById(R.id.grid_row_imageView);
@@ -271,25 +381,82 @@ public class NewsFeedFragmentNew extends Fragment {
                     @Override
                     public void onClick(View v) {
                         int shortNewsId = Integer.parseInt(((TextView) v.findViewById(R.id.grid_hide_id)).getText().toString());
-                        if (lastChosenPosition != shortNewsId) {
                             // mNewsFeedEntityPartOfList.get(position).setViewed(true);
-                            //  DBAdapter.getInstance().saveNewsReadValue(mNewsFeedEntityPartOfList.get(position).getId());
-                            Animation mFragmentSliderFadeIn = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.fragment_slider_in);
-                            getChildFragmentManager().beginTransaction().replace(R.id.news_item_container_frameLayout, NewsItemFragment.newInstance(shortNewsId)).commit();
-                            mNewsItemContainer.startAnimation(mFragmentSliderFadeIn);
-                            lastChosenPosition = shortNewsId;
-                            ((MainActivity) NewsFeedFragmentNew.this.getActivity()).startHttpIntent(getFullDescriptionQuery(shortNewsId), HttpIntentService.NEWS_PART_FULL);
+                            // DBAdapter.getInstance().saveNewsReadValue(mNewsFeedEntityPartOfList.get(position).getId());
+
+                            LOGI(TAG, "Last pos : " + mLastChosenPosition + ", New pos : " + shortNewsId);
+                            if(mNewsItemFragment==null){
+                                mNewsItemFragment = NewsItemFragment.newInstance(shortNewsId);
+                                ((MainActivity) NewsFeedFragmentNew.this.getActivity()).startHttpIntent(getFullDescriptionQuery(shortNewsId), HttpIntentService.NEWS_PART_FULL);
+
+                                getChildFragmentManager().beginTransaction().replace(R.id.news_item_container_frameLayout, mNewsItemFragment).commit();
+
+                                mNewsItemContainer.setVisibility(View.VISIBLE);
+                                // Show Anim
+                                mNewsItemContainer.startAnimation(AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.fragment_slider_in));
+                            }else{
+                                if(mLastChosenPosition!=shortNewsId){
+                                    // Create new Fragment
+                                    mNewsItemFragment = NewsItemFragment.newInstance(shortNewsId);
+                                    ((MainActivity) NewsFeedFragmentNew.this.getActivity()).startHttpIntent(getFullDescriptionQuery(shortNewsId), HttpIntentService.NEWS_PART_FULL);
+
+                                    getChildFragmentManager().beginTransaction().replace(R.id.news_item_container_frameLayout, mNewsItemFragment).commit();
+
+                                    mNewsItemContainer.setVisibility(View.VISIBLE);
+                                    // Show Anim
+                                    mNewsItemContainer.startAnimation(AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.fragment_slider_in));
+                                }else{
+                                    mNewsItemContainer.setVisibility(View.VISIBLE);
+                                    mNewsItemContainer.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in_fast));
+                                }
+                            }
+
+                            isChildFragmentShow = true;
+                            mLastChosenPosition = shortNewsId;
                         }
-                    }
                 });
-                gridLayout.addView(shortNewsLayout);
+
+                mGridLayout.addView(shortNewsLayout);
             }
         }
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        LOGI(TAG, "Fragment Detach");
+
+        try {
+            Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
+            childFragmentManager.setAccessible(true);
+            childFragmentManager.set(this, null);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Animation getFragmentCloseAnimation(){
+        return mFragmentSliderOut;
+    }
+
+    public void showFullNews(){
+        LOGI(TAG, "Show full news, isChildFragmentShow : " + isChildFragmentShow);
+
+        if(isChildFragmentShow) {
+            mNewsItemContainer.startAnimation(mFadeIn);
+        }
+    }
+
+    public void closeFullNews(){
+        LOGI(TAG, "Close full news, isChildFragmentShow : " + isChildFragmentShow);
+
+        if(isChildFragmentShow) {
+            mNewsItemContainer.startAnimation(mFadeOut);
+        }
+    }
 
     public void updateLastChosenPosition() {
-        lastChosenPosition = -1;
+        mLastChosenPosition = -1;
     }
 
     // private List<ArticleShortEntity> fillNewsFromCursor(Cursor cursorNews, ArrayList<Integer> readNewsList) {
@@ -308,8 +475,9 @@ public class NewsFeedFragmentNew extends Fragment {
 //            if (readNewsList.contains(news_id)) {
 //                articlesResponse.setViewed(true);
 //            }
+
             String selectQueryShortNewsComments = "SELECT * FROM short_news_comments_table WHERE article_id=" + news_id;
-            Cursor cursorComments = database.rawQuery(selectQueryShortNewsComments, null);
+            Cursor cursorComments = mDatabase.rawQuery(selectQueryShortNewsComments, null);
             ArrayList<ArticleShortCommentEntity> commentsList = new ArrayList<>();
             if (cursorComments != null) {
                 for (cursorComments.moveToFirst(); !cursorComments.isAfterLast(); cursorComments.moveToNext()) {
@@ -323,12 +491,14 @@ public class NewsFeedFragmentNew extends Fragment {
                 }
                 articlesResponse.setComments(commentsList);
             }
+
             newsList.add(articlesResponse);
 
             if (cursorComments != null) {
                 cursorComments.close();
             }
         }
+
         return newsList;
     }
 
@@ -337,71 +507,76 @@ public class NewsFeedFragmentNew extends Fragment {
         for (cursorIsRead.moveToFirst(); !cursorIsRead.isAfterLast(); cursorIsRead.moveToNext()) {
             allReadValues.add(cursorIsRead.getInt(cursorIsRead.getColumnIndex(IS_SHORT_NEWS_READ_ARTICLE_ID)));
         }
+
         return allReadValues;
     }
 
     public ArticleFullQuery getFullDescriptionQuery(int id) {
         ArticleFullQuery query = new ArticleFullQuery();
         query.params.article_id = id;
+
         return query;
     }
 
     private List<ArticleShortEntity> getNextArticlesPack() {
         List<ArticleShortEntity> shortEntityList = new ArrayList<>();
         LOGI(TAG, "getNextArticlesPack " + mNewsFeedEntityList.size() + " " + mNewsFeedEntityPartOfList.size());
-        if (from < mNewsFeedEntityList.size()) {
-            if (to > mNewsFeedEntityList.size()) {
-                to = mNewsFeedEntityList.size();
+        if (mFrom < mNewsFeedEntityList.size()) {
+            if (mTo > mNewsFeedEntityList.size()) {
+                mTo = mNewsFeedEntityList.size();
             }
-            for (int i = from; i < to; i++) {
+            for (int i = mFrom; i < mTo; i++) {
                 shortEntityList.add(mNewsFeedEntityList.get(i));
             }
-            from = from + 10;
-            to = to + 10;
+            mFrom = mFrom + 10;
+            mTo = mTo + 10;
         }
+
         return shortEntityList;
     }
 
     public void updateNewsComments() {
-        Cursor cursorReadNews = database.rawQuery("SELECT * FROM " + IS_SHORT_NEWS_READ_TABLE_NAME, null);
+        Cursor cursorReadNews = mDatabase.rawQuery("SELECT * FROM " + IS_SHORT_NEWS_READ_TABLE_NAME, null);
         mReadNewsList = getAllReadNewsFromCursor(cursorReadNews);
-        if (cursorReadNews != null)
+        if (cursorReadNews != null) {
             cursorReadNews.close();
-        Cursor cursorNews = database.rawQuery(selectQueryShortNews, null);
+        }
+
+        Cursor cursorNews = mDatabase.rawQuery(mSelectQueryShortNews, null);
         //  mNewsFeedEntityList = fillNewsFromCursor(cursorNews, mReadNewsList);
         mNewsFeedEntityList = fillNewsFromCursor(cursorNews);
         if (cursorNews != null) {
             cursorNews.close();
         }
+
         int oldSizeValue = mNewsFeedEntityPartOfList.size();
         mNewsFeedEntityPartOfList.clear();
         mNewsFeedEntityPartOfList.addAll(mNewsFeedEntityList.subList(0, oldSizeValue));
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            updateView(columnLandscape);
+            updateView(mColumnLandscape);
         } else {
-            updateView(columnPortrait);
+            updateView(mColumnPortrait);
         }
-
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         mProgressBar.setVisibility(View.GONE);
-        gridLayout.removeAllViews();
+        mGridLayout.removeAllViews();
         updateScreenWidth();
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            int row = mNewsFeedEntityList.size() / columnLandscape;
-            gridLayout.setColumnCount(columnLandscape);
-            gridLayout.setRowCount(row + 1);
-            updateView(columnLandscape);
-        } else {
-            int row = mNewsFeedEntityList.size() / columnPortrait;
-            gridLayout.setColumnCount(columnPortrait);
-            gridLayout.setRowCount(row + 1);
-            updateView(columnPortrait);
-        }
 
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            int row = mNewsFeedEntityList.size() / mColumnLandscape;
+            mGridLayout.setColumnCount(mColumnLandscape);
+            mGridLayout.setRowCount(row + 1);
+            updateView(mColumnLandscape);
+        } else {
+            int row = mNewsFeedEntityList.size() / mColumnPortrait;
+            mGridLayout.setColumnCount(mColumnPortrait);
+            mGridLayout.setRowCount(row + 1);
+            updateView(mColumnPortrait);
+        }
     }
 
     private void updateScreenWidth() {
@@ -409,11 +584,10 @@ public class NewsFeedFragmentNew extends Fragment {
         Point size = new Point();
         display.getSize(size);
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            screenWidth = size.x - CommonUtils.convertDpToPixels(getActivity(), 165);
+            mScreenWidth = size.x - CommonUtils.convertDpToPixels(getActivity(), 165);
         } else {
-            screenWidth = size.x - CommonUtils.convertDpToPixels(getActivity(), 135);
+            mScreenWidth = size.x - CommonUtils.convertDpToPixels(getActivity(), 135);
         }
-
     }
 
 }

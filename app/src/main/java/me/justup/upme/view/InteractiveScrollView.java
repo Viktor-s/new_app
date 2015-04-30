@@ -8,8 +8,7 @@ import android.widget.ScrollView;
 public class InteractiveScrollView extends ScrollView {
     OnBottomReachedListener mListener;
 
-    public InteractiveScrollView(Context context, AttributeSet attrs,
-                                 int defStyle) {
+    public InteractiveScrollView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 
@@ -40,8 +39,7 @@ public class InteractiveScrollView extends ScrollView {
         return mListener;
     }
 
-    public void setOnBottomReachedListener(
-            OnBottomReachedListener onBottomReachedListener) {
+    public void setOnBottomReachedListener(OnBottomReachedListener onBottomReachedListener) {
         mListener = onBottomReachedListener;
     }
 

@@ -1,112 +1,123 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/app_background">
+    android:background="@color/html_background">
 
     <ScrollView
         android:id="@+id/news_item_scrollview"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_marginLeft="@dimen/base30dp720sw"
-        android:layout_marginRight="@dimen/base60dp720sw"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:scrollbars="none">
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/base10dp720sw"
+            android:layout_marginLeft="@dimen/base10dp720sw"
+            android:layout_marginRight="@dimen/base10dp720sw"
+            android:orientation="vertical">
 
-            <WebView
-                android:layout_width="fill_parent"
+            <me.justup.upme.view.cwvm.CWView xmlns:CWView="http://schemas.android.com/apk/res/me.justup.upme"
+                android:id="@+id/news_web_view"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/news_item_webView"
-                android:visibility="visible" />
+                android:layout_marginBottom="15dp"
+                CWView:BlockLoadImg="false"
+                CWView:JavaScript="true"
+                CWView:MailTextSize="@integer/web_view_txt_size"
+                CWView:MaximumScale="normal"
+                CWView:TextStyle="sansSerif"
+                CWView:Zoom="true"
+                CWView:ZoomButton="false" />
+
+            <!--android:scrollbars="vertical"-->
 
             <Button
+                android:id="@+id/fb_share_Button"
                 android:layout_width="@dimen/base240dp720sw"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/base35dp720sw"
-                android:id="@+id/fb_share_Button"
                 android:background="@drawable/facebook"
                 android:visibility="gone" />
 
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="2dp"
-                android:background="#AAAAAA"
+                android:layout_marginBottom="@dimen/base40dp720sw"
                 android:layout_marginTop="@dimen/base40dp720sw"
-                android:layout_marginBottom="@dimen/base40dp720sw" />
+                android:background="#AAAAAA" />
 
             <TextView
+                android:id="@+id/news_item_add_comment_textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/news_item_add_comment"
-                android:id="@+id/news_item_add_comment_textView"
                 android:layout_marginBottom="@dimen/base20dp720sw"
-                android:textSize="@dimen/base21sp720sw"
-                android:textColor="@android:color/black"
+                android:layout_marginLeft="@dimen/base18dp720sw"
+                android:text="@string/news_item_add_comment"
                 android:textAllCaps="true"
-                android:layout_marginLeft="@dimen/base18dp720sw" />
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/base21sp720sw" />
 
             <LinearLayout
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/base70dp720sw"
                 android:layout_marginBottom="@dimen/base40dp720sw"
-                android:layout_marginLeft="@dimen/base18dp720sw">
+                android:layout_marginLeft="@dimen/base18dp720sw"
+                android:orientation="horizontal">
 
-                <EditText
+                <me.justup.upme.utils.BackAwareEditText
+                    android:id="@+id/news_item_comment_editText"
                     android:layout_width="@dimen/base250dp720sw"
                     android:layout_height="match_parent"
-                    android:id="@+id/news_item_comment_editText"
+                    android:layout_gravity="top"
                     android:layout_marginRight="@dimen/base20dp720sw"
-                    android:background="@drawable/news_item_comment_edittext_bg"
-                    android:textColor="@color/black"
                     android:layout_weight="1"
-                    android:layout_gravity="top"/>
+                    android:background="@drawable/news_item_comment_edittext_bg"
+                    android:textColor="@color/black" />
 
                 <Button
+                    android:id="@+id/news_item_button_add_comment"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/base50dp720sw"
-                    android:text="@string/news_item_add_comment_button"
-                    android:id="@+id/news_item_button_add_comment"
-                    android:textAllCaps="true"
+                    android:layout_gravity="center_vertical"
                     android:background="@drawable/pay_panel_button_selector"
                     android:padding="@dimen/base6dp720sw"
                     android:paddingLeft="@dimen/base10dp720sw"
                     android:paddingRight="@dimen/base10dp720sw"
-                    android:layout_gravity="center_vertical" />
+                    android:text="@string/news_item_add_comment_button"
+                    android:textAllCaps="true" />
             </LinearLayout>
 
             <ListView
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/base50dp720sw"
                 android:id="@+id/news_item_comments_listView"
-                android:layout_marginLeft="@dimen/base55dp720sw" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/base15dp720sw"
+                android:layout_marginRight="@dimen/base15dp720sw" />
         </LinearLayout>
     </ScrollView>
 
-
     <Button
+        android:id="@+id/news_item_close_button"
         android:layout_width="@dimen/base50dp720sw"
         android:layout_height="@dimen/base50dp720sw"
-        android:id="@+id/news_item_close_button"
-        android:visibility="visible"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
+        android:layout_marginTop="@dimen/base10dp720sw"
+        android:layout_marginRight="@dimen/base10dp720sw"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
         android:background="@drawable/button_close_test"
         android:clickable="false"
-        android:layout_marginTop="@dimen/base20dp720sw" />
+        android:visibility="visible" />
 
     <ProgressBar
+        android:id="@+id/news_feed_progressbar"
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:indeterminate="false"
-        android:id="@+id/news_feed_progressbar" />
+        android:layout_centerVertical="true"
+        android:layout_gravity="center"
+        android:indeterminate="false" />
 
 </RelativeLayout>

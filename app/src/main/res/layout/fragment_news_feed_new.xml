@@ -1,59 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:background="@android:color/white"
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/main_action_bar"
-        android:orientation="horizontal"
-        style="@style/ActionBarStyle">
+        style="@style/ActionBarStyle"
+        android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/ab_user_name_textView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Новости"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:id="@+id/ab_user_name_textView" />
+            android:text="Новости"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
     </LinearLayout>
 
-    <me.justup.upme.view.InteractiveScrollView
-        android:id="@+id/interactiveScrollView"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="@dimen/base30dp720sw"
-        android:layout_below="@+id/main_action_bar">
+        android:layout_height="match_parent">
 
-        <GridLayout
-            android:id="@+id/newsFeedGridLayout"
+        <me.justup.upme.view.InteractiveScrollView
+            android:id="@+id/interactiveScrollView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:scrollbars="none"
+            android:layout_alignParentBottom="true">
 
+            <GridLayout
+                android:id="@+id/newsFeedGridLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/base10dp720sw" />
 
-        </GridLayout>
-    </me.justup.upme.view.InteractiveScrollView>
+        </me.justup.upme.view.InteractiveScrollView>
 
-    <FrameLayout
-        android:id="@+id/news_item_container_frameLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
-        android:layout_alignParentStart="false"
-        android:layout_alignParentTop="false"
-        android:background="@android:color/white"
-        android:layout_below="@+id/main_action_bar" />
+        <FrameLayout
+            android:id="@+id/news_item_container_frameLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentStart="false"
+            android:layout_alignParentTop="false"
+            android:background="@drawable/null_card"
+            android:visibility="gone" />
 
-    <ProgressBar
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:indeterminate="false"
-        android:id="@+id/news_feed_progressbar"
-        android:visibility="gone" />
-</RelativeLayout>
+        <ProgressBar
+            android:id="@+id/news_feed_progressbar"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:indeterminate="false"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+</LinearLayout>

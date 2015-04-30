@@ -2,33 +2,34 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@drawable/app_background">
+    android:background="@drawable/app_background"
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/main_action_bar"
-        android:orientation="horizontal"
-        style="@style/ActionBarStyle">
+        style="@style/ActionBarStyle"
+        android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/ab_user_name_textView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Продукты"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:id="@+id/ab_user_name_textView" />
+            android:text="Продукты"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
     </LinearLayout>
 
     <HorizontalScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginLeft="2dp">
 
         <LinearLayout
             android:id="@+id/container_product_main"
-            android:orientation="horizontal"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
         </LinearLayout>
     </HorizontalScrollView>
