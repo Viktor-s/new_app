@@ -105,7 +105,8 @@ public class AppPreferences {
         if (BuildConfig.FLAVOR.equals(Constance.APP_FLAVOR_LAUNCHER)) {
             return mSharedPreferences.getBoolean(TAG_MONITORING, false);
         } else {
-            return mSharedPreferences.getBoolean(TAG_MONITORING, true);
+            // off
+            return mSharedPreferences.getBoolean(TAG_MONITORING, false);
         }
     }
 
