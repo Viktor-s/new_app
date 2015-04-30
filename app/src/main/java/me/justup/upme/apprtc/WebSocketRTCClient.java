@@ -196,7 +196,8 @@ public class WebSocketRTCClient implements AppRTCClient,
             @Override
             public void run() {
                 if (roomState != ConnectionState.CONNECTED) {
-                    reportError("Sending offer SDP in non connected state.");
+//                    reportError("Sending offer SDP in non connected state.");
+                    reportError("Соединение прервано. Пожалуйста повторите звонок.");
                     return;
                 }
                 JSONObject json = new JSONObject();
@@ -223,7 +224,8 @@ public class WebSocketRTCClient implements AppRTCClient,
                     return;
                 }
                 if (wsClient.getState() != WebSocketConnectionState.REGISTERED) {
-                    reportError("Sending answer SDP in non registered state.");
+//                    reportError("Sending answer SDP in non registered state.");
+                    reportError("Соединение прервано. Пожалуйста повторите звонок.");
                     return;
                 }
                 JSONObject json = new JSONObject();
