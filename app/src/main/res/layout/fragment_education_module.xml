@@ -74,6 +74,7 @@
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/base19sp720sw" />
         </LinearLayout>
+
     </RelativeLayout>
 
     <ProgressBar
@@ -146,7 +147,20 @@
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:id="@+id/fragment_module_youtube_container"
-        android:layout_below="@+id/fragment_education_module_action_bar"></FrameLayout>
+        android:layout_below="@+id/fragment_education_module_action_bar">
 
 
+    </FrameLayout>
+
+    <Button
+        android:layout_width="@dimen/base50dp720sw"
+        android:layout_height="@dimen/base50dp720sw"
+        android:id="@+id/education_module_close_button"
+        android:visibility="gone"
+
+        android:background="@drawable/button_close_test"
+        android:clickable="false"
+        android:layout_gravity="right|top"
+        android:layout_below="@+id/fragment_education_module_action_bar"
+        android:layout_alignParentEnd="true" />
 </RelativeLayout>

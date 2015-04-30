@@ -21,6 +21,7 @@ import org.apache.http.Header;
 import java.util.ArrayList;
 
 import me.justup.upme.R;
+import me.justup.upme.dialogs.EducationChoseTestDialog;
 import me.justup.upme.entity.EducationGetTestsQuery;
 import me.justup.upme.entity.EducationGetTestsResponse;
 import me.justup.upme.entity.EducationTestAnswerEntity;
@@ -180,8 +181,9 @@ public class EducationTestFragment extends Fragment {
 
             if (response != null) {
                 //тут будет выбор теста сначала
+                EducationChoseTestDialog educationChoseTestDialog = new EducationChoseTestDialog(EducationTestFragment.this, response, getActivity());
+                educationChoseTestDialog.show();
 
-                generateViewFromChosenTest(response, 0);
             }
         }
 
@@ -192,7 +194,7 @@ public class EducationTestFragment extends Fragment {
         }
     }
 
-    private void generateViewFromChosenTest(EducationGetTestsResponse response, int testPosition) {
+    public void generateViewFromChosenTest(EducationGetTestsResponse response, int testPosition) {
         questionNameTextview.setVisibility(View.VISIBLE);
         questionContentTextView.setVisibility(View.VISIBLE);
         previousQuestionButton.setVisibility(View.VISIBLE);
