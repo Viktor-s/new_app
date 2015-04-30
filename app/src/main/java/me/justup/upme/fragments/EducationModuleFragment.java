@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loopj.android.http.FileAsyncHttpResponseHandler;
 
@@ -373,7 +374,7 @@ public class EducationModuleFragment extends Fragment {
         @Override
         public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
             mProgressBar.setVisibility(View.GONE);
-
+            Toast.makeText(getActivity(), "Server error", Toast.LENGTH_SHORT).show();
         }
     }
 }
