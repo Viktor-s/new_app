@@ -14,12 +14,14 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loopj.android.http.FileAsyncHttpResponseHandler;
 
@@ -31,6 +33,7 @@ import java.util.ArrayList;
 import me.justup.upme.R;
 import me.justup.upme.db.DBAdapter;
 import me.justup.upme.dialogs.ViewPDFDialog;
+import me.justup.upme.dialogs.WarningDialog;
 import me.justup.upme.entity.EducationMaterialEntity;
 import me.justup.upme.entity.EducationModuleEntity;
 import me.justup.upme.http.ApiWrapper;
@@ -81,6 +84,7 @@ public class EducationModuleFragment extends Fragment {
     private ArrayList<EducationMaterialEntity> secondaryMaterialsList;
     private TextView moduleMainTextView, moduleSecondaryTextView;
     private LinearLayout passTestLayout;
+    private Button closeYoutubeFragmentButton;
 
     public static EducationModuleFragment newInstance(String productName, int productId) {
         EducationModuleFragment fragment = new EducationModuleFragment();
@@ -209,6 +213,14 @@ public class EducationModuleFragment extends Fragment {
         moduleMainTextView.setVisibility(View.INVISIBLE);
         moduleSecondaryTextView.setVisibility(View.INVISIBLE);
 
+        closeYoutubeFragmentButton = (Button) view.findViewById(R.id.education_module_close_button);
+        closeYoutubeFragmentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getChildFragmentManager().popBackStack();
+                closeYoutubeFragmentButton.setVisibility(View.GONE);
+            }
+        });
         return view;
     }
 
@@ -317,20 +329,29 @@ public class EducationModuleFragment extends Fragment {
             categoryProductLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int idCurrentGroup = Integer.parseInt(((TextView) v.findViewById(R.id.education_module_item_id)).getText().toString());
-                    // String nameCurrentGroup = ((TextView) v.findViewById(R.id.grid_row_name_extView)).getText().toString();
-                    // showProductHtmlFragment(idCurrentGroup, nameCurrentGroup, namePath);
                     String contentType = ((TextView) v.findViewById(R.id.education_module_item_content_type)).getText().toString();
+                    String link = ((TextView) v.findViewById(R.id.education_module_item_link)).getText().toString();
                     if (contentType.equals("Video")) {
-                        getChildFragmentManager().beginTransaction().replace(R.id.fragment_module_youtube_container, YoutubeDefaultFragment.newInstance("OMOVFvcNfvE")).addToBackStack(null).commit();
+                        getChildFragmentManager().beginTransaction().replace(R.id.fragment_module_youtube_container, YoutubeDefaultFragment.newInstance(link)).addToBackStack(null).commit();
+                        closeYoutubeFragmentButton.setVisibility(View.VISIBLE);
                     } else {
-                        ApiWrapper.downloadFileFromUrl("http://www.education.gov.yk.ca/pdf/pdf-test.pdf", new OnDownloadFileResponse(getActivity()));
+
+                        ApiWrapper.downloadFileFromUrl(link, new OnDownloadFileResponse(getActivity()));
                         mProgressBar.setVisibility(View.VISIBLE);
+                        //showViewPDFDialog("The fast forward mba in project management", "file:///android_asset/mba.pdf");
                     }
                 }
             });
             gridLayout.addView(categoryProductLayout);
         }
+    }
+
+
+    public void closeTest() {
+        getChildFragmentManager().popBackStack();
+        WarningDialog dialog = WarningDialog.newInstance("Отправлено", "Ваш тест отправлен на сервер");
+        dialog.show(getChildFragmentManager(), WarningDialog.WARNING_DIALOG);
+        passTestLayout.setVisibility(View.VISIBLE);
     }
 
     private void showViewPDFDialog(String mFileName, String mFilePath) {
@@ -354,7 +375,7 @@ public class EducationModuleFragment extends Fragment {
         @Override
         public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
             mProgressBar.setVisibility(View.GONE);
-
+            Toast.makeText(getActivity(), "Server error", Toast.LENGTH_SHORT).show();
         }
     }
 }
