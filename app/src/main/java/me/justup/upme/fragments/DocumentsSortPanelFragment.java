@@ -12,8 +12,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import me.justup.upme.JustUpApplication;
 import me.justup.upme.R;
 import me.justup.upme.entity.FileEntity;
+import me.justup.upme.utils.AppPreferences;
 import me.justup.upme.utils.ExplorerUtils;
 
 
@@ -64,6 +66,8 @@ public class DocumentsSortPanelFragment extends Fragment implements View.OnClick
             mTextButtonArray.add(mColumnSize);
             mTextButtonArray.add(mColumnDate);
         }
+
+        initSortPanel(mParentFragment.initialSortPanelType(), mParentFragment.initialSortPanelIsDesc());
 
         return view;
     }
@@ -160,7 +164,39 @@ public class DocumentsSortPanelFragment extends Fragment implements View.OnClick
         mColumnCloud.setImageResource(R.drawable.ic_file_cloud_gray);
     }
 
-    static class FileSort {
+    private void initSortPanel(int sortType, boolean isDesc) {
+        switch (sortType) {
+            case FileSort.SORT_BY_TYPE:
+                initTextButton(mColumnType, isDesc);
+                break;
+
+            case FileSort.SORT_BY_NAME:
+                initTextButton(mColumnName, isDesc);
+                break;
+
+            case FileSort.SORT_BY_SIZE:
+                initTextButton(mColumnSize, isDesc);
+                break;
+
+            case FileSort.SORT_BY_DATE:
+                initTextButton(mColumnDate, isDesc);
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    private void initTextButton(TextView view, boolean isDesc) {
+        if (isDesc) {
+            view.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_sort_arrow_desc, 0, 0, 0);
+        } else {
+            view.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_sort_arrow_asc, 0, 0, 0);
+        }
+    }
+
+
+    public static class FileSort {
         public static final int SORT_BY_FAVOR = 1;
         public static final int SORT_BY_TYPE = 2;
         public static final int SORT_BY_NAME = 3;
@@ -169,7 +205,12 @@ public class DocumentsSortPanelFragment extends Fragment implements View.OnClick
         public static final int SORT_BY_IN_TABLET = 6;
         public static final int SORT_BY_IN_CLOUD = 7;
 
+        private static AppPreferences prefs = new AppPreferences(JustUpApplication.getApplication());
+
         public static void sort(final ArrayList<FileEntity> array, final int sortType, final boolean isDesk) {
+            prefs.setFileSortType(sortType);
+            prefs.setDescFileSort(isDesk);
+
             switch (sortType) {
                 case SORT_BY_FAVOR:
                     compare(array, ExplorerUtils.COMPARE_BY_FAVOR_ASC, ExplorerUtils.COMPARE_BY_FAVOR_DESC, isDesk);

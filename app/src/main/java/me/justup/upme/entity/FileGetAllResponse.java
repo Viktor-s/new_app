@@ -10,6 +10,7 @@ public class FileGetAllResponse extends BaseHttpResponseEntity {
         public String hash_name = "";
         public int size;
         public String origin_name = "";
+        public boolean favorite;
     }
 
 }

@@ -46,6 +46,7 @@ import me.justup.upme.entity.FileGetAllResponse;
 import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.services.FileExplorerService;
 import me.justup.upme.utils.AppLocale;
+import me.justup.upme.utils.AppPreferences;
 import me.justup.upme.utils.ExplorerUtils;
 
 import static me.justup.upme.services.FileExplorerService.BROADCAST_EXTRA_ACTION_TYPE;
@@ -105,6 +106,7 @@ public class DocumentsFragment extends Fragment {
     private static final int FILE_SHARE_PROPERTIES = 6;
 
     private ArrayList<FileEntity> mFileArray;
+    private AppPreferences mAppPreferences;
 
 
     @Override
@@ -127,6 +129,8 @@ public class DocumentsFragment extends Fragment {
         mLayoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mFileExplorer = (TableLayout) view.findViewById(R.id.files_panel);
         mProgressBar = (ProgressBar) view.findViewById(R.id.explorer_progressBar);
+
+        mAppPreferences = new AppPreferences(getActivity());
 
         getChildFragmentManager().beginTransaction().add(R.id.doc_sort_panel_fragment, new DocumentsSortPanelFragment()).commit();
 
@@ -541,7 +545,7 @@ public class DocumentsFragment extends Fragment {
 
             private void fillArray(FileGetAllResponse response, ArrayList<FileEntity> arrayList, int type) {
                 for (FileGetAllResponse.Result file : response.result) {
-                    arrayList.add(new FileEntity(true, file.origin_name, null, file.size, 0, file.hash_name, type));
+                    arrayList.add(new FileEntity(file.favorite, file.origin_name, null, file.size, 0, file.hash_name, type));
                 }
             }
 
@@ -607,7 +611,7 @@ public class DocumentsFragment extends Fragment {
     }
 
     public void setFileArray(ArrayList<FileEntity> array) {
-        // mFileArray = sort(array);
+        DocumentsSortPanelFragment.FileSort.sort(array, mAppPreferences.getFileSortType(), mAppPreferences.isDescFileSort());
         mFileArray = array;
     }
 
@@ -621,6 +625,14 @@ public class DocumentsFragment extends Fragment {
         for (FileEntity file : getFileArray()) {
             setFileItem(file);
         }
+    }
+
+    public int initialSortPanelType() {
+        return mAppPreferences.getFileSortType();
+    }
+
+    public boolean initialSortPanelIsDesc() {
+        return mAppPreferences.isDescFileSort();
     }
 
 }

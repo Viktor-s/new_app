@@ -20,6 +20,8 @@ public class AppPreferences {
     private static final String TAG_JABBER_ID = "jabber_id";
     private static final String TAG_MONITORING = "is_monitoring";
     private static final String TAG_BROWSER_URL = "browser_url";
+    private static final String TAG_FILE_SORT_TYPE = "file_sort_type";
+    private static final String TAG_FILE_SORT_IS_DESC = "file_sort_is_desc";
 
 
     public AppPreferences(final Context context) {
@@ -115,6 +117,26 @@ public class AppPreferences {
 
     public String getBrowserUrl() {
         return mSharedPreferences.getString(TAG_BROWSER_URL, BrowserFragment.HOME_URL);
+    }
+
+    public void setFileSortType(int sortType) {
+        mEditor = mSharedPreferences.edit();
+        mEditor.putInt(TAG_FILE_SORT_TYPE, sortType);
+        mEditor.apply();
+    }
+
+    public int getFileSortType() {
+        return mSharedPreferences.getInt(TAG_FILE_SORT_TYPE, 0);
+    }
+
+    public void setDescFileSort(boolean isDesc) {
+        mEditor = mSharedPreferences.edit();
+        mEditor.putBoolean(TAG_FILE_SORT_IS_DESC, isDesc);
+        mEditor.apply();
+    }
+
+    public boolean isDescFileSort() {
+        return mSharedPreferences.getBoolean(TAG_FILE_SORT_IS_DESC, false);
     }
 
 }
