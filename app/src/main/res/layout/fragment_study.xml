@@ -41,7 +41,7 @@
 
                     android:src="@drawable/search_icon_test" />
 
-                <EditText
+                <me.justup.upme.utils.BackAwareEditText
                     android:id="@+id/study_fragment_search_editText"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/base40dp720sw"
@@ -80,25 +80,25 @@
         android:background="@android:color/white">
 
         <RelativeLayout
-    android:id="@+id/fragment_study_action_bar"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/base90dp720sw"
-    android:layout_toEndOf="@+id/linearLayout5"
-    android:background="@color/button_back_pink"
-    android:orientation="horizontal"
-    android:layout_gravity="center_horizontal|top">
+            android:id="@+id/fragment_study_action_bar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/base90dp720sw"
+            android:layout_gravity="center_horizontal|top"
+            android:layout_toEndOf="@+id/linearLayout5"
+            android:background="@color/button_back_pink"
+            android:orientation="horizontal">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center|top"
-        android:layout_marginTop="@dimen/base20dp720sw"
-        android:text="@string/study"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@android:color/white" />
-</RelativeLayout>
-</FrameLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center|top"
+                android:layout_marginTop="@dimen/base20dp720sw"
+                android:text="@string/study"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@android:color/white" />
+        </RelativeLayout>
+    </FrameLayout>
 
 
 </RelativeLayout>

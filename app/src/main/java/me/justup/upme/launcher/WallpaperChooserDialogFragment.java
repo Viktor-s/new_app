@@ -144,6 +144,7 @@ public class WallpaperChooserDialogFragment extends DialogFragment implements
         return null;
     }
 
+    @SuppressLint("ServiceCast")
     private void selectWallpaper(int position) {
         try {
             @SuppressLint("ServiceCast") WallpaperManager wpm = (WallpaperManager) getActivity().getSystemService(

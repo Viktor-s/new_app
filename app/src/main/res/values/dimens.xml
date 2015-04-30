@@ -70,6 +70,7 @@
     <dimen name="base42sp720sw">26.9sp</dimen>
 
     <!--Dashboard-->
+    <dimen name="tile_menu_margin_top">350dp</dimen>
     <dimen name="tile_menu_margin_left">215dp</dimen>
     <dimen name="tile_rotate_menu_height">800dp</dimen>
 

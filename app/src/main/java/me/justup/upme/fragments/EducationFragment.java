@@ -17,7 +17,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.FilterQueryProvider;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -29,6 +28,7 @@ import me.justup.upme.db.DBAdapter;
 import me.justup.upme.db.DBHelper;
 import me.justup.upme.entity.EducationGetModulesByProgramIdQuery;
 import me.justup.upme.http.HttpIntentService;
+import me.justup.upme.utils.BackAwareEditText;
 
 import static me.justup.upme.db.DBHelper.EDUCATION_PRODUCTS_TABLE_NAME;
 import static me.justup.upme.utils.LogUtils.LOGE;
@@ -148,7 +148,16 @@ public class EducationFragment extends Fragment {
             }
         });
 
-        EditText mSearchFieldEditText = (EditText) v.findViewById(R.id.study_fragment_search_editText);
+        BackAwareEditText mSearchFieldEditText = (BackAwareEditText) v.findViewById(R.id.study_fragment_search_editText);
+        mSearchFieldEditText.setBackPressedListener(new BackAwareEditText.BackPressedListener() {
+            @Override
+            public void onImeBack(BackAwareEditText editText) {
+                if (getActivity() != null) {
+                    ((MainActivity) getActivity()).hideNavBar();
+                }
+            }
+        });
+
         mSearchFieldEditText.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable s) {

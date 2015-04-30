@@ -118,7 +118,7 @@
             android:stateNotNeeded="true"
             android:windowSoftInputMode="stateHidden|adjustResize"
 
-            android:configChanges="keyboardHidden|orientation|screenSize"> <!-- Warning !!! -->
+            android:configChanges="keyboardHidden|orientation|screenSize">
 
             <intent-filter>
                 <action android:name="uplaunchm" />

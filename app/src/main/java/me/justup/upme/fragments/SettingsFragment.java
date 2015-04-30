@@ -1,17 +1,10 @@
 package me.justup.upme.fragments;
 
-import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebChromeClient;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,12 +12,8 @@ import java.util.ArrayList;
 
 import me.justup.upme.MainActivity;
 import me.justup.upme.R;
-import me.justup.upme.utils.AppPreferences;
-
 
 public class SettingsFragment extends Fragment implements View.OnClickListener {
-
-
     private static final String SAVE_FRAGMENT_TAG = "save_settings_fragment_tag";
 
     private TextView mWiFiMenu;

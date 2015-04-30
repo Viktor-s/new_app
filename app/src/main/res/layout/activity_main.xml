@@ -254,12 +254,12 @@
     <FrameLayout
         android:id="@+id/mapAndUserFragment"
         android:layout_width="wrap_content"
-        tools:layout_width="@dimen/base420dp720sw"
         android:layout_height="match_parent"
         android:layout_alignParentEnd="true"
-        tools:background="@color/blue_gray"
         android:layout_below="@+id/main_action_bar"
-        android:visibility="gone" />
+        android:visibility="gone"
+        tools:background="@color/blue_gray"
+        tools:layout_width="@dimen/base420dp720sw" />
 
     <FrameLayout
         android:id="@+id/include_corner"

@@ -29,11 +29,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.justup.upme.JustUpApplication;
+import me.justup.upme.MainActivity;
 import me.justup.upme.R;
 import me.justup.upme.db.DBAdapter;
 import me.justup.upme.entity.PersonBriefcaseEntity;
 import me.justup.upme.fragments.CalendarFragment;
 import me.justup.upme.utils.AppPreferences;
+import me.justup.upme.utils.BackAwareEditText;
 
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_IMG;
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_NAME;
@@ -100,7 +102,16 @@ public class ChooseReferralDialog extends DialogFragment { // ChooseReferralDial
         chooseReferralAdapter = new ChooseReferralAdapter(getActivity(), searchListPerson);
         mListviewReferrals.setAdapter(chooseReferralAdapter);
 
-        final TextView mUserName = (TextView) dialogView.findViewById(R.id.search_people_by_name);
+        final BackAwareEditText mUserName = (BackAwareEditText) dialogView.findViewById(R.id.search_people_by_name);
+        mUserName.setBackPressedListener(new BackAwareEditText.BackPressedListener() {
+            @Override
+            public void onImeBack(BackAwareEditText editText) {
+                if (getActivity() != null) {
+                    ((MainActivity) getActivity()).hideNavBar();
+                }
+            }
+        });
+
         mUserName.addTextChangedListener(new TextWatcher() {
                                              @Override
                                              public void beforeTextChanged(CharSequence s, int start, int count, int after) {}

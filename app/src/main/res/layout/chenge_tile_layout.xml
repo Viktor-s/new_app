@@ -32,7 +32,7 @@
             android:layout_marginTop="@dimen/base12dp720sw"
             android:text="Введите новое имя" />
 
-        <EditText
+        <me.justup.upme.utils.BackAwareEditText
             android:id="@+id/edt_tile_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

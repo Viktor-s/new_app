@@ -27,7 +27,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
@@ -61,6 +60,7 @@ import me.justup.upme.entity.CalendarUpdateEventQuery;
 import me.justup.upme.entity.PersonBriefcaseEntity;
 import me.justup.upme.http.HttpIntentService;
 import me.justup.upme.utils.AppPreferences;
+import me.justup.upme.utils.BackAwareEditText;
 import me.justup.upme.utils.CommonUtils;
 import me.justup.upme.weekview.WeekView;
 import me.justup.upme.weekview.WeekViewEvent;
@@ -81,7 +81,6 @@ import static me.justup.upme.db.DBHelper.MAIL_CONTACT_PARENT_ID;
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_SERVER_ID;
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_TABLE_NAME;
 import static me.justup.upme.utils.LogUtils.LOGD;
-import static me.justup.upme.utils.LogUtils.LOGE;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 
@@ -104,9 +103,9 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
     private TextView tvStartTimeEvent;
     private TextView tvDurationEvent;
     private TextView tvRemindEvent;
-    private EditText etNewEventName;
-    private EditText etNewEventLocation;
-    private EditText etNewEventDescription;
+    private BackAwareEditText etNewEventName;
+    private BackAwareEditText etNewEventLocation;
+    private BackAwareEditText etNewEventDescription;
 
     private Calendar startTimeEvent;
     private int durationEventMin;
@@ -270,9 +269,36 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
         tvDurationEvent.setOnClickListener(this);
         tvRemindEvent = (TextView) v.findViewById(R.id.remind_event);
         tvRemindEvent.setOnClickListener(this);
-        etNewEventName = (EditText) v.findViewById(R.id.new_event_name);
-        etNewEventLocation = (EditText) v.findViewById(R.id.new_event_location);
-        etNewEventDescription = (EditText) v.findViewById(R.id.new_event_description);
+        etNewEventName = (BackAwareEditText) v.findViewById(R.id.new_event_name);
+        etNewEventName.setBackPressedListener(new BackAwareEditText.BackPressedListener() {
+            @Override
+            public void onImeBack(BackAwareEditText editText) {
+                if (getActivity() != null) {
+                    ((MainActivity) getActivity()).hideNavBar();
+                }
+            }
+        });
+
+        etNewEventLocation = (BackAwareEditText) v.findViewById(R.id.new_event_location);
+        etNewEventLocation.setBackPressedListener(new BackAwareEditText.BackPressedListener() {
+            @Override
+            public void onImeBack(BackAwareEditText editText) {
+                if (getActivity() != null) {
+                    ((MainActivity) getActivity()).hideNavBar();
+                }
+            }
+        });
+
+        etNewEventDescription = (BackAwareEditText) v.findViewById(R.id.new_event_description);
+        etNewEventDescription.setBackPressedListener(new BackAwareEditText.BackPressedListener() {
+            @Override
+            public void onImeBack(BackAwareEditText editText) {
+                if (getActivity() != null) {
+                    ((MainActivity) getActivity()).hideNavBar();
+                }
+            }
+        });
+
         addNewEventButton = (Button) v.findViewById(R.id.add_new_event_button);
         addNewEventButton.setOnClickListener(this);
 

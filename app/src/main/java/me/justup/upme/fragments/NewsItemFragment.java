@@ -272,6 +272,7 @@ public class NewsItemFragment extends Fragment {
             public void onClick(View view) {
                 ((NewsFeedFragmentNew) getParentFragment()).updateLastChosenPosition();
                 LocalBroadcastManager.getInstance(NewsItemFragment.this.getActivity()).unregisterReceiver(receiver);
+                getParentFragment().getChildFragmentManager().beginTransaction().remove(NewsItemFragment.this).commit();
                 NewsItemFragment.this.getView().startAnimation(mFragmentSliderOut);
             }
         });

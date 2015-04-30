@@ -1,4 +1,5 @@
 <resources>
+    <!--used by 7" tablets-->
 
     <dimen name="base3dp720sw">2dp</dimen>
     <dimen name="base5dp720sw">4dp</dimen>

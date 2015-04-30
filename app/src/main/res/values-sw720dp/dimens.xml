@@ -1,5 +1,15 @@
-<resources>
+<?xml version="1.0" encoding="utf-8"?>
+<resources> <!--used by 10" tablets-->
 
+    <!--Dashboard-->
+    <dimen name="tile_menu_margin_top">340dp</dimen>
+    <dimen name="tile_menu_margin_left">215dp</dimen>
+    <dimen name="tile_rotate_menu_height">770dp</dimen>
+
+    <dimen name="del_setting_menu_height">90dp</dimen>
+    <dimen name="tile_width">180dp</dimen>
+
+    <!--Launcher-->
     <dimen name="base3dp720sw">3dp</dimen>
     <dimen name="base5dp720sw">5dp</dimen>
     <dimen name="base6dp720sw">6dp</dimen>

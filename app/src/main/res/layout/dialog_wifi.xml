@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:baselineAligned="false">
+    android:baselineAligned="false"
+    android:orientation="vertical">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAllCaps="true"
-        android:text="@string/settings_wifi_dialog_pass"
         android:layout_gravity="center_horizontal"
         android:paddingBottom="@dimen/base5dp720sw"
-        android:paddingTop="@dimen/base5dp720sw" />
+        android:paddingTop="@dimen/base5dp720sw"
+        android:text="@string/settings_wifi_dialog_pass"
+        android:textAllCaps="true" />
 
-    <EditText
+    <me.justup.upme.utils.BackAwareEditText
+        android:id="@+id/wifi_pass"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:layout_marginStart="@dimen/base20dp720sw"
+        android:layout_gravity="center_horizontal"
         android:layout_marginEnd="@dimen/base20dp720sw"
+        android:layout_marginStart="@dimen/base20dp720sw"
         android:ems="10"
-        android:id="@+id/wifi_pass"
-        android:layout_gravity="center_horizontal" />
+        android:inputType="textPassword" />
 
 </LinearLayout>

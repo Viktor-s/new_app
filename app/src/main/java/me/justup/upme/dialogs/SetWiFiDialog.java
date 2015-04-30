@@ -8,10 +8,11 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.EditText;
 
+import me.justup.upme.MainActivity;
 import me.justup.upme.R;
 import me.justup.upme.fragments.SettingsWifiFragment;
+import me.justup.upme.utils.BackAwareEditText;
 import me.justup.upme.utils.CommonUtils;
 
 
@@ -42,7 +43,15 @@ public class SetWiFiDialog extends DialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_wifi, null);
 
-        final EditText mNetworkPass = (EditText) dialogView.findViewById(R.id.wifi_pass);
+        final BackAwareEditText mNetworkPass = (BackAwareEditText) dialogView.findViewById(R.id.wifi_pass);
+        mNetworkPass.setBackPressedListener(new BackAwareEditText.BackPressedListener() {
+            @Override
+            public void onImeBack(BackAwareEditText editText) {
+                if (getActivity() != null) {
+                    ((MainActivity) getActivity()).hideNavBar();
+                }
+            }
+        });
 
         builder.setView(dialogView).setTitle(mNetworkSSID)
                 .setPositiveButton(R.string.settings_wifi_dialog_connect, new DialogInterface.OnClickListener() {

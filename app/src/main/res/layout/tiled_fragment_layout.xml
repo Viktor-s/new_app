@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/tile_rotate_menu_height"
         android:layout_marginLeft="@dimen/tile_menu_margin_left"
-        android:layout_marginTop="350dp">
+        android:layout_marginTop="@dimen/tile_menu_margin_top">
 
         <me.justup.upme.view.dashboard.SlowlyScrollView
             android:id="@+id/scrollView"

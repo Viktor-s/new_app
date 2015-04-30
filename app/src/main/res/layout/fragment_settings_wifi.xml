@@ -8,6 +8,7 @@
 
     <LinearLayout
         android:orientation="horizontal"
+        android:padding="@dimen/base10dp720sw"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -16,11 +17,6 @@
             android:layout_height="wrap_content"
             android:text="@string/settings_on_off_wifi"
             android:id="@+id/wifi_checkBox"
-            android:layout_weight="1" />
-
-        <TextView
-            android:text="@string/settings_wifi_title"
-            style="@style/SettingsTitle"
             android:layout_weight="1" />
 
         <ImageView
@@ -32,9 +28,15 @@
             android:contentDescription="@string/dummy_string" />
     </LinearLayout>
 
+    <TextView
+        android:padding="@dimen/base10dp720sw"
+        android:text="@string/settings_wifi_title"
+        style="@style/SettingsTitle" />
+
     <ScrollView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:scrollbars="none"
         android:layout_gravity="center_horizontal">
 
         <LinearLayout

@@ -58,6 +58,7 @@ import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 public class NewsFeedFragmentNew extends Fragment {
     private static final String TAG = makeLogTag(NewsFeedFragmentNew.class);
+
     private List<ArticleShortEntity> mNewsFeedEntityList;
     private List<ArticleShortEntity> mNewsFeedEntityPartOfList = new ArrayList<>();
     private FrameLayout mNewsItemContainer;
@@ -203,7 +204,6 @@ public class NewsFeedFragmentNew extends Fragment {
                 gridLayout.setRowCount(row + 1);
                 updateView(columnPortrait);
             }
-
 
         }
 
@@ -403,7 +403,6 @@ public class NewsFeedFragmentNew extends Fragment {
         }
 
     }
-
 
     private void updateScreenWidth() {
         Display display = getActivity().getWindowManager().getDefaultDisplay();

@@ -24,7 +24,6 @@ import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -35,8 +34,10 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import me.justup.upme.MainActivity;
 import me.justup.upme.R;
 import me.justup.upme.db.DBAdapter;
+import me.justup.upme.utils.BackAwareEditText;
 import me.justup.upme.view.dashboard.CoolDragAndDropGridView;
 import me.justup.upme.view.dashboard.DashboardAdapter;
 import me.justup.upme.view.dashboard.ItemChangeSizeListener;
@@ -69,7 +70,7 @@ public class TiledMenuFragment extends Fragment implements CoolDragAndDropGridVi
     private int mLayoutWidth, mLayoutHeight;
 
     private Dialog mSettingDialog = null;
-    private EditText mEdtTileName = null;
+    private BackAwareEditText mEdtTileName = null;
 
     private View mContentView = null;
 
@@ -418,7 +419,16 @@ public class TiledMenuFragment extends Fragment implements CoolDragAndDropGridVi
             mSettingDialog.setCancelable(true);
             mSettingDialog.setContentView(R.layout.chenge_tile_layout);
 
-            mEdtTileName = (EditText) mSettingDialog.findViewById(R.id.edt_tile_name);
+            mEdtTileName = (BackAwareEditText) mSettingDialog.findViewById(R.id.edt_tile_name);
+            mEdtTileName.setBackPressedListener(new BackAwareEditText.BackPressedListener() {
+                @Override
+                public void onImeBack(BackAwareEditText editText) {
+                    if (getActivity() != null) {
+                        ((MainActivity) getActivity()).hideNavBar();
+                    }
+                }
+            });
+
             Button btnSave = (Button) mSettingDialog.findViewById(R.id.btn_save);
             btnSave.setOnClickListener(new View.OnClickListener() {
                 @Override

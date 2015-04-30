@@ -8,6 +8,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.TranslateAnimation;
 
 import me.justup.upme.utils.LogUtils;
 
@@ -15,8 +18,95 @@ public abstract class BaseActivity extends Activity {
     // Default 4.4.2
     private int currentApiVersion = 19;
 
+    public Animation mFragmentSliderOut = null;
+    public Animation mFragmentSliderIn = null;
+    public Animation mAnimOpenUserPanel = null;
+    public Animation mAnimCloseUserPanel = null;
+
+    private static final int UP_ME_ANIMATION_VALUE = 114;
+    private static final int UP_ME_ANIMATION_DURATION = 1000;
+
+    public Animation mAnimCloseLogo = null;
+    public Animation mAnimOpenLogo = null;
+
+    public Boolean isShowMainFragmentContainer = false;
+    public Boolean isOrderingPanelOpen = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Init Animation
+        mFragmentSliderOut = AnimationUtils.loadAnimation(this, R.anim.fragment_slider_out);
+        mFragmentSliderOut.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                isShowMainFragmentContainer = null;
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                isShowMainFragmentContainer = false;
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) { }
+        });
+
+        mAnimOpenUserPanel = AnimationUtils.loadAnimation(this, R.anim.fragment_slider_out);
+        mAnimOpenUserPanel.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                isOrderingPanelOpen = null;
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                isOrderingPanelOpen = false;
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) { }
+        });
+
+        mFragmentSliderIn = AnimationUtils.loadAnimation(this, R.anim.fragment_slider_in);
+        mFragmentSliderIn.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                isShowMainFragmentContainer = null;
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                isShowMainFragmentContainer = true;
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) { }
+        });
+
+        mAnimCloseUserPanel = AnimationUtils.loadAnimation(this, R.anim.fragment_slider_in);
+        mAnimCloseUserPanel.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                isOrderingPanelOpen = null;
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                isOrderingPanelOpen = true;
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) { }
+        });
+
+        mAnimCloseLogo = new TranslateAnimation(-UP_ME_ANIMATION_VALUE, 0, 0, 0);
+        mAnimCloseLogo.setDuration(UP_ME_ANIMATION_DURATION);
+        mAnimCloseLogo.setFillAfter(true);
+
+        mAnimOpenLogo = new TranslateAnimation(0, -UP_ME_ANIMATION_VALUE, 0, 0);
+        mAnimOpenLogo.setDuration(UP_ME_ANIMATION_DURATION);
+        mAnimOpenLogo.setFillAfter(true);
+
         // Get device API version
         currentApiVersion = android.os.Build.VERSION.SDK_INT;
 

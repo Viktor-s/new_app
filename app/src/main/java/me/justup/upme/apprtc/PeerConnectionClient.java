@@ -31,9 +31,6 @@ import android.content.Context;
 import android.opengl.EGLContext;
 import android.util.Log;
 
-import me.justup.upme.apprtc.AppRTCClient.SignalingParameters;
-import me.justup.upme.utils.LooperExecutor;
-
 import org.webrtc.DataChannel;
 import org.webrtc.IceCandidate;
 import org.webrtc.MediaCodecVideoEncoder;
@@ -57,6 +54,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import me.justup.upme.apprtc.AppRTCClient.SignalingParameters;
+import me.justup.upme.utils.LooperExecutor;
 
 /**
  * Peer connection client implementation.
@@ -516,10 +516,12 @@ public class PeerConnectionClient {
     // capturer that works, or crash if none do.
     private VideoCapturer getVideoCapturer(boolean useFrontFacing) {
         String[] cameraFacing = {"front", "back"};
+
         if (!useFrontFacing) {
             cameraFacing[0] = "back";
             cameraFacing[1] = "front";
         }
+
         for (String facing : cameraFacing) {
             int[] cameraIndex = {0, 1};
             int[] cameraOrientation = {0, 90, 180, 270};
@@ -534,6 +536,7 @@ public class PeerConnectionClient {
                 }
             }
         }
+
         reportError("Failed to open capturer");
         return null;
     }
@@ -545,13 +548,21 @@ public class PeerConnectionClient {
             videoSource.dispose();
         }
 
-        videoSource = factory.createVideoSource(capturer, videoConstraints);
-        String trackExtension = frontFacing ? "frontFacing" : "backFacing";
+        // TODO MyTAB Capture : null IF OPEN CAMERA IN ANOTHER APP
+        if(capturer==null){
+            reportError("Failed to open capturer");
+        }else {
+            videoSource = factory.createVideoSource(capturer, videoConstraints);
+            String trackExtension = frontFacing ? "frontFacing" : "backFacing";
 
-        localVideoTrack = factory.createVideoTrack(VIDEO_TRACK_ID + trackExtension, videoSource);
-        localVideoTrack.setEnabled(renderVideo);
-        localVideoTrack.addRenderer(new VideoRenderer(localRender));
-        return localVideoTrack;
+            localVideoTrack = factory.createVideoTrack(VIDEO_TRACK_ID + trackExtension, videoSource);
+            localVideoTrack.setEnabled(renderVideo);
+            localVideoTrack.addRenderer(new VideoRenderer(localRender));
+
+            return localVideoTrack;
+        }
+
+        return null;
     }
 
     private static String setStartBitrate(

@@ -1,27 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <Button
         android:id="@+id/mail_messages_close_button"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
         android:layout_width="@dimen/base50dp720sw"
         android:layout_height="@dimen/base50dp720sw"
-        android:background="@drawable/button_close_test"
-        android:layout_marginTop="@dimen/base20dp720sw" />
+        android:layout_alignBottom="@+id/chat_title_textView"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/button_close_test" />
 
     <LinearLayout
-        android:orientation="vertical"
+        android:id="@+id/linearLayout3"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/linearLayout3"
+        android:layout_alignEnd="@+id/jabber_listMessages"
         android:layout_alignParentBottom="true"
         android:layout_toStartOf="@+id/mail_messages_close_button"
-        android:layout_alignEnd="@+id/jabber_listMessages">
+        android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="fill_parent"
@@ -31,129 +30,123 @@
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="1dp"
-                android:background="#AAAAAA"
-                android:layout_toEndOf="@+id/news_comment_imageView" />
+                android:layout_toEndOf="@+id/news_comment_imageView"
+                android:background="#AAAAAA" />
 
             <Button
+                android:id="@+id/mail_messages_staple_button"
                 android:layout_width="@dimen/base60dp720sw"
                 android:layout_height="@dimen/base35dp720sw"
-                android:id="@+id/mail_messages_staple_button"
-                android:layout_centerVertical="true"
                 android:layout_alignParentStart="true"
-                android:background="@drawable/mail_messages_add_file_button_bg"
-                android:layout_marginLeft="4dp" />
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="4dp"
+                android:background="@drawable/mail_messages_add_file_button_bg" />
 
             <View
+                android:id="@+id/button12"
                 android:layout_width="2dp"
                 android:layout_height="wrap_content"
-                android:background="@color/login_enter_button_background"
-                android:layout_toEndOf="@+id/mail_messages_staple_button"
-                android:layout_alignTop="@+id/mail_messages_staple_button"
                 android:layout_alignBottom="@+id/mail_messages_staple_button"
-                android:id="@+id/button12"
+                android:layout_alignTop="@+id/mail_messages_staple_button"
                 android:layout_marginLeft="@dimen/base12dp720sw"
-                android:layout_marginRight="@dimen/base12dp720sw" />
+                android:layout_marginRight="@dimen/base12dp720sw"
+                android:layout_toEndOf="@+id/mail_messages_staple_button"
+                android:background="@color/login_enter_button_background" />
 
             <EditText
-                android:layout_width="@dimen/base350dp720sw"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/base10dp720sw"
                 android:id="@+id/chatET"
-                android:inputType="textMultiLine"
-                android:singleLine="false"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:background="@drawable/chat_edit_text"
                 android:layout_toEndOf="@+id/button12"
-                android:textColor="@color/black"
-                tools:ignore="LabelFor">
+                android:layout_toStartOf="@+id/mail_messages_image_attach_imageView"
+                android:background="@drawable/chat_edit_text"
+                android:inputType="textMultiLine"
+                android:padding="@dimen/base10dp720sw"
+                android:singleLine="false"
+                android:textColor="@color/black">
 
                 <requestFocus />
             </EditText>
 
             <Button
+                android:id="@+id/mail_messages_call_button"
                 android:layout_width="@dimen/base40dp720sw"
                 android:layout_height="@dimen/base40dp720sw"
-                android:id="@+id/mail_messages_call_button"
-                android:layout_centerVertical="true"
                 android:layout_alignParentEnd="true"
-                android:background="@drawable/image_call"
-                android:layout_marginRight="@dimen/base15dp720sw" />
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/base15dp720sw"
+                android:background="@drawable/image_call" />
 
             <Button
+                android:id="@+id/mail_messages_add_button"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/base40dp720sw"
-                android:id="@+id/mail_messages_add_button"
                 android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/base15dp720sw"
                 android:layout_toStartOf="@+id/mail_messages_call_button"
                 android:background="@drawable/pay_panel_button_selector"
+                android:gravity="center"
                 android:padding="6dp"
-                android:layout_marginRight="@dimen/base15dp720sw"
                 android:text="@string/mail_messages_send"
-                android:textAllCaps="true"
-                android:gravity="center" />
+                android:textAllCaps="true" />
 
             <ImageButton
+                android:id="@+id/mail_messages_image_attach_imageView"
                 android:layout_width="@dimen/base50dp720sw"
                 android:layout_height="@dimen/base50dp720sw"
-                android:id="@+id/mail_messages_image_attach_imageView"
-                android:clickable="true"
                 android:layout_centerVertical="true"
-                android:layout_toEndOf="@+id/chatET" />
+                android:layout_toStartOf="@+id/mail_messages_add_button"
+                android:clickable="true" />
 
         </RelativeLayout>
 
-        <TextView
-            android:orientation="vertical"
-            android:layout_width="fill_parent"
-            android:layout_height="16dp"
-            android:background="@color/mail_add_file_bg" />
-
         <RelativeLayout
+            android:id="@+id/mail_messages_add_file_container"
             android:layout_width="fill_parent"
             android:layout_height="@dimen/base90dp720sw"
-            android:visibility="gone"
             android:layout_centerVertical="true"
             android:layout_toEndOf="@+id/mail_messages_staple_button"
-            android:id="@+id/mail_messages_add_file_container"
-            android:background="@color/mail_add_file_bg">
+            android:background="@color/mail_add_file_bg"
+            android:visibility="gone">
 
             <Button
+                android:id="@+id/mail_messages_add_audio_button"
                 android:layout_width="@dimen/base55dp720sw"
                 android:layout_height="@dimen/base55dp720sw"
-                android:id="@+id/mail_messages_add_audio_button"
-                android:layout_centerVertical="true"
                 android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
                 android:background="@drawable/button_sound_bg" />
 
             <Button
+                android:id="@+id/mail_messages_add_photo_button"
                 android:layout_width="@dimen/base55dp720sw"
                 android:layout_height="@dimen/base55dp720sw"
-                android:id="@+id/mail_messages_add_photo_button"
-                android:background="@drawable/button_camera_bg"
                 android:layout_alignTop="@+id/mail_messages_add_audio_button"
-                android:layout_toStartOf="@+id/textView10" />
+                android:layout_toStartOf="@+id/textView10"
+                android:background="@drawable/button_camera_bg" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/mail_messages_take_audio"
                 android:id="@+id/textView8"
-                android:layout_centerVertical="true"
-                android:layout_toEndOf="@+id/mail_messages_add_audio_button" />
-
-            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/mail_messages_take_photo"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/mail_messages_add_audio_button"
+                android:text="@string/mail_messages_take_audio" />
+
+            <TextView
                 android:id="@+id/textView10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignTop="@+id/textView8"
+                android:layout_marginRight="4dp"
                 android:layout_toStartOf="@+id/mail_messages_add_audio_button"
-                android:layout_marginRight="4dp" />
+                android:text="@string/mail_messages_take_photo" />
 
             <Button
+                android:id="@+id/mail_messages_add_document_button"
                 android:layout_width="@dimen/base55dp720sw"
                 android:layout_height="@dimen/base55dp720sw"
-                android:id="@+id/mail_messages_add_document_button"
                 android:layout_alignBottom="@+id/mail_messages_add_audio_button"
                 android:layout_toEndOf="@+id/textView8"
                 android:background="@android:drawable/ic_input_get" />
@@ -161,25 +154,25 @@
     </LinearLayout>
 
     <ListView
+        android:id="@+id/jabber_listMessages"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/jabber_listMessages"
-        android:stackFromBottom="true"
-        android:transcriptMode="alwaysScroll"
         android:layout_above="@+id/linearLayout3"
-        android:layout_marginEnd="@dimen/base60dp720sw"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/chat_title_textView"
         android:src="@android:drawable/dark_header"
-        android:layout_below="@+id/chat_title_textView" />
+        android:stackFromBottom="true"
+        android:transcriptMode="alwaysScroll" />
 
     <TextView
+        android:id="@+id/chat_title_textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/base10dp720sw"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:background="@color/base_background"
-        tools:text="User name - чат"
-        android:id="@+id/chat_title_textView"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_toStartOf="@+id/mail_messages_close_button" />
+        android:layout_toStartOf="@+id/mail_messages_close_button"
+        android:background="@color/base_background"
+        android:padding="@dimen/base10dp720sw"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        tools:text="User name - чат" />
 </RelativeLayout>

@@ -8,8 +8,11 @@ import android.os.PowerManager;
 
 import me.justup.upme.R;
 
+import static me.justup.upme.utils.LogUtils.LOGE;
+
 
 public class SoundNotifyService extends Service implements MediaPlayer.OnCompletionListener {
+    private static final String TAG = SoundNotifyService.class.getSimpleName();
     public static final String SOUND_NOTIFY_TYPE_EXTRA = "sound_notify_type_extra";
 
     public static final int TYPE_CHAT = 1;
@@ -20,7 +23,13 @@ public class SoundNotifyService extends Service implements MediaPlayer.OnComplet
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        int type = intent.getIntExtra(SOUND_NOTIFY_TYPE_EXTRA, 0);
+        int type = TYPE_CHAT;
+
+        try{
+            type = intent.getIntExtra(SOUND_NOTIFY_TYPE_EXTRA, 0);
+        }catch (NullPointerException e){
+            LOGE(TAG, e.getMessage());
+        }
 
         int sound_chat = R.raw.chat;
         int sound_call = R.raw.call;
