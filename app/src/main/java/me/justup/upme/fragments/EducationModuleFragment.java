@@ -349,6 +349,7 @@ public class EducationModuleFragment extends Fragment {
         getChildFragmentManager().popBackStack();
         WarningDialog dialog = WarningDialog.newInstance("Отправлено", "Ваш тест отправлен на сервер");
         dialog.show(getChildFragmentManager(), WarningDialog.WARNING_DIALOG);
+        passTestLayout.setVisibility(View.VISIBLE);
     }
 
     private void showViewPDFDialog(String mFileName, String mFilePath) {

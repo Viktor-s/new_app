@@ -187,7 +187,7 @@ public class EducationTestFragment extends Fragment {
             radioButtonView.setText(itemAnswer.getAnswer_text());
             radioButtonView.setLayoutParams(p);
             radioButtonView.setTextColor(Color.BLACK);
-            radioButtonView.setTextSize(27);
+            radioButtonView.setTextSize(25);
             if (itemAnswer.getAnswer_hash().equals(answerNumber))
                 index = i;
 

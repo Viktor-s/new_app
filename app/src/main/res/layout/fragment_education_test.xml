@@ -13,7 +13,7 @@
         android:text="Large Text"
         android:id="@+id/education_test_question_name_textView"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/base100dp720sw"
+        android:layout_marginTop="@dimen/base80dp720sw"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:textSize="@dimen/base28sp720sw"
@@ -61,7 +61,7 @@
         android:layout_below="@+id/education_test_question_name_textView"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/base20dp720sw"
-        android:textSize="@dimen/base21sp720sw"
+        android:textSize="@dimen/base26sp720sw"
         android:textColor="@android:color/black"
         android:gravity="center"/>
 
@@ -71,7 +71,8 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_below="@+id/education_test_previous_button"
-            android:layout_marginTop="@dimen/base30dp720sw">
+            android:layout_marginTop="@dimen/base30dp720sw"
+            android:visibility="visible">
         </RadioGroup>
 
 </RelativeLayout>
