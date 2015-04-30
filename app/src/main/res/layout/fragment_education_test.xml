@@ -51,17 +51,37 @@
         android:textSize="@dimen/base21sp720sw"
         android:textColor="@android:color/black" />
 
-    <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_below="@+id/education_test_previous_button"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/base12dp720sw"
-        android:id="@+id/scrollView5">
 
+
+        <!--
         <GridLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:id="@+id/education_test_answers_container"></GridLayout>
-    </ScrollView>
+        -->
+
+
+        <RadioGroup
+            android:id="@+id/hour_radio_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_below="@+id/education_test_previous_button">
+
+            <RadioButton
+                android:id="@+id/radioVibrateStop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:onClick="onClickRadioSelectTest"
+                android:text="Остановка вибрации" />
+            <RadioButton
+                android:id="@+id/radioVibrateStop1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:onClick="onClickRadioSelectTest"
+                android:text="Остановка вибрации" />
+        </RadioGroup>
+
 </RelativeLayout>
