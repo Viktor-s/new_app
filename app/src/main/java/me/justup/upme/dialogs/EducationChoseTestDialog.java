@@ -32,6 +32,7 @@ public class EducationChoseTestDialog extends Dialog {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.dialog_education_choose_test);
+        setCanceledOnTouchOutside(false);
         linearLayout = (LinearLayout) findViewById(R.id.dialog_education_test_linear_layout);
         generateButtons();
 
