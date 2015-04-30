@@ -108,7 +108,7 @@ public class EducationTestFragment extends Fragment {
         });
         EducationGetTestsQuery testsQuery = new EducationGetTestsQuery();
         testsQuery.params.module_id = currentModuleId;
-        ApiWrapper.syncQuery(testsQuery, new OnTestResponse());
+        ApiWrapper.query(testsQuery, new OnTestResponse());
 
         return view;
     }
@@ -118,14 +118,14 @@ public class EducationTestFragment extends Fragment {
         if (positionInList == 0) {
             previousQuestionButton.setVisibility(View.INVISIBLE);
             nextQuestionButton.setVisibility(View.VISIBLE);
-        } else if (positionInList == educationTestEntity.getQuestions().size()-1) {
+        } else if (positionInList == educationTestEntity.getQuestions().size() - 1) {
             nextQuestionButton.setVisibility(View.INVISIBLE);
             previousQuestionButton.setVisibility(View.VISIBLE);
         } else {
             nextQuestionButton.setVisibility(View.VISIBLE);
             previousQuestionButton.setVisibility(View.VISIBLE);
         }
-        if (positionInList <= educationTestEntity.getQuestions().size() -1) {
+        if (positionInList <= educationTestEntity.getQuestions().size() - 1) {
             EducationTestQuestionEntity questionEntity = educationTestEntity.getQuestions().get(positionInList);
             questionContentTextView.setText(questionEntity.getQuestion_text());
 
@@ -165,11 +165,9 @@ public class EducationTestFragment extends Fragment {
             param.width = (screenWidth / 3);
             param.leftMargin = CommonUtils.convertDpToPixels(getActivity(), 25);
             param.topMargin = CommonUtils.convertDpToPixels(getActivity(), 10);
-            ;
             //  param.setGravity(Gravity.CENTER);
             param.columnSpec = GridLayout.spec(c);
             param.rowSpec = GridLayout.spec(r);
-
             LinearLayout answerItemLayout = (LinearLayout) layoutInflater.inflate(R.layout.education_test_anser_item, null, false);
             TextView answerHash = (TextView) answerItemLayout.findViewById(R.id.education_test_item_hash);
             answerHash.setText(testAnswerEntities.get(i).getAnswer_hash());
@@ -185,9 +183,6 @@ public class EducationTestFragment extends Fragment {
                     } else {
                         Toast.makeText(getActivity(), "Wrong answer", Toast.LENGTH_SHORT).show();
                     }
-                    // int idCurrentGroup = Integer.parseInt(((TextView) v.findViewById(R.id.grid_hide_id)).getText().toString());
-                    // String nameCurrentGroup = ((TextView) v.findViewById(R.id.grid_row_name_extView)).getText().toString();
-                    // showProductHtmlFragment(idCurrentGroup, nameCurrentGroup, namePath);
                 }
             });
             answersContainerLayout.addView(answerItemLayout);
@@ -199,7 +194,7 @@ public class EducationTestFragment extends Fragment {
         @Override
         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
             String content = ApiWrapper.responseBodyToString(responseBody);
-            LOGI("pavel", "Sucsess : " + content);
+            LOGI("pavel", "onSuccess : " + content);
             EducationGetTestsResponse response = null;
             try {
                 response = ApiWrapper.gson.fromJson(content, EducationGetTestsResponse.class);
@@ -208,36 +203,9 @@ public class EducationTestFragment extends Fragment {
             }
 
             if (response != null) {
-                questionNameTextview.setVisibility(View.VISIBLE);
-                questionContentTextView.setVisibility(View.VISIBLE);
-                previousQuestionButton.setVisibility(View.VISIBLE);
-                nextQuestionButton.setVisibility(View.VISIBLE);
-                educationTestEntity = new EducationTestEntity();
-                educationTestEntity.setId(response.result.get(0).id);
-                educationTestEntity.setModule_id(response.result.get(0).module_id);
-                educationTestEntity.setName(response.result.get(0).name);
-                educationTestEntity.setDescription(response.result.get(0).description);
-                educationTestEntity.setPass_limit(response.result.get(0).pass_limit);
-                ArrayList<EducationTestQuestionEntity> testQuestionEntities = new ArrayList<>();
-                for (int i = 0; i < response.result.get(0).questions.size(); i++) {
-                    EducationTestQuestionEntity questionEntity = new EducationTestQuestionEntity();
-                    questionEntity.setQuestion_text(response.result.get(0).questions.get(i).question_text);
-                    questionEntity.setQuestion_hash(response.result.get(0).questions.get(i).question_hash);
-                    ArrayList<EducationTestAnswerEntity> answerEntities = new ArrayList<>();
-                    for (int j = 0; j < response.result.get(0).questions.get(i).answers.size(); j++) {
-                        EducationTestAnswerEntity answerEntity = new EducationTestAnswerEntity();
-                        answerEntity.setAnswer_text(response.result.get(0).questions.get(i).answers.get(j).answer_text);
-                        answerEntity.setAnswer_hash(response.result.get(0).questions.get(i).answers.get(j).answer_hash);
-                        answerEntities.add(answerEntity);
-                    }
-                    questionEntity.setAnswers(answerEntities);
-                    testQuestionEntities.add(questionEntity);
-                }
-                educationTestEntity.setQuestions(testQuestionEntities);
-                LOGE("pavel", educationTestEntity.toString());
-                currentQuestionListPosition = 0;
-                questionNameTextview.setText(educationTestEntity.getName());
-                updateQuestion(currentQuestionListPosition);
+                //тут будет выбор теста сначала
+
+                generateViewFromChosenTest(response, 0);
             }
         }
 
@@ -246,5 +214,38 @@ public class EducationTestFragment extends Fragment {
             String content = ApiWrapper.responseBodyToString(responseBody);
             LOGI("pavel", "OnFailure : " + content);
         }
+    }
+
+    private void generateViewFromChosenTest(EducationGetTestsResponse response, int testPosition) {
+        questionNameTextview.setVisibility(View.VISIBLE);
+        questionContentTextView.setVisibility(View.VISIBLE);
+        previousQuestionButton.setVisibility(View.VISIBLE);
+        nextQuestionButton.setVisibility(View.VISIBLE);
+        educationTestEntity = new EducationTestEntity();
+        educationTestEntity.setId(response.result.get(testPosition).id);
+        educationTestEntity.setModule_id(response.result.get(testPosition).module_id);
+        educationTestEntity.setName(response.result.get(testPosition).name);
+        educationTestEntity.setDescription(response.result.get(testPosition).description);
+        educationTestEntity.setPass_limit(response.result.get(testPosition).pass_limit);
+        ArrayList<EducationTestQuestionEntity> testQuestionEntities = new ArrayList<>();
+        for (int i = 0; i < response.result.get(testPosition).questions.size(); i++) {
+            EducationTestQuestionEntity questionEntity = new EducationTestQuestionEntity();
+            questionEntity.setQuestion_text(response.result.get(testPosition).questions.get(i).question_text);
+            questionEntity.setQuestion_hash(response.result.get(testPosition).questions.get(i).question_hash);
+            ArrayList<EducationTestAnswerEntity> answerEntities = new ArrayList<>();
+            for (int j = 0; j < response.result.get(testPosition).questions.get(i).answers.size(); j++) {
+                EducationTestAnswerEntity answerEntity = new EducationTestAnswerEntity();
+                answerEntity.setAnswer_text(response.result.get(testPosition).questions.get(i).answers.get(j).answer_text);
+                answerEntity.setAnswer_hash(response.result.get(testPosition).questions.get(i).answers.get(j).answer_hash);
+                answerEntities.add(answerEntity);
+            }
+            questionEntity.setAnswers(answerEntities);
+            testQuestionEntities.add(questionEntity);
+        }
+        educationTestEntity.setQuestions(testQuestionEntities);
+        LOGE("pavel", educationTestEntity.toString());
+        currentQuestionListPosition = 0;
+        questionNameTextview.setText(educationTestEntity.getName());
+        updateQuestion(currentQuestionListPosition);
     }
 }
