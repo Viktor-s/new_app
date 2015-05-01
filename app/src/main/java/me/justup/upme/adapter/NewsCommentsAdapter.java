@@ -1,7 +1,7 @@
 package me.justup.upme.adapter;
 
-
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.amulyakhare.textdrawable.TextDrawable;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -45,11 +46,28 @@ public class NewsCommentsAdapter extends ArrayAdapter<ArticleShortCommentEntity>
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        String imagePath = (newsCommentEntity.getAuthor_img() != null && newsCommentEntity.getAuthor_img().length() > 1) ? newsCommentEntity.getAuthor_img() : "fake";
-        Picasso.with(context).load(imagePath).placeholder(R.drawable.ic_launcher).into(viewHolder.mImageView);
-        viewHolder.mTitle.setText(newsCommentEntity.getAuthor_name() + " " + newsCommentEntity.getPosted_at());
-       // viewHolder.mTitle.setText(newsCommentEntity.getAuthor_name() );
+
+        String name = newsCommentEntity.getAuthor_name();
+        String postInfo = newsCommentEntity.getPosted_at();
+        viewHolder.mTitle.setText(name + " " + postInfo);
         viewHolder.mMainText.setText(newsCommentEntity.getContent());
+
+        String imagePath = (newsCommentEntity.getAuthor_img() != null && newsCommentEntity.getAuthor_img().length() > 1) ? newsCommentEntity.getAuthor_img() : null;
+        if(imagePath!=null) {
+            Picasso.with(context).load(imagePath).placeholder(R.mipmap.ic_launcher).into(viewHolder.mImageView);
+        }else{
+            int circleColor = context.getResources().getColor(R.color.settings_manual_button);
+
+            TextDrawable drawable = TextDrawable.builder().beginConfig()
+                    .withBorder(4)
+                    .useFont(Typeface.SANS_SERIF)
+                    .toUpperCase()
+                    .endConfig()
+                    .buildRound(Character.toString((name).charAt(0)), circleColor);
+
+            viewHolder.mImageView.setImageDrawable(drawable);
+        }
+
         return convertView;
     }
 }

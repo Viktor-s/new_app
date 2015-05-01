@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import me.justup.upme.JustUpApplication;
 import me.justup.upme.R;
 
 public class DashboardAdapter extends ArrayAdapter<TileItem> implements SpanVariableGridView.CalculateChildrenPosition {
@@ -81,7 +82,11 @@ public class DashboardAdapter extends ArrayAdapter<TileItem> implements SpanVari
         final boolean isRedacted = item.isRedacted();
 
         if (convertView == null) {
-            convertView = mLayoutInflater.inflate(R.layout.tile_item, parent, false);
+            if(JustUpApplication.getScreenDensityDpi()==240) { // Sony Z
+                convertView = mLayoutInflater.inflate(R.layout.tile_item_sony_z, parent, false);
+            }else{
+                convertView = mLayoutInflater.inflate(R.layout.tile_item, parent, false);
+            }
 
             itemViewHolder = new ItemViewHolder();
 

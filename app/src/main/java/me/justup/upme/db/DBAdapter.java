@@ -462,7 +462,7 @@ public class DBAdapter {
         Cursor cursor;
         try {
             cursor = database.rawQuery(selectQuery, null);
-        } catch (NullPointerException e) {
+        } catch (IllegalStateException | NullPointerException e) {
             return null;
         }
 

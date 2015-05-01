@@ -1,117 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+    android:id="@+id/news_feed_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@android:color/transparent"
-    android:paddingTop="@dimen/base25dp720sw"
-    android:id="@+id/news_feed_container">
+    android:orientation="horizontal"
+    android:paddingTop="@dimen/base25dp720sw">
 
     <LinearLayout
-        android:orientation="horizontal"
+        android:id="@+id/click_area_container_linearLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/click_area_container_linearLayout"
-        android:layout_marginLeft="@dimen/base25dp720sw">
+        android:layout_marginLeft="@dimen/base25dp720sw"
+        android:orientation="horizontal">
 
         <LinearLayout
-            android:orientation="vertical"
+            android:id="@+id/linearLayout"
             android:layout_width="@dimen/base240dp720sw"
             android:layout_height="@dimen/base240dp720sw"
             android:background="@android:color/white"
-            android:id="@+id/linearLayout">
+            android:orientation="vertical">
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="New Text"
                 android:id="@+id/news_date_textView"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/base18dp720sw"
-                android:layout_marginLeft="@dimen/base18dp720sw"
-                android:layout_marginRight="@dimen/base18dp720sw"
-                android:background="#C85694"
-                android:autoText="true"
-                android:textSize="@dimen/base15sp720sw"
-                android:gravity="center"
-                android:padding="@dimen/base5dp720sw" />
-
-            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="New Text"
-                android:id="@+id/news_title_textView"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/base12dp720sw"
                 android:layout_marginLeft="@dimen/base18dp720sw"
                 android:layout_marginRight="@dimen/base18dp720sw"
-                android:textSize="@dimen/base21sp720sw"
+                android:layout_marginTop="@dimen/base18dp720sw"
+                android:autoText="true"
+                android:background="#C85694"
+                android:gravity="center"
+                android:padding="@dimen/base5dp720sw"
+                android:text="New Text"
+                android:textSize="@dimen/base15sp720sw" />
+
+            <TextView
+                android:id="@+id/news_title_textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="@dimen/base18dp720sw"
+                android:layout_marginRight="@dimen/base18dp720sw"
+                android:layout_marginTop="@dimen/base12dp720sw"
+                android:text="New Text"
                 android:textColor="#414976"
+                android:textSize="@dimen/base21sp720sw"
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/news_text_textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="New Text"
-                android:id="@+id/news_text_textView"
-                android:layout_marginTop="@dimen/base12dp720sw"
                 android:layout_marginLeft="@dimen/base18dp720sw"
                 android:layout_marginRight="@dimen/base18dp720sw"
-                android:textSize="@dimen/base12sp720sw"
-                android:textColor="@android:color/black" />
+                android:layout_marginTop="@dimen/base12dp720sw"
+                android:text="New Text"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/base12sp720sw" />
         </LinearLayout>
 
         <LinearLayout
-            android:orientation="vertical"
+            android:id="@+id/linearLayout2"
             android:layout_width="@dimen/base240dp720sw"
             android:layout_height="@dimen/base240dp720sw"
-            android:id="@+id/linearLayout2">
+            android:orientation="vertical">
 
             <ImageView
+                android:id="@+id/news_image_imageView"
                 android:layout_width="@dimen/base240dp720sw"
                 android:layout_height="wrap_content"
-                android:id="@+id/news_image_imageView"
                 android:scaleType="centerCrop" />
         </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/base240dp720sw"
-        android:layout_weight="1"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="false"
         android:layout_alignParentEnd="false"
-        android:layout_toRightOf="@+id/click_area_container_linearLayout"
-        android:layout_toEndOf="@id/click_area_container_linearLayout"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
         android:layout_marginLeft="@dimen/base12dp720sw"
-        android:layout_alignParentBottom="false">
+        android:layout_toEndOf="@id/click_area_container_linearLayout"
+        android:layout_toRightOf="@+id/click_area_container_linearLayout"
+        android:layout_weight="1"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/comments_title_textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/news_comments_title"
-                android:id="@+id/comments_title_textView"
                 android:layout_gravity="start|top"
-                android:textSize="@dimen/base21sp720sw"
-                android:textColor="#848180"
                 android:layout_marginBottom="@dimen/base12dp720sw"
+                android:gravity="top"
+                android:text="@string/news_comments_title"
                 android:textAllCaps="true"
-                android:gravity="top" />
+                android:textColor="#848180"
+                android:textSize="@dimen/base21sp720sw" />
 
             <TextView
+                android:id="@+id/comments_length_textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="1"
-                android:id="@+id/comments_length_textView"
-                android:textSize="@dimen/base21sp720sw"
-                android:textColor="#C85694" />
+                android:textColor="#C85694"
+                android:textSize="@dimen/base21sp720sw" />
 
         </LinearLayout>
 
@@ -126,22 +126,22 @@
             android:background="#AAAAAA" />
 
         <ListView
+            android:id="@+id/comments_listView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/comments_listView"
             android:background="@android:color/transparent" />
 
     </LinearLayout>
 
     <ImageView
+        android:id="@+id/is_news_viewed_imageView"
         android:layout_width="@dimen/base20dp720sw"
         android:layout_height="@dimen/base20dp720sw"
-        android:id="@+id/is_news_viewed_imageView"
-        android:layout_marginLeft="@dimen/base15dp720sw"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:src="@drawable/ic_launcher"
-        android:layout_marginTop="@dimen/base20dp720sw" />
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="@dimen/base15dp720sw"
+        android:layout_marginTop="@dimen/base20dp720sw"
+        android:src="@mipmap/ic_launcher" />
 
 </RelativeLayout>

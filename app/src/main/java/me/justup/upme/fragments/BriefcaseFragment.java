@@ -313,7 +313,7 @@ public class BriefcaseFragment extends Fragment {
             RelativeLayout photoLayoutInner = (RelativeLayout) briefcaseItemLayout.findViewById(R.id.image_container);
             CircularImageView personPhoto = (CircularImageView) briefcaseItemLayout.findViewById(R.id.briefcase_fragment_user_photo);
             String imagePath = (personBriefcaseEntity.getPhoto() != null && personBriefcaseEntity.getPhoto().length() > 1) ? personBriefcaseEntity.getPhoto() : "fake";
-            Picasso.with(BriefcaseFragment.this.getActivity()).load(imagePath).placeholder(R.drawable.ic_launcher).into(personPhoto);
+            Picasso.with(BriefcaseFragment.this.getActivity()).load(imagePath).placeholder(R.mipmap.ic_launcher).into(personPhoto);
 
             final TextView itemId = (TextView) photoLayoutInner.getChildAt(1);
             itemId.setText(Integer.toString(personBriefcaseEntity.getId()));

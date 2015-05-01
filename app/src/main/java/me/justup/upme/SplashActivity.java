@@ -24,11 +24,14 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import org.apache.http.Header;
 
 import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import me.justup.upme.entity.ErrorResponse;
 import me.justup.upme.entity.SetGooglePushIdQuery;
 import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.utils.CommonUtils;
+import me.justup.upme.utils.ThreadPolicyManager;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.LOGE;
@@ -41,6 +44,8 @@ public class SplashActivity extends Activity {
     // GCM
     private GoogleCloudMessaging mGCM = null;
     private String mRegId = null;
+    private Boolean isDeviceRegister = false;
+    private Timer mTimer = null;
 
     private static final String SENDER_ID = "896253211448";
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
@@ -62,7 +67,8 @@ public class SplashActivity extends Activity {
 
                 if (checkConnectingToInternet()) {
                     if (checkAndRegGCM()) {
-                        goToDashboardActivity();
+                        mTimer = new Timer();
+                        mTimer.schedule(new CheckRegisterGCM(), 100, 1000);
                     }
                 } else {
                     Toast.makeText(SplashActivity.this, "No Internet connection", Toast.LENGTH_LONG).show();
@@ -77,8 +83,15 @@ public class SplashActivity extends Activity {
         // Check device for Play Services APK. If check succeeds, proceed with GCM registration.
         if (checkPlayServices()) {
             mGCM = GoogleCloudMessaging.getInstance(this);
-            mRegId = getRegistrationId(getApplicationContext());
 
+            ThreadPolicyManager.getInstance().executePermissiveUnit(new ThreadPolicyManager.PermissiveUnit(){
+                @Override
+                public void executeUnitOfWork() {
+                    mRegId = getRegistrationId(getApplicationContext());
+                }
+            });
+
+            LOGI(TAG, "Object GCM : " + mGCM + ", RegId : " + mRegId);
             if (mRegId.isEmpty()) {
                 registerInBackground();
             } else {
@@ -95,9 +108,13 @@ public class SplashActivity extends Activity {
     }
 
     private void goToDashboardActivity() {
-        Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-        // Maybe add some param
-        startActivity(intent);
+        if(isDeviceRegister!=null && isDeviceRegister) {
+            Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+            // Maybe add some param
+            startActivity(intent);
+        }else if(isDeviceRegister==null){
+            Toast.makeText(getApplicationContext(), "Problem width registration device.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
@@ -120,6 +137,7 @@ public class SplashActivity extends Activity {
 
                 dialog.show();
             } else {
+                LOGI(TAG, "This device is not supported.");
                 SplashActivity.this.finish();
             }
 
@@ -139,6 +157,8 @@ public class SplashActivity extends Activity {
      */
     private String getRegistrationId(Context context) {
         final SharedPreferences prefs = getGcmPreferences();
+        LOGI(TAG, "GCM Pref : " + prefs);
+
         String registrationId = prefs.getString(PROPERTY_REG_ID, "");
         if (registrationId.isEmpty()) {
             LOGI(TAG, "Registration not found.");
@@ -174,7 +194,7 @@ public class SplashActivity extends Activity {
             return packageInfo.versionCode;
         } catch (PackageManager.NameNotFoundException e) {
             // should never happen
-            throw new RuntimeException("Could not get package name: " + e);
+            throw new RuntimeException("Could not get package name : " + e);
         }
     }
 
@@ -214,6 +234,7 @@ public class SplashActivity extends Activity {
                     // Persist the regID - no need to register again.
                     storeRegistrationId(getApplicationContext(), mRegId);
                 } catch (IOException ex) {
+                    LOGE(TAG, ex.getMessage());
                     msg = "Error : " + ex.getMessage();
                     // If there is an error, don't just keep trying to register.
                     // Require the user to click a button again, or perform
@@ -241,11 +262,13 @@ public class SplashActivity extends Activity {
      */
 
     private void sendSyncRegistrationIdToBackend(final String pushId) {
+        LOGI(TAG, "Send new request to Server from regGCM method.");
         ApiWrapper.syncQuery(createPushIdEntity(pushId), new OnPushRegisterResponse());
     }
 
     // For Main thread
     private void sendAsyncRegistrationIdToBackend(final String pushId) {
+        LOGI(TAG, "Send old request to Server from regGCM method.");
         ApiWrapper.query(createPushIdEntity(pushId), new OnPushRegisterResponse());
     }
 
@@ -274,12 +297,18 @@ public class SplashActivity extends Activity {
             if (response != null && response.error != null) {
                 CommonUtils.showWarningToast(SplashActivity.this, response.error.data);
             }
+
+            // Notify device is registered
+            isDeviceRegister = true;
         }
 
         @Override
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
             String content = ApiWrapper.responseBodyToString(responseBody);
             LOGI(TAG, "OnFailure : " + content);
+
+            // Notify device is unregistered
+            isDeviceRegister = null;
         }
     }
 
@@ -319,5 +348,22 @@ public class SplashActivity extends Activity {
         }
 
         return false;
+    }
+
+    class CheckRegisterGCM extends TimerTask {
+
+        @Override
+        public void run() {
+            goToDashboardActivity();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mTimer != null) {
+            mTimer.cancel();
+            mTimer = null;
+        }
     }
 }

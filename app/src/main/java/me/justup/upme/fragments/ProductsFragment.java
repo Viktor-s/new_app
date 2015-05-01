@@ -163,7 +163,7 @@ public class ProductsFragment extends Fragment {
                 categoryName.setText(mListCategory.get(i).getName());
                 ImageView groupProductPhoto = (ImageView) groupProductLayout.findViewById(R.id.group_product_photo);
                 String imagePath = (mListCategory.get(i).getBrandList().get(j).getImage() != null && mListCategory.get(i).getBrandList().get(j).getImage().length() > 1) ? mListCategory.get(i).getBrandList().get(j).getImage() : "fake";
-                Picasso.with(getActivity()).load(imagePath).placeholder(R.drawable.ic_launcher).into(groupProductPhoto);
+                Picasso.with(getActivity()).load(imagePath).placeholder(R.mipmap.ic_launcher).into(groupProductPhoto);
                 TextView groupProductTitle = (TextView) groupProductLayout.findViewById(R.id.group_product_title);
                 groupProductTitle.setText(mListCategory.get(i).getBrandList().get(j).getName());
                 TextView groupProductDescription = (TextView) groupProductLayout.findViewById(R.id.group_product_description);

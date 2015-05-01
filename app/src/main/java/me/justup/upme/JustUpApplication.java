@@ -348,4 +348,7 @@ public class JustUpApplication extends Application {
         return sLongPressTimeout;
     }
 
+    public static int getScreenDensityDpi(){
+        return (int)(sScreenDensity * 160f);
+    }
 }

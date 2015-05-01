@@ -9,6 +9,11 @@
     <dimen name="del_setting_menu_height">90dp</dimen>
     <dimen name="tile_width">180dp</dimen>
 
+    <dimen name="tile_menu_margin_top_sony_z">350dp</dimen>
+    <dimen name="tile_rotate_menu_height_sony_z">800dp</dimen>
+
+    <dimen name="tile_width_sony_z">146dp</dimen>
+
     <!--Launcher-->
     <dimen name="base3dp720sw">3dp</dimen>
     <dimen name="base5dp720sw">5dp</dimen>
@@ -81,11 +86,11 @@
     <dimen name="base42sp720sw">42sp</dimen>
 
     <!--Launcher-->
-     <dimen name="app_icon_size">72dp</dimen>
+    <dimen name="app_icon_size">72dp</dimen>
     <dimen name="app_icon_padding_top">0dp</dimen>
     <dimen name="reveal_radius">72dp</dimen>
 
-	<!-- Hotseat -->
+    <!-- Hotseat -->
     <dimen name="button_bar_height">82dp</dimen>
     <dimen name="button_bar_height_top_padding">12dp</dimen>
     <dimen name="button_bar_height_bottom_padding">12dp</dimen>
@@ -94,11 +99,11 @@
     <dimen name="button_bar_height_plus_padding">82dp</dimen>
     <dimen name="hotseat_width_gap">58dp</dimen>
 
-	<!-- QSB -->
+    <!-- QSB -->
     <dimen name="toolbar_button_vertical_padding">8dip</dimen>
     <dimen name="toolbar_button_horizontal_padding">8dip</dimen>
 
-	<!-- Workspace -->
+    <!-- Workspace -->
     <dimen name="qsb_bar_height">60dp</dimen>
     <dimen name="qsb_bar_height_inset">60dp</dimen>
     <dimen name="qsb_padding_left">177dp</dimen>
@@ -108,7 +113,7 @@
     <!-- 44dp high for the optical bounds -->
     <dimen name="search_bar_height">52dp</dimen>
 
-	<!-- AppsCustomize -->
+    <!-- AppsCustomize -->
     <dimen name="apps_customize_cell_width">96dp</dimen>
     <dimen name="apps_customize_cell_height">96dp</dimen>
     <integer name="apps_customize_maxCellCountX">-1</integer>
@@ -124,7 +129,7 @@
     <dimen name="dragViewOffsetX">0dp</dimen>
     <dimen name="dragViewOffsetY">0dp</dimen>
 
-	<!-- CellLayout padding land / port-->
+    <!-- CellLayout padding land / port-->
     <dimen name="cell_layout_left_padding_port">4dp</dimen>
     <dimen name="cell_layout_left_padding_land">4dp</dimen>
     <dimen name="cell_layout_right_padding_port">4dp</dimen>
@@ -134,7 +139,7 @@
     <dimen name="cell_layout_bottom_padding_port">8dp</dimen>
     <dimen name="cell_layout_bottom_padding_land">8dp</dimen>
 
-	<!-- Folders -->
+    <!-- Folders -->
     <!-- The size of the image which sits behind the preview of the folder contents -->
     <dimen name="folder_cell_width">96dp</dimen>
     <dimen name="folder_cell_height">96dp</dimen>
@@ -143,7 +148,7 @@
     <dimen name="folder_height_gap">2dp</dimen>
     <dimen name="folder_padding">4dp</dimen>
 
-	<!-- Workspace padding -->
+    <!-- Workspace padding -->
     <dimen name="workspace_left_padding_port">0dp</dimen>
     <dimen name="workspace_left_padding_land">0dp</dimen>
     <dimen name="workspace_right_padding_port">0dp</dimen>
@@ -161,7 +166,7 @@
     <dimen name="workspace_divider_padding_top">0dp</dimen>
     <dimen name="workspace_divider_padding_bottom">0dp</dimen>
 
-	<!-- Workspace cell size -->
+    <!-- Workspace cell size -->
     <dimen name="workspace_cell_width_land">96dp</dimen>
     <dimen name="workspace_cell_width_port">96dp</dimen>
     <dimen name="workspace_cell_height_land">96dp</dimen>

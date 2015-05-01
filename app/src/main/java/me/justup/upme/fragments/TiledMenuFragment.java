@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import me.justup.upme.JustUpApplication;
 import me.justup.upme.MainActivity;
 import me.justup.upme.R;
 import me.justup.upme.db.DBAdapter;
@@ -46,6 +47,8 @@ import me.justup.upme.view.dashboard.SimpleScrollingStrategy;
 import me.justup.upme.view.dashboard.SpanVariableGridView;
 import me.justup.upme.view.dashboard.TileItem;
 import me.justup.upme.view.dashboard.TileUtils;
+
+import static me.justup.upme.utils.LogUtils.LOGI;
 
 public class TiledMenuFragment extends Fragment implements CoolDragAndDropGridView.DragAndDropListener,
         SpanVariableGridView.OnItemClickListener,
@@ -118,9 +121,14 @@ public class TiledMenuFragment extends Fragment implements CoolDragAndDropGridVi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mContentView = super.onCreateView(inflater, container, savedInstanceState);
+        LOGI(TAG, "Screen density : " + JustUpApplication.getScreenDensityDpi());
 
         if (mContentView == null) {
-            mContentView = inflater.inflate(R.layout.tiled_fragment_layout, container, false);
+            if(JustUpApplication.getScreenDensityDpi()==240){ // Sony Z
+                mContentView = inflater.inflate(R.layout.tiled_fragment_layout_sony_z, container, false);
+            }else {
+                mContentView = inflater.inflate(R.layout.tiled_fragment_layout, container, false);
+            }
         }
 
         return mContentView;

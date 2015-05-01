@@ -1,22 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="@dimen/base70dp720sw"
     android:descendantFocusability="blocksDescendants"
     android:orientation="vertical">
 
-    <me.justup.upme.utils.CircularImageView
+    <!--<me.justup.upme.utils.CircularImageView-->
+        <!--android:id="@+id/mail_contacts_item_imageView"-->
+        <!--android:layout_width="@dimen/base60dp720sw"-->
+        <!--android:layout_height="@dimen/base60dp720sw"-->
+        <!--android:layout_alignParentStart="true"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:layout_marginLeft="@dimen/base30dp720sw"-->
+        <!--android:layout_marginRight="@dimen/base15dp720sw"-->
+        <!--app:civ_border="true"-->
+        <!--app:civ_border_color="@color/white"-->
+        <!--app:civ_border_width="@dimen/base5dp720sw" />-->
+
+    <ImageView
         android:id="@+id/mail_contacts_item_imageView"
         android:layout_width="@dimen/base60dp720sw"
         android:layout_height="@dimen/base60dp720sw"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/base30dp720sw"
-        android:layout_marginRight="@dimen/base15dp720sw"
-        app:civ_border="true"
-        app:civ_border_color="@color/white"
-        app:civ_border_width="@dimen/base5dp720sw" />
+        android:layout_marginRight="@dimen/base15dp720sw" />
 
     <TextView
         android:id="@+id/mail_contacts_item_textView"

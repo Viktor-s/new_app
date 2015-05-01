@@ -68,6 +68,7 @@ public class CWView extends WebView {
         this.setScrollBarStyle(SCROLLBARS_INSIDE_OVERLAY);
         this.setLongClickable(true);
         this.setClickable(true);
+        this.setInitialScale(120);
 
         if (Build.VERSION.SDK_INT >= 9) this.setOverScrollMode(OVER_SCROLL_NEVER);
 
@@ -145,7 +146,7 @@ public class CWView extends WebView {
         // Viewport HTML Param
         String viewport = "<meta name=\"viewport\"\n" +
                 "      content=\"\n" +
-                "          minimum-scale = 0.7 ,\n" +
+                "          minimum-scale = 1.2 ,\n" +
                 "          maximum-scale = " + VAR_MAX_SCALE + ",\n" +
                 "          width=device-width ,\n"+
                 "          target-density=device-px ,\n"+

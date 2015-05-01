@@ -62,6 +62,7 @@
 
         <ListView
             android:id="@+id/mail_contacts_ListView"
+            android:layout_marginTop="@dimen/base10dp720sw"
             android:layout_width="@dimen/base350dp720sw"
             android:layout_height="match_parent"
             android:background="@android:color/transparent" />
