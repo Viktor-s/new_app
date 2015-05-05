@@ -11,6 +11,8 @@ public class AppPreferences {
     private SharedPreferences mSharedPreferences;
     private SharedPreferences.Editor mEditor;
 
+    private static final long _24h = 86400000;
+
     private static final String PREFS_FILE = "UPMEPrefsFile";
     private static final String TAG_TOKEN = "token";
     private static final String TAG_PIN_CODE = "pin_code";
@@ -22,6 +24,7 @@ public class AppPreferences {
     private static final String TAG_BROWSER_URL = "browser_url";
     private static final String TAG_FILE_SORT_TYPE = "file_sort_type";
     private static final String TAG_FILE_SORT_IS_DESC = "file_sort_is_desc";
+    private static final String TAG_TOKEN_LIFE_TIME = "token_life_time";
 
 
     public AppPreferences(final Context context) {
@@ -138,6 +141,23 @@ public class AppPreferences {
 
     public boolean isDescFileSort() {
         return mSharedPreferences.getBoolean(TAG_FILE_SORT_IS_DESC, false);
+    }
+
+    public void setTokenLife(long currentMillis) {
+        mEditor = mSharedPreferences.edit();
+        mEditor.putLong(TAG_TOKEN_LIFE_TIME, currentMillis);
+        mEditor.apply();
+    }
+
+    public boolean isTokenLive() {
+        boolean isLive;
+
+        long startTime = mSharedPreferences.getLong(TAG_TOKEN_LIFE_TIME, 0);
+        long currentTime = System.currentTimeMillis();
+
+        isLive = currentTime < (startTime + _24h);
+
+        return isLive;
     }
 
 }

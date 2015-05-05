@@ -126,6 +126,9 @@ public class LoginActivity extends BaseActivity {
             startService(new Intent(JustUpApplication.getApplication().getApplicationContext(), ApplicationSupervisorService.class));
         }
 
+        ImageView mFastEnter = (ImageView) findViewById(R.id.upme_corner_button);
+        mFastEnter.setOnClickListener(new OnFastEnterListener());
+
 
         // Delete! Only for debug!
         TextView appVersion = (TextView) findViewById(R.id.app_version_textView);
@@ -172,16 +175,6 @@ public class LoginActivity extends BaseActivity {
             }
         });
 
-        ImageView mLoginDebug = (ImageView) findViewById(R.id.upme_corner_button);
-        mLoginDebug.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (BuildConfig.FLAVOR.equals(Constance.APP_FLAVOR_APP)) {
-                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                    finish();
-                }
-            }
-        });
     }
 
     @SuppressWarnings("UnusedDeclaration")
@@ -336,6 +329,7 @@ public class LoginActivity extends BaseActivity {
                     mAppPreferences.setPhoneNumber(mPhoneNumber);
                 } else {
                     mAppPreferences.setToken(response.result.token);
+                    mAppPreferences.setTokenLife(System.currentTimeMillis());
 
                     startActivity(new Intent(LoginActivity.this, SplashActivity.class));
                     LoginActivity.this.finish();
@@ -379,6 +373,11 @@ public class LoginActivity extends BaseActivity {
         dialog.show(getFragmentManager(), WarningDialog.WARNING_DIALOG);
     }
 
+    private void showWarningDialog(String title, String message) {
+        WarningDialog dialog = WarningDialog.newInstance(title, message);
+        dialog.show(getFragmentManager(), WarningDialog.WARNING_DIALOG);
+    }
+
     private class OnLoadSettings implements View.OnClickListener {
         @Override
         public void onClick(View v) {
@@ -409,6 +408,20 @@ public class LoginActivity extends BaseActivity {
         super.onSaveInstanceState(outState);
 
         outState.putBoolean(IS_SHOW_PIN_PANEL, isPhoneVerification);
+    }
+
+    private class OnFastEnterListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            if (BuildConfig.FLAVOR.equals(Constance.APP_FLAVOR_APP)) {
+                if (mAppPreferences.isTokenLive()) {
+                    startActivity(new Intent(LoginActivity.this, SplashActivity.class));
+                    LoginActivity.this.finish();
+                } else {
+                    showWarningDialog(getString(R.string.warning), getString(R.string.token_life_warning));
+                }
+            }
+        }
     }
 
 }
