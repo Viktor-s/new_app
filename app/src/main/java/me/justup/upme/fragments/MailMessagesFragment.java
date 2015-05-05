@@ -169,12 +169,16 @@ public class MailMessagesFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_mail_messages, container, false);
 
         mAddFileContainer = (RelativeLayout) view.findViewById(R.id.mail_messages_add_file_container);
+
+        final MailFragment parentFragment = (MailFragment) getParentFragment();
+
         Button mMailMessageCloseButton = (Button) view.findViewById(R.id.mail_messages_close_button);
         mMailMessageCloseButton.setVisibility(View.INVISIBLE);
         mMailMessageCloseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getParentFragment().getChildFragmentManager().beginTransaction().remove(MailMessagesFragment.this).commit();
+                parentFragment.resizeContacts(false);
+                parentFragment.getChildFragmentManager().beginTransaction().remove(MailMessagesFragment.this).commit();
             }
         });
 
@@ -570,15 +574,16 @@ public class MailMessagesFragment extends Fragment {
                     Uri uriFile = data.getData();
                     mFilePath = getPath(uriFile, getActivity().getApplicationContext());
 
-                    if (mFilePath.contains(".jpg") || mFilePath.contains(".png")) {
-                        try {
-                            mAttachImageBitmap = decodeUri(uriFile);
-                        } catch (FileNotFoundException e) {
-                            LOGE(TAG, "REQUEST_TAKE_FILE", e);
-                        }
-                        mAttachFileType = AttachFileType.IMAGE;
-                    } else
-                        mAttachFileType = AttachFileType.DOC;
+                    if (mFilePath != null)
+                        if (mFilePath.contains(".jpg") || mFilePath.contains(".png")) {
+                            try {
+                                mAttachImageBitmap = decodeUri(uriFile);
+                            } catch (FileNotFoundException e) {
+                                LOGE(TAG, "REQUEST_TAKE_FILE", e);
+                            }
+                            mAttachFileType = AttachFileType.IMAGE;
+                        } else
+                            mAttachFileType = AttachFileType.DOC;
 
                     mImageAttachedImageView.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_input_get));
                     break;

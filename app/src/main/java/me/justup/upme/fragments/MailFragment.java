@@ -14,13 +14,16 @@ import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.FilterQueryProvider;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import me.justup.upme.MainActivity;
 import me.justup.upme.R;
@@ -65,6 +68,9 @@ public class MailFragment extends Fragment {
     public static final int ORDER_INFO = 7;
 
     private SQLiteDatabase mDatabase = null;
+    private RelativeLayout mContactsContainer;
+    private FrameLayout mChatContainer;
+
 
     @Override
     public void onAttach(Activity activity) {
@@ -112,7 +118,7 @@ public class MailFragment extends Fragment {
 
     @Override
     public void onDestroy() {
-        if(mMailContactsAdapter.getCursor()!=null){
+        if (mMailContactsAdapter.getCursor() != null) {
             mMailContactsAdapter.getCursor().close();
         }
 
@@ -133,7 +139,7 @@ public class MailFragment extends Fragment {
                 LOGE(TAG, "onReceive mailFragment");
                 try {
                     mCursor = mDatabase.rawQuery(mSelectQuery, null);
-                }catch (IllegalStateException e){
+                } catch (IllegalStateException e) {
                     LOGE(TAG, "Attempt to re-open an already-closed object: SQLiteDatabase: /data/data/me.justup.upme/databases/upme.db : \n" + e.getMessage());
                 }
                 // mMailContactsAdapter = new MailContactsAdapter(this, getActivity().getApplicationContext(), mCursor, 0);
@@ -148,6 +154,8 @@ public class MailFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_mail, container, false);
 
         final AppPreferences appPreferences = new AppPreferences(getActivity());
+        mContactsContainer = (RelativeLayout) view.findViewById(R.id.chat_contacts_container);
+        mChatContainer = (FrameLayout) view.findViewById(R.id.mail_messages_container_frameLayout);
 
         final Push push = ((MainActivity) getActivity()).getPush();
         if (push != null) {
@@ -158,7 +166,10 @@ public class MailFragment extends Fragment {
                 String yourJabberId = appPreferences.getJabberId();
                 String yourName = appPreferences.getUserName();
 
-                getChildFragmentManager().beginTransaction().replace(R.id.mail_messages_container_frameLayout, MailMessagesFragment.newInstance(yourName, yourJabberId, friendName, friendJabberId, push.getUserId())).commit();
+                resizeContacts(true);
+
+                getChildFragmentManager().beginTransaction().
+                        replace(R.id.mail_messages_container_frameLayout, MailMessagesFragment.newInstance(yourName, yourJabberId, friendName, friendJabberId, push.getUserId())).commit();
 
             } else if (push.getType() == WEBRTC) {
                 ((MainActivity) getActivity()).prepareAndCallRTC(String.valueOf(push.getRoom()), false, false, 0, 0, "");
@@ -187,6 +198,7 @@ public class MailFragment extends Fragment {
                     int userId = mMailContactsAdapter.getCursor().getInt(mMailContactsAdapter.getCursor().getColumnIndex(DBHelper.MAIL_CONTACT_SERVER_ID));
 
                     startNotificationIntent(userId);
+                    resizeContacts(true);
 
                     final FragmentTransaction ft = getChildFragmentManager().beginTransaction();
                     ft.replace(R.id.mail_messages_container_frameLayout, MailMessagesFragment.newInstance(yourName, yourJabberId, friendName, friendJabberId, userId));
@@ -258,6 +270,24 @@ public class MailFragment extends Fragment {
 
         // mCursor = new FilterCursorWrapper(mCursor, search, mCursor.getColumnIndex(DBHelper.MAIL_CONTACT_NAME));
         return mCursor;
+    }
+
+    public void resizeContacts(boolean isChatVisible) {
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mContactsContainer.getLayoutParams();
+
+        if (isChatVisible) {
+            params.width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 350, getResources().getDisplayMetrics());
+            params.height = RelativeLayout.LayoutParams.MATCH_PARENT;
+
+            mContactsContainer.setLayoutParams(params);
+            mChatContainer.setVisibility(View.VISIBLE);
+        } else {
+            params.width = RelativeLayout.LayoutParams.MATCH_PARENT;
+            params.height = RelativeLayout.LayoutParams.MATCH_PARENT;
+
+            mContactsContainer.setLayoutParams(params);
+            mChatContainer.setVisibility(View.GONE);
+        }
     }
 
 }
