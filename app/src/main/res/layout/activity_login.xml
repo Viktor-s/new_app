@@ -6,175 +6,175 @@
     tools:context=".LoginActivity">
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true">
+        android:orientation="horizontal">
 
         <LinearLayout
             android:id="@+id/login_phone_layout"
-            tools:visibility="visible"
-            style="@style/LoginEnterLayout">
+            style="@style/LoginEnterLayout"
+            tools:visibility="visible">
 
             <TextView
-                android:text="@string/enter_phone_number"
-                style="@style/LoginInfoText" />
+                style="@style/LoginInfoText"
+                android:text="@string/enter_phone_number" />
 
             <TextView
+                android:id="@+id/phone_number_textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="+"
-                tools:text="+380977552530"
-                android:id="@+id/phone_number_textView"
-                android:background="@color/login_phone_number_background"
                 android:layout_marginBottom="@dimen/base10dp720sw"
-                android:padding="@dimen/base10dp720sw" />
+                android:background="@color/login_phone_number_background"
+                android:padding="@dimen/base10dp720sw"
+                android:text="+"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                tools:text="+380977552530" />
 
             <Button
+                android:id="@+id/login_button"
                 android:layout_width="@dimen/base195dp720sw"
                 android:layout_height="@dimen/base50dp720sw"
-                android:text="@string/login_button"
-                android:textSize="@dimen/base19sp720sw"
                 android:background="@drawable/enter_button_selector"
-                android:id="@+id/login_button" />
+                android:text="@string/login_button"
+                android:textSize="@dimen/base19sp720sw" />
 
             <TextView
+                android:id="@+id/pin_code_limit_textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/base5dp720sw"
+                android:gravity="center"
                 android:text="@string/pin_code_limit"
                 android:textColor="@color/login_pin_code_limit"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:textStyle="bold"
-                android:layout_marginTop="@dimen/base5dp720sw"
-                android:visibility="gone"
                 android:textSize="@dimen/base16sp720sw"
-                tools:visibility="visible"
-                android:id="@+id/pin_code_limit_textView" />
+                android:textStyle="bold"
+                android:visibility="gone"
+                tools:visibility="visible" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/login_pin_layout"
+            style="@style/LoginEnterLayout"
             android:visibility="gone"
-            tools:visibility="visible"
-            style="@style/LoginEnterLayout">
+            tools:visibility="visible">
 
             <TextView
-                android:text="@string/enter_pin_code"
-                style="@style/LoginInfoText" />
+                style="@style/LoginInfoText"
+                android:text="@string/enter_pin_code" />
 
             <TextView
+                android:id="@+id/pin_number_textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                tools:text="5234"
-                android:gravity="center"
-                android:id="@+id/pin_number_textView"
-                android:background="@color/login_phone_number_background"
                 android:layout_marginBottom="@dimen/base10dp720sw"
-                android:padding="@dimen/base10dp720sw" />
+                android:background="@color/login_phone_number_background"
+                android:gravity="center"
+                android:padding="@dimen/base10dp720sw"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                tools:text="5234" />
 
             <Button
+                android:id="@+id/login_pin_button"
                 android:layout_width="@dimen/base195dp720sw"
                 android:layout_height="@dimen/base50dp720sw"
-                android:text="@string/enter_button"
-                android:textSize="@dimen/base19sp720sw"
                 android:background="@drawable/enter_button_selector"
-                android:id="@+id/login_pin_button" />
+                android:text="@string/enter_button"
+                android:textSize="@dimen/base19sp720sw" />
         </LinearLayout>
 
         <TableLayout
+            android:id="@+id/tableLayout"
             android:layout_width="@dimen/base220dp720sw"
             android:layout_height="@dimen/base220dp720sw"
-            android:stretchColumns="*"
-            android:id="@+id/tableLayout"
-            android:layout_marginLeft="@dimen/base35dp720sw">
+            android:layout_marginLeft="@dimen/base35dp720sw"
+            android:stretchColumns="*">
 
             <TableRow android:layout_weight="1">
 
                 <Button
+                    android:id="@+id/button1"
                     style="@style/PinCodeButton"
-                    android:text="1"
-                    android:id="@+id/button1" />
+                    android:text="1" />
 
                 <Button
+                    android:id="@+id/button2"
                     style="@style/PinCodeButton"
-                    android:text="2"
-                    android:id="@+id/button2" />
+                    android:text="2" />
 
                 <Button
+                    android:id="@+id/button3"
                     style="@style/PinCodeButton"
-                    android:text="3"
-                    android:id="@+id/button3" />
+                    android:text="3" />
             </TableRow>
 
             <TableRow android:layout_weight="1">
 
                 <Button
+                    android:id="@+id/button4"
                     style="@style/PinCodeButton"
-                    android:text="4"
-                    android:id="@+id/button4" />
+                    android:text="4" />
 
                 <Button
+                    android:id="@+id/button5"
                     style="@style/PinCodeButton"
-                    android:text="5"
-                    android:id="@+id/button5" />
+                    android:text="5" />
 
                 <Button
+                    android:id="@+id/button6"
                     style="@style/PinCodeButton"
-                    android:text="6"
-                    android:id="@+id/button6" />
+                    android:text="6" />
             </TableRow>
 
             <TableRow android:layout_weight="1">
 
                 <Button
+                    android:id="@+id/button7"
                     style="@style/PinCodeButton"
-                    android:text="7"
-                    android:id="@+id/button7" />
+                    android:text="7" />
 
                 <Button
+                    android:id="@+id/button8"
                     style="@style/PinCodeButton"
-                    android:text="8"
-                    android:id="@+id/button8" />
+                    android:text="8" />
 
                 <Button
+                    android:id="@+id/button9"
                     style="@style/PinCodeButton"
-                    android:text="9"
-                    android:id="@+id/button9" />
+                    android:text="9" />
             </TableRow>
 
             <TableRow android:layout_weight="1">
 
                 <Button
+                    android:id="@+id/button0"
                     style="@style/PinCodeButton"
-                    android:text="0"
-                    android:id="@+id/button0" />
+                    android:text="0" />
 
                 <Button
+                    android:id="@+id/button_clear"
                     style="@style/PinCodeButton"
                     android:layout_span="2"
-                    android:text="@string/picode_button_del"
-                    android:id="@+id/button_clear" />
+                    android:text="@string/picode_button_del" />
             </TableRow>
         </TableLayout>
     </LinearLayout>
 
     <fragment
+        android:id="@+id/status_bar_fragment"
+        android:name="me.justup.upme.fragments.StatusBarFragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:name="me.justup.upme.fragments.StatusBarFragment"
-        android:id="@+id/status_bar_fragment"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
         tools:layout="@layout/fragment_status_bar" />
 
     <include
-        layout="@layout/upme_corner"
-        android:id="@+id/include" />
+        android:id="@+id/include"
+        layout="@layout/upme_corner" />
 
     <Button
         android:id="@+id/login_settings_button"
@@ -182,93 +182,20 @@
         android:layout_alignBottom="@+id/include"
         android:layout_alignParentStart="true" />
 
-
-    <LinearLayout
-        android:layout_width="@dimen/base350dp720sw"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="@dimen/base20dp720sw">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginStart="20dp"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Выберите сервер:"
-            android:textColor="@color/black" />
-
-        <RadioGroup
-            android:id="@+id/server_radioGroup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/base20dp720sw"
-            android:layout_marginTop="5dp"
-            android:orientation="vertical">
-
-            <RadioButton
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/base10dp720sw"
-                android:textColor="@color/black"
-                android:text="test.justup.me"
-                android:id="@+id/server1_radioButton" />
-
-            <RadioButton
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="pre-prod.justup.me"
-                android:textColor="@color/black"
-                android:padding="@dimen/base10dp720sw"
-                android:id="@+id/server2_radioButton" />
-        </RadioGroup>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/base10dp720sw"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="http://" />
-
-            <EditText
-                android:id="@+id/test_set_url_editText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/base5dp720sw"
-                android:layout_marginEnd="@dimen/base5dp720sw"
-                android:hint="test.justup.me"
-                android:inputType="text" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="/uptabinterface/jsonrpc/" />
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/test_set_url_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Set"
-            android:layout_gravity="center_horizontal" />
-    </LinearLayout>
-
     <TextView
+        android:id="@+id/app_version_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        tools:text="UPME v0.2"
-        android:id="@+id/app_version_textView"
-        android:layout_marginBottom="@dimen/base10dp720sw"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/base10dp720sw"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        tools:text="UPME v0.2" />
 
+    <FrameLayout
+        android:id="@+id/login_settings_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/base10dp720sw"
+        android:layout_toEndOf="@+id/login_settings_button" />
 </RelativeLayout>

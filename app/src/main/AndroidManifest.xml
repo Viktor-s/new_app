@@ -136,11 +136,6 @@
             android:excludeFromRecents="true"
             android:finishOnTaskLaunch="true" />
 
-        <activity
-            android:name=".SettingsActivity"
-            android:windowSoftInputMode="stateHidden"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
-
         <receiver android:name="me.justup.upme.utils.BootReceiver"
             android:label="@string/app_name"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED">

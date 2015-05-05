@@ -2,65 +2,58 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/base50dp720sw"
-    android:background="@color/settings_background">
+    android:background="@color/settings_background"
+    android:padding="@dimen/base50dp720sw">
 
     <LinearLayout
         android:id="@+id/settings_left_menu"
-        android:orientation="vertical"
         android:layout_width="@dimen/base270dp720sw"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <TextView
-            android:text="@string/settings_wifi"
+            android:id="@+id/settings_wifi_menu_textView"
+            style="@style/SettingsMenuItem"
             android:background="@drawable/settings_back_left"
             android:drawableStart="@android:drawable/ic_menu_mylocation"
-            android:id="@+id/settings_wifi_menu_textView"
-            style="@style/SettingsMenuItem" />
+            android:text="@string/settings_wifi" />
 
         <TextView
-            android:text="@string/settings_screen_sound"
-            android:drawableStart="@android:drawable/ic_menu_manage"
             android:id="@+id/settings_screen_menu_textView"
-            style="@style/SettingsMenuItem" />
+            style="@style/SettingsMenuItem"
+            android:drawableStart="@android:drawable/ic_menu_manage"
+            android:text="@string/settings_screen_sound" />
 
         <TextView
-            android:text="@string/settings_webrtc"
-            android:drawableStart="@android:drawable/ic_menu_call"
             android:id="@+id/settings_webrtc_menu_textView"
-            style="@style/SettingsMenuItem" />
+            style="@style/SettingsMenuItem"
+            android:drawableStart="@android:drawable/ic_menu_call"
+            android:text="@string/settings_webrtc" />
 
         <TextView
-            android:visibility="gone"
-            android:text="@string/settings_social"
-            android:drawableStart="@android:drawable/ic_menu_my_calendar"
             android:id="@+id/settings_social_menu_textView"
-            style="@style/SettingsMenuItem" />
+            style="@style/SettingsMenuItem"
+            android:drawableStart="@android:drawable/ic_menu_my_calendar"
+            android:text="@string/settings_social"
+            android:visibility="gone" />
 
         <TextView
-            android:text="@string/settings_monitor"
-            android:drawableStart="@android:drawable/ic_dialog_alert"
             android:id="@+id/settings_monitoring_textView"
-            style="@style/SettingsMenuItem" />
+            style="@style/SettingsMenuItem"
+            android:drawableStart="@android:drawable/ic_dialog_alert"
+            android:text="@string/settings_monitor" />
+
+        <TextView
+            android:id="@+id/settings_servers_textView"
+            style="@style/SettingsMenuItem"
+            android:drawableStart="@android:drawable/ic_menu_myplaces"
+            android:text="@string/settings_server" />
     </LinearLayout>
 
     <FrameLayout
         android:id="@+id/settings_fragment_container"
-        android:background="@drawable/settings_back_right"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_toEndOf="@+id/settings_left_menu">
-    </FrameLayout>
-
-    <ImageView
-        android:id="@+id/close_settings_activity_imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="@dimen/base10dp720sw"
-        android:layout_marginEnd="@dimen/base10dp720sw"
-        android:src="@drawable/button_close_test"
-        android:contentDescription="@string/app_name" />
-
+        android:layout_toEndOf="@+id/settings_left_menu"
+        android:background="@drawable/settings_back_right" />
 </RelativeLayout>

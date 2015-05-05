@@ -10,10 +10,8 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.google.gson.JsonSyntaxException;
@@ -25,13 +23,12 @@ import me.justup.upme.dialogs.WarningDialog;
 import me.justup.upme.entity.LoginPhoneQueryEntity;
 import me.justup.upme.entity.LoginPinCodeQueryEntity;
 import me.justup.upme.entity.LoginResponseEntity;
+import me.justup.upme.fragments.SettingsFragment;
 import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.services.ApplicationSupervisorService;
 import me.justup.upme.services.StatusBarService;
 import me.justup.upme.utils.AppPreferences;
-import me.justup.upme.utils.CommonUtils;
 import me.justup.upme.utils.Constance;
-import me.justup.upme.utils.ServerSwitcher;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.LOGE;
@@ -43,6 +40,7 @@ public class LoginActivity extends BaseActivity {
 
     private static final String IS_SHOW_PIN_PANEL = "is_show_pin_panel";
     private static final String ENTER_PIN_CODE_LIMIT = "ATTEMPTS_TO_LIMIT_EXCEEDED";
+    private static final String SETTINGS_FRAGMENT_TAG = "SETTINGS_FRAGMENT";
 
     private TextView mPhoneField;
     private TextView mPinCodeField;
@@ -64,6 +62,7 @@ public class LoginActivity extends BaseActivity {
 
     private Button mPhoneLoginButton;
     private Button mPinLoginButton;
+    private boolean isShowSettings;
 
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
@@ -139,42 +138,6 @@ public class LoginActivity extends BaseActivity {
         }
 
         appVersion.setText("UPME v" + versionName);
-
-        final EditText mNewUrlString = (EditText) findViewById(R.id.test_set_url_editText);
-        Button mSetNewUrl = (Button) findViewById(R.id.test_set_url_button);
-        mSetNewUrl.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String newUrl = mNewUrlString.getText().toString();
-
-                if (newUrl != null && newUrl.length() > 2) {
-                    mNewUrlString.setText("");
-                    ServerSwitcher.getInstance().setEasyUrl(newUrl);
-                    CommonUtils.clearAllAppData();
-                }
-            }
-        });
-
-        RadioGroup radiogroup = (RadioGroup) findViewById(R.id.server_radioGroup);
-        radiogroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (checkedId) {
-                    case R.id.server1_radioButton:
-                        ServerSwitcher.getInstance().setUrl("http://test.justup.me/uptabinterface/jsonrpc/");
-                        ServerSwitcher.getInstance().setCloudStorageUrl("http://test.justup.me/CloudStorage");
-                        CommonUtils.clearAllAppData();
-                        break;
-                    case R.id.server2_radioButton:
-                        ServerSwitcher.getInstance().setEasyUrl("pre-prod.justup.me");
-                        CommonUtils.clearAllAppData();
-                        break;
-                    default:
-                        break;
-                }
-            }
-        });
-
     }
 
     @SuppressWarnings("UnusedDeclaration")
@@ -381,7 +344,13 @@ public class LoginActivity extends BaseActivity {
     private class OnLoadSettings implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            startActivity(new Intent(LoginActivity.this, SettingsActivity.class));
+            if (!isShowSettings) {
+                getFragmentManager().beginTransaction().add(R.id.login_settings_container, new SettingsFragment(), SETTINGS_FRAGMENT_TAG).commit();
+                isShowSettings = true;
+            } else {
+                getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentByTag(SETTINGS_FRAGMENT_TAG)).commit();
+                isShowSettings = false;
+            }
         }
     }
 

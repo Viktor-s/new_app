@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/base30dp720sw">
+
+    <TextView
+        style="@style/SettingsTitle"
+        android:text="@string/settings_server" />
+
+    <TextView
+        android:id="@+id/current_server_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        tools:text="Текущий сервер: http://test.justup.me/uptabinterface/jsonrpc/" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/base20dp720sw"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/base20dp720sw"
+            android:text="Выберите из списка:"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <RadioGroup
+            android:id="@+id/server_radioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/base30dp720sw"
+            android:layout_marginStart="@dimen/base20dp720sw"
+            android:layout_marginTop="@dimen/base10dp720sw"
+            android:orientation="vertical">
+
+            <RadioButton
+                android:id="@+id/server1_radioButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/base10dp720sw"
+                android:padding="@dimen/base10dp720sw"
+                android:text="test.justup.me" />
+
+            <RadioButton
+                android:id="@+id/server2_radioButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/base10dp720sw"
+                android:text="pre-prod.justup.me" />
+        </RadioGroup>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/base20dp720sw"
+            android:text="Или укажите свой:"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/base10dp720sw"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="http://"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <EditText
+                android:id="@+id/test_set_url_editText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/base5dp720sw"
+                android:layout_marginStart="@dimen/base5dp720sw"
+                android:hint="test.justup.me"
+                android:inputType="text" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="/uptabinterface/jsonrpc/"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/test_set_url_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/base10dp720sw"
+            android:layout_marginStart="@dimen/base70dp720sw"
+            android:text="Set" />
+    </LinearLayout>
+</LinearLayout>

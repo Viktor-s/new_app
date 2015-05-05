@@ -120,6 +120,7 @@
     <string name="settings_webrtc">Настройки WebRTC</string>
     <string name="settings_lang">Выбор языка</string>
     <string name="settings_monitor">Мониторинг</string>
+    <string name="settings_server">Выберите сервер</string>
     <string name="settings_wifi_title">Доступные Wi-Fi сети</string>
     <string name="settings_lang_title">Смена языка</string>
     <string name="settings_on_off_wifi">Wi-Fi вкл/выкл</string>
