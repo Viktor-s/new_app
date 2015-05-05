@@ -9,63 +9,72 @@
     <LinearLayout
         android:id="@+id/fragment_mail_action_bar"
         style="@style/ActionBarStyle"
-        android:orientation="horizontal">
+        android:gravity="center_vertical"
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="@string/contacts"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:layout_marginTop="@dimen/base10dp720sw"
+            android:text="@string/menu_item_title_mail"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+
+        <RelativeLayout
+            android:layout_width="@dimen/base320dp720sw"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/base10dp720sw"
+            android:layout_marginTop="@dimen/base5dp720sw"
+            android:background="@drawable/study_edit_text_corners"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/clear_search_text_button"
+                android:layout_width="@dimen/base30dp720sw"
+                android:layout_height="@dimen/base30dp720sw"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/base5dp720sw"
+                android:background="@drawable/ic_navigation_cancel" />
+
+            <ImageView
+                android:id="@+id/img_search"
+                android:layout_width="@dimen/base30dp720sw"
+                android:layout_height="@dimen/base30dp720sw"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/base10dp720sw"
+                android:layout_marginStart="@dimen/base10dp720sw"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/search_icon_test_light_blue" />
+
+            <me.justup.upme.utils.BackAwareEditText
+                android:id="@+id/mail_fragment_search_edt"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/base40dp720sw"
+                android:layout_gravity="center_vertical"
+                android:layout_toEndOf="@+id/img_search"
+                android:layout_toStartOf="@+id/clear_search_text_button"
+                android:background="#00000000"
+                android:textColor="@android:color/black" />
+        </RelativeLayout>
+
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="@dimen/base350dp720sw"
-        android:layout_height="fill_parent"
+        android:layout_height="match_parent"
         android:layout_below="@+id/fragment_mail_action_bar"
         android:orientation="vertical">
 
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="@dimen/base30dp720sw"
-                android:layout_height="@dimen/base30dp720sw"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="@dimen/base20dp720sw"
-                android:contentDescription="@string/app_name"
-                android:src="@drawable/search_icon_test" />
-
-            <EditText
-                android:id="@+id/mail_fragment_search_editText"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/base70dp720sw"
-                android:layout_weight="1"
-                android:background="#00000000"
-                android:textColor="@android:color/black" />
-
-            <Button
-                android:id="@+id/clear_search_text_button"
-                android:layout_width="@dimen/base50dp720sw"
-                android:layout_height="@dimen/base50dp720sw"
-                android:layout_gravity="center_vertical"
-                android:layout_marginRight="@dimen/base5dp720sw"
-                android:background="@drawable/study_edittext_corners"
-                android:text="X"
-                android:textSize="@dimen/base28sp720sw" />
-        </LinearLayout>
-
         <ListView
             android:id="@+id/mail_contacts_ListView"
-            android:layout_marginTop="@dimen/base10dp720sw"
             android:layout_width="@dimen/base350dp720sw"
             android:layout_height="match_parent"
-            android:background="@android:color/transparent" />
+            android:background="@color/main_app_light_blue_color" />
     </LinearLayout>
 
     <FrameLayout
@@ -76,4 +85,5 @@
         android:layout_below="@+id/fragment_mail_action_bar"
         android:layout_marginStart="@dimen/base350dp720sw"
         android:background="@android:color/white" />
+
 </RelativeLayout>

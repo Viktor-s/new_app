@@ -1,53 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
 
     <ImageView
-        android:src="@drawable/ic_file_star_gray"
         android:id="@+id/sort_column_favorite"
+        style="@style/DocumentsSortPanelIcon"
         android:contentDescription="@string/dummy_string"
-        style="@style/DocumentsSortPanelIcon" />
+        android:src="@drawable/ic_file_star_light_blue" />
 
     <TextView
+        android:id="@+id/sort_column_type"
+        style="@style/DocumentsSortPanelText"
         android:layout_width="wrap_content"
         android:text="@string/type"
-        android:id="@+id/sort_column_type"
-        style="@style/DocumentsSortPanelText" />
+        android:textColor="@color/action_bar_text_background"
+        android:textStyle="bold" />
 
     <TextView
+        android:id="@+id/sort_column_name"
+        style="@style/DocumentsSortPanelText"
         android:layout_width="0dp"
         android:layout_weight="3"
-        tools:drawableStart="@drawable/ic_sort_arrow_desc"
         android:text="@string/name"
-        android:id="@+id/sort_column_name"
-        style="@style/DocumentsSortPanelText" />
+        android:textColor="@color/action_bar_text_background"
+        android:textStyle="bold"
+        tools:drawableStart="@drawable/ic_sort_arrow_desc" />
 
     <TextView
-        android:layout_width="0dp"
-        android:text="@string/size"
-        android:layout_weight="0.8"
         android:id="@+id/sort_column_size"
-        style="@style/DocumentsSortPanelText" />
+        style="@style/DocumentsSortPanelText"
+        android:layout_width="0dp"
+        android:layout_weight="0.8"
+        android:text="@string/size"
+        android:textColor="@color/action_bar_text_background"
+        android:textStyle="bold" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:text="@string/date"
-        android:layout_weight="0.3"
         android:id="@+id/sort_column_date"
-        style="@style/DocumentsSortPanelText" />
+        style="@style/DocumentsSortPanelText"
+        android:layout_width="wrap_content"
+        android:layout_weight="0.3"
+        android:drawablePadding="@dimen/base5dp720sw"
+        android:drawableStart="@drawable/ic_arrow_up_light_blue"
+        android:text="@string/date"
+        android:textColor="@color/action_bar_text_background"
+        android:textStyle="bold" />
 
     <ImageView
-        android:src="@drawable/ic_file_tab_gray"
         android:id="@+id/sort_column_tab"
+        style="@style/DocumentsSortPanelIcon"
         android:contentDescription="@string/dummy_string"
-        style="@style/DocumentsSortPanelIcon" />
+        android:src="@drawable/ic_file_tab_light_blue" />
 
     <ImageView
-        android:src="@drawable/ic_file_cloud_gray"
         android:id="@+id/sort_column_cloud"
+        style="@style/DocumentsSortPanelIcon"
         android:contentDescription="@string/dummy_string"
-        style="@style/DocumentsSortPanelIcon" />
+        android:src="@drawable/ic_file_cloud_light_blue" />
+
 </LinearLayout>

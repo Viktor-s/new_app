@@ -76,9 +76,9 @@ import static me.justup.upme.utils.LogUtils.LOGE;
 import static me.justup.upme.utils.LogUtils.LOGI;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
-
 public class MailMessagesFragment extends Fragment {
     private static final String TAG = makeLogTag(MailMessagesFragment.class);
+
     private static final String FRIEND_NAME = "mail_messages_friend_name";
     private static final String YOUR_NAME = "mail_messages_your_name";
     private static final String FRIEND_ID = "mail_messages_friend_id";
@@ -95,18 +95,18 @@ public class MailMessagesFragment extends Fragment {
     private static final String TITLE_CHAT = " - чат";
     private static final int TIME_ANIM = 250;
 
-    private RelativeLayout mAddFileContainer;
-    private String mCurrentPhotoPath;
-    private ImageButton mImageAttachedImageView;
-    private TextView mAudioPreviewCurrentPosTextView;
-    private SeekBar mAudioPreviewSeekBar;
-    private Handler mAudioPreviewHandler;
-    private MediaRecorder mRecorder;
-    private MediaPlayer mPlayer;
+    private RelativeLayout mAddFileContainer = null;
+    private String mCurrentPhotoPath = null;
+    private ImageButton mImageAttachedImageView = null;
+    private TextView mAudioPreviewCurrentPosTextView = null;
+    private SeekBar mAudioPreviewSeekBar = null;
+    private Handler mAudioPreviewHandler = null;
+    private MediaRecorder mRecorder = null;
+    private MediaPlayer mPlayer = null;
     private String audioOutputFile = null;
-    private ToggleButton mAudioRecordButton;
-    private AttachFileType mAttachFileType;
-    private Bitmap mAttachImageBitmap;
+    private ToggleButton mAudioRecordButton = null;
+    private AttachFileType mAttachFileType = null;
+    private Bitmap mAttachImageBitmap = null;
 
     // Jabber
     private static final String HOST = "95.213.170.164";
@@ -122,22 +122,21 @@ public class MailMessagesFragment extends Fragment {
     private static final String START_HTML_FILE = "<br><font color=blue>[";
     private static final String END_HTML_FILE = "]</font>";
 
-    private XMPPConnection mXMPPConnection;
+    private XMPPConnection mXMPPConnection = null;
     private ArrayList<Spanned> mMessages = new ArrayList<>();
     private Handler mHandler = new Handler();
     private StringBuilder mChatLineBuilder = new StringBuilder();
-    private ArrayAdapter<Spanned> mChatAdapter;
-    private Button mSendButton;
+    private ArrayAdapter<Spanned> mChatAdapter = null;
+    private ImageButton mSendButton = null;
 
-    private EditText mTextMessage;
-    private String mFriendJabberId;
-    private String mFriendName;
-    private int friendId;
-    private String mYourName;
-    private String mYourJabberId;
-    private String mYourPassword;
-    private String mFilePath;
-
+    private EditText mTextMessage = null;
+    private String mFriendJabberId = null;
+    private String mFriendName = null;
+    private Integer mFriendId = null;
+    private String mYourName = null;
+    private String mYourJabberId = null;
+    private String mYourPassword = null;
+    private String mFilePath = null;
 
     public static MailMessagesFragment newInstance(String yourName, String yourJabberId, String userName, String userJabberId, int userId) {
         MailMessagesFragment fragment = new MailMessagesFragment();
@@ -162,7 +161,7 @@ public class MailMessagesFragment extends Fragment {
         mFriendName = getArguments().getString(FRIEND_NAME, "");
         mYourJabberId = mYourPassword = getArguments().getString(YOUR_JABBER_ID, "");
         mFriendJabberId = getArguments().getString(FRIEND_JABBER_ID, "") + AT + SERVICE;
-        friendId = getArguments().getInt(FRIEND_ID, 0);
+        mFriendId = getArguments().getInt(FRIEND_ID, 0);
     }
 
     @Override
@@ -179,7 +178,7 @@ public class MailMessagesFragment extends Fragment {
             }
         });
 
-        Button mStapleButton = (Button) view.findViewById(R.id.mail_messages_staple_button);
+        ImageButton mStapleButton = (ImageButton) view.findViewById(R.id.mail_messages_staple_button);
         mStapleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -248,7 +247,7 @@ public class MailMessagesFragment extends Fragment {
         mChatAdapter = new ArrayAdapter<>(getActivity(), R.layout.list_jabber_chat_item, mMessages);
         mJabberListView.setAdapter(mChatAdapter);
 
-        mSendButton = (Button) view.findViewById(R.id.mail_messages_add_button);
+        mSendButton = (ImageButton) view.findViewById(R.id.mail_messages_add_button);
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -483,7 +482,7 @@ public class MailMessagesFragment extends Fragment {
     private void addFileShareWith(final String fileHash) {
         FileAddShareWithQuery query = new FileAddShareWithQuery();
         query.params.file_hash = fileHash;
-        query.params.member_ids = friendId;
+        query.params.member_ids = mFriendId;
 
         ApiWrapper.query(query, new AsyncHttpResponseHandler() {
             @Override
@@ -491,7 +490,7 @@ public class MailMessagesFragment extends Fragment {
                 String content = ApiWrapper.responseBodyToString(responseBody);
                 LOGD(TAG, "addFileShareWith onSuccess(): " + content);
 
-                // startNotificationIntent(friendId, mYourName, MailFragment.FILE, fileHash, fileName);
+                // startNotificationIntent(mFriendId, mYourName, MailFragment.FILE, fileHash, fileName);
             }
 
             @Override

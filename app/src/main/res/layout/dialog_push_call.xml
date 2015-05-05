@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:baselineAligned="false">
+    android:baselineAligned="false"
+    android:orientation="horizontal">
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:contentDescription="@string/app_name"
         android:padding="@dimen/base10dp720sw"
-        android:src="@drawable/image_call"
-        android:contentDescription="@string/app_name" />
+        android:src="@drawable/device_access_call" />
 
     <TextView
+        android:id="@+id/call_user_name_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        tools:text="test4"
-        android:id="@+id/call_user_name_textView"
+        android:layout_gravity="center_vertical"
         android:singleLine="true"
-        android:layout_gravity="center_vertical" />
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        tools:text="test4" />
 </LinearLayout>

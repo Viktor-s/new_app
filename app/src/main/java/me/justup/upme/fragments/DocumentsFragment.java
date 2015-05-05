@@ -77,10 +77,10 @@ public class DocumentsFragment extends Fragment {
 
     private static final String FILE_ARRAY_MESSAGE = "file_array_thread_message";
 
-    private TableLayout mFileExplorer;
-    private LayoutInflater mLayoutInflater;
-    private ProgressBar mProgressBar;
-    private String mShareFileName;
+    private TableLayout mFileExplorer = null;
+    private LayoutInflater mLayoutInflater = null;
+    private ProgressBar mProgressBar = null;
+    private String mShareFileName = null;
 
     private BroadcastReceiver mFileActionDoneReceiver = new BroadcastReceiver() {
         @Override
@@ -105,9 +105,8 @@ public class DocumentsFragment extends Fragment {
     private static final int FILE_REMOVE_SHARE = 5;
     private static final int FILE_SHARE_PROPERTIES = 6;
 
-    private ArrayList<FileEntity> mFileArray;
-    private AppPreferences mAppPreferences;
-
+    private ArrayList<FileEntity> mFileArray = null;
+    private AppPreferences mAppPreferences = null;
 
     @Override
     public void onResume() {

@@ -6,16 +6,16 @@
     android:orientation="vertical">
 
     <!--<me.justup.upme.utils.CircularImageView-->
-        <!--android:id="@+id/mail_contacts_item_imageView"-->
-        <!--android:layout_width="@dimen/base60dp720sw"-->
-        <!--android:layout_height="@dimen/base60dp720sw"-->
-        <!--android:layout_alignParentStart="true"-->
-        <!--android:layout_centerVertical="true"-->
-        <!--android:layout_marginLeft="@dimen/base30dp720sw"-->
-        <!--android:layout_marginRight="@dimen/base15dp720sw"-->
-        <!--app:civ_border="true"-->
-        <!--app:civ_border_color="@color/white"-->
-        <!--app:civ_border_width="@dimen/base5dp720sw" />-->
+    <!--android:id="@+id/mail_contacts_item_imageView"-->
+    <!--android:layout_width="@dimen/base60dp720sw"-->
+    <!--android:layout_height="@dimen/base60dp720sw"-->
+    <!--android:layout_alignParentStart="true"-->
+    <!--android:layout_centerVertical="true"-->
+    <!--android:layout_marginLeft="@dimen/base30dp720sw"-->
+    <!--android:layout_marginRight="@dimen/base15dp720sw"-->
+    <!--app:civ_border="true"-->
+    <!--app:civ_border_color="@color/white"-->
+    <!--app:civ_border_width="@dimen/base5dp720sw" />-->
 
     <ImageView
         android:id="@+id/mail_contacts_item_imageView"
@@ -32,26 +32,35 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toEndOf="@+id/mail_contacts_item_imageView"
-        android:text="New Text"
-        android:textColor="@android:color/darker_gray" />
+        android:text="Vassily Poupkine"
+        android:textColor="@color/black"
+        android:textStyle="bold" />
 
-    <Button
-        android:id="@+id/mail_contacts_item_call_button"
-        android:layout_width="@dimen/base40dp720sw"
-        android:layout_height="@dimen/base40dp720sw"
+    <RelativeLayout
+        android:id="@+id/layout_btn_call"
+        android:layout_width="@dimen/base50dp720sw"
+        android:layout_height="@dimen/base50dp720sw"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="@dimen/base30dp720sw"
-        android:background="@drawable/image_call"
-        android:focusableInTouchMode="true" />
+        android:layout_marginRight="@dimen/base30dp720sw">
 
-    <Button
-        android:id="@+id/mail_contacts_item_info_button"
-        android:layout_width="@dimen/base40dp720sw"
-        android:layout_height="@dimen/base40dp720sw"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="@dimen/base15dp720sw"
-        android:layout_toStartOf="@+id/mail_contacts_item_call_button"
-        android:background="@android:drawable/ic_dialog_info"
-        android:focusableInTouchMode="true" />
+        <ImageButton
+            android:id="@+id/mail_contacts_item_call_button"
+            android:layout_width="@dimen/base50dp720sw"
+            android:layout_height="@dimen/base50dp720sw"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/call_circle_img"
+            android:focusableInTouchMode="true" />
+
+        <ImageView
+            android:id="@+id/img_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/device_access_call" />
+
+    </RelativeLayout>
+
 </RelativeLayout>

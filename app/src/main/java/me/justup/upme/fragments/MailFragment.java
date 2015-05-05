@@ -18,9 +18,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.FilterQueryProvider;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import me.justup.upme.MainActivity;
@@ -32,6 +31,7 @@ import me.justup.upme.entity.Push;
 import me.justup.upme.entity.StartChatQuery;
 import me.justup.upme.services.PushIntentService;
 import me.justup.upme.utils.AppPreferences;
+import me.justup.upme.utils.BackAwareEditText;
 import me.justup.upme.utils.CommonUtils;
 
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_TABLE_NAME;
@@ -46,7 +46,7 @@ public class MailFragment extends Fragment {
     private MailContactsAdapter mMailContactsAdapter = null;
     private String mSelectQuery = null;
     private Cursor mCursor = null;
-    private EditText mSearchFieldEditText = null;
+    private BackAwareEditText mSearchFieldEditText = null;
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -196,7 +196,16 @@ public class MailFragment extends Fragment {
             }
         });
 
-        mSearchFieldEditText = (EditText) view.findViewById(R.id.mail_fragment_search_editText);
+        mSearchFieldEditText = (BackAwareEditText) view.findViewById(R.id.mail_fragment_search_edt);
+        mSearchFieldEditText.setBackPressedListener(new BackAwareEditText.BackPressedListener() {
+            @Override
+            public void onImeBack(BackAwareEditText editText) {
+                if (getActivity() != null) {
+                    ((MainActivity) getActivity()).hideNavBar();
+                }
+            }
+        });
+
         mSearchFieldEditText.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable s) {
@@ -210,7 +219,7 @@ public class MailFragment extends Fragment {
             }
         });
 
-        Button clearEditTextButton = (Button) view.findViewById(R.id.clear_search_text_button);
+        ImageButton clearEditTextButton = (ImageButton) view.findViewById(R.id.clear_search_text_button);
         clearEditTextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

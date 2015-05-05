@@ -18,17 +18,18 @@ import me.justup.upme.entity.FileEntity;
 import me.justup.upme.utils.AppPreferences;
 import me.justup.upme.utils.ExplorerUtils;
 
-
 public class DocumentsSortPanelFragment extends Fragment implements View.OnClickListener {
-    private DocumentsFragment mParentFragment;
+    private static final String TAG = DocumentsSortPanelFragment.class.getSimpleName();
 
-    private ImageView mColumnFavorite;
-    private TextView mColumnType;
-    private TextView mColumnName;
-    private TextView mColumnSize;
-    private TextView mColumnDate;
-    private ImageView mColumnTablet;
-    private ImageView mColumnCloud;
+    private DocumentsFragment mParentFragment = null;
+
+    private ImageView mColumnFavorite = null;
+    private TextView mColumnType = null;
+    private TextView mColumnName = null;
+    private TextView mColumnSize = null;
+    private TextView mColumnDate = null;
+    private ImageView mColumnTablet = null;
+    private ImageView mColumnCloud = null;
 
     private ArrayList<TextView> mTextButtonArray = new ArrayList<>();
     private boolean isDesc;
@@ -36,7 +37,6 @@ public class DocumentsSortPanelFragment extends Fragment implements View.OnClick
     private static final int ICON_FAVORITE = 1;
     private static final int ICON_TABLET = 2;
     private static final int ICON_CLOUD = 3;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

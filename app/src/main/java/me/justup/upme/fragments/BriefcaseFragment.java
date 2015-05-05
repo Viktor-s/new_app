@@ -50,22 +50,23 @@ import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 public class BriefcaseFragment extends Fragment {
     private static final String TAG = makeLogTag(BriefcaseFragment.class);
-    private List<PersonBriefcaseEntity> listPerson;
-    private LinearLayout containerLayout;
-    private RelativeLayout photoLayout;
-    private Button mCloseUserFragmentButton;
-    private BroadcastReceiver receiver;
-    private String selectQuery;
-    private TextView mUserContactsCountTextView;
-    private FrameLayout mUserContainer;
-    private Animation mFragmentSliderFadeIn;
-    private Animation mFragmentSliderOut;
-    private SQLiteDatabase database;
-    private Cursor cursor;
+
+    private List<PersonBriefcaseEntity> listPerson = null;
+    private LinearLayout containerLayout = null;
+    private RelativeLayout photoLayout = null;
+    private Button mCloseUserFragmentButton = null;
+    private BroadcastReceiver receiver = null;
+    private String selectQuery = null;
+    private TextView mUserContactsCountTextView = null;
+    private FrameLayout mUserContainer = null;
+    private Animation mFragmentSliderFadeIn = null;
+    private Animation mFragmentSliderOut = null;
+    private SQLiteDatabase database = null;
+    private Cursor cursor = null;
     private int lastChoosenItem;
     private int userId;
     private int totalItemCount;
-    View viewId;
+    View viewId = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -252,7 +253,7 @@ public class BriefcaseFragment extends Fragment {
         List<PersonBriefcaseEntity> children = getChildrenOnParent(listPersonInner, id);
         int countChildren = children.size();
         LOGD(TAG, "countChildren —- " + countChildren);
-// definition of the first cell to fill
+        // definition of the first cell to fill
         int x = (int) Math.round(countChildren / 2 - 0.1);
         LOGD(TAG, "X —- " + x);
         int startPosition = (x >= column) ? 0 : column - x;
@@ -347,21 +348,24 @@ public class BriefcaseFragment extends Fragment {
                     } else {
                         //view.findViewById(R.id.briefcase_ellipsis_imageView).setVisibility(View.VISIBLE);
                         if (totalItemCount > 1) {
-//containerLayout.removeViewAt(containerLayout.getChildCount() - 1);
+                        //containerLayout.removeViewAt(containerLayout.getChildCount() - 1);
                             for (int i = containerLayout.getChildCount() - 1; i > Integer.parseInt(((TextView) v.findViewById(R.id.row)).getText().toString()); i--) {
                                 containerLayout.removeViewAt(i);
                             }
                             totalItemCount = containerLayout.getChildCount();
                             view.findViewById(R.id.briefcase_ellipsis_imageView).setVisibility(View.VISIBLE);
                         }
+
                         lastChoosenItem = -1;
                         LOGE("pavel", "" + "need to remove :" + " ");
                     }
+
 //if (Integer.parseInt(parentId.getText().toString()) == userId) {
 
 // }
                 }
             });
+
             TextView rowObject = (TextView) photoLayoutInner.getChildAt(2);
             rowObject.setText(Integer.toString(row + 1));
             TextView columnObject = (TextView) photoLayoutInner.getChildAt(3);
@@ -392,12 +396,14 @@ public class BriefcaseFragment extends Fragment {
 
                         }
                     });
+
                     Fragment fragment = UserFragment.newInstance(getLoggedUserInfoQuery, false);
                     getChildFragmentManager().beginTransaction().replace(R.id.briefcase_user_info_container_frameLayout, fragment, "UserFragmentBriefcase").commit();
                     mUserContainer.startAnimation(mFragmentSliderFadeIn);
 
                 }
             });
+
             TextView text = (TextView) briefcaseItemLayout.getChildAt(2);
             text.setText(personBriefcaseEntity.getName());
             if (i == 0) {
@@ -406,8 +412,10 @@ public class BriefcaseFragment extends Fragment {
                 param.rowSpec = GridLayout.spec(row + 1);
                 briefcaseItemLayout.setLayoutParams(param);
             }
+
             gridLayout.addView(briefcaseItemLayout);
         }
+
         return gridLayout;
     }
 

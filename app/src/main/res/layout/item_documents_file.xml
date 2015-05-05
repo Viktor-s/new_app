@@ -4,51 +4,51 @@
     android:id="@+id/explorer_file_item_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingStart="@dimen/base10dp720sw"
-    android:paddingEnd="@dimen/base10dp720sw"
-    android:paddingTop="@dimen/base15dp720sw"
     android:paddingBottom="@dimen/base15dp720sw"
+    android:paddingEnd="@dimen/base10dp720sw"
+    android:paddingStart="@dimen/base10dp720sw"
+    android:paddingTop="@dimen/base15dp720sw"
     tools:ignore="ContentDescription">
 
     <ImageView
-        android:src="@drawable/ic_file_star_gray"
         android:id="@+id/file_star_imageView"
-        style="@style/DocumentsItemLeftIconStyle" />
+        style="@style/DocumentsItemLeftIconStyle"
+        android:src="@drawable/ic_file_star_gray" />
 
     <ImageView
-        android:src="@drawable/ic_file_doc"
         android:id="@+id/file_image_imageView"
-        style="@style/DocumentsItemRightIconStyle" />
+        style="@style/DocumentsItemRightIconStyle"
+        android:src="@drawable/ic_file_doc" />
 
     <TextView
+        android:id="@+id/file_name_textView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_marginEnd="@dimen/base15dp720sw"
-        tools:text="My document.doc"
-        android:singleLine="true"
-        android:textColor="@color/black"
         android:layout_gravity="center_vertical"
+        android:layout_marginEnd="@dimen/base15dp720sw"
         android:layout_weight="1"
-        android:id="@+id/file_name_textView" />
+        android:singleLine="true"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/black"
+        tools:text="My document.doc" />
 
     <TextView
-        tools:text="32Kb"
         android:id="@+id/file_size_textView"
-        style="@style/DocumentsItemTextStyle" />
+        style="@style/DocumentsItemTextStyle"
+        tools:text="32Kb" />
 
     <TextView
-        tools:text="23 февраля 2015, 11:05"
         android:id="@+id/file_date_textView"
-        style="@style/DocumentsItemTextStyle" />
+        style="@style/DocumentsItemTextStyle"
+        tools:text="23 февраля 2015, 11:05" />
 
     <ImageView
-        android:src="@drawable/ic_file_tab"
         android:id="@+id/file_tablet_imageView"
-        style="@style/DocumentsItemRightIconStyle" />
+        style="@style/DocumentsItemRightIconStyle"
+        android:src="@drawable/ic_file_tab" />
 
     <ImageView
-        android:src="@drawable/ic_file_cloud_gray"
         android:id="@+id/file_cloud_imageView"
-        style="@style/DocumentsItemBaseStyle" />
+        style="@style/DocumentsItemBaseStyle"
+        android:src="@drawable/ic_file_cloud_gray" />
 </TableRow>

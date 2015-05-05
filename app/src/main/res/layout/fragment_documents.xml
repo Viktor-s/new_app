@@ -14,22 +14,24 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
             android:layout_marginTop="@dimen/base15dp720sw"
-            android:text="@string/file_explorer" />
+            android:text="@string/menu_item_title_docs"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
     </LinearLayout>
 
     <FrameLayout
         android:id="@+id/documents_content"
-        android:layout_height="match_parent"
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_below="@+id/documents_action_bar">
 
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingStart="10dp"
-            android:paddingEnd="10dp">
+            android:paddingEnd="10dp"
+            android:paddingStart="10dp">
 
             <TableLayout
                 android:id="@+id/files_panel"
@@ -39,20 +41,20 @@
     </FrameLayout>
 
     <ProgressBar
+        android:id="@+id/explorer_progressBar"
         style="?android:attr/progressBarStyle"
         android:layout_width="@dimen/base40dp720sw"
         android:layout_height="@dimen/base40dp720sw"
-        android:id="@+id/explorer_progressBar"
-        android:visibility="gone"
-        tools:visibility="visible"
-        android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="400dp" />
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="400dp"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
     <FrameLayout
         android:id="@+id/doc_sort_panel_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/base60dp720sw"
-        android:layout_above="@+id/documents_content" />
+        android:layout_above="@+id/documents_content"
+        android:layout_marginTop="@dimen/base60dp720sw" />
 </RelativeLayout>

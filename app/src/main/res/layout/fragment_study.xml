@@ -28,7 +28,7 @@
                 android:layout_marginBottom="@dimen/base10dp720sw"
                 android:layout_marginLeft="@dimen/base12dp720sw"
                 android:layout_marginRight="@dimen/base12dp720sw"
-                android:background="@drawable/study_edittext_corners"
+                android:background="@drawable/study_edit_text_corners"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -36,10 +36,10 @@
                     android:layout_width="@dimen/base30dp720sw"
                     android:layout_height="@dimen/base30dp720sw"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="@dimen/base20dp720sw"
+                    android:layout_marginLeft="@dimen/base10dp720sw"
+                    android:layout_marginStart="@dimen/base10dp720sw"
                     android:contentDescription="@string/app_name"
-
-                    android:src="@drawable/search_icon_test" />
+                    android:src="@drawable/search_icon_test_light_blue" />
 
                 <me.justup.upme.utils.BackAwareEditText
                     android:id="@+id/study_fragment_search_editText"
@@ -59,7 +59,8 @@
                 android:layout_marginBottom="@dimen/base6dp720sw"
                 android:text="@string/study"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textColor="@android:color/white" />
+                android:textColor="@color/white"
+                android:textStyle="bold" />
 
         </RelativeLayout>
 

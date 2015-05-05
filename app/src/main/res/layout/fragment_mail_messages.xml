@@ -33,10 +33,10 @@
                 android:layout_toEndOf="@+id/news_comment_imageView"
                 android:background="#AAAAAA" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/mail_messages_staple_button"
-                android:layout_width="@dimen/base60dp720sw"
-                android:layout_height="@dimen/base35dp720sw"
+                android:layout_width="60px"
+                android:layout_height="60px"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="4dp"
@@ -71,23 +71,22 @@
 
             <Button
                 android:id="@+id/mail_messages_call_button"
-                android:layout_width="@dimen/base40dp720sw"
+                android:layout_width="0dp"
                 android:layout_height="@dimen/base40dp720sw"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="@dimen/base15dp720sw"
-                android:background="@drawable/image_call" />
+                android:layout_marginRight="@dimen/base15dp720sw" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/mail_messages_add_button"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/base40dp720sw"
+                android:layout_width="60px"
+                android:layout_height="60px"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/base15dp720sw"
                 android:layout_toStartOf="@+id/mail_messages_call_button"
-                android:background="@drawable/pay_panel_button_selector"
+                android:background="@drawable/send_msg_dtn_background"
                 android:gravity="center"
-                android:padding="6dp"
+                android:padding="@dimen/base10dp720sw"
                 android:text="@string/mail_messages_send"
                 android:textAllCaps="true" />
 

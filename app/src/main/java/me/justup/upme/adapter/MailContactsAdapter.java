@@ -7,8 +7,8 @@ import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CursorAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -38,8 +38,7 @@ public class MailContactsAdapter extends CursorAdapter {
         ViewHolder holder = new ViewHolder();
         holder.mImageView = (ImageView) convertView.findViewById(R.id.mail_contacts_item_imageView);
         holder.mName = (TextView) convertView.findViewById(R.id.mail_contacts_item_textView);
-        holder.mInfo = (Button) convertView.findViewById(R.id.mail_contacts_item_info_button);
-        holder.mCall = (Button) convertView.findViewById(R.id.mail_contacts_item_call_button);
+        holder.mCall = (ImageButton) convertView.findViewById(R.id.mail_contacts_item_call_button);
         convertView.setTag(holder);
 
         return convertView;
@@ -70,15 +69,6 @@ public class MailContactsAdapter extends CursorAdapter {
                 holder.mImageView.setImageDrawable(drawable);
             }
 
-            holder.rowId = id;
-
-            holder.mInfo.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                }
-            });
-
             holder.mCall.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -98,9 +88,7 @@ public class MailContactsAdapter extends CursorAdapter {
     public static class ViewHolder {
         private ImageView mImageView;
         private TextView mName;
-        private Button mCall;
-        private Button mInfo;
-        private int rowId;
+        private ImageButton mCall;
     }
 
 }

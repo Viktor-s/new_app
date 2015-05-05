@@ -54,11 +54,11 @@
         android:id="@+id/tv1"
         android:layout_width="@dimen/base100dp720sw"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/image_container"
-        android:text="ВИОЛКТТА ТРОФИМОВА"
-        android:textColor="@android:color/black"
         android:layout_alignEnd="@+id/image2"
-        android:gravity="center" />
+        android:layout_below="@+id/image_container"
+        android:gravity="center"
+        android:text="ВИОЛКТТА ТРОФИМОВА"
+        android:textColor="@android:color/black" />
 
     <ImageView
         android:id="@+id/briefcase_ellipsis_imageView"
