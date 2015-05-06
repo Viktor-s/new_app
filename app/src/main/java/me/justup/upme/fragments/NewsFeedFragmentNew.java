@@ -357,8 +357,8 @@ public class NewsFeedFragmentNew extends Fragment {
                 GridLayout.LayoutParams param = new GridLayout.LayoutParams();
                 param.height = LinearLayout.LayoutParams.WRAP_CONTENT;
                 param.width = (mScreenWidth / columnNumber);
-                param.rightMargin = CommonUtils.convertDpToPixels(getActivity(), 30);
-                param.topMargin = CommonUtils.convertDpToPixels(getActivity(), 30);
+                param.rightMargin = CommonUtils.convertDpToPixels(getActivity(), (int) getResources().getDimension(R.dimen.base20dp720sw));
+                param.topMargin = CommonUtils.convertDpToPixels(getActivity(), (int) getResources().getDimension(R.dimen.base10dp720sw));
                 param.columnSpec = GridLayout.spec(c);
                 param.rowSpec = GridLayout.spec(r);
 

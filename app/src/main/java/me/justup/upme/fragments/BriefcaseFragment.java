@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
@@ -20,14 +21,18 @@ import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amulyakhare.textdrawable.TextDrawable;
+import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import me.justup.upme.JustUpApplication;
 import me.justup.upme.MainActivity;
 import me.justup.upme.R;
 import me.justup.upme.db.DBAdapter;
@@ -36,7 +41,7 @@ import me.justup.upme.entity.PersonBriefcaseEntity;
 import me.justup.upme.entity.ReferalAddQuery;
 import me.justup.upme.http.HttpIntentService;
 import me.justup.upme.utils.AppPreferences;
-import me.justup.upme.utils.CircularImageView;
+import me.justup.upme.view.dashboard.TileUtils;
 
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_IMG;
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_NAME;
@@ -66,6 +71,7 @@ public class BriefcaseFragment extends Fragment {
     private int lastChoosenItem;
     private int userId;
     private int totalItemCount;
+    private TableLayout mTableLayout = null;
     View viewId = null;
 
     @Override
@@ -140,7 +146,6 @@ public class BriefcaseFragment extends Fragment {
             public void onAnimationEnd(Animation animation) {
                 Fragment fragment = getChildFragmentManager().findFragmentByTag("UserFragmentBriefcase");
                 if (fragment != null) {
-
                     getChildFragmentManager().beginTransaction().remove(fragment).commit();
                 }
             }
@@ -149,6 +154,9 @@ public class BriefcaseFragment extends Fragment {
             public void onAnimationRepeat(Animation animation) {
             }
         });
+
+        mTableLayout = (TableLayout) view.findViewById(R.id.user_briefcase_tableLayout);
+
         TextView mObjectIdTextView = (TextView) view.findViewById(R.id.briefcase_fragment_idObject);
         TextView mUserNameTextView = (TextView) view.findViewById(R.id.briefcase_fragment_user_name);
         mUserContactsCountTextView = (TextView) view.findViewById(R.id.briefcase_fragment_user_contacts_count);
@@ -199,6 +207,7 @@ public class BriefcaseFragment extends Fragment {
                 }
             }
         });
+
         return view;
     }
 
@@ -211,10 +220,10 @@ public class BriefcaseFragment extends Fragment {
 
     private ImageView createDirection(int resId) {
         ImageView resultView = new ImageView(getActivity());
-        LinearLayout.LayoutParams layoutParams = new
-                LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         resultView.setLayoutParams(layoutParams);
         resultView.setImageResource(resId);
+
         return resultView;
     }
 
@@ -250,18 +259,24 @@ public class BriefcaseFragment extends Fragment {
         int id = Integer.parseInt(((TextView) v.findViewById(R.id.briefcase_fragment_idObject)).getText().toString());
         int row = Integer.parseInt(((TextView) v.findViewById(R.id.row)).getText().toString());
         int column = Integer.parseInt(((TextView) v.findViewById(R.id.column)).getText().toString());
+
         List<PersonBriefcaseEntity> children = getChildrenOnParent(listPersonInner, id);
+
         int countChildren = children.size();
-        LOGD(TAG, "countChildren —- " + countChildren);
-        // definition of the first cell to fill
+        LOGD(TAG, "Сount children : " + countChildren);
+
+        // Definition of the first cell to fill
         int x = (int) Math.round(countChildren / 2 - 0.1);
-        LOGD(TAG, "X —- " + x);
+        LOGD(TAG, "X : " + x);
+
         int startPosition = (x >= column) ? 0 : column - x;
-        LOGD(TAG, "START POSITION —- " + startPosition);
+        LOGD(TAG, "START POSITION : " + startPosition);
+
         GridLayout gridLayout = new GridLayout(getActivity());
         for (int i = 0; i < startPosition; i++) {
             gridLayout.addView(createDirection(R.drawable.p00));
         }
+
         if (column == 0) {
             if (countChildren == 1) {
                 gridLayout.addView(createDirection(R.drawable.p13));
@@ -270,8 +285,11 @@ public class BriefcaseFragment extends Fragment {
                 gridLayout.addView(createDirection(R.drawable.p34));
             } else if (countChildren > 2) {
                 gridLayout.addView(createDirection(R.drawable.p123));
-                for (int j = startPosition + 1; j < countChildren - 1; j++)
+
+                for (int j = startPosition + 1; j < countChildren - 1; j++) {
                     gridLayout.addView(createDirection(R.drawable.p234));
+                }
+
                 gridLayout.addView(createDirection(R.drawable.p34));
             }
         } else {
@@ -286,22 +304,33 @@ public class BriefcaseFragment extends Fragment {
                 gridLayout.addView(createDirection(R.drawable.p34));
             } else if (countChildren > 3) {
                 gridLayout.addView(createDirection(R.drawable.p23));
+
                 for (int j = 2; j < countChildren; j++) {
-                    if (startPosition + j - 1 != column)
+                    if (startPosition + j - 1 != column) {
                         gridLayout.addView(createDirection(R.drawable.p234));
-                    else
+                    }else {
                         gridLayout.addView(createDirection(R.drawable.p1234));
+                    }
                 }
+
                 gridLayout.addView(createDirection(R.drawable.p34));
             }
         }
 
         RelativeLayout briefcaseItemLayout;
         LayoutInflater inflater = LayoutInflater.from(v.getContext());
-        for (int i = 0; i <
-                countChildren; i++) {
+        for (int i = 0; i < countChildren; i++) {
             PersonBriefcaseEntity personBriefcaseEntity = children.get(i);
-            briefcaseItemLayout = (RelativeLayout) inflater.inflate(R.layout.item_briefcase, null, false);
+
+            if(JustUpApplication.getScreenDensityDpi()==240){ // Sony Z
+                briefcaseItemLayout = (RelativeLayout) inflater.inflate(R.layout.item_briefcase_sony_z, null, false);
+            }else {
+                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mTableLayout.getLayoutParams();
+                layoutParams.setMargins(TileUtils.dpToPx((int) getResources().getDimension(R.dimen.base10dp720sw), getActivity().getApplicationContext()), 0, 0 ,0);
+
+                mTableLayout.setLayoutParams(layoutParams);
+                briefcaseItemLayout = (RelativeLayout) inflater.inflate(R.layout.item_briefcase, null, false);
+            }
 
             ImageView ellipsisImageView = (ImageView) briefcaseItemLayout.findViewById(R.id.briefcase_ellipsis_imageView);
             if (checkListHaveObjectWithValue(listPersonInner, personBriefcaseEntity.getId())) {
@@ -309,22 +338,43 @@ public class BriefcaseFragment extends Fragment {
             } else {
                 ellipsisImageView.setVisibility(View.GONE);
             }
-            RelativeLayout photoLayoutMain = (RelativeLayout) briefcaseItemLayout.findViewById(R.id.r_layout);
 
+            RelativeLayout photoLayoutMain = (RelativeLayout) briefcaseItemLayout.findViewById(R.id.r_layout);
             RelativeLayout photoLayoutInner = (RelativeLayout) briefcaseItemLayout.findViewById(R.id.image_container);
-            CircularImageView personPhoto = (CircularImageView) briefcaseItemLayout.findViewById(R.id.briefcase_fragment_user_photo);
-            String imagePath = (personBriefcaseEntity.getPhoto() != null && personBriefcaseEntity.getPhoto().length() > 1) ? personBriefcaseEntity.getPhoto() : "fake";
-            Picasso.with(BriefcaseFragment.this.getActivity()).load(imagePath).placeholder(R.mipmap.ic_launcher).into(personPhoto);
+
+
+            TextView text = (TextView) briefcaseItemLayout.getChildAt(2);
+            text.setText(personBriefcaseEntity.getName());
+
+            ImageView personPhoto = (ImageView) briefcaseItemLayout.findViewById(R.id.briefcase_fragment_user_photo);
+            String imagePath = (personBriefcaseEntity.getPhoto() != null && personBriefcaseEntity.getPhoto().length() > 1) ? personBriefcaseEntity.getPhoto() : null;
+            if(imagePath==null){
+                ColorGenerator generator = ColorGenerator.MATERIAL; // Or use DEFAULT
+                int color = generator.getColor(personBriefcaseEntity.getName());
+
+                TextDrawable drawable = TextDrawable.builder().beginConfig()
+                        .withBorder(4)
+                        .useFont(Typeface.SANS_SERIF)
+                        .toUpperCase()
+                        .endConfig()
+                        .buildRound(Character.toString((personBriefcaseEntity.getName()).charAt(0)), color);
+
+                personPhoto.setImageDrawable(drawable);
+            }else {
+                Picasso.with(BriefcaseFragment.this.getActivity()).load(imagePath).placeholder(R.mipmap.ic_launcher).into(personPhoto);
+            }
 
             final TextView itemId = (TextView) photoLayoutInner.getChildAt(1);
             itemId.setText(Integer.toString(personBriefcaseEntity.getId()));
+
             final TextView parentId = (TextView) photoLayoutInner.getChildAt(4);
             parentId.setText(Integer.toString(personBriefcaseEntity.getParentId()));
+
             photoLayoutMain.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    LOGE("pavel", "" + containerLayout.getChildCount());
-                    LOGE("pavel", "" + lastChoosenItem + " " + Integer.parseInt(itemId.getText().toString()));
+                    LOGE(TAG, "" + containerLayout.getChildCount());
+                    LOGE(TAG, "" + lastChoosenItem + " " + Integer.parseInt(itemId.getText().toString()));
 
                     if (lastChoosenItem != Integer.parseInt(itemId.getText().toString())) {
 
@@ -338,20 +388,23 @@ public class BriefcaseFragment extends Fragment {
                             for (int i = containerLayout.getChildCount() - 1; i > row; i--) {
                                 containerLayout.removeViewAt(i);
                             }
+
                             viewId = levelGenerate(view, listPersonInner);
                             containerLayout.addView(viewId);
 
                             totalItemCount = containerLayout.getChildCount();
                         }
+
                         lastChoosenItem = Integer.parseInt(itemId.getText().toString());
                         view.findViewById(R.id.briefcase_ellipsis_imageView).setVisibility(View.GONE);
                     } else {
-                        //view.findViewById(R.id.briefcase_ellipsis_imageView).setVisibility(View.VISIBLE);
+                        // view.findViewById(R.id.briefcase_ellipsis_imageView).setVisibility(View.VISIBLE);
                         if (totalItemCount > 1) {
-                        //containerLayout.removeViewAt(containerLayout.getChildCount() - 1);
+                        // containerLayout.removeViewAt(containerLayout.getChildCount() - 1);
                             for (int i = containerLayout.getChildCount() - 1; i > Integer.parseInt(((TextView) v.findViewById(R.id.row)).getText().toString()); i--) {
                                 containerLayout.removeViewAt(i);
                             }
+
                             totalItemCount = containerLayout.getChildCount();
                             view.findViewById(R.id.briefcase_ellipsis_imageView).setVisibility(View.VISIBLE);
                         }
@@ -360,31 +413,32 @@ public class BriefcaseFragment extends Fragment {
                         LOGE("pavel", "" + "need to remove :" + " ");
                     }
 
-//if (Integer.parseInt(parentId.getText().toString()) == userId) {
-
-// }
+                    //if (Integer.parseInt(parentId.getText().toString()) == userId) {
+                    // }
                 }
             });
 
             TextView rowObject = (TextView) photoLayoutInner.getChildAt(2);
             rowObject.setText(Integer.toString(row + 1));
+
             TextView columnObject = (TextView) photoLayoutInner.getChildAt(3);
             columnObject.setText(Integer.toString(startPosition + i));
-            LOGD(TAG, "id - " + personBriefcaseEntity.getId() + "; row - " + (row + 1) + "; column - " + (startPosition + i));
+
+            LOGD(TAG, "Id : " + personBriefcaseEntity.getId() + "; row : " + (row + 1) + "; column : " + (startPosition + i));
+
             ImageView imageViewInfo = (ImageView) briefcaseItemLayout.getChildAt(1);
             imageViewInfo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     int idPersonal = Integer.parseInt(itemId.getText().toString());
-                    LOGI(TAG, "id personal " + idPersonal);
+                    LOGI(TAG, "Id personal : " + idPersonal);
+
                     GetAccountPanelInfoQuery getLoggedUserInfoQuery = new GetAccountPanelInfoQuery();
                     getLoggedUserInfoQuery.params.user_id = idPersonal;
                     Animation mFragmentSliderFadeIn = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.fragment_item_slide_fade_in);
                     mFragmentSliderFadeIn.setAnimationListener(new Animation.AnimationListener() {
                         @Override
-                        public void onAnimationStart(Animation animation) {
-
-                        }
+                        public void onAnimationStart(Animation animation) { }
 
                         @Override
                         public void onAnimationEnd(Animation animation) {
@@ -392,9 +446,7 @@ public class BriefcaseFragment extends Fragment {
                         }
 
                         @Override
-                        public void onAnimationRepeat(Animation animation) {
-
-                        }
+                        public void onAnimationRepeat(Animation animation) { }
                     });
 
                     Fragment fragment = UserFragment.newInstance(getLoggedUserInfoQuery, false);
@@ -404,8 +456,6 @@ public class BriefcaseFragment extends Fragment {
                 }
             });
 
-            TextView text = (TextView) briefcaseItemLayout.getChildAt(2);
-            text.setText(personBriefcaseEntity.getName());
             if (i == 0) {
                 GridLayout.LayoutParams param = new GridLayout.LayoutParams();
                 param.columnSpec = GridLayout.spec(startPosition);

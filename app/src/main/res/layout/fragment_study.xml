@@ -76,7 +76,6 @@
         android:id="@+id/education_module_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
         android:layout_toEndOf="@+id/linearLayout5"
         android:background="@android:color/white">
 
@@ -94,10 +93,11 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center|top"
-                android:layout_marginTop="@dimen/base20dp720sw"
+                android:layout_marginTop="@dimen/base5dp720sw"
                 android:text="@string/study"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textColor="@android:color/white" />
+                android:textColor="@color/white"
+                android:textStyle="bold" />
         </RelativeLayout>
     </FrameLayout>
 

@@ -32,37 +32,36 @@ import me.justup.upme.utils.BackAwareEditText;
 
 import static me.justup.upme.db.DBHelper.EDUCATION_PRODUCTS_TABLE_NAME;
 import static me.justup.upme.utils.LogUtils.LOGE;
-import static me.justup.upme.utils.LogUtils.LOGI;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
-
 
 public class EducationFragment extends Fragment {
     private static final String TAG = makeLogTag(EducationFragment.class);
-    private RelativeLayout youtubePlayerButton;
-    private BroadcastReceiver receiver;
-    private SQLiteDatabase database;
-    private String selectQuery;
-    private Cursor cursor;
-    private int lastChosenPosition = -1;
-    private EducationProductsAdapter educationProductsAdapter;
 
+    private RelativeLayout youtubePlayerButton = null;
+    private BroadcastReceiver mReceiver = null;
+    private SQLiteDatabase mDatabase = null;
+    private String mSelectQuery = null;
+    private Cursor mCursor = null;
+    private int mLastChosenPosition = -1;
+    private EducationProductsAdapter mEducationProductsAdapter = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        if (database != null) {
-            if (!database.isOpen()) {
-                database = DBAdapter.getInstance().openDatabase();
+        if (mDatabase != null) {
+            if (!mDatabase.isOpen()) {
+                mDatabase = DBAdapter.getInstance().openDatabase();
             }
         } else {
-            database = DBAdapter.getInstance().openDatabase();
+            mDatabase = DBAdapter.getInstance().openDatabase();
         }
-        selectQuery = "SELECT * FROM " + EDUCATION_PRODUCTS_TABLE_NAME;
-        cursor = database.rawQuery(selectQuery, null);
 
-        educationProductsAdapter = new EducationProductsAdapter(getActivity().getApplicationContext(), cursor, 0);
-        educationProductsAdapter.setFilterQueryProvider(new FilterQueryProvider() {
+        mSelectQuery = "SELECT * FROM " + EDUCATION_PRODUCTS_TABLE_NAME;
+        mCursor = mDatabase.rawQuery(mSelectQuery, null);
+
+        mEducationProductsAdapter = new EducationProductsAdapter(getActivity().getApplicationContext(), mCursor, 0);
+        mEducationProductsAdapter.setFilterQueryProvider(new FilterQueryProvider() {
             @Override
             public Cursor runQuery(CharSequence constraint) {
                 return fetchProductByName(constraint.toString().toLowerCase());
@@ -75,16 +74,16 @@ public class EducationFragment extends Fragment {
         super.onPause();
 
         try {
-            LocalBroadcastManager.getInstance(EducationFragment.this.getActivity()).unregisterReceiver(receiver);
+            LocalBroadcastManager.getInstance(EducationFragment.this.getActivity()).unregisterReceiver(mReceiver);
         } catch (Exception e) {
-            LOGE(TAG, "unregisterReceiver(receiver)", e);
-            receiver = null;
+            LOGE(TAG, "unregisterReceiver(mReceiver)", e);
+            mReceiver = null;
         }
     }
 
     @Override
     public void onDestroy() {
-        cursor.close();
+        mCursor.close();
         DBAdapter.getInstance().closeDatabase();
         super.onDestroy();
     }
@@ -92,23 +91,23 @@ public class EducationFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        receiver = new BroadcastReceiver() {
+        mReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 LOGE(TAG, "onReceive educationFragment");
-                cursor = database.rawQuery(selectQuery, null);
-                educationProductsAdapter.changeCursor(cursor);
-                educationProductsAdapter.notifyDataSetChanged();
+                mCursor = mDatabase.rawQuery(mSelectQuery, null);
+                mEducationProductsAdapter.changeCursor(mCursor);
+                mEducationProductsAdapter.notifyDataSetChanged();
             }
         };
-        LocalBroadcastManager.getInstance(EducationFragment.this.getActivity())
-                .registerReceiver(receiver, new IntentFilter(DBAdapter.EDUCATION_GET_PRODUCTS_SQL_BROADCAST_INTENT));
+
+        LocalBroadcastManager.getInstance(EducationFragment.this.getActivity()).registerReceiver(mReceiver, new IntentFilter(DBAdapter.EDUCATION_GET_PRODUCTS_SQL_BROADCAST_INTENT));
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_study, container, false);
-        LOGI(TAG, "StudyFragment onCreateView()");
+
 //        youtubePlayerButton = (RelativeLayout) v.findViewById(R.id.youtube_button_container);
 //        youtubePlayerButton.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -122,28 +121,29 @@ public class EducationFragment extends Fragment {
 
 
         ListView contactsListView = (ListView) v.findViewById(R.id.study_ListView);
-        contactsListView.setAdapter(educationProductsAdapter);
+        contactsListView.setAdapter(mEducationProductsAdapter);
         contactsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 for (int i = 0; i < adapterView.getChildCount(); i++) {
                     adapterView.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
                 }
+
                 view.setBackground(getResources().getDrawable(R.drawable.educ_let_side_rounded));
 
 
-                if (lastChosenPosition != position) {
-                    int productId = educationProductsAdapter.getCursor().getInt(educationProductsAdapter.getCursor().getColumnIndex(DBHelper.EDUCATION_PRODUCTS_SERVER_ID));
+                if (mLastChosenPosition != position) {
+                    int productId = mEducationProductsAdapter.getCursor().getInt(mEducationProductsAdapter.getCursor().getColumnIndex(DBHelper.EDUCATION_PRODUCTS_SERVER_ID));
                     EducationGetModulesByProgramIdQuery educationGetModulesByProgramIdQuery = new EducationGetModulesByProgramIdQuery();
                     educationGetModulesByProgramIdQuery.params.program_id = productId;
                     ((MainActivity) EducationFragment.this.getActivity()).startHttpIntent(educationGetModulesByProgramIdQuery, HttpIntentService.EDUCATION_GET_PRODUCT_MODULES);
-                    String productName = educationProductsAdapter.getCursor().getString(educationProductsAdapter.getCursor().getColumnIndex(DBHelper.EDUCATION_PRODUCTS_NAME));
+                    String productName = mEducationProductsAdapter.getCursor().getString(mEducationProductsAdapter.getCursor().getColumnIndex(DBHelper.EDUCATION_PRODUCTS_NAME));
 
 
                     final FragmentTransaction ft = getChildFragmentManager().beginTransaction();
                     ft.replace(R.id.education_module_container, EducationModuleFragment.newInstance(productName, productId));
                     ft.commit();
-                    lastChosenPosition = position;
+                    mLastChosenPosition = position;
                 }
             }
         });
@@ -160,14 +160,12 @@ public class EducationFragment extends Fragment {
 
         mSearchFieldEditText.addTextChangedListener(new TextWatcher() {
 
-            public void afterTextChanged(Editable s) {
-            }
+            public void afterTextChanged(Editable s) { }
 
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
 
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                educationProductsAdapter.getFilter().filter(s.toString());
+                mEducationProductsAdapter.getFilter().filter(s.toString());
             }
         });
 
@@ -178,16 +176,18 @@ public class EducationFragment extends Fragment {
     private Cursor fetchProductByName(String search) {
         Cursor mCursor;
         if (search == null || search.length() == 0) {
-            mCursor = database.rawQuery(selectQuery, null);
+            mCursor = mDatabase.rawQuery(mSelectQuery, null);
         } else {
             LOGE(TAG, search);
-            mCursor = database.rawQuery("SELECT * FROM "
+            mCursor = mDatabase.rawQuery("SELECT * FROM "
                     + DBHelper.EDUCATION_PRODUCTS_TABLE_NAME + " where " + "name_lc" + " like '%" + search
                     + "%'", null);
         }
+
         if (mCursor != null) {
             mCursor.moveToFirst();
         }
+
         return mCursor;
     }
 

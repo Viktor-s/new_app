@@ -4,7 +4,7 @@
     <!--Dashboard-->
     <dimen name="tile_menu_margin_top">355dp</dimen>
     <dimen name="tile_menu_margin_left">217dp</dimen>
-    <dimen name="tile_rotate_menu_height">575dp</dimen>
+    <dimen name="tile_rotate_menu_height">475dp</dimen>
 
     <dimen name="del_setting_menu_height">90dp</dimen>
     <dimen name="tile_width">128dp</dimen>
