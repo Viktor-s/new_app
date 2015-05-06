@@ -17,7 +17,7 @@ import me.justup.upme.utils.AppPreferences;
 
 
 public class BrowserFragment extends Fragment implements View.OnClickListener {
-    public static final String HOME_URL = "https://duckduckgo.com/";
+    public static final String HOME_URL = "https://www.google.com/";
     private static final String HTTP = "http://";
 
     private WebView mWebView = null;
