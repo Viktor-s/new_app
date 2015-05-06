@@ -185,8 +185,10 @@ public class ProductsFragment extends Fragment {
 
                     }
                 });
+
                 categoryProductContainer.addView(groupProductLayout);
             }
+
             mContainerProductMain = (LinearLayout) mContentView.findViewById(R.id.container_product_main);
             mContainerProductMain.addView(categoryProductLayout);
         }

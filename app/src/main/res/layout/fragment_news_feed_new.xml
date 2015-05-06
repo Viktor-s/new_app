@@ -29,14 +29,14 @@
             android:id="@+id/interactiveScrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbars="none"
-            android:layout_alignParentBottom="true">
+            android:layout_alignParentBottom="true"
+            android:scrollbars="none">
 
             <GridLayout
                 android:id="@+id/newsFeedGridLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="@dimen/base10dp720sw" />
+                android:paddingLeft="@dimen/base15dp720sw" />
 
         </me.justup.upme.view.InteractiveScrollView>
 

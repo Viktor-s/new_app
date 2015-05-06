@@ -7,7 +7,7 @@
     android:padding="1dp">
 
     <ScrollView
-        android:layout_width="@dimen/base230dp720sw"
+        android:layout_width="@dimen/base240dp720sw"
         android:layout_height="wrap_content">
 
         <LinearLayout

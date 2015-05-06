@@ -24,6 +24,7 @@ public abstract class BaseActivity extends Activity {
     public Animation mAnimCloseUserPanel = null;
 
     private static final int UP_ME_ANIMATION_VALUE = 114;
+    private static final int UP_ME_ANIMATION_VALUE_SONY_Z = 100;
     private static final int UP_ME_ANIMATION_DURATION = 1000;
 
     public Animation mAnimCloseLogo = null;
@@ -115,11 +116,17 @@ public abstract class BaseActivity extends Activity {
             public void onAnimationRepeat(Animation animation) { }
         });
 
-        mAnimCloseLogo = new TranslateAnimation(-UP_ME_ANIMATION_VALUE, 0, 0, 0);
+        if(JustUpApplication.getScreenDensityDpi()==240){ // Sony Z
+            mAnimOpenLogo = new TranslateAnimation(0, -UP_ME_ANIMATION_VALUE_SONY_Z, 0, 0);
+            mAnimCloseLogo = new TranslateAnimation(-UP_ME_ANIMATION_VALUE_SONY_Z, 0, 0, 0);
+        }else {
+            mAnimOpenLogo = new TranslateAnimation(0, -UP_ME_ANIMATION_VALUE, 0, 0);
+            mAnimCloseLogo = new TranslateAnimation(-UP_ME_ANIMATION_VALUE, 0, 0, 0);
+        }
+
         mAnimCloseLogo.setDuration(UP_ME_ANIMATION_DURATION);
         mAnimCloseLogo.setFillAfter(true);
 
-        mAnimOpenLogo = new TranslateAnimation(0, -UP_ME_ANIMATION_VALUE, 0, 0);
         mAnimOpenLogo.setDuration(UP_ME_ANIMATION_DURATION);
         mAnimOpenLogo.setFillAfter(true);
 

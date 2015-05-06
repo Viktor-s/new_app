@@ -8,18 +8,20 @@
     <TextView
         android:id="@+id/id_group_product"
         android:layout_width="0dp"
-        android:layout_height="0dp"/>
+        android:layout_height="0dp" />
+
     <TextView
         android:id="@+id/category_name"
         android:layout_width="0dp"
-        android:layout_height="0dp"/>
+        android:layout_height="0dp" />
+
     <ImageView
         android:id="@+id/group_product_photo"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/base110dp720sw"
-        android:src="@drawable/risk_insurance"
+        android:layout_height="@dimen/base150dp720sw"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true" />
+        android:src="@drawable/risk_insurance" />
 
     <TextView
         android:id="@+id/group_product_title"
@@ -30,13 +32,13 @@
         android:id="@+id/group_product_description"
         style="@style/ProductDescription"
         android:layout_below="@+id/group_product_photo"
-        tools:text="@string/product_description_credit_without_bail"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        tools:text="@string/product_description_credit_without_bail" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@android:color/white"
-        android:layout_alignParentBottom="true"/>
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/white" />
 
 </RelativeLayout>

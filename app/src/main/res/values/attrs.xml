@@ -237,4 +237,11 @@
         </attr>
     </declare-styleable>
 
+    <!--MarqueeView-->
+    <declare-styleable name="MarqueeView">
+        <attr name="speed" format="integer"/>
+        <attr name="pause" format="integer"/>
+        <attr name="autoStart" format="boolean"/>
+    </declare-styleable>
+
 </resources>

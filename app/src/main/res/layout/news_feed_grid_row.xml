@@ -13,56 +13,56 @@
             android:id="@+id/grid_row_imageView"
             android:layout_width="match_parent"
             android:layout_height="@dimen/base300dp720sw"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentStart="false"
             android:layout_alignParentEnd="false"
-            android:layout_alignParentLeft="false"
-            android:layout_alignParentRight="false" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="New Text"
-            android:id="@+id/grid_row_date_textView"
-            android:layout_alignParentEnd="false"
-            android:layout_alignParentBottom="false"
-            android:layout_alignBottom="@+id/grid_row_imageView"
-            android:textSize="@dimen/base19sp720sw"
-            android:textColor="@color/white"
-            android:layout_marginLeft="@dimen/base5dp720sw"
-            android:layout_marginBottom="@dimen/base5dp720sw" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="11"
-            android:id="@+id/grid_row_comments_lenght_textView"
-            android:layout_alignParentStart="false"
             android:layout_alignParentLeft="false"
             android:layout_alignParentRight="false"
-            android:layout_alignRight="@+id/grid_row_imageView"
+            android:layout_alignParentStart="false"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:id="@+id/grid_row_date_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/grid_row_imageView"
-            android:textSize="@dimen/base19sp720sw"
-            android:textColor="@android:color/white"
-            android:background="@drawable/pay_panel_button_pressed"
-            android:layout_marginRight="@dimen/base5dp720sw"
+            android:layout_alignParentBottom="false"
+            android:layout_alignParentEnd="false"
             android:layout_marginBottom="@dimen/base5dp720sw"
+            android:layout_marginLeft="@dimen/base5dp720sw"
+            android:text="New Text"
+            android:textColor="@color/white"
+            android:textSize="@dimen/base19sp720sw" />
+
+        <TextView
+            android:id="@+id/grid_row_comments_lenght_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/grid_row_imageView"
+            android:layout_alignParentLeft="false"
+            android:layout_alignParentRight="false"
+            android:layout_alignParentStart="false"
+            android:layout_alignRight="@+id/grid_row_imageView"
+            android:layout_marginBottom="@dimen/base5dp720sw"
+            android:layout_marginRight="@dimen/base5dp720sw"
+            android:background="@drawable/pay_panel_button_pressed"
             android:paddingLeft="@dimen/base5dp720sw"
-            android:paddingRight="@dimen/base5dp720sw" />
+            android:paddingRight="@dimen/base5dp720sw"
+            android:text="11"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/base19sp720sw" />
     </RelativeLayout>
 
     <ScrollView
+        android:id="@+id/scrollView4"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/base250dp720sw"
-        android:id="@+id/scrollView4"
-        android:scrollbars="none"
-        android:layout_below="@+id/grid_row_imageView">
+        android:layout_below="@+id/grid_row_imageView"
+        android:scrollbars="none">
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/grid_row_name_extView"
@@ -86,7 +86,6 @@
                 android:textSize="@dimen/base20sp720sw" />
         </LinearLayout>
     </ScrollView>
-
 
     <TextView
         android:id="@+id/grid_hide_id"
