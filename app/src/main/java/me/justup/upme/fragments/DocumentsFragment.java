@@ -10,11 +10,15 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
@@ -107,6 +111,8 @@ public class DocumentsFragment extends Fragment {
 
     private ArrayList<FileEntity> mFileArray = null;
     private AppPreferences mAppPreferences = null;
+    private EditText mSearchField;
+
 
     @Override
     public void onResume() {
@@ -128,6 +134,12 @@ public class DocumentsFragment extends Fragment {
         mLayoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mFileExplorer = (TableLayout) view.findViewById(R.id.files_panel);
         mProgressBar = (ProgressBar) view.findViewById(R.id.explorer_progressBar);
+
+        mSearchField = (EditText) view.findViewById(R.id.doc_search_field);
+        mSearchField.addTextChangedListener(new SearchTextWatcher());
+
+        ImageButton mClearSearchField = (ImageButton) view.findViewById(R.id.doc_clear_search_text);
+        mClearSearchField.setOnClickListener(new ClearSearchField());
 
         mAppPreferences = new AppPreferences(getActivity());
 
@@ -632,6 +644,50 @@ public class DocumentsFragment extends Fragment {
 
     public boolean initialSortPanelIsDesc() {
         return mAppPreferences.isDescFileSort();
+    }
+
+    private class SearchTextWatcher implements TextWatcher {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if (count > 0) {
+                for (FileEntity file : getFileArray()) {
+                    char fileChar = Character.toLowerCase(file.getName().charAt(count - 1));
+                    char searchChar = Character.toLowerCase(s.charAt(count - 1));
+
+                    if (fileChar != searchChar) {
+                        file.setHiddenForSearch(true);
+                    }
+                }
+
+                mFileExplorer.removeAllViews();
+                for (FileEntity file : getFileArray()) {
+                    if (!file.isHiddenForSearch()) {
+                        setFileItem(file);
+                    }
+                }
+            } else {
+                for (FileEntity file : getFileArray()) {
+                    file.setHiddenForSearch(false);
+                }
+
+                updateFileExplorer();
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+        }
+    }
+
+    private class ClearSearchField implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            mSearchField.setText("");
+        }
     }
 
 }

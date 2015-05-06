@@ -57,4 +57,45 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/documents_content"
         android:layout_marginTop="@dimen/base60dp720sw" />
+
+    <RelativeLayout
+        android:layout_width="@dimen/base320dp720sw"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="@dimen/base10dp720sw"
+        android:layout_marginTop="@dimen/base10dp720sw"
+        android:background="@drawable/study_edit_text_corners">
+
+        <ImageButton
+            android:id="@+id/doc_clear_search_text"
+            android:layout_width="@dimen/base30dp720sw"
+            android:layout_height="@dimen/base30dp720sw"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/base5dp720sw"
+            android:background="@drawable/ic_navigation_cancel"
+            android:contentDescription="@string/app_name" />
+
+        <ImageView
+            android:id="@+id/doc_img_search"
+            android:layout_width="@dimen/base30dp720sw"
+            android:layout_height="@dimen/base30dp720sw"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/base10dp720sw"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/search_icon_test_light_blue" />
+
+        <EditText
+            android:id="@+id/doc_search_field"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/base40dp720sw"
+            android:layout_gravity="center_vertical"
+            android:layout_toEndOf="@+id/doc_img_search"
+            android:layout_toStartOf="@+id/doc_clear_search_text"
+            android:background="#00000000"
+            android:textColor="@android:color/black" />
+    </RelativeLayout>
 </RelativeLayout>

@@ -31,6 +31,7 @@ public class FileEntity implements Serializable {
     private final boolean isOnTablet;
     private boolean isOnCloud;
     private final int fileType;
+    private boolean hiddenForSearch;
 
 
     public FileEntity(boolean isFavorite, String name, String path, long size, long date, String hash, int type) {
@@ -105,6 +106,14 @@ public class FileEntity implements Serializable {
 
     public boolean isOnCloud() {
         return isOnCloud;
+    }
+
+    public boolean isHiddenForSearch() {
+        return hiddenForSearch;
+    }
+
+    public void setHiddenForSearch(boolean hide) {
+        hiddenForSearch = hide;
     }
 
     @Override
