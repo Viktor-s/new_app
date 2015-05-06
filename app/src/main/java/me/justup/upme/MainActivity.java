@@ -28,6 +28,7 @@ import java.util.ArrayList;
 
 import me.justup.upme.dialogs.BreakCallDialog;
 import me.justup.upme.dialogs.CallDialog;
+import me.justup.upme.dialogs.ChangeAvatarDialog;
 import me.justup.upme.dialogs.OrderDialog;
 import me.justup.upme.dialogs.StatusBarSliderDialog;
 import me.justup.upme.dialogs.WarningDialog;
@@ -61,6 +62,7 @@ import me.justup.upme.interfaces.OnDownloadCloudFile;
 import me.justup.upme.interfaces.OnLoadMailFragment;
 import me.justup.upme.services.GPSTracker;
 import me.justup.upme.utils.AppPreferences;
+import me.justup.upme.utils.CircularImageView;
 import me.justup.upme.utils.CommonUtils;
 import me.justup.upme.utils.Constance;
 
@@ -200,6 +202,8 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
 
         initTiledMenuFragment();
 
+        CircularImageView mUserAvatarView = (CircularImageView) findViewById(R.id.ab_user_image_imageView);
+        mUserAvatarView.setOnClickListener(new LoadAvatarDialog());
         Button mOrderingButton = (Button) findViewById(R.id.main_screen_ordering_button);
         mOrderingButton.setOnClickListener(new OpenOrderingPanel());
 
@@ -853,6 +857,14 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
                 findViewById(R.id.mapAndUserFragment).startAnimation(mAnimOpenUserPanel);
                 findViewById(R.id.mapAndUserFragment).setVisibility(View.GONE);
             }
+        }
+    }
+
+    private class LoadAvatarDialog implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            ChangeAvatarDialog dialog = ChangeAvatarDialog.newInstance();
+            dialog.show(getFragmentManager(), ChangeAvatarDialog.CHANGE_AVATAR_DIALOG);
         }
     }
 
