@@ -23,7 +23,7 @@ public abstract class BaseActivity extends Activity {
     public Animation mAnimOpenUserPanel = null;
     public Animation mAnimCloseUserPanel = null;
 
-    private static final int UP_ME_ANIMATION_VALUE = 114;
+    private static final int UP_ME_ANIMATION_VALUE = 112;
     private static final int UP_ME_ANIMATION_DURATION = 1000;
 
     public Animation mAnimCloseLogo = null;

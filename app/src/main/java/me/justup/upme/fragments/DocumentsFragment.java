@@ -605,13 +605,15 @@ public class DocumentsFragment extends Fragment {
         @SuppressWarnings("unchecked")
         @Override
         public void handleMessage(Message msg) {
-            stopProgressBar();
+            if (DocumentsFragment.this.isAdded()) {
+                stopProgressBar();
 
-            ArrayList<FileEntity> array = (ArrayList<FileEntity>) msg.getData().getSerializable(FILE_ARRAY_MESSAGE);
+                ArrayList<FileEntity> array = (ArrayList<FileEntity>) msg.getData().getSerializable(FILE_ARRAY_MESSAGE);
 
-            if ((null != array)) {
-                setFileArray(array);
-                updateFileExplorer();
+                if ((null != array)) {
+                    setFileArray(array);
+                    updateFileExplorer();
+                }
             }
         }
     }

@@ -409,5 +409,6 @@
     <string name="date">Дата</string>
     <string name="size">Размер</string>
     <string name="token_life_warning">С Вашего первого входа прошло более 24-х часов - пожалуйста, залогинтесь по новой.</string>
+    <string name="user_not_get_message">В данный момент пользователь не может получить сообщение!</string>
 
 </resources>

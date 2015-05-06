@@ -9,6 +9,7 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.apache.http.Header;
 
+import me.justup.upme.R;
 import me.justup.upme.entity.BaseHttpQueryEntity;
 import me.justup.upme.entity.PushQueryResponse;
 import me.justup.upme.http.ApiWrapper;
@@ -49,23 +50,28 @@ public class PushIntentService extends IntentService {
             }
 
             if (response != null) {
-                StringBuilder pushMessages = new StringBuilder();
+                // StringBuilder pushMessages = new StringBuilder();
 
                 if (response.result != null) {
                     if (response.result.success) return;
 
+                    /*
                     if (response.result.error != null) {
                         for (PushQueryResponse.Result.PushError pushError : response.result.error) {
                             pushMessages.append(pushError.message).append("\n");
                         }
                     }
+                    */
                 }
 
+                /*
                 if (response.error != null) {
                     pushMessages.append(response.error.data);
                 }
+                */
 
-                makeToast(pushMessages.toString());
+                // makeToast(pushMessages.toString());
+                makeToast(getString(R.string.user_not_get_message));
             }
         }
 
