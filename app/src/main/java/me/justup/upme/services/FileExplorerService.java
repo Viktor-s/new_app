@@ -2,6 +2,9 @@ package me.justup.upme.services;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.os.Environment;
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -11,6 +14,7 @@ import org.apache.http.Header;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,6 +48,7 @@ public class FileExplorerService extends IntentService {
     public static final int COPY = 4;
     public static final int ERROR = 5;
     public static final int UNSUBSCRIBE = 6;
+    public static final int AVATARS = 7;
 
 
     public FileExplorerService() {
@@ -77,6 +82,10 @@ public class FileExplorerService extends IntentService {
 
             case UNSUBSCRIBE:
                 unsubscribeQuery(fileHash);
+                break;
+
+            case AVATARS:
+                uploadAvatar(filePath);
                 break;
 
             default:
@@ -214,6 +223,72 @@ public class FileExplorerService extends IntentService {
                 }
             }
         });
+    }
+
+    private void uploadAvatar(String filePath) {
+        File file = saveBitmap(filePath);
+
+        if (file != null)
+            ApiWrapper.syncSendFileToCloud(file, new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    String content = ApiWrapper.responseBodyToString(responseBody);
+                    LOGD(TAG, "uploadAvatar onSuccess(): " + content);
+
+                    sendExplorerBroadcast(AVATARS);
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                    String content = ApiWrapper.responseBodyToString(responseBody);
+                    LOGE(TAG, "uploadAvatar onFailure(): " + content);
+
+                    if (error != null) {
+                        sendExplorerBroadcast(ERROR, error.getMessage());
+                    } else {
+                        sendExplorerBroadcast(ERROR, content);
+                    }
+                }
+            });
+    }
+
+    private Bitmap getResizedBitmap(Bitmap bm) {
+        final int REQUIRED_SIZE = 200;
+
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+
+        float scaleWidth = ((float) REQUIRED_SIZE) / width;
+        float scaleHeight = ((float) REQUIRED_SIZE) / height;
+
+        Matrix matrix = new Matrix();
+        matrix.postScale(scaleWidth, scaleHeight);
+
+        return Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
+    }
+
+    private File saveBitmap(String filePath) {
+        Bitmap pictureBitmap = getResizedBitmap(BitmapFactory.decodeFile(filePath));
+
+        File file = new File(filePath);
+        FileOutputStream fos = null;
+
+        try {
+            fos = new FileOutputStream(file);
+            pictureBitmap.compress(Bitmap.CompressFormat.JPEG, 80, fos);
+        } catch (FileNotFoundException e) {
+            LOGE(TAG, "saveBitmap FileNotFoundException" + e);
+        }
+        try {
+            if (fos != null) {
+                fos.flush();
+                fos.close();
+            }
+        } catch (IOException e) {
+            LOGE(TAG, "saveBitmap IOException" + e);
+        }
+
+        return file;
     }
 
     private void sendExplorerBroadcast(final int actionType) {

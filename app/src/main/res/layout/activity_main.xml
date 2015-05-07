@@ -252,6 +252,13 @@
     </LinearLayout>
 
     <FrameLayout
+        android:id="@+id/account_settings_fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignTop="@+id/main_content_container"
+        android:layout_toEndOf="@+id/left_main_menu" />
+
+    <FrameLayout
         android:id="@+id/mapAndUserFragment"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"

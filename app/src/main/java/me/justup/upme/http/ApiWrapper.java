@@ -60,6 +60,7 @@ public class ApiWrapper {
     public static final String ACCOUNT_ADD_REFERRAL = "Account.addReferral";
     public static final String ACCOUNT_GET_USER_PANEL_INFO = "Account.getUserPanelInfo";
     public static final String ACCOUNT_ADD_USER_LOCATION = "Account.addUserLocation";
+    public static final String ACCOUNT_SET_AVATAR_FILE = "Account.setAvatarFile";
 
     public static final String PUSH_SET_GOOGLE_PUSH_ID = "Push.setGooglePushId";
     public static final String JABBER_START_CHAT = "Jabber.startChat";

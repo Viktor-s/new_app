@@ -28,7 +28,6 @@ import java.util.ArrayList;
 
 import me.justup.upme.dialogs.BreakCallDialog;
 import me.justup.upme.dialogs.CallDialog;
-import me.justup.upme.dialogs.ChangeAvatarDialog;
 import me.justup.upme.dialogs.OrderDialog;
 import me.justup.upme.dialogs.StatusBarSliderDialog;
 import me.justup.upme.dialogs.WarningDialog;
@@ -44,6 +43,7 @@ import me.justup.upme.entity.ProductsGetAllCategoriesQuery;
 import me.justup.upme.entity.ProductsOrderGetFormQuery;
 import me.justup.upme.entity.ProductsOrderGetFormResponse;
 import me.justup.upme.entity.Push;
+import me.justup.upme.fragments.AccountSettingsFragment;
 import me.justup.upme.fragments.BriefcaseFragment;
 import me.justup.upme.fragments.BrowserFragment;
 import me.justup.upme.fragments.CalendarFragment;
@@ -132,6 +132,9 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
         }
     };
 
+    private boolean isAccountSettingsLoad;
+
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -202,8 +205,8 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
 
         initTiledMenuFragment();
 
-        CircularImageView mUserAvatarView = (CircularImageView) findViewById(R.id.ab_user_image_imageView);
-        mUserAvatarView.setOnClickListener(new LoadAvatarDialog());
+        CircularImageView mLoadAccountSettings = (CircularImageView) findViewById(R.id.ab_user_image_imageView);
+        mLoadAccountSettings.setOnClickListener(new LoadAccountSettingsFragment());
         Button mOrderingButton = (Button) findViewById(R.id.main_screen_ordering_button);
         mOrderingButton.setOnClickListener(new OpenOrderingPanel());
 
@@ -860,11 +863,16 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
         }
     }
 
-    private class LoadAvatarDialog implements View.OnClickListener {
+    private class LoadAccountSettingsFragment implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            ChangeAvatarDialog dialog = ChangeAvatarDialog.newInstance();
-            dialog.show(getFragmentManager(), ChangeAvatarDialog.CHANGE_AVATAR_DIALOG);
+            if (!isAccountSettingsLoad) {
+                getFragmentManager().beginTransaction().add(R.id.account_settings_fragment_container, new AccountSettingsFragment()).commit();
+                isAccountSettingsLoad = true;
+            } else {
+                getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentById(R.id.account_settings_fragment_container)).commit();
+                isAccountSettingsLoad = false;
+            }
         }
     }
 

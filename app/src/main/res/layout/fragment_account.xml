@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/base_background"
+    android:clickable="true">
+
+    <TextView
+        android:id="@+id/avatar_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/base25dp720sw"
+        android:background="@color/blue_gray"
+        android:gravity="center"
+        android:padding="@dimen/base15dp720sw"
+        android:text="@string/account_settings"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/white" />
+
+    <ImageView
+        android:id="@+id/avatar_image"
+        android:layout_width="@dimen/base150dp720sw"
+        android:layout_height="@dimen/base150dp720sw"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/avatar_title"
+        android:layout_marginLeft="@dimen/base15dp720sw"
+        android:layout_marginRight="@dimen/base15dp720sw"
+        android:contentDescription="@string/dummy_string"
+        android:src="@drawable/protection" />
+
+    <Button
+        android:id="@+id/avatar_new_button"
+        android:layout_width="@dimen/base210dp720sw"
+        android:layout_height="@dimen/base50dp720sw"
+        android:layout_below="@+id/avatar_title"
+        android:layout_toEndOf="@+id/avatar_image"
+        android:background="@drawable/enter_button_selector"
+        android:text="@string/new_image" />
+
+    <Button
+        android:id="@+id/avatar_save_button"
+        android:layout_width="@dimen/base210dp720sw"
+        android:layout_height="@dimen/base50dp720sw"
+        android:layout_alignStart="@+id/avatar_new_button"
+        android:layout_below="@+id/avatar_new_button"
+        android:layout_marginTop="@dimen/base20dp720sw"
+        android:background="@drawable/enter_button_selector"
+        android:enabled="false"
+        android:text="@string/update" />
+
+    <include
+        layout="@layout/base_progress_bar"
+        android:visibility="gone" />
+</RelativeLayout>
