@@ -114,11 +114,20 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
     // broadcast push
     public static final String BROADCAST_ACTION_CALL = "me.justup.upme.broadcast.call.call";
     public static final String BROADCAST_EXTRA_PUSH = "me.justup.upme.broadcast.call.extra.push";
+    public static final String BROADCAST_EXTRA_CHANGE_AVATAR = "me.justup.upme.broadcast.call.change.avatar";
     private BroadcastReceiver mCallPushReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context c, Intent intent) {
             final Push push = (Push) intent.getSerializableExtra(BROADCAST_EXTRA_PUSH);
-            showCallDialog(push);
+            final boolean isChangeAvatar = intent.getBooleanExtra(BROADCAST_EXTRA_CHANGE_AVATAR, false);
+
+            if (push != null)
+                showCallDialog(push);
+
+            if (isChangeAvatar) {
+                LOGI(TAG, "isChangeAvatar");
+                ApiWrapper.query(new GetLoggedUserInfoQuery(), new OnGetLoggedUserInfoResponse());
+            }
         }
     };
 
@@ -133,6 +142,7 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
     };
 
     private boolean isAccountSettingsLoad;
+    private CircularImageView mLoadAccountSettings;
 
 
     @Override
@@ -205,7 +215,7 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
 
         initTiledMenuFragment();
 
-        CircularImageView mLoadAccountSettings = (CircularImageView) findViewById(R.id.ab_user_image_imageView);
+        mLoadAccountSettings = (CircularImageView) findViewById(R.id.ab_user_image_imageView);
         mLoadAccountSettings.setOnClickListener(new LoadAccountSettingsFragment());
         Button mOrderingButton = (Button) findViewById(R.id.main_screen_ordering_button);
         mOrderingButton.setOnClickListener(new OpenOrderingPanel());
@@ -222,7 +232,7 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
         setAnimationOpenFragmentListener(new AnimationOpenFragmentListener() {
             @Override
             public void onStartAnim() {
-                if(currentlySelectedFragment==SELECTED_FRAGMENT_NEWS) {
+                if (currentlySelectedFragment == SELECTED_FRAGMENT_NEWS) {
                     new Handler().postDelayed(new Runnable() {
                         public void run() {
                             ((NewsFeedFragmentNew) mNewsFeedFragmentNew).showFullNews();
@@ -380,7 +390,7 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
             getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, fragment).commit();
         }
 
-        if (isShowMainFragmentContainer!=null && !isShowMainFragmentContainer) {
+        if (isShowMainFragmentContainer != null && !isShowMainFragmentContainer) {
             showMainFragmentContainer();
         }
     }
@@ -427,7 +437,7 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
                 break;
         }
 
-        if (isShowMainFragmentContainer!=null && isShowMainFragmentContainer) {
+        if (isShowMainFragmentContainer != null && isShowMainFragmentContainer) {
             showMainFragmentContainer();
         }
     }
@@ -480,7 +490,7 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
         @Override
         public void onClick(View v) {
             if (currentlySelectedFragment != 0) {
-                if (isShowMainFragmentContainer!=null && isShowMainFragmentContainer) {
+                if (isShowMainFragmentContainer != null && isShowMainFragmentContainer) {
                     mMainFragmentContainer.startAnimation(mFragmentSliderOut);
                     mMainFragmentContainer.setVisibility(View.GONE);
 
@@ -489,7 +499,7 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
 
                     // Set Anim to Logo
                     mUPMELogo.startAnimation(mAnimCloseLogo);
-                } else if (isShowMainFragmentContainer!=null && !isShowMainFragmentContainer){
+                } else if (isShowMainFragmentContainer != null && !isShowMainFragmentContainer) {
                     showMainFragmentContainer();
                 }
             }
@@ -563,11 +573,11 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
         onSaveInstanceStateLA(outState);
 
         outState.putInt(SAVE_FRAGMENT_STATE, currentlySelectedFragment);
-        if(isShowMainFragmentContainer!=null) {
+        if (isShowMainFragmentContainer != null) {
             outState.putBoolean(IS_SHOW_FRAGMENT_CONTAINER, isShowMainFragmentContainer);
         }
 
-        if(isOrderingPanelOpen!=null) {
+        if (isOrderingPanelOpen != null) {
             outState.putBoolean(IS_SHOW_USER_INFO_CONTAINER, isOrderingPanelOpen);
         }
     }
@@ -616,7 +626,7 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
         getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, fragment).commit();
 
         changeButtonState(mMailButton);
-        if (isShowMainFragmentContainer!=null && !isShowMainFragmentContainer) {
+        if (isShowMainFragmentContainer != null && !isShowMainFragmentContainer) {
             showMainFragmentContainer();
         }
     }
@@ -646,7 +656,7 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
         getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new DocumentsFragment()).commit();
 
         changeButtonState(mDocsButton);
-        if (isShowMainFragmentContainer!=null && !isShowMainFragmentContainer) {
+        if (isShowMainFragmentContainer != null && !isShowMainFragmentContainer) {
             showMainFragmentContainer();
         }
     }
@@ -682,6 +692,11 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
                 appPreferences.setUserName(userName);
                 appPreferences.setUserId(response.result.id);
                 appPreferences.setJabberId(response.result.jabber_id);
+
+                if (response.result.img != null && !response.result.img.equals("")) {
+                    ApiWrapper.loadImage(response.result.img, mLoadAccountSettings);
+                    appPreferences.setUserAvatarUrl(response.result.img);
+                }
 
                 BaseMethodEmptyQuery query = new BaseMethodEmptyQuery();
                 query.method = ApiWrapper.ACCOUNT_GET_ALL_CONTACTS;
@@ -850,12 +865,12 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
     private class OpenOrderingPanel implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            if (isOrderingPanelOpen!=null && !isOrderingPanelOpen) {
+            if (isOrderingPanelOpen != null && !isOrderingPanelOpen) {
 
                 findViewById(R.id.mapAndUserFragment).setVisibility(View.VISIBLE);
                 findViewById(R.id.mapAndUserFragment).startAnimation(mAnimCloseUserPanel);
 
-            } else if(isOrderingPanelOpen!=null && isOrderingPanelOpen){
+            } else if (isOrderingPanelOpen != null && isOrderingPanelOpen) {
 
                 findViewById(R.id.mapAndUserFragment).startAnimation(mAnimOpenUserPanel);
                 findViewById(R.id.mapAndUserFragment).setVisibility(View.GONE);

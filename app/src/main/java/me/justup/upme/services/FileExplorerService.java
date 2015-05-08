@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.os.Environment;
 
+import com.google.gson.JsonSyntaxException;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.FileAsyncHttpResponseHandler;
 
@@ -22,6 +23,7 @@ import java.io.InputStream;
 import me.justup.upme.entity.FileCopySharedQuery;
 import me.justup.upme.entity.FileDeleteQuery;
 import me.justup.upme.entity.FileUnlinkSharedQuery;
+import me.justup.upme.entity.SetAvatarFileHashResponse;
 import me.justup.upme.http.ApiWrapper;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
@@ -36,6 +38,7 @@ public class FileExplorerService extends IntentService {
     public static final String FILE_ACTION_DONE_BROADCAST = "me.justup.upme.broadcast.explorer.file_action_done";
     public static final String BROADCAST_EXTRA_ACTION_TYPE = "broadcast_extra_action_type";
     public static final String BROADCAST_EXTRA_ERROR = "broadcast_explorer_service_error";
+    public static final String BROADCAST_EXTRA_FILE_HASH = "broadcast_explorer_service_file_hash";
 
     public static final String EXPLORER_SERVICE_FILE_NAME = "explorer_service_file_name";
     public static final String EXPLORER_SERVICE_FILE_HASH = "explorer_service_file_hash";
@@ -235,7 +238,20 @@ public class FileExplorerService extends IntentService {
                     String content = ApiWrapper.responseBodyToString(responseBody);
                     LOGD(TAG, "uploadAvatar onSuccess(): " + content);
 
-                    sendExplorerBroadcast(AVATARS);
+                    SetAvatarFileHashResponse response = null;
+
+                    try {
+                        response = ApiWrapper.gson.fromJson(content, SetAvatarFileHashResponse.class);
+                    } catch (JsonSyntaxException e) {
+                        LOGE(TAG, "gson.fromJson:\n" + content);
+                    }
+
+                    if (response != null && response.status.equals("ok")) {
+                        Intent intent = new Intent(FILE_ACTION_DONE_BROADCAST);
+                        intent.putExtra(BROADCAST_EXTRA_ACTION_TYPE, AVATARS);
+                        intent.putExtra(BROADCAST_EXTRA_FILE_HASH, response.file_hash);
+                        sendBroadcast(intent);
+                    }
                 }
 
                 @Override

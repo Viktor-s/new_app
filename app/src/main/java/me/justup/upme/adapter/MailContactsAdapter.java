@@ -13,12 +13,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
-import com.squareup.picasso.Picasso;
 
 import me.justup.upme.JustUpApplication;
 import me.justup.upme.MainActivity;
 import me.justup.upme.R;
 import me.justup.upme.db.DBHelper;
+import me.justup.upme.http.ApiWrapper;
 
 public class MailContactsAdapter extends CursorAdapter {
     private LayoutInflater mInflater = null;
@@ -54,9 +54,9 @@ public class MailContactsAdapter extends CursorAdapter {
         if (holder != null) {
             holder.mName.setText(contactName);
             String imagePath = (cur.getString(cur.getColumnIndex(DBHelper.MAIL_CONTACT_IMG)) != null && cur.getString(cur.getColumnIndex(DBHelper.MAIL_CONTACT_IMG)).length() > 1) ? cur.getString(cur.getColumnIndex(DBHelper.MAIL_CONTACT_IMG)) : null;
-            if(imagePath!=null) {
-                Picasso.with(context).load(imagePath).placeholder(R.mipmap.ic_launcher).into(holder.mImageView);
-            }else{
+            if (imagePath != null) {
+                ApiWrapper.loadImage(imagePath, holder.mImageView);
+            } else {
                 int circleColor = context.getResources().getColor(R.color.settings_manual_button);
 
                 TextDrawable drawable = TextDrawable.builder().beginConfig()

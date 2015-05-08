@@ -3,6 +3,8 @@ package me.justup.upme.http;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
+import android.widget.ImageView;
 
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
@@ -10,6 +12,8 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.FileAsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.SyncHttpClient;
+import com.squareup.picasso.OkHttpDownloader;
+import com.squareup.picasso.Picasso;
 
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
@@ -17,7 +21,9 @@ import org.apache.http.protocol.HTTP;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 
 import me.justup.upme.JustUpApplication;
 import me.justup.upme.R;
@@ -246,6 +252,20 @@ public class ApiWrapper {
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
 
         return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
+
+    public static void loadImage(String url, ImageView imageView) {
+        Picasso.Builder builder = new Picasso.Builder(JustUpApplication.getApplication());
+        Picasso picasso = builder.downloader(new OkHttpDownloader(JustUpApplication.getApplication()) {
+            @Override
+            protected HttpURLConnection openConnection(Uri uri) throws IOException {
+                HttpURLConnection connection = super.openConnection(uri);
+                connection.setRequestProperty(AUTHORIZATION_HEADER, getToken());
+                return connection;
+            }
+        }).build();
+
+        picasso.load(serverSwitcher.getAvatarUrl() + url).into(imageView);
     }
 
 }

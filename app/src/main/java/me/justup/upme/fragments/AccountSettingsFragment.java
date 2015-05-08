@@ -36,16 +36,20 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import me.justup.upme.JustUpApplication;
+import me.justup.upme.MainActivity;
 import me.justup.upme.R;
 import me.justup.upme.dialogs.WarningDialog;
 import me.justup.upme.entity.SetAvatarQuery;
 import me.justup.upme.entity.SetAvatarResponse;
 import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.services.FileExplorerService;
+import me.justup.upme.utils.AppPreferences;
 
 import static me.justup.upme.services.FileExplorerService.AVATARS;
 import static me.justup.upme.services.FileExplorerService.BROADCAST_EXTRA_ACTION_TYPE;
 import static me.justup.upme.services.FileExplorerService.BROADCAST_EXTRA_ERROR;
+import static me.justup.upme.services.FileExplorerService.BROADCAST_EXTRA_FILE_HASH;
 import static me.justup.upme.services.FileExplorerService.ERROR;
 import static me.justup.upme.services.FileExplorerService.EXPLORER_SERVICE_ACTION_TYPE;
 import static me.justup.upme.services.FileExplorerService.EXPLORER_SERVICE_FILE_PATH;
@@ -75,9 +79,11 @@ public class AccountSettingsFragment extends Fragment {
         public void onReceive(Context context, Intent intent) {
             int actionType = intent.getIntExtra(BROADCAST_EXTRA_ACTION_TYPE, 0);
             String error = intent.getStringExtra(BROADCAST_EXTRA_ERROR);
+            String fileHash = intent.getStringExtra(BROADCAST_EXTRA_FILE_HASH);
 
             if (actionType == AVATARS) {
                 SetAvatarQuery query = new SetAvatarQuery();
+                query.params.file_hash = fileHash;
                 ApiWrapper.query(query, new OnSetAvatarResponse());
             }
 
@@ -106,6 +112,11 @@ public class AccountSettingsFragment extends Fragment {
         mUploadImageButton.setOnClickListener(new UploadImage());
 
         mUserAvatar = (ImageView) view.findViewById(R.id.avatar_image);
+
+        String imageUrl = new AppPreferences(getActivity()).getUserAvatarUrl();
+        if (imageUrl != null)
+            ApiWrapper.loadImage(imageUrl, mUserAvatar);
+
         mProgressBar = (FrameLayout) view.findViewById(R.id.base_progressBar);
 
         return view;
@@ -369,6 +380,10 @@ public class AccountSettingsFragment extends Fragment {
                     Toast.makeText(getActivity(), getString(R.string.avatar_is_update), Toast.LENGTH_LONG).show();
                 }
             }
+
+            Intent intent = new Intent(MainActivity.BROADCAST_ACTION_CALL);
+            intent.putExtra(MainActivity.BROADCAST_EXTRA_CHANGE_AVATAR, true);
+            JustUpApplication.getApplication().sendBroadcast(intent);
         }
 
         @Override

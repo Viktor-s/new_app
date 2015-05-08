@@ -28,6 +28,8 @@ import me.justup.upme.entity.BaseHttpQueryEntity;
 import me.justup.upme.entity.GetLoggedUserInfoResponse;
 import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.interfaces.OnCloseFragment;
+import me.justup.upme.utils.AppPreferences;
+import me.justup.upme.utils.CircularImageView;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.LOGE;
@@ -104,6 +106,11 @@ public class UserFragment extends Fragment implements OnMapReadyCallback, OnClos
         });
 
         mUserOrderingFragment = UserOrderingFragment.newInstance(42);
+
+        CircularImageView mUserAvatar = (CircularImageView) view.findViewById(R.id.user_image_imageView);
+        String imageUrl = new AppPreferences(getActivity()).getUserAvatarUrl();
+        if (imageUrl != null)
+            ApiWrapper.loadImage(imageUrl, mUserAvatar);
 
         return view;
     }

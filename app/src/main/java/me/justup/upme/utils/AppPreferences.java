@@ -20,6 +20,7 @@ public class AppPreferences {
     private static final String TAG_USER_ID = "user_id";
     private static final String TAG_PHONE = "user_phone";
     private static final String TAG_JABBER_ID = "jabber_id";
+    private static final String TAG_AVATAR_URL = "avatar_url";
     private static final String TAG_MONITORING = "is_monitoring";
     private static final String TAG_BROWSER_URL = "browser_url";
     private static final String TAG_FILE_SORT_TYPE = "file_sort_type";
@@ -96,6 +97,16 @@ public class AppPreferences {
 
     public String getJabberId() {
         return mSharedPreferences.getString(TAG_JABBER_ID, "jabber");
+    }
+
+    public void setUserAvatarUrl(String url) {
+        mEditor = mSharedPreferences.edit();
+        mEditor.putString(TAG_AVATAR_URL, url);
+        mEditor.apply();
+    }
+
+    public String getUserAvatarUrl() {
+        return mSharedPreferences.getString(TAG_AVATAR_URL, null);
     }
 
     public void setMonitoring(boolean isMonitoring) {
