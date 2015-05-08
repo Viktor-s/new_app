@@ -286,7 +286,7 @@ public class FileExplorerService extends IntentService {
     private File saveBitmap(String filePath) {
         Bitmap pictureBitmap = getResizedBitmap(BitmapFactory.decodeFile(filePath));
 
-        File file = new File(filePath);
+        File file = new File(Environment.getExternalStorageDirectory() + "/avatar.jpg");
         FileOutputStream fos = null;
 
         try {

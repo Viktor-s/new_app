@@ -132,7 +132,7 @@ public abstract class BaseActivity extends Activity {
 
         // Get device API version
         currentApiVersion = android.os.Build.VERSION.SDK_INT;
-
+/*
         if (LogUtils.DEVELOPER_MODE) {
             StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
                     .detectDiskReads()
@@ -148,6 +148,7 @@ public abstract class BaseActivity extends Activity {
                     .penaltyDeath()
                     .build());
         }
+*/
 
         super.onCreate(savedInstanceState);
     }
