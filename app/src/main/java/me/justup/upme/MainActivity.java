@@ -682,7 +682,7 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
         Fragment fragment = new MailFragment();
         getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, fragment).commit();
 
-        changeButtonState(mMailButton, null);
+        changeButtonState(mMailButton, getResources().getDrawable(R.drawable.ic_main_docs_pink));
         if (isShowMainFragmentContainer != null && !isShowMainFragmentContainer) {
             showMainFragmentContainer();
         }
