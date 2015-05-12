@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal">
@@ -29,8 +30,6 @@
         android:textColor="@color/action_bar_text_background"
         android:textStyle="bold"/>
 
-    <!--tools:drawableStart="@drawable/ic_sort_arrow_desc"-->
-
     <TextView
         android:id="@+id/sort_column_size"
         style="@style/DocumentsSortPanelText"
@@ -49,8 +48,8 @@
         android:layout_width="wrap_content"
         android:layout_weight="0.3"
         android:drawablePadding="@dimen/base5dp720sw"
-        android:drawableLeft="@drawable/ic_arrow_up_light_blue"
-        android:drawableStart="@drawable/ic_arrow_up_light_blue"
+        tools:drawableLeft="@drawable/ic_arrow_up_light_blue"
+        tools:drawableStart="@drawable/ic_arrow_up_light_blue"
         android:text="@string/date"
         android:textColor="@color/action_bar_text_background"
         android:textStyle="bold" />

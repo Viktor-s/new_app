@@ -57,6 +57,8 @@ import static me.justup.upme.db.DBHelper.EDUCATION_PRODUCT_MODULE_NAME;
 import static me.justup.upme.db.DBHelper.EDUCATION_PRODUCT_MODULE_PROGRAM_ID;
 import static me.justup.upme.db.DBHelper.EDUCATION_PRODUCT_MODULE_SERVER_ID;
 import static me.justup.upme.db.DBHelper.EDUCATION_PRODUCT_MODULE_UPDATED_AT;
+import static me.justup.upme.utils.LogUtils.LOGD;
+import static me.justup.upme.utils.LogUtils.LOGE;
 import static me.justup.upme.utils.LogUtils.LOGI;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
@@ -383,6 +385,8 @@ public class EducationModuleFragment extends Fragment {
 
         @Override
         public void onSuccess(int statusCode, Header[] headers, File file) {
+            LOGD(TAG, "OnDownloadFileResponse onSuccess()");
+
             if (EducationModuleFragment.this.isAdded()) {
                 mProgressBar.setVisibility(View.GONE);
                 showViewPDFDialog("PDF", file.getAbsolutePath());
@@ -391,6 +395,11 @@ public class EducationModuleFragment extends Fragment {
 
         @Override
         public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
+            LOGE(TAG, "OnDownloadFileResponse onFailure()");
+            if (throwable != null) {
+                LOGE(TAG, "Throwable:", throwable);
+            }
+
             if (EducationModuleFragment.this.isAdded()) {
                 mProgressBar.setVisibility(View.GONE);
                 Toast.makeText(getActivity(), "Server error", Toast.LENGTH_SHORT).show();
