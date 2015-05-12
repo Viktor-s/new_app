@@ -35,9 +35,10 @@ public class BreakCallDialog extends DialogFragment {
         final String userName = getArguments().getString(BREAK_CALL_USER);
 
         Fragment videoFragment = getFragmentManager().findFragmentById(R.id.container_video_chat);
-        if (videoFragment != null)
+        if (videoFragment != null) {
             getFragmentManager().beginTransaction().remove(videoFragment).commit();
-        getActivity().findViewById(R.id.container_video_chat).setVisibility(View.GONE);
+            getActivity().findViewById(R.id.container_video_chat).setVisibility(View.GONE);
+        }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();

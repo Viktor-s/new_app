@@ -54,7 +54,7 @@
     <string name="menu_item_title_study">Обучение</string>
     <string name="menu_item_title_browser">Браузер</string>
     <string name="menu_item_title_settings">Настройка</string>
-    <string name="menu_item_title_demo">Демо-режим</string>
+    <string name="menu_item_title_demo">Демо - режим</string>
     <string name="fast_pay">Заплати\nбыстро</string>
     <string name="communication">Связь</string>
     <string name="internet">Интернет</string>
@@ -126,6 +126,7 @@
     <string name="settings_on_off_wifi">Wi-Fi вкл/выкл</string>
     <string name="settings_wifi_auth_error">Ошибка аутентификации</string>
     <string name="settings_on_off_monitoring">Мониторинг вкл/выкл</string>
+    <string name="settings_demo">Demo - режим</string>
     <string name="settings_wifi_dialog_connect">Подключить</string>
     <string name="settings_wifi_dialog_cancel">Отмена</string>
     <string name="settings_wifi_dialog_pass">Введите пароль:</string>
@@ -184,71 +185,85 @@
     <string name="pref_room_key">room_preference</string>
     <string name="pref_room_list_key">room_list_preference</string>
 
+    <string name="pref_videosettings_key">video_settings_key</string>
+    <string name="pref_videosettings_title">WebRTC видео настройки.</string>
+
+    <string name="pref_videocall_key">videocall_preference</string>
+    <string name="pref_videocall_title">Видеозвонок.</string>
+    <string name="pref_videocall_dlg">Включить видео в режиме разговора.</string>
+    <string name="pref_videocall_default">true</string>
+
     <string name="pref_resolution_key">resolution_preference</string>
-    <string name="pref_resolution_title_en">Video resolution.</string>
-    <string name="pref_resolution_title">Разрешение видео</string>
-    <string name="pref_resolution_dlg_en">Enter AppRTC local video resolution.</string>
-    <string name="pref_resolution_dlg">Выберите видео разрешение</string>
+    <string name="pref_resolution_title">Разрешение видео.</string>
+    <string name="pref_resolution_dlg">Выберите разрешение видео.</string>
     <string name="pref_resolution_default">Default</string>
 
     <string name="pref_fps_key">fps_preference</string>
-    <string name="pref_fps_title_en">Camera fps.</string>
-    <string name="pref_fps_title">Кадров в секунду для камеры</string>
+    <string name="pref_fps_title">Камера fps.(кадров в секунду)</string>
     <string name="pref_fps_dlg_en">Enter local camera fps.</string>
-    <string name="pref_fps_dlg">Выберите количество кадров в секунду</string>
+    <string name="pref_fps_dlg">Выберите fps.(кадров в секунду)</string>
     <string name="pref_fps_default">Default</string>
 
-    <string name="pref_cpu_usage_detection_key">cpu_usage_detection</string>
-    <string name="pref_cpu_usage_detection_title">CPU overuse detection</string>
-    <string name="pref_cpu_usage_detection_dlg">Adapt transmission to CPU status</string>
-    <string name="pref_cpu_usage_detection_default" translatable="false">true</string>
+    <string name="pref_startvideobitrate_key">startvideobitrate_preference</string>
+    <string name="pref_startvideobitrate_title">Настройка битрейта.</string>
+    <string name="pref_startvideobitrate_dlg">Настройка битрейта.</string>
+    <string name="pref_startvideobitrate_default">Default</string>
 
-    <string name="pref_startbitrate_key">startbitrate_preference</string>
-    <string name="pref_startbitrate_title_en">Start bitrate setting.</string>
-    <string name="pref_startbitrate_title">Настройка битрейта</string>
-    <string name="pref_startbitrate_dlg_en">Start bitrate setting.</string>
-    <string name="pref_startbitrate_dlg">Настройка битрейта</string>
-    <string name="pref_startbitrate_default">Default</string>
-
-    <string name="pref_startbitratevalue_key">startbitratevalue_preference</string>
-    <string name="pref_startbitratevalue_title_en">Video encoder start bitrate.</string>
-    <string name="pref_startbitratevalue_title">Битрейт</string>
-    <string name="pref_startbitratevalue_dlg_en">Enter video encoder start bitrate in kbps.</string>
-    <string name="pref_startbitratevalue_dlg">Установите битрейт в килобитах</string>
-    <string name="pref_startbitratevalue_default">1000</string>
+    <string name="pref_startvideobitratevalue_key">startvideobitratevalue_preference</string>
+    <string name="pref_startvideobitratevalue_title">Видео битрейт.</string>
+    <string name="pref_startvideobitratevalue_dlg">Установите видео-битрейт в килобитах. (kbps)</string>
+    <string name="pref_startvideobitratevalue_default">1000</string>
 
     <string name="pref_videocodec_key">videocodec_preference</string>
-    <string name="pref_videocodec_title_en">Default video codec.</string>
-    <string name="pref_videocodec_title">Видео кодек по умолчанию</string>
-    <string name="pref_videocodec_dlg_en">Select default video codec.</string>
-    <string name="pref_videocodec_dlg">Выберите видео кодек по умолчанию</string>
+    <string name="pref_videocodec_title">Видео-кодек по умолчанию</string>
+    <string name="pref_videocodec_dlg">Выберите видео кодек.</string>
     <string name="pref_videocodec_default">VP8</string>
 
     <string name="pref_hwcodec_key">hwcodec_preference</string>
-    <string name="pref_hwcodec_title_en">Video codec hardware acceleration.</string>
-    <string name="pref_hwcodec_title">Аппаратное декодирование</string>
-    <string name="pref_hwcodec_dlg_en">Use hardware accelerated video codec (if available).</string>
-    <string name="pref_hwcodec_dlg">Используется аппаратное декодирование (если доступно)</string>
+    <string name="pref_hwcodec_title">Аппаратное ускорение.</string>
+    <string name="pref_hwcodec_dlg">Используется аппаратное ускорение (если доступно).</string>
     <string name="pref_hwcodec_default">true</string>
 
-    <string name="pref_value_enabled_en">Enabled</string>
     <string name="pref_value_enabled">Включено</string>
-    <string name="pref_value_disabled_en">Disabled</string>
     <string name="pref_value_disabled">Отключено</string>
 
+    <string name="pref_audiosettings_key">audio_settings_key</string>
+    <string name="pref_audiosettings_title">WebRTC настройки звука.</string>
+
+    <string name="pref_startaudiobitrate_key">startaudiobitrate_preference</string>
+    <string name="pref_startaudiobitrate_title">Настройки битрейда звука.</string>
+    <string name="pref_startaudiobitrate_dlg">Настройки битрейда звука.</string>
+    <string name="pref_startaudiobitrate_default">Default</string>
+
+    <string name="pref_startaudiobitratevalue_key">startaudiobitratevalue_preference</string>
+    <string name="pref_startaudiobitratevalue_title">Битрейд аудио кодека.</string>
+    <string name="pref_startaudiobitratevalue_dlg">Установите аудио-битрейт в килобитах. (kbps)</string>
+    <string name="pref_startaudiobitratevalue_default">256</string>
+
+    <string name="pref_audiocodec_key">audiocodec_preference</string>
+    <string name="pref_audiocodec_title">Аудио-кодек по умолчанию.</string>
+    <string name="pref_audiocodec_dlg">Выберите аудио кодек.</string>
+    <string name="pref_audiocodec_default">ISAC</string>
+
+    <string name="pref_miscsettings_key">misc_settings_key</string>
+    <string name="pref_miscsettings_title">Различные настройки.</string>
+
+    <string name="pref_cpu_usage_detection_key">cpu_usage_detection</string>
+    <string name="pref_cpu_usage_detection_title">CPU overuse detection.</string>
+    <string name="pref_cpu_usage_detection_dlg">Adapt transmission to CPU status.</string>
+    <string name="pref_cpu_usage_detection_default" translatable="false">true</string>
+
     <string name="pref_room_server_url_key">room_server_url_preference</string>
-    <string name="pref_room_server_url_title_en">Room server URL.</string>
-    <string name="pref_room_server_url_title">URL сигнального сервера</string>
-    <string name="pref_room_server_url_dlg_en">Enter a room server URL.</string>
-    <string name="pref_room_server_url_dlg">Введите URL сигнального сервера</string>
+    <string name="pref_room_server_url_title">URL сигнального сервера.</string>
+    <string name="pref_room_server_url_dlg">Введите URL сигнального сервера.</string>
     <string name="pref_room_server_url_default" translatable="false">http://95.213.170.164:8080</string>
+    <!--<string name="pref_room_server_url_default" translatable="false">https://apprtc.appspot.com</string>-->
 
     <string name="pref_displayhud_key">displayhud_preference</string>
-    <string name="pref_displayhud_title_en">Display call statistics.</string>
-    <string name="pref_displayhud_title">Отображать статистику</string>
-    <string name="pref_displayhud_dlg_">Display call statistics.</string>
-    <string name="pref_displayhud_dlg">Отображать статистику</string>
+    <string name="pref_displayhud_title">Отображать статистику.</string>
+    <string name="pref_displayhud_dlg">Отображать статистику.</string>
     <string name="pref_displayhud_default" translatable="false">false</string>
+    <!-- WebRTC Settings strings. ^ up -->
 
     <string name="sent_file">" открыл доступ к файлу: "</string>
     <string name="file_in_cloud">Файл в облаке</string>

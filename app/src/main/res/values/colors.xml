@@ -61,6 +61,7 @@
     <!--Till dummy color-->
     <color name="avio_sales_green">#60bb46</color>
     <color name="avio_sales_yellow">#d2c26e</color>
+    <color name="mobile_connection">#93b6ba</color>
 
     <!--Launcher-->
     <!-- The color tints to apply to the text and drag view when hovering

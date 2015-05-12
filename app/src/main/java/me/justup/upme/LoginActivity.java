@@ -34,7 +34,6 @@ import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.LOGE;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
-
 public class LoginActivity extends BaseActivity {
     private static final String TAG = makeLogTag(LoginActivity.class);
 

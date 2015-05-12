@@ -31,6 +31,7 @@ import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -80,6 +81,8 @@ public class TiledMenuFragment extends Fragment implements CoolDragAndDropGridVi
     private AlertDialog.Builder mDeleteDialog = null;
     private AlertDialog mAlertDialog = null;
 
+    private HashMap<String, String> mListImgCategory = null;
+
     // Instance
     public static TiledMenuFragment newInstance() {
         return new TiledMenuFragment();
@@ -115,6 +118,18 @@ public class TiledMenuFragment extends Fragment implements CoolDragAndDropGridVi
 
         mLayoutHeight = measuredHeight;
         mLayoutWidth = measuredWidth;
+
+        // Set List Img
+        mListImgCategory = new HashMap<>();
+        mListImgCategory.put("browser", "http://test.justup.me/static/icon/html_verstka.png");
+        mListImgCategory.put("cruise", "http://test.justup.me/static/icon/kruizi.png");
+        mListImgCategory.put("avia", "http://test.justup.me/static/icon/aviabilet.png");
+        mListImgCategory.put("pig", "");
+        mListImgCategory.put("car", "");
+        mListImgCategory.put("umbrella", "");
+        mListImgCategory.put("cup", "");
+        mListImgCategory.put("home", "");
+        mListImgCategory.put("phone", "");
     }
 
 
@@ -177,19 +192,19 @@ public class TiledMenuFragment extends Fragment implements CoolDragAndDropGridVi
             mTileItems = new ArrayList<TileItem>(tileItemList);
         }else{
             // Set dummy item
-            mTileItems.add(new TileItem(1, 2, "Быстрая оплата.", "", R.drawable.ic_main_browser, R.color.action_bar_background, false, false, false));
-            mTileItems.add(new TileItem(1, 2, "Авиабилеты", "", R.drawable.ic_main_demo, R.color.avio_sales_green, false, false, false));
-            mTileItems.add(new TileItem(1, 2, "Авиабилеты", "", R.drawable.ic_main_demo, R.color.action_bar_background, false, false, false));
+            mTileItems.add(new TileItem(1, 2, "Быстрая оплата.", "", R.drawable.html_verstka, R.color.action_bar_background, false, false, false));
+            mTileItems.add(new TileItem(1, 2, "Круизы", "", R.drawable.kruizi, R.color.avio_sales_green, false, false, false));
+            mTileItems.add(new TileItem(1, 2, "Авиабилеты", "", R.drawable.aviabilet, R.color.action_bar_background, false, false, false));
             mTileItems.add(new TileItem(1, 2, "Лотерея", "Джекпот\n" + Html.fromHtml("<![CDATA[12378450]]>"), R.drawable.ic_person, R.color.user_fragment_red_money_color, false, false, false));
+            mTileItems.add(new TileItem(1, 2, "ОСАГО", "", R.drawable.osago_img, R.color.action_bar_background, false, false, false));
             mTileItems.add(new TileItem(1, 2, "Страхование жизни", "", R.drawable.ic_shadow_umbrella, R.color.action_bar_background, false, false, false));
-            mTileItems.add(new TileItem(1, 2, "Страхование жизни", "", R.drawable.ic_shadow_umbrella, R.color.action_bar_background, false, false, false));
-            mTileItems.add(new TileItem(1, 2, "Широкий виджет", "", R.drawable.ic_main_study, R.color.action_bar_background, false, false, false));
-            mTileItems.add(new TileItem(1, 2, "Авиабилеты", "", 0, R.drawable.test_aero_back, false, false, true));
-            mTileItems.add(new TileItem(1, 2, "Авиабилеты", "", R.drawable.ic_main_demo, R.color.avio_sales_yellow, false, false, false));
-            mTileItems.add(new TileItem(1, 2, "Страхование жизни", "", R.drawable.ic_shadow_umbrella, R.color.action_bar_background, false, false, false));
-            mTileItems.add(new TileItem(1, 2, "Страхование жизни", "", R.drawable.ic_shadow_umbrella, R.color.action_bar_background, false, false, false));
-            mTileItems.add(new TileItem(1, 2, "Страхование жизни", "", R.drawable.ic_shadow_umbrella, R.color.action_bar_background, false, false, false));
-            mTileItems.add(new TileItem(1, 2, "Страхование жизни", "", R.drawable.test_ic_circle_image, R.color.action_bar_background, false, false, false));
+            mTileItems.add(new TileItem(1, 4, "Широкий виджет", "", R.drawable.oteli, R.color.action_bar_background, false, false, false));
+            mTileItems.add(new TileItem(1, 2, "Путешествия", "", 0, R.drawable.test_aero_back, false, false, true));
+            mTileItems.add(new TileItem(1, 2, "Ипотека", "", R.drawable.strahovanie_kvartiri, R.color.user_fragment_red_money_color, false, false, false));
+            mTileItems.add(new TileItem(1, 2, "Мобильная связь", "", R.drawable.mobil_svyaz, R.color.mobile_connection, false, false, false));
+            mTileItems.add(new TileItem(1, 2, "КАСКО", "", R.drawable.osago_img, R.color.action_bar_background, false, false, false));
+            mTileItems.add(new TileItem(1, 2, "Обучение \nпрофессии:\nHTML-верстка", "", R.drawable.html_verstka, R.color.avio_sales_yellow, false, false, false));
+            mTileItems.add(new TileItem(1, 2, "Виджет с портретом", "", R.drawable.test_ic_circle_image, R.color.action_bar_background, false, false, false));
 
             // Add Item Button
             mTileItems.add(new TileItem(1, 2, "+", "", R.drawable.ic_shadow_umbrella, R.color.action_bar_background, true, false, false));

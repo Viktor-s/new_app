@@ -15,9 +15,8 @@ import me.justup.upme.services.ApplicationSupervisorService;
 import me.justup.upme.utils.AppPreferences;
 import me.justup.upme.utils.Constance;
 
-
 public class SettingsMonitoringFragment extends Fragment {
-    private AppPreferences mAppPreferences;
+    private AppPreferences mAppPreferences = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -34,6 +33,10 @@ public class SettingsMonitoringFragment extends Fragment {
             mOnOffMonitoring.setOnCheckedChangeListener(new MonitoringListener());
         }
 
+        CheckBox mDemoMode = (CheckBox) v.findViewById(R.id.demo_mode);
+        mDemoMode.setChecked(mAppPreferences.isDemoMode());
+        mDemoMode.setOnCheckedChangeListener(new DemoModeListener());
+
         return v;
     }
 
@@ -46,6 +49,17 @@ public class SettingsMonitoringFragment extends Fragment {
             } else {
                 mAppPreferences.setMonitoring(true);
                 getActivity().startService(new Intent(getActivity().getApplicationContext(), ApplicationSupervisorService.class));
+            }
+        }
+    }
+
+    private class DemoModeListener implements CompoundButton.OnCheckedChangeListener {
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            if (mAppPreferences.isDemoMode()) {
+                mAppPreferences.setDemoMode(false);
+            } else {
+                mAppPreferences.setDemoMode(true);
             }
         }
     }

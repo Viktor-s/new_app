@@ -26,11 +26,13 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.justup.upme.JustUpApplication;
 import me.justup.upme.R;
 import me.justup.upme.db.DBAdapter;
 import me.justup.upme.entity.ProductCategoryEntity;
 import me.justup.upme.entity.ProductsCategoryBrandEntity;
 import me.justup.upme.entity.ProductsProductEntity;
+import me.justup.upme.utils.AppPreferences;
 
 import static me.justup.upme.db.DBHelper.PRODUCTS_BRAND_CATEGORIES_BRAND_ID;
 import static me.justup.upme.db.DBHelper.PRODUCTS_BRAND_CATEGORIES_IMAGE;
@@ -58,6 +60,7 @@ public class ProductsFragment extends Fragment {
     private LayoutInflater mLayoutInflater = null;
     private LinearLayout mContainerProductMain = null;
     private ArrayList<ProductsCategoryBrandEntity> mAllBrandsList = new ArrayList<>();
+    private AppPreferences mAppPreferences = null;
 
     private String[] mColorForProduct = null;
 
@@ -69,6 +72,8 @@ public class ProductsFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+
+        mAppPreferences = new AppPreferences(JustUpApplication.getApplication().getApplicationContext());
 
         mColorForProduct = getResources().getStringArray(R.array.color_for_product);
         mDatabase = DBAdapter.getInstance().openDatabase();
@@ -162,10 +167,82 @@ public class ProductsFragment extends Fragment {
                 TextView categoryName = (TextView) groupProductLayout.findViewById(R.id.category_name);
                 categoryName.setText(mListCategory.get(i).getName());
                 ImageView groupProductPhoto = (ImageView) groupProductLayout.findViewById(R.id.group_product_photo);
-                String imagePath = (mListCategory.get(i).getBrandList().get(j).getImage() != null && mListCategory.get(i).getBrandList().get(j).getImage().length() > 1) ? mListCategory.get(i).getBrandList().get(j).getImage() : "fake";
-                Picasso.with(getActivity()).load(imagePath).placeholder(R.mipmap.ic_launcher).into(groupProductPhoto);
                 TextView groupProductTitle = (TextView) groupProductLayout.findViewById(R.id.group_product_title);
-                groupProductTitle.setText(mListCategory.get(i).getBrandList().get(j).getName());
+                String title = mListCategory.get(i).getBrandList().get(j).getName();
+                groupProductTitle.setText(title);
+
+                String imagePath = "fake";
+
+                if(mAppPreferences.isDemoMode()){
+                    if(title.equals("Кредит наличными без залога") || title.equals("Кредит наличными под залог")){
+                        // Set Image to Product Item
+                        Picasso.with(getActivity()).load(R.drawable.prod_nalich_bez_zaloga).placeholder(R.mipmap.ic_launcher).into(groupProductPhoto);
+                    }else if(title.equals("Ипотека") || title.equals("Коммунальные платежи") || title.equals("Страхование квартиры")){
+                        // Set Image to Product Item
+                        Picasso.with(getActivity()).load(R.drawable.strahovanie_kvartiri).placeholder(R.mipmap.ic_launcher).into(groupProductPhoto);
+                    }else if(title.equals("Микрозаймы")){
+                        // Set Image to Product Item
+                        Picasso.with(getActivity()).load(R.drawable.mikrozaimi).placeholder(R.mipmap.ic_launcher).into(groupProductPhoto);
+                    }else if(title.equals("Кредитование бизнеса")){
+                        // Set Image to Product Item
+                        Picasso.with(getActivity()).load(R.drawable.kreditovanie_biznesa).placeholder(R.mipmap.ic_launcher).into(groupProductPhoto);
+                    }else if(title.equals("Вералайф")){
+                        // Set Image to Product Item
+                        Picasso.with(getActivity()).load(R.drawable.veralaif).placeholder(R.mipmap.ic_launcher).into(groupProductPhoto);
+                    }else if(title.equals("ОСАГО") || title.equals("КАСКО")){
+                        // Set Image to Product Item
+                        Picasso.with(getActivity()).load(R.drawable.osago_img).placeholder(R.mipmap.ic_launcher).into(groupProductPhoto);
+                    }else if(title.equals("Страхование жизни")){
+                        // Set Image to Product Item
+                        Picasso.with(getActivity()).load(R.drawable.strahovanie_gizni).placeholder(R.mipmap.ic_launcher).into(groupProductPhoto);
+                    }else if(title.equals("Авиабилеты")){
+                        // Set Image to Product Item
+                        Picasso.with(getActivity()).load(R.drawable.aviabilet).placeholder(R.mipmap.ic_launcher).into(groupProductPhoto);
+                    }else if(title.equals("Круизы")){
+                        // Set Image to Product Item
+                        Picasso.with(getActivity()).load(R.drawable.kruizi).placeholder(R.mipmap.ic_launcher).into(groupProductPhoto);
+                    }else if(title.equals("Отели")){
+                        // Set Image to Product Item
+                        Picasso.with(getActivity()).load(R.drawable.oteli).placeholder(R.mipmap.ic_launcher).into(groupProductPhoto);
+                    }else if(title.equals("Экскурсии")){
+                        // Set Image to Product Item
+                        Picasso.with(getActivity()).load(R.drawable.ekscursii).placeholder(R.mipmap.ic_launcher).into(groupProductPhoto);
+                    }else if(title.equals("Пакетные туры")){
+                        // Set Image to Product Item
+                        Picasso.with(getActivity()).load(R.drawable.paketnie_turi).placeholder(R.mipmap.ic_launcher).into(groupProductPhoto);
+                    }else if(title.equals("Обучение профессии: HTML-верстка")){
+                        // Set Image to Product Item
+                        Picasso.with(getActivity()).load(R.drawable.html_verstka).placeholder(R.mipmap.ic_launcher).into(groupProductPhoto);
+                    }else if(title.equals("Обучение профессии: Интернет маркетолог")){
+                        // Set Image to Product Item
+                        Picasso.with(getActivity()).load(R.drawable.internet_marketolog).placeholder(R.mipmap.ic_launcher).into(groupProductPhoto);
+                    }else if(title.equals("Управление общественным транспортом")){
+                        // Set Image to Product Item
+                        Picasso.with(getActivity()).load(R.drawable.uprav_obsh_transport).placeholder(R.mipmap.ic_launcher).into(groupProductPhoto);
+                    }else if(title.equals("Спортивная гребля")){
+                        // Set Image to Product Item
+                        Picasso.with(getActivity()).load(R.drawable.sport_grebla).placeholder(R.mipmap.ic_launcher).into(groupProductPhoto);
+                    }else if(title.equals("Работа с почтовыми сообщениями")){
+                        // Set Image to Product Item
+                        Picasso.with(getActivity()).load(R.drawable.pochtov_slugba).placeholder(R.mipmap.ic_launcher).into(groupProductPhoto);
+                    }else if(title.equals("Мобильная связь")){
+                        // Set Image to Product Item
+                        Picasso.with(getActivity()).load(R.drawable.mobil_svyaz).placeholder(R.mipmap.ic_launcher).into(groupProductPhoto);
+                    }else if(title.equals("Интернет")){
+                        // Set Image to Product Item
+                        Picasso.with(getActivity()).load(R.drawable.internet).placeholder(R.mipmap.ic_launcher).into(groupProductPhoto);
+                    }else if(title.equals("Онлайн-игры") || title.equals("Оффлайн-игры")){
+                        // Set Image to Product Item
+                        Picasso.with(getActivity()).load(R.drawable.offline_game).placeholder(R.mipmap.ic_launcher).into(groupProductPhoto);
+                    }
+                }else{
+                    imagePath = (mListCategory.get(i).getBrandList().get(j).getImage() != null && mListCategory.get(i).getBrandList().get(j).getImage().length() > 1) ? mListCategory.get(i).getBrandList().get(j).getImage() : "fake";
+                    // Set Image to Product Item
+                    Picasso.with(getActivity()).load(imagePath).placeholder(R.mipmap.ic_launcher).into(groupProductPhoto);
+                }
+
+                LOGD(TAG, "Image Path : " + imagePath + ", Title : " + title);
+
                 TextView groupProductDescription = (TextView) groupProductLayout.findViewById(R.id.group_product_description);
                 groupProductDescription.setText(mListCategory.get(i).getBrandList().get(j).getDescription());
                 groupProductLayout.setOnClickListener(new View.OnClickListener() {
@@ -194,17 +271,17 @@ public class ProductsFragment extends Fragment {
         }
     }
 
-
     private void updateProductsList() {
         mCursorProducts = mDatabase.rawQuery("SELECT * FROM " + PRODUCTS_CATEGORIES_TABLE_NAME, null);
         mListCategory = fillProductsFromCursor(mCursorProducts);
+
         LOGD(TAG, mListCategory.toString());
         if (mCursorProducts != null) {
             mCursorProducts.close();
         }
     }
 
-    private List<ProductCategoryEntity> fillProductsFromCursor(Cursor cursorProducts) {
+    public List<ProductCategoryEntity> fillProductsFromCursor(Cursor cursorProducts) {
         ArrayList<ProductCategoryEntity> categoryEntities = new ArrayList<>();
 
         for (cursorProducts.moveToFirst(); !cursorProducts.isAfterLast(); cursorProducts.moveToNext()) {

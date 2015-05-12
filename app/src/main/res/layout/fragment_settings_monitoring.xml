@@ -1,17 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:padding="@dimen/base30dp720sw"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/base30dp720sw">
 
     <TextView
-        android:text="@string/settings_monitor"
-        style="@style/SettingsTitle" />
+        style="@style/SettingsTitle"
+        android:text="@string/settings_monitor" />
 
     <CheckBox
+        android:id="@+id/monitoring_checkBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/settings_on_off_monitoring"
-        android:id="@+id/monitoring_checkBox" />
+        android:text="@string/settings_on_off_monitoring" />
+
+    <CheckBox
+        android:id="@+id/demo_mode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/base15dp720sw"
+        android:text="@string/settings_demo" />
 </LinearLayout>

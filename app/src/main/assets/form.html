@@ -1,6 +1,6 @@
 <html>
 
-  <head>
+<head>
     <script type="text/javascript">
       function prepareToSubmit(){
 
@@ -10,18 +10,19 @@
 
         window.android.submit(JSON.stringify(myJSONObject), "methodName");
       }
+
     </script>
-  </head>
+</head>
 
-  <body>
-    <h2>Form</h2>
+<body>
+<h2>Form</h2>
 
-    <form>
-    First name: <input type="text" name="firstname" id="firstname"/><br />
-    Last name: <input type="text" name="lastname" id="lastname"/><br />
+<form>
+    First name: <input type="text" name="firstname" id="firstname"/><br/>
+    Last name: <input type="text" name="lastname" id="lastname"/><br/>
 
     <input type="button" onclick="prepareToSubmit();" value="submit">
 
-    </form>
-  </body>
+</form>
+</body>
 </html>

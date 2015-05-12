@@ -7,4 +7,8 @@ public class Constance {
 
     // BroadcastReceiver
     public static final String BOOT_ACTION = "android.intent.action.BOOT_COMPLETED";
+
+    // WebRTC
+    public static final String SERVER_ADDRESS = "http://95.213.170.164:8080"; // "https://apprtc.appspot.com";
+
 }

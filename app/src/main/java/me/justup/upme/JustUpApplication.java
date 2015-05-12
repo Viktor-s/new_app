@@ -73,26 +73,38 @@ public class JustUpApplication extends Application {
     private static final int max = 2147483647;
 
     private SharedPreferences mSharedPref = null;
+    private String keyprefVideoCallEnabled = null;
     private String keyprefResolution = null;
     private String keyprefFps = null;
+    private String keyprefVideoBitrateType = null;
     private String keyprefBitrateType = null;
     private String keyprefBitrateValue = null;
     private String keyprefVideoCodec = null;
+    private String keyprefVideoBitrateValue = null;
     private String keyprefHwCodecAcceleration = null;
+    private String keyprefAudioBitrateType = null;
+    private String keyprefAudioBitrateValue = null;
+    private String keyprefAudioCodec = null;
     private String keyprefCpuUsageDetection = null;
     private String keyprefDisplayHud = null;
     private String keyprefRoomServerUrl = null;
+    private String keyprefRoom = null;
+    private String keyprefRoomList = null;
 
     public static final String EXTRA_ROOM_URL = "org.appspot.apprtc.ROOM_URL";
     public static final String EXTRA_ROOMID = "org.appspot.apprtc.ROOMID";
     public static final String EXTRA_LOOPBACK = "org.appspot.apprtc.LOOPBACK";
     public static final String EXTRA_HWCODEC = "org.appspot.apprtc.HWCODEC";
+    public static final String EXTRA_VIDEO_CALL = "org.appspot.apprtc.VIDEO_CALL";
     public static final String EXTRA_VIDEO_BITRATE = "org.appspot.apprtc.VIDEO_BITRATE";
     public static final String EXTRA_VIDEO_WIDTH = "org.appspot.apprtc.VIDEO_WIDTH";
     public static final String EXTRA_VIDEO_HEIGHT = "org.appspot.apprtc.VIDEO_HEIGHT";
     public static final String EXTRA_VIDEO_FPS = "org.appspot.apprtc.VIDEO_FPS";
     public static final String EXTRA_VIDEOCODEC = "org.appspot.apprtc.VIDEOCODEC";
+    public static final String EXTRA_HWCODEC_ENABLED = "org.appspot.apprtc.HWCODEC";
     public static final String EXTRA_CPUOVERUSE_DETECTION = "org.appspot.apprtc.CPUOVERUSE_DETECTION";
+    public static final String EXTRA_AUDIO_BITRATE = "org.appspot.apprtc.AUDIO_BITRATE";
+    public static final String EXTRA_AUDIOCODEC = "org.appspot.apprtc.AUDIOCODEC";
     public static final String EXTRA_DISPLAY_HUD = "org.appspot.apprtc.DISPLAY_HUD";
     public static final String EXTRA_CMDLINE = "org.appspot.apprtc.CMDLINE";
     public static final String EXTRA_RUNTIME = "org.appspot.apprtc.RUNTIME";
@@ -157,17 +169,24 @@ public class JustUpApplication extends Application {
         mJustUpApplication = JustUpApplication.this;
 
         // Init Pref
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
         mSharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
+        keyprefVideoCallEnabled = getString(R.string.pref_videocall_key);
         keyprefResolution = getString(R.string.pref_resolution_key);
         keyprefFps = getString(R.string.pref_fps_key);
-        keyprefBitrateType = getString(R.string.pref_startbitrate_key);
-        keyprefBitrateValue = getString(R.string.pref_startbitratevalue_key);
+        keyprefVideoBitrateType = getString(R.string.pref_startvideobitrate_key);
+        keyprefVideoBitrateValue = getString(R.string.pref_startvideobitratevalue_key);
         keyprefVideoCodec = getString(R.string.pref_videocodec_key);
         keyprefHwCodecAcceleration = getString(R.string.pref_hwcodec_key);
+        keyprefAudioBitrateType = getString(R.string.pref_startaudiobitrate_key);
+        keyprefAudioBitrateValue = getString(R.string.pref_startaudiobitratevalue_key);
+        keyprefAudioCodec = getString(R.string.pref_audiocodec_key);
         keyprefCpuUsageDetection = getString(R.string.pref_cpu_usage_detection_key);
         keyprefDisplayHud = getString(R.string.pref_displayhud_key);
         keyprefRoomServerUrl = getString(R.string.pref_room_server_url_key);
+        keyprefRoom = getString(R.string.pref_room_key);
+        keyprefRoomList = getString(R.string.pref_room_list_key);
 
         // Main App DB Singleton
         DBAdapter.initInstance();
@@ -177,8 +196,11 @@ public class JustUpApplication extends Application {
 
         String roomUrl = mSharedPref.getString(keyprefRoomServerUrl, getString(R.string.pref_room_server_url_default));
 
-        // Get default video codec.
-        String videoCodec = mSharedPref.getString(keyprefVideoCodec, getString(R.string.pref_videocodec_default));
+        // Get default codecs.
+        String videoCodec = mSharedPref.getString(keyprefVideoCodec,
+                getString(R.string.pref_videocodec_default));
+        String audioCodec = mSharedPref.getString(keyprefAudioCodec,
+                getString(R.string.pref_audiocodec_default));
 
         // Check HW codec flag.
         boolean hwCodec = mSharedPref.getBoolean(keyprefHwCodecAcceleration, Boolean.valueOf(getString(R.string.pref_hwcodec_default)));
@@ -212,13 +234,21 @@ public class JustUpApplication extends Application {
             }
         }
 
-        // Get start bitrate.
-        int startBitrate = 0;
-        String bitrateTypeDefault = getString(R.string.pref_startbitrate_default);
-        String bitrateType = mSharedPref.getString(keyprefBitrateType, bitrateTypeDefault);
+        // Get video and audio start bitrate.
+        int videoStartBitrate = 0;
+        String bitrateTypeDefault = getString(R.string.pref_startvideobitrate_default);
+        String bitrateType = mSharedPref.getString(keyprefVideoBitrateType, bitrateTypeDefault);
         if (!bitrateType.equals(bitrateTypeDefault)) {
-            String bitrateValue = mSharedPref.getString(keyprefBitrateValue, getString(R.string.pref_startbitratevalue_default));
-            startBitrate = Integer.parseInt(bitrateValue);
+            String bitrateValue = mSharedPref.getString(keyprefVideoBitrateValue, getString(R.string.pref_startvideobitratevalue_default));
+            videoStartBitrate = Integer.parseInt(bitrateValue);
+        }
+
+        int audioStartBitrate = 0;
+        bitrateTypeDefault = getString(R.string.pref_startaudiobitrate_default);
+        bitrateType = mSharedPref.getString(keyprefAudioBitrateType, bitrateTypeDefault);
+        if (!bitrateType.equals(bitrateTypeDefault)) {
+            String bitrateValue = mSharedPref.getString(keyprefAudioBitrateValue, getString(R.string.pref_startaudiobitratevalue_default));
+            audioStartBitrate = Integer.parseInt(bitrateValue);
         }
 
         // Test if CpuOveruseDetection should be disabled. By default is on.
@@ -227,21 +257,27 @@ public class JustUpApplication extends Application {
         // Check statistics display option.
         boolean displayHud = mSharedPref.getBoolean(keyprefDisplayHud, Boolean.valueOf(getString(R.string.pref_displayhud_default)));
 
+        // Video call enabled flag.
+        boolean videoCallEnabled = mSharedPref.getBoolean(keyprefVideoCallEnabled, Boolean.valueOf(getString(R.string.pref_videocall_default)));
+
         // Prepare Bundle.
         LOGD(TAG, "Connecting to room " + roomId + " at URL " + roomUrl);
 
         if (validateUrl(roomUrl)) {
             Bundle args = new Bundle();
 
-            args.putString(EXTRA_ROOM_URL, roomUrl);
             args.putString(EXTRA_ROOMID, roomId);
             args.putBoolean(EXTRA_LOOPBACK, loopback);
-            args.putString(EXTRA_VIDEOCODEC, videoCodec);
-            args.putBoolean(EXTRA_HWCODEC, hwCodec);
-            args.putInt(EXTRA_VIDEO_BITRATE, startBitrate);
+            args.putBoolean(EXTRA_VIDEO_CALL, videoCallEnabled);
             args.putInt(EXTRA_VIDEO_WIDTH, videoWidth);
             args.putInt(EXTRA_VIDEO_HEIGHT, videoHeight);
             args.putInt(EXTRA_VIDEO_FPS, cameraFps);
+            args.putInt(EXTRA_VIDEO_BITRATE, videoStartBitrate);
+            args.putString(EXTRA_VIDEOCODEC, videoCodec);
+            args.putBoolean(EXTRA_HWCODEC, hwCodec);
+            args.putInt(EXTRA_AUDIO_BITRATE, audioStartBitrate);
+            args.putString(EXTRA_AUDIOCODEC, audioCodec);
+            args.putString(EXTRA_ROOM_URL, roomUrl);
             args.putBoolean(EXTRA_CPUOVERUSE_DETECTION, cpuOveruseDetection);
             args.putBoolean(EXTRA_DISPLAY_HUD, displayHud);
             args.putBoolean(EXTRA_CMDLINE, commandLineRun);

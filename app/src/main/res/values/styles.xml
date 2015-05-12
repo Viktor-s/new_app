@@ -275,11 +275,10 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/base20sp720sw</item>
-        <item name="android:textColor">@color/main_menu_text</item>
-        <item name="android:paddingStart">@dimen/base20dp720sw</item>
-        <item name="android:paddingTop">@dimen/base10dp720sw</item>
-        <item name="android:paddingBottom">@dimen/base10dp720sw</item>
-        <item name="android:drawablePadding">@dimen/base25dp720sw</item>
+        <item name="android:textColor">@color/action_bar_text_background</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:paddingStart">@dimen/base5dp720sw</item>
+        <item name="android:drawablePadding">@dimen/base5dp720sw</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:background">@drawable/main_menu_background</item>
         <item name="android:layout_weight">1</item>
@@ -448,11 +447,9 @@
     </style>
 
     <!--Launcher-->
-    <style name="Theme.WallpaperPicker" parent="@android:style/Theme.Holo.NoActionBar">
-    </style>
+    <style name="Theme.WallpaperPicker" parent="@android:style/Theme.Holo.NoActionBar"></style>
 
-    <style name="Theme" parent="@android:style/Theme.Holo.Wallpaper.NoTitleBar">
-    </style>
+    <style name="Theme" parent="@android:style/Theme.Holo.Wallpaper.NoTitleBar"></style>
 
     <style name="ClingButton">
         <item name="android:layout_width">wrap_content</item>
@@ -465,6 +462,7 @@
         <item name="android:textStyle">bold</item>
         <item name="android:background">@drawable/cling_button_bg</item>
     </style>
+
     <style name="ClingTitleText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -475,6 +473,7 @@
         <item name="android:shadowDy">2</item>
         <item name="android:shadowRadius">2.0</item>
     </style>
+
     <style name="ClingText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -519,6 +518,7 @@
         <item name="android:drawablePadding">0dp</item>
         <item name="android:paddingTop">@dimen/folder_icon_padding_top</item>
     </style>
+
     <style name="WorkspaceIcon.Landscape.Folder">
         <item name="android:drawablePadding">0dp</item>
         <item name="android:paddingTop">0dp</item>
@@ -535,6 +535,7 @@
         <item name="android:paddingRight">0dp</item>
         <item name="android:drawablePadding">2dp</item>
     </style>
+
     <style name="WorkspaceIcon.Landscape.AppsCustomize">
         <item name="android:background">@null</item>
         <item name="android:paddingTop">4dp</item>
@@ -550,21 +551,25 @@
         <item name="android:paddingLeft">@dimen/qsb_padding_left</item>
         <item name="android:paddingRight">@dimen/qsb_padding_right</item>
     </style>
+
     <style name="SearchDropTargetBar">
         <item name="android:orientation">horizontal</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_gravity">bottom|center_horizontal</item>
     </style>
+
     <style name="SearchButton">
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:paddingTop">@dimen/toolbar_button_vertical_padding</item>
         <item name="android:paddingBottom">@dimen/toolbar_button_vertical_padding</item>
     </style>
+
     <style name="DropTargetButtonContainer">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">match_parent</item>
     </style>
+
     <style name="DropTargetButton">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">match_parent</item>
@@ -597,6 +602,7 @@
         <item name="android:singleLine">true</item>
         <item name="android:ellipsize">end</item>
     </style>
+
     <style name="TabIndicator.AppsCustomize">
         <!-- Overridden in values-land -->
     </style>
@@ -606,23 +612,23 @@
         <item name="android:paddingRight">5dp</item>
         <item name="android:textColor">@color/workspace_all_apps_and_delete_zone_text_color</item>
         <item name="android:textSize">18sp</item>
-        <item name="android:shadowColor">@color/workspace_all_apps_and_delete_zone_text_shadow_color</item>
+        <item name="android:shadowColor">
+            @color/workspace_all_apps_and_delete_zone_text_shadow_color
+        </item>
         <item name="android:shadowDx">0.0</item>
         <item name="android:shadowDy">0.0</item>
         <item name="android:shadowRadius">2.0</item>
     </style>
 
     <!-- Overridden in device overlays -->
-    <style name="CustomClingTitleText">
-    </style>
-    <style name="CustomClingText">
-    </style>
+    <style name="CustomClingTitleText"></style>
+
+    <style name="CustomClingText"></style>
 
     <style name="DocumentsSortPanelText">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:textSize">@dimen/base18sp720sw</item>
-        <item name="android:layout_marginStart">@dimen/base15dp720sw</item>
         <item name="android:layout_marginEnd">@dimen/base20dp720sw</item>
     </style>
 
@@ -631,6 +637,12 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginStart">@dimen/base20dp720sw</item>
         <item name="android:layout_marginEnd">@dimen/base15dp720sw</item>
+    </style>
+
+    <style name="ConnectActivity" parent="android:Theme.Holo">
+        <item name="android:windowActionBar">true</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowNoTitle">false</item>
     </style>
 
 </resources>

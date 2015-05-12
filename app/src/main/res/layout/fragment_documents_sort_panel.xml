@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal">
@@ -9,11 +8,13 @@
         android:id="@+id/sort_column_favorite"
         style="@style/DocumentsSortPanelIcon"
         android:contentDescription="@string/dummy_string"
+        android:layout_marginEnd="@dimen/doc_icon_star_end_dimen"
         android:src="@drawable/ic_file_star_light_blue" />
 
     <TextView
         android:id="@+id/sort_column_type"
         style="@style/DocumentsSortPanelText"
+        android:layout_marginEnd="@dimen/doc_txt_type_end_dimen"
         android:layout_width="wrap_content"
         android:text="@string/type"
         android:textColor="@color/action_bar_text_background"
@@ -26,14 +27,16 @@
         android:layout_weight="3"
         android:text="@string/name"
         android:textColor="@color/action_bar_text_background"
-        android:textStyle="bold"
-        tools:drawableStart="@drawable/ic_sort_arrow_desc" />
+        android:textStyle="bold"/>
+
+    <!--tools:drawableStart="@drawable/ic_sort_arrow_desc"-->
 
     <TextView
         android:id="@+id/sort_column_size"
         style="@style/DocumentsSortPanelText"
         android:layout_width="0dp"
-        android:layout_weight="0.8"
+        android:layout_weight="1"
+        android:layout_marginEnd="@dimen/doc_size_margin_end_dimen"
         android:text="@string/size"
         android:textColor="@color/action_bar_text_background"
         android:textStyle="bold" />
@@ -41,10 +44,13 @@
     <TextView
         android:id="@+id/sort_column_date"
         style="@style/DocumentsSortPanelText"
+        android:gravity="end"
+        android:layout_marginEnd="@dimen/doc_data_margin_end_dimen"
         android:layout_width="wrap_content"
         android:layout_weight="0.3"
         android:drawablePadding="@dimen/base5dp720sw"
-        tools:drawableStart="@drawable/ic_arrow_up_light_blue"
+        android:drawableLeft="@drawable/ic_arrow_up_light_blue"
+        android:drawableStart="@drawable/ic_arrow_up_light_blue"
         android:text="@string/date"
         android:textColor="@color/action_bar_text_background"
         android:textStyle="bold" />
@@ -52,12 +58,14 @@
     <ImageView
         android:id="@+id/sort_column_tab"
         style="@style/DocumentsSortPanelIcon"
+        android:layout_marginEnd="@dimen/doc_phone_margin_end_dimen"
         android:contentDescription="@string/dummy_string"
         android:src="@drawable/ic_file_tab_light_blue" />
 
     <ImageView
         android:id="@+id/sort_column_cloud"
         style="@style/DocumentsSortPanelIcon"
+        android:layout_marginEnd="@dimen/doc_cloud_margin_end_dimen"
         android:contentDescription="@string/dummy_string"
         android:src="@drawable/ic_file_cloud_light_blue" />
 

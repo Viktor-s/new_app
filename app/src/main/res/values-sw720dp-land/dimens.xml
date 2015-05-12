@@ -2,15 +2,15 @@
 <resources> <!--used by 10" tablets-->
 
     <!--Dashboard-->
-    <dimen name="tile_menu_margin_top">355dp</dimen>
+    <dimen name="tile_menu_margin_top">360dp</dimen>
     <dimen name="tile_menu_margin_left">217dp</dimen>
-    <dimen name="tile_rotate_menu_height">475dp</dimen>
+    <dimen name="tile_rotate_menu_height">490dp</dimen>
 
     <dimen name="del_setting_menu_height">90dp</dimen>
     <dimen name="tile_width">128dp</dimen>
 
-    <dimen name="tile_menu_margin_top_sony_z">317dp</dimen>
-    <dimen name="tile_rotate_menu_height_sony_z">400dp</dimen>
+    <dimen name="tile_menu_margin_top_sony_z">326dp</dimen>
+    <dimen name="tile_rotate_menu_height_sony_z">410dp</dimen>
 
     <dimen name="tile_width_sony_z">130dp</dimen>
 

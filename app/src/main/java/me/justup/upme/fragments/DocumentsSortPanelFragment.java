@@ -1,11 +1,13 @@
 package me.justup.upme.fragments;
 
 import android.app.Fragment;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -17,6 +19,9 @@ import me.justup.upme.R;
 import me.justup.upme.entity.FileEntity;
 import me.justup.upme.utils.AppPreferences;
 import me.justup.upme.utils.ExplorerUtils;
+import me.justup.upme.view.dashboard.TileUtils;
+
+import static me.justup.upme.utils.LogUtils.LOGE;
 
 public class DocumentsSortPanelFragment extends Fragment implements View.OnClickListener {
     private static final String TAG = DocumentsSortPanelFragment.class.getSimpleName();
@@ -251,6 +256,27 @@ public class DocumentsSortPanelFragment extends Fragment implements View.OnClick
                 Collections.sort(array, compareByAsc);
             else
                 Collections.sort(array, compareByDesc);
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        try {
+            super.onConfigurationChanged(newConfig);
+
+            if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                LinearLayout.LayoutParams llp = (LinearLayout.LayoutParams) mColumnSize.getLayoutParams();
+                llp.setMargins(0, 0, -1*TileUtils.dpToPx(5, getActivity().getApplicationContext()), 0);
+                mColumnSize.setLayoutParams(llp);
+                mColumnSize.invalidate();
+            } else if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                LinearLayout.LayoutParams llp = (LinearLayout.LayoutParams) mColumnSize.getLayoutParams();
+                llp.setMargins(0, 0, TileUtils.dpToPx(130, getActivity().getApplicationContext()), 0);
+                mColumnSize.setLayoutParams(llp);
+                mColumnSize.invalidate();
+            }
+        } catch (Exception e) {
+            LOGE(TAG, e.getMessage());
         }
     }
 

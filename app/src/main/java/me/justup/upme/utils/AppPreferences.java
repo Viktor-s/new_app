@@ -22,6 +22,7 @@ public class AppPreferences {
     private static final String TAG_JABBER_ID = "jabber_id";
     private static final String TAG_AVATAR_URL = "avatar_url";
     private static final String TAG_MONITORING = "is_monitoring";
+    private static final String TAG_DEMO_MODE = "is_demo_mode";
     private static final String TAG_BROWSER_URL = "browser_url";
     private static final String TAG_FILE_SORT_TYPE = "file_sort_type";
     private static final String TAG_FILE_SORT_IS_DESC = "file_sort_is_desc";
@@ -122,6 +123,16 @@ public class AppPreferences {
             // off
             return mSharedPreferences.getBoolean(TAG_MONITORING, false);
         }
+    }
+
+    public void setDemoMode(boolean isDemoMode) {
+        mEditor = mSharedPreferences.edit();
+        mEditor.putBoolean(TAG_DEMO_MODE, isDemoMode);
+        mEditor.apply();
+    }
+
+    public boolean isDemoMode() {
+        return mSharedPreferences.getBoolean(TAG_DEMO_MODE, true);
     }
 
     public void setBrowserUrl(String url) {

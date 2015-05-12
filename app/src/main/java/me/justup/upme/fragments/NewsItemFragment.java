@@ -29,10 +29,13 @@ import org.brickred.socialauth.android.SocialAuthAdapter.Provider;
 import org.brickred.socialauth.android.SocialAuthError;
 import org.brickred.socialauth.android.SocialAuthListener;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.justup.upme.JustUpApplication;
 import me.justup.upme.MainActivity;
 import me.justup.upme.R;
 import me.justup.upme.adapter.NewsCommentsAdapter;
@@ -93,6 +96,7 @@ public class NewsItemFragment extends Fragment {
     private ProgressBar mProgressBar = null;
     private boolean isScreenOrienrtationChanged = false;
     private boolean isProgressBarShown = true;
+    private AppPreferences mAppPreferences = null;
 
     private View mContentView = null;
     private Button mNewsItemCloseButton = null;
@@ -113,6 +117,7 @@ public class NewsItemFragment extends Fragment {
         super.onAttach(activity);
 
         mDatabase = DBAdapter.getInstance().openDatabase();
+        mAppPreferences = new AppPreferences(JustUpApplication.getApplication().getApplicationContext());
     }
 
     @Override
@@ -307,8 +312,164 @@ public class NewsItemFragment extends Fragment {
 
     private void fillViewsWithData() {
         // Set Data to Web View
-        LOGI(TAG, "HTML Data : " + mArticleFullEntity.getFull_descr());
-        mCWView.setText(mArticleFullEntity.getFull_descr());
+        boolean onlyContent = false;
+        int idNews = mArticleFullEntity.getId();
+        LOGI(TAG, "Id news : " + idNews + ", Is Demo-mode : " + mAppPreferences.isDemoMode() + ", HTML Data : " + mArticleFullEntity.getFull_descr());
+        if(mAppPreferences.isDemoMode()){
+            switch (idNews){
+                case 1:
+                    if(onlyContent) {
+                        InputStream is1 = null;
+                        try {
+                            is1 = getActivity().getAssets().open("news_item/article1.html");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        int size1 = 0;
+                        try {
+                            size1 = is1.available();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        byte[] buffer1 = new byte[size1];
+                        try {
+                            is1.read(buffer1);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        try {
+                            is1.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        String str1 = new String(buffer1);
+                        mCWView.setText(str1);
+                    }else{
+                        mCWView.loadUrl("file:///android_asset/news_item/article1.html");
+                    }
+
+                    break;
+                case 2:
+                    if(onlyContent) {
+                        InputStream is2 = null;
+                        try {
+                            is2 = getActivity().getAssets().open("news_item/article4.html");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        int size2 = 0;
+                        try {
+                            size2 = is2.available();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        byte[] buffer2 = new byte[size2];
+                        try {
+                            is2.read(buffer2);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        try {
+                            is2.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        String str2 = new String(buffer2);
+                        mCWView.setText(str2);
+                    }else{
+                        mCWView.loadUrl("file:///android_asset/news_item/article4.html");
+                    }
+
+                    break;
+                case 3:
+                    if(onlyContent) {
+                        InputStream is3 = null;
+                        try {
+                            is3 = getActivity().getAssets().open("news_item/article2.html");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        int size3 = 0;
+                        try {
+                            size3 = is3.available();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        byte[] buffer3 = new byte[size3];
+                        try {
+                            is3.read(buffer3);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        try {
+                            is3.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        String str3 = new String(buffer3);
+                        mCWView.setText(str3);
+                    }else{
+                        mCWView.loadUrl("file:///android_asset/news_item/article2.html");
+                    }
+
+                    break;
+                case 4:
+                    if(onlyContent) {
+                        InputStream is4 = null;
+                        try {
+                            is4 = getActivity().getAssets().open("news_item/article3.html");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        int size4 = 0;
+                        try {
+                            size4 = is4.available();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        byte[] buffer4 = new byte[size4];
+                        try {
+                            is4.read(buffer4);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        try {
+                            is4.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        String str4 = new String(buffer4);
+                        mCWView.setText(str4);
+                    }else{
+                        mCWView.loadUrl("file:///android_asset/news_item/article3.html");
+                    }
+
+                    break;
+                case 5:
+                    mCWView.setText(mArticleFullEntity.getFull_descr());
+                    break;
+            }
+
+        }else{
+            mCWView.setText(mArticleFullEntity.getFull_descr());
+        }
+
         updateCommentsList();
     }
 

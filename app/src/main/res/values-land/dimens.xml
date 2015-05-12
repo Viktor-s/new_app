@@ -1,5 +1,13 @@
 <resources>
 
+    <!-- Document -->
+    <dimen name="doc_icon_star_end_dimen">15dp</dimen>
+    <dimen name="doc_txt_type_end_dimen">25dp</dimen>
+    <dimen name="doc_cloud_margin_end_dimen">20dp</dimen>
+    <dimen name="doc_phone_margin_end_dimen">5dp</dimen>
+    <dimen name="doc_data_margin_end_dimen">0dp</dimen>
+    <dimen name="doc_size_margin_end_dimen">-5dp</dimen>
+
     <!--Dashboard-->
     <dimen name="tile_menu_margin_top">320dp</dimen>
     <dimen name="tile_menu_margin_left">215dp</dimen>

@@ -13,6 +13,8 @@ import me.justup.upme.R;
 
 
 public class SettingsFragment extends Fragment implements View.OnClickListener {
+    private static final String TAG = SettingsFragment.class.getSimpleName();
+
     private TextView mWiFiMenu;
     private TextView mScreenSoundMenu;
     private TextView mSocialMenu;
@@ -20,7 +22,6 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     private TextView mWebRTCMenu;
     private TextView mServersMenu;
     private ArrayList<TextView> mButtonList = new ArrayList<>();
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

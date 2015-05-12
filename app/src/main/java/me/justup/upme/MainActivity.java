@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -65,6 +66,7 @@ import me.justup.upme.utils.AppPreferences;
 import me.justup.upme.utils.CircularImageView;
 import me.justup.upme.utils.CommonUtils;
 import me.justup.upme.utils.Constance;
+import me.justup.upme.view.dashboard.TileUtils;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.LOGE;
@@ -99,6 +101,7 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
     private Button mNewsButton, mMailButton, mCalendarButton, mProductsButton, mBriefcaseButton, mDocsButton, mStudyButton, mBrowserButton, mSettingsButton;
     private Push push;
     private String shareFileName;
+    private Button mExitButton = null;
 
     private FrameLayout.LayoutParams mLogoParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
     private ImageView mUPMELogo;
@@ -110,6 +113,8 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
     private Fragment mUserFragment = null;
     private Fragment mNewsFeedFragmentNew = null;
     private Fragment mProductsFragment = null;
+
+    private Bundle mCallParam = null;
 
     // broadcast push
     public static final String BROADCAST_ACTION_CALL = "me.justup.upme.broadcast.call.call";
@@ -142,12 +147,13 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
     };
 
     private boolean isAccountSettingsLoad;
-    private CircularImageView mLoadAccountSettings;
-
+    private CircularImageView mLoadAccountSettings = null;
 
     @Override
     protected void onResume() {
         super.onResume();
+        LOGI(TAG, "onResume");
+
         // Launcher
         onResumeLA();
 
@@ -159,6 +165,8 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LOGI(TAG, "onCreate");
+
         hideNavBar();
         setContentView(R.layout.activity_main);
 
@@ -189,7 +197,8 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
         mUserName = (TextView) findViewById(R.id.ab_user_name_textView);
         mUserInSystem = (TextView) findViewById(R.id.ab_user_in_system_textView);
 
-        Button mExitButton = (Button) findViewById(R.id.demo_menu_item);
+        mExitButton = (Button) findViewById(R.id.demo_menu_item);
+        mExitButton.setTag(getResources().getDrawable(R.drawable.ic_main_demo));
         mExitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -284,7 +293,7 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
                 if (currentlySelectedFragment != SELECTED_FRAGMENT_NEWS) {
                     startHttpIntent(getShortDescriptionQuery(100, 0), HttpIntentService.NEWS_PART_SHORT);
                     //startHttpIntent(getShortDescriptionQuery(500, 20), HttpIntentService.NEWS_PART_SHORT);
-                    changeButtonState(mNewsButton);
+                    changeButtonState(mNewsButton, (Drawable) getResources().getDrawable(R.drawable.ic_main_news_pink));
 
                     fragment = mNewsFeedFragmentNew;
                     currentlySelectedFragment = SELECTED_FRAGMENT_NEWS;
@@ -297,7 +306,7 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
                     BaseMethodEmptyQuery query = new BaseMethodEmptyQuery();
                     query.method = ApiWrapper.ACCOUNT_GET_ALL_CONTACTS;
                     startHttpIntent(query, HttpIntentService.MAIL_CONTACT_PART);
-                    changeButtonState(mMailButton);
+                    changeButtonState(mMailButton, (Drawable) getResources().getDrawable(R.drawable.ic_main_mail_pink));
 
                     fragment = new MailFragment();
                     currentlySelectedFragment = SELECTED_FRAGMENT_MAIL;
@@ -309,7 +318,7 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
                 if (currentlySelectedFragment != SELECTED_FRAGMENT_CALENDAR) {
                     LocalDateTime firstDayCurrentWeek = new LocalDateTime().withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0).withDayOfWeek(DateTimeConstants.MONDAY);
                     startHttpIntent(getEventCalendarQuery(firstDayCurrentWeek), HttpIntentService.CALENDAR_PART);
-                    changeButtonState(mCalendarButton);
+                    changeButtonState(mCalendarButton, (Drawable) getResources().getDrawable(R.drawable.ic_main_cal_pink));
 
                     fragment = new CalendarFragment();
                     currentlySelectedFragment = SELECTED_FRAGMENT_CALENDAR;
@@ -320,7 +329,7 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
             case R.id.products_menu_item:
                 if (currentlySelectedFragment != SELECTED_FRAGMENT_PRODUCTS) {
                     startHttpIntent(new ProductsGetAllCategoriesQuery(), HttpIntentService.PRODUCTS_PART);
-                    changeButtonState(mProductsButton);
+                    changeButtonState(mProductsButton, (Drawable) getResources().getDrawable(R.drawable.ic_main_prod_pink));
 
                     fragment = mProductsFragment;
                     currentlySelectedFragment = SELECTED_FRAGMENT_PRODUCTS;
@@ -333,7 +342,7 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
                     BaseMethodEmptyQuery query = new BaseMethodEmptyQuery();
                     query.method = ApiWrapper.ACCOUNT_GET_ALL_CONTACTS;
                     startHttpIntent(query, HttpIntentService.MAIL_CONTACT_PART);
-                    changeButtonState(mBriefcaseButton);
+                    changeButtonState(mBriefcaseButton, (Drawable) getResources().getDrawable(R.drawable.ic_main_brief_pink));
 
                     fragment = new BriefcaseFragment();
                     currentlySelectedFragment = SELECTED_FRAGMENT_BRIEFCASE;
@@ -343,7 +352,7 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
 
             case R.id.docs_menu_item:
                 if (currentlySelectedFragment != SELECTED_FRAGMENT_DOCS) {
-                    changeButtonState(mDocsButton);
+                    changeButtonState(mDocsButton, (Drawable) getResources().getDrawable(R.drawable.ic_main_docs_pink));
 
                     fragment = new DocumentsFragment();
                     currentlySelectedFragment = SELECTED_FRAGMENT_DOCS;
@@ -354,7 +363,7 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
             case R.id.study_menu_item:
                 if (currentlySelectedFragment != SELECTED_FRAGMENT_STUDY) {
                     startHttpIntent(new EducationGetProgramsQuery(), HttpIntentService.EDUCATION_GET_PRODUCTS);
-                    changeButtonState(mStudyButton);
+                    changeButtonState(mStudyButton, (Drawable) getResources().getDrawable(R.drawable.ic_main_study_pink));
 
                     fragment = new EducationFragment();
                     currentlySelectedFragment = SELECTED_FRAGMENT_STUDY;
@@ -364,7 +373,7 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
 
             case R.id.browser_menu_item:
                 if (currentlySelectedFragment != SELECTED_FRAGMENT_BROWSER) {
-                    changeButtonState(mBrowserButton);
+                    changeButtonState(mBrowserButton, (Drawable) getResources().getDrawable(R.drawable.ic_main_browser_pink));
 
                     fragment = new BrowserFragment();
                     currentlySelectedFragment = SELECTED_FRAGMENT_BROWSER;
@@ -374,7 +383,7 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
 
             case R.id.settings_menu_item:
                 if (currentlySelectedFragment != SELECTED_FRAGMENT_SETTINGS) {
-                    changeButtonState(mSettingsButton);
+                    changeButtonState(mSettingsButton, (Drawable) getResources().getDrawable(R.drawable.ic_main_settings_pink));
 
                     fragment = new SettingsFragment();
                     currentlySelectedFragment = SELECTED_FRAGMENT_SETTINGS;
@@ -398,39 +407,39 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
     private void reopenFragment(int currentNumberFragment) {
         switch (currentNumberFragment) {
             case SELECTED_FRAGMENT_NEWS:
-                changeButtonState(mNewsButton);
+                changeButtonState(mNewsButton, null);
                 break;
 
             case SELECTED_FRAGMENT_MAIL:
-                changeButtonState(mMailButton);
+                changeButtonState(mMailButton, null);
                 break;
 
             case SELECTED_FRAGMENT_CALENDAR:
-                changeButtonState(mCalendarButton);
+                changeButtonState(mCalendarButton, null);
                 break;
 
             case SELECTED_FRAGMENT_PRODUCTS:
-                changeButtonState(mProductsButton);
+                changeButtonState(mProductsButton, null);
                 break;
 
             case SELECTED_FRAGMENT_BRIEFCASE:
-                changeButtonState(mBriefcaseButton);
+                changeButtonState(mBriefcaseButton, null);
                 break;
 
             case SELECTED_FRAGMENT_DOCS:
-                changeButtonState(mDocsButton);
+                changeButtonState(mDocsButton, null);
                 break;
 
             case SELECTED_FRAGMENT_STUDY:
-                changeButtonState(mStudyButton);
+                changeButtonState(mStudyButton, null);
                 break;
 
             case SELECTED_FRAGMENT_BROWSER:
-                changeButtonState(mBrowserButton);
+                changeButtonState(mBrowserButton, null);
                 break;
 
             case SELECTED_FRAGMENT_SETTINGS:
-                changeButtonState(mSettingsButton);
+                changeButtonState(mSettingsButton, null);
                 break;
 
             default:
@@ -444,14 +453,31 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
 
     private void makeButtonSelector() {
         mNewsButton = (Button) findViewById(R.id.news_menu_item);
+        mNewsButton.setTag(getResources().getDrawable(R.drawable.ic_main_news));
+
         mMailButton = (Button) findViewById(R.id.mail_menu_item);
+        mNewsButton.setTag(getResources().getDrawable(R.drawable.ic_main_mail));
+
         mCalendarButton = (Button) findViewById(R.id.calendar_menu_item);
+        mNewsButton.setTag(getResources().getDrawable(R.drawable.ic_main_cal));
+
         mProductsButton = (Button) findViewById(R.id.products_menu_item);
+        mNewsButton.setTag(getResources().getDrawable(R.drawable.ic_main_prod));
+
         mBriefcaseButton = (Button) findViewById(R.id.briefcase_menu_item);
+        mNewsButton.setTag(getResources().getDrawable(R.drawable.ic_main_brief));
+
         mDocsButton = (Button) findViewById(R.id.docs_menu_item);
+        mNewsButton.setTag(getResources().getDrawable(R.drawable.ic_main_docs));
+
         mStudyButton = (Button) findViewById(R.id.study_menu_item);
+        mNewsButton.setTag(getResources().getDrawable(R.drawable.ic_main_study));
+
         mBrowserButton = (Button) findViewById(R.id.browser_menu_item);
+        mNewsButton.setTag(getResources().getDrawable(R.drawable.ic_main_browser));
+
         mSettingsButton = (Button) findViewById(R.id.settings_menu_item);
+        mNewsButton.setTag(getResources().getDrawable(R.drawable.ic_main_settings));
 
         mNewsButton.setOnClickListener(this);
         mMailButton.setOnClickListener(this);
@@ -463,6 +489,7 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
         mBrowserButton.setOnClickListener(this);
         mSettingsButton.setOnClickListener(this);
 
+        // Add all menu button to List
         if (mButtonList != null) {
             mButtonList.add(mNewsButton);
             mButtonList.add(mMailButton);
@@ -473,17 +500,46 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
             mButtonList.add(mStudyButton);
             mButtonList.add(mBrowserButton);
             mButtonList.add(mSettingsButton);
+            mButtonList.add(mExitButton);
+        }
+
+        // Set Drawable Padding
+        if (mButtonList != null) {
+            for (Button button : mButtonList) {
+                if(JustUpApplication.getScreenDensityDpi()!=240){
+                    button.setCompoundDrawablePadding(TileUtils.dpToPx( (int) getResources().getDimension(R.dimen.base10dp720sw), getApplicationContext()));
+                }
+            }
         }
     }
 
-    private void changeButtonState(Button activeButton) {
+    private void changeButtonState(Button activeButton, Drawable drawable) {
         if (mButtonList != null) {
             for (Button button : mButtonList) {
-                button.setBackground(getResources().getDrawable(R.drawable.main_menu_background));
+                if (!button.getText().toString().equals("Демо - режим")) {
+                    button.setBackground(getResources().getDrawable(R.drawable.main_menu_background));
+                }
+
+                if(JustUpApplication.getScreenDensityDpi()!=240){
+                    button.setCompoundDrawablePadding(TileUtils.dpToPx( (int) getResources().getDimension(R.dimen.base10dp720sw), getApplicationContext()));
+                }
+
+                if(button.getText().toString().equals("Новости")){
+                    button.setCompoundDrawablesWithIntrinsicBounds((Drawable) getResources().getDrawable(R.drawable.ic_main_news), null, null, null);
+                }else{
+                    button.setCompoundDrawablesWithIntrinsicBounds((Drawable) button.getTag(), null, null, null);
+                }
             }
         }
 
         activeButton.setBackground(getResources().getDrawable(R.drawable.main_menu_pressed_background));
+        if(drawable!=null) {
+            if(JustUpApplication.getScreenDensityDpi()!=240){
+                activeButton.setCompoundDrawablePadding(TileUtils.dpToPx( (int) getResources().getDimension(R.dimen.base10dp720sw), getApplicationContext()));
+            }
+
+            activeButton.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
+        }
     }
 
     private class OnCornerButtonListener implements View.OnClickListener {
@@ -544,6 +600,7 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
     @Override
     public void onStop() {
         super.onStop();
+        LOGI(TAG, "onStop");
 
         stopService(new Intent(this, GPSTracker.class));
 
@@ -625,7 +682,7 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
         Fragment fragment = new MailFragment();
         getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, fragment).commit();
 
-        changeButtonState(mMailButton);
+        changeButtonState(mMailButton, null);
         if (isShowMainFragmentContainer != null && !isShowMainFragmentContainer) {
             showMainFragmentContainer();
         }
@@ -655,7 +712,7 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
 
         getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new DocumentsFragment()).commit();
 
-        changeButtonState(mDocsButton);
+        changeButtonState(mDocsButton, null);
         if (isShowMainFragmentContainer != null && !isShowMainFragmentContainer) {
             showMainFragmentContainer();
         }
@@ -791,16 +848,32 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
     }
 
     public void prepareAndCallRTC(Object roomId, Boolean loopback, Boolean commandLineRun, int runTimeMs, int idPerson, String contactName) {
-        final Bundle callParam = JustUpApplication.getApplication().prepareCallParam(roomId.getClass().equals(String.class) ? (String) roomId : String.valueOf(roomId), loopback, commandLineRun, runTimeMs, idPerson, contactName);
+        LOGI(WebRtcFragment.TAG, "prepareAndCallRTC");
+
+        mCallParam = JustUpApplication.getApplication().prepareCallParam(roomId.getClass().equals(String.class) ? (String) roomId : String.valueOf(roomId), loopback, commandLineRun, runTimeMs, idPerson, contactName);
         findViewById(R.id.container_video_chat).setVisibility(View.VISIBLE);
-        mWebRtcFragment = WebRtcFragment.newInstance(callParam);
+        mWebRtcFragment = WebRtcFragment.newInstance(mCallParam);
         getFragmentManager().beginTransaction().replace(R.id.container_video_chat, mWebRtcFragment).commit();
+    }
+
+    public void reCall(){
+        new Handler().postDelayed(new Runnable() {
+            public void run() {
+                LOGI(WebRtcFragment.TAG, "Handler reCall");
+
+                findViewById(R.id.container_video_chat).setVisibility(View.VISIBLE);
+                mWebRtcFragment = WebRtcFragment.newInstance(mCallParam);
+                getFragmentManager().beginTransaction().replace(R.id.container_video_chat, mWebRtcFragment).commit();
+            }
+        }, 1500);
     }
 
     public void clearDataAfterCallRTC() {
         Fragment videoFragment = getFragmentManager().findFragmentById(R.id.container_video_chat);
-        if (videoFragment != null)
+        if (videoFragment != null) {
             getFragmentManager().beginTransaction().remove(videoFragment).commit();
+        }
+
         findViewById(R.id.container_video_chat).setVisibility(View.GONE);
     }
 
@@ -839,6 +912,8 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
 
     @Override
     protected void onPause() {
+        LOGI(TAG, "onPause");
+
         // Launcher
         // NOTE: We want all transitions from launcher to act as if the
         // wallpaper were enabled

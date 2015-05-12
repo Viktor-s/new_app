@@ -113,7 +113,20 @@ public class SplashActivity extends Activity {
             // Maybe add some param
             startActivity(intent);
         }else if(isDeviceRegister==null){
-            Toast.makeText(getApplicationContext(), "Problem width registration device.", Toast.LENGTH_SHORT).show();
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    final Toast toast = Toast.makeText(getApplicationContext(), "Problem width registration device.", Toast.LENGTH_SHORT);
+                    toast.show();
+
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            toast.cancel();
+                        }
+                    }, 2000);
+                }
+            });
         }
     }
 
