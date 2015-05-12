@@ -15,8 +15,9 @@ import android.widget.ImageButton;
 import me.justup.upme.R;
 import me.justup.upme.utils.AppPreferences;
 
-
 public class BrowserFragment extends Fragment implements View.OnClickListener {
+    private static final String TAG = BrowserFragment.class.getSimpleName();
+
     public static final String HOME_URL = "https://www.google.com/";
     private static final String HTTP = "http://";
 
@@ -28,11 +29,19 @@ public class BrowserFragment extends Fragment implements View.OnClickListener {
     private AppPreferences mAppPreferences = null;
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onStart() {
+        super.onStart();
 
         String url = mAppPreferences.getBrowserUrl();
         mWebView.loadUrl(url);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        mAppPreferences.setBrowserUrl(mWebView.getUrl());
+        mWebView.onPause();
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -138,13 +147,21 @@ public class BrowserFragment extends Fragment implements View.OnClickListener {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        // String url = mAppPreferences.getBrowserUrl();
+        // mWebView.loadUrl(url);
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
 
-        mAppPreferences.setBrowserUrl(mWebView.getUrl());
+        // mAppPreferences.setBrowserUrl(mWebView.getUrl());
 
-        mWebView.loadUrl(HOME_URL);
-        mWebView.onPause();
+        // mWebView.loadUrl(HOME_URL);
+        // mWebView.onPause();
     }
 
 }
