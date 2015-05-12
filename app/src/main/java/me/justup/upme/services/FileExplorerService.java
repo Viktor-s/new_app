@@ -167,16 +167,7 @@ public class FileExplorerService extends IntentService {
                 String content = ApiWrapper.responseBodyToString(responseBody);
                 LOGD(TAG, "deleteFileQuery onSuccess(): " + content);
 
-                BaseFileResponse response = null;
-                try {
-                    response = ApiWrapper.gson.fromJson(content, BaseFileResponse.class);
-                } catch (JsonSyntaxException e) {
-                    LOGE(TAG, "gson.fromJson:\n" + content);
-                }
-
-                if (response != null && response.status) {
-                    sendExplorerBroadcast(DELETE);
-                }
+                sendExplorerBroadcast(DELETE);
             }
 
             @Override
