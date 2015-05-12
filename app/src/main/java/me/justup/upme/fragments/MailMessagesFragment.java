@@ -47,6 +47,8 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import org.apache.http.Header;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.PacketListener;
+import org.jivesoftware.smack.Roster;
+import org.jivesoftware.smack.RosterEntry;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.filter.MessageTypeFilter;
@@ -61,6 +63,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
 import me.justup.upme.R;
@@ -70,6 +73,7 @@ import me.justup.upme.entity.SendFileToCloudResponse;
 import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.utils.AnimateButtonClose;
 import me.justup.upme.utils.AppLocale;
+import me.justup.upme.utils.LogUtils;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.LOGE;
@@ -352,26 +356,27 @@ public class MailMessagesFragment extends Fragment {
                     connection.sendPacket(presence);
                     setConnection(connection);
 
-                    /*
-                    Roster roster = connection.getRoster();
-                    Collection<RosterEntry> entries = roster.getEntries();
-                    for (RosterEntry entry : entries) {
-                        LOGD(TAG, "--------------------------------------");
-                        LOGD(TAG, "RosterEntry " + entry);
-                        LOGD(TAG, "User: " + entry.getUser());
-                        LOGD(TAG, "Name: " + entry.getName());
-                        LOGD(TAG, "Status: " + entry.getStatus());
-                        LOGD(TAG, "Type: " + entry.getType());
-                        Presence entryPresence = roster.getPresence(entry.getUser());
+                    if (LogUtils.DEVELOPER_MODE) {
+                        Roster roster = connection.getRoster();
+                        Collection<RosterEntry> entries = roster.getEntries();
+                        for (RosterEntry entry : entries) {
+                            LOGD(TAG, "--------------------------------------");
+                            LOGD(TAG, "RosterEntry " + entry);
+                            LOGD(TAG, "User: " + entry.getUser());
+                            LOGD(TAG, "Name: " + entry.getName());
+                            LOGD(TAG, "Status: " + entry.getStatus());
+                            LOGD(TAG, "Type: " + entry.getType());
+                            Presence entryPresence = roster.getPresence(entry.getUser());
 
-                        LOGD(TAG, "Presence Status: " + entryPresence.getStatus());
-                        LOGD(TAG, "Presence Type: " + entryPresence.getType());
-                        Presence.Type type = entryPresence.getType();
-                        if (type == Presence.Type.available)
-                            LOGD(TAG, "Presence AVAILABLE");
-                        LOGD(TAG, "Presence : " + entryPresence);
+                            LOGD(TAG, "Presence Status: " + entryPresence.getStatus());
+                            LOGD(TAG, "Presence Type: " + entryPresence.getType());
+                            Presence.Type type = entryPresence.getType();
+                            if (type == Presence.Type.available)
+                                LOGD(TAG, "Presence AVAILABLE");
+                            LOGD(TAG, "Presence : " + entryPresence);
+                        }
                     }
-                    */
+
 
                 } catch (XMPPException ex) {
                     LOGE(TAG, "Failed to log in as " + mYourJabberId);
