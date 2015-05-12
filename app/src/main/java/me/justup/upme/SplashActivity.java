@@ -109,6 +109,12 @@ public class SplashActivity extends Activity {
 
     private void goToDashboardActivity() {
         if(isDeviceRegister!=null && isDeviceRegister) {
+
+            if (mTimer != null) {
+                mTimer.cancel();
+                mTimer = null;
+            }
+
             Intent intent = new Intent(SplashActivity.this, MainActivity.class);
             // Maybe add some param
             startActivity(intent);
