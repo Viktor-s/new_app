@@ -711,8 +711,8 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
         setShareFileName(fileName);
 
         getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new DocumentsFragment()).commit();
+        changeButtonState(mDocsButton, getResources().getDrawable(R.drawable.ic_main_docs_pink));
 
-        changeButtonState(mDocsButton, null);
         if (isShowMainFragmentContainer != null && !isShowMainFragmentContainer) {
             showMainFragmentContainer();
         }

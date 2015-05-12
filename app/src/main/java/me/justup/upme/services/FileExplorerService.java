@@ -20,6 +20,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import me.justup.upme.entity.BaseFileResponse;
 import me.justup.upme.entity.FileCopySharedQuery;
 import me.justup.upme.entity.FileDeleteQuery;
 import me.justup.upme.entity.FileUnlinkSharedQuery;
@@ -130,7 +131,16 @@ public class FileExplorerService extends IntentService {
                 String content = ApiWrapper.responseBodyToString(responseBody);
                 LOGD(TAG, "syncSendFileToCloud onSuccess(): " + content);
 
-                sendExplorerBroadcast(UPLOAD);
+                BaseFileResponse response = null;
+                try {
+                    response = ApiWrapper.gson.fromJson(content, BaseFileResponse.class);
+                } catch (JsonSyntaxException e) {
+                    LOGE(TAG, "gson.fromJson:\n" + content);
+                }
+
+                if (response != null && response.status) {
+                    sendExplorerBroadcast(UPLOAD);
+                }
             }
 
             @Override
@@ -157,7 +167,16 @@ public class FileExplorerService extends IntentService {
                 String content = ApiWrapper.responseBodyToString(responseBody);
                 LOGD(TAG, "deleteFileQuery onSuccess(): " + content);
 
-                sendExplorerBroadcast(DELETE);
+                BaseFileResponse response = null;
+                try {
+                    response = ApiWrapper.gson.fromJson(content, BaseFileResponse.class);
+                } catch (JsonSyntaxException e) {
+                    LOGE(TAG, "gson.fromJson:\n" + content);
+                }
+
+                if (response != null && response.status) {
+                    sendExplorerBroadcast(DELETE);
+                }
             }
 
             @Override
@@ -246,7 +265,7 @@ public class FileExplorerService extends IntentService {
                         LOGE(TAG, "gson.fromJson:\n" + content);
                     }
 
-                    if (response != null && response.status.equals("ok")) {
+                    if (response != null && response.status) {
                         Intent intent = new Intent(FILE_ACTION_DONE_BROADCAST);
                         intent.putExtra(BROADCAST_EXTRA_ACTION_TYPE, AVATARS);
                         intent.putExtra(BROADCAST_EXTRA_FILE_HASH, response.file_hash);

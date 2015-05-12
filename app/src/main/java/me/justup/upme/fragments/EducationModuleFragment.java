@@ -383,14 +383,19 @@ public class EducationModuleFragment extends Fragment {
 
         @Override
         public void onSuccess(int statusCode, Header[] headers, File file) {
-            mProgressBar.setVisibility(View.GONE);
-            showViewPDFDialog("PDF", file.getAbsolutePath());
+            if (EducationModuleFragment.this.isAdded()) {
+                mProgressBar.setVisibility(View.GONE);
+                showViewPDFDialog("PDF", file.getAbsolutePath());
+            }
         }
 
         @Override
         public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
-            mProgressBar.setVisibility(View.GONE);
-            Toast.makeText(getActivity(), "Server error", Toast.LENGTH_SHORT).show();
+            if (EducationModuleFragment.this.isAdded()) {
+                mProgressBar.setVisibility(View.GONE);
+                Toast.makeText(getActivity(), "Server error", Toast.LENGTH_SHORT).show();
+            }
         }
     }
+
 }

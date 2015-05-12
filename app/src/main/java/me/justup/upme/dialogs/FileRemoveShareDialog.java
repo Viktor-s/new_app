@@ -22,6 +22,7 @@ import me.justup.upme.R;
 import me.justup.upme.entity.FileDropShareWithQuery;
 import me.justup.upme.entity.FileGetShareWithQuery;
 import me.justup.upme.entity.FileGetShareWithResponse;
+import me.justup.upme.entity.FileResultResponse;
 import me.justup.upme.http.ApiWrapper;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
@@ -98,7 +99,16 @@ public class FileRemoveShareDialog extends DialogFragment {
                         String content = ApiWrapper.responseBodyToString(responseBody);
                         LOGD(TAG, "FileDropShareWithQuery onSuccess(): " + content);
 
-                        mUserShareLayout.removeView(item);
+                        FileResultResponse response = null;
+                        try {
+                            response = ApiWrapper.gson.fromJson(content, FileResultResponse.class);
+                        } catch (JsonSyntaxException e) {
+                            LOGE(TAG, "gson.fromJson:\n" + content);
+                        }
+
+                        if (response != null && response.result.success) {
+                            mUserShareLayout.removeView(item);
+                        }
                     }
 
                     @Override

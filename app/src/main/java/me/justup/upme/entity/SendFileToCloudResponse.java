@@ -12,11 +12,8 @@ package me.justup.upme.entity;
     }
 */
 public class SendFileToCloudResponse {
-    public static final String STATUS_OK = "ok";
-    public static final String STATUS_UPDATED = "updated";
-
-    public String status;
-    public String file_hash;
-    public String reason;
+    public boolean status = false;
+    public String file_hash = "";
+    public String reason = "";
 
 }

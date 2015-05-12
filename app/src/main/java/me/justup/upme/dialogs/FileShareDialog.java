@@ -26,8 +26,10 @@ import me.justup.upme.JustUpApplication;
 import me.justup.upme.R;
 import me.justup.upme.entity.BaseMethodEmptyQuery;
 import me.justup.upme.entity.FileAddShareWithQuery;
+import me.justup.upme.entity.FileResultResponse;
 import me.justup.upme.entity.GetAllContactsResponse;
 import me.justup.upme.http.ApiWrapper;
+import me.justup.upme.utils.CommonUtils;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.LOGE;
@@ -156,8 +158,19 @@ public class FileShareDialog extends DialogFragment {
                 String content = ApiWrapper.responseBodyToString(responseBody);
                 LOGD(TAG, "addFileShareWith onSuccess(): " + content);
 
-                if (FileShareDialog.this.isAdded()) {
-                    Toast.makeText(JustUpApplication.getApplication().getApplicationContext(), getString(R.string.share_access_grant), Toast.LENGTH_SHORT).show();
+                FileResultResponse response = null;
+                try {
+                    response = ApiWrapper.gson.fromJson(content, FileResultResponse.class);
+                } catch (JsonSyntaxException e) {
+                    LOGE(TAG, "gson.fromJson:\n" + content);
+                }
+
+                if (response != null && response.result.success) {
+                    if (FileShareDialog.this.isAdded()) {
+                        Toast.makeText(JustUpApplication.getApplication().getApplicationContext(), getString(R.string.share_access_grant), Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    CommonUtils.showWarningToast(getString(R.string.user_not_get_message));
                 }
             }
 

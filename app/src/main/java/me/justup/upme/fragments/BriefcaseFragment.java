@@ -27,7 +27,6 @@ import android.widget.Toast;
 
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +38,7 @@ import me.justup.upme.db.DBAdapter;
 import me.justup.upme.entity.GetAccountPanelInfoQuery;
 import me.justup.upme.entity.PersonBriefcaseEntity;
 import me.justup.upme.entity.ReferalAddQuery;
+import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.http.HttpIntentService;
 import me.justup.upme.utils.AppPreferences;
 import me.justup.upme.view.dashboard.TileUtils;
@@ -208,6 +208,11 @@ public class BriefcaseFragment extends Fragment {
             }
         });
 
+        ImageView userPhoto = (ImageView) view.findViewById(R.id.briefcase_fragment_user_photo);
+        String imageUrl = new AppPreferences(getActivity()).getUserAvatarUrl();
+        if (imageUrl != null)
+            ApiWrapper.loadImage(imageUrl, userPhoto);
+
         return view;
     }
 
@@ -348,7 +353,7 @@ public class BriefcaseFragment extends Fragment {
 
             ImageView personPhoto = (ImageView) briefcaseItemLayout.findViewById(R.id.briefcase_fragment_user_photo);
             String imagePath = (personBriefcaseEntity.getPhoto() != null && personBriefcaseEntity.getPhoto().length() > 1) ? personBriefcaseEntity.getPhoto() : null;
-            if(imagePath==null){
+            if (imagePath == null) {
                 ColorGenerator generator = ColorGenerator.MATERIAL; // Or use DEFAULT
                 int color = generator.getColor(personBriefcaseEntity.getName());
 
@@ -360,8 +365,8 @@ public class BriefcaseFragment extends Fragment {
                         .buildRound(Character.toString((personBriefcaseEntity.getName()).charAt(0)), color);
 
                 personPhoto.setImageDrawable(drawable);
-            }else {
-                Picasso.with(BriefcaseFragment.this.getActivity()).load(imagePath).placeholder(R.mipmap.ic_launcher).into(personPhoto);
+            } else {
+                ApiWrapper.loadImage(imagePath, personPhoto);
             }
 
             final TextView itemId = (TextView) photoLayoutInner.getChildAt(1);

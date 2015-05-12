@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.google.gson.JsonSyntaxException;
@@ -125,9 +126,8 @@ public class DocumentsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_documents, container, false);
 
-        String shareFileName = ((MainActivity) getActivity()).getShareFileName();
-        if (shareFileName != null) {
-            setShareFileName(shareFileName);
+        mShareFileName = ((MainActivity) getActivity()).getShareFileName();
+        if (mShareFileName != null) {
             ((MainActivity) getActivity()).setShareFileName(null);
         }
 
@@ -248,6 +248,11 @@ public class DocumentsFragment extends Fragment {
         }
 
         item.setOnLongClickListener(new OnContextMenuListener(file.getHash(), file.getPath(), file.getType()));
+
+        if (mShareFileName != null && mShareFileName.equals(file.getName())) {
+            TableRow mFileLayout = (TableRow) item.findViewById(R.id.explorer_file_item_layout);
+            mFileLayout.setBackgroundColor(getResources().getColor(R.color.light_gray));
+        }
 
         mFileExplorer.addView(item);
     }
@@ -413,14 +418,6 @@ public class DocumentsFragment extends Fragment {
         mProgressBar.setVisibility(View.GONE);
     }
 
-    public String getShareFileName() {
-        return mShareFileName;
-    }
-
-    public void setShareFileName(String shareFileName) {
-        mShareFileName = shareFileName;
-    }
-
     private class OnDownloadFileListener implements View.OnClickListener {
         private final String fileHash;
         private final String fileName;
@@ -556,7 +553,8 @@ public class DocumentsFragment extends Fragment {
 
             private void fillArray(FileGetAllResponse response, ArrayList<FileEntity> arrayList, int type) {
                 for (FileGetAllResponse.Result file : response.result) {
-                    arrayList.add(new FileEntity(file.favorite, file.origin_name, null, file.size, 0, file.hash_name, type));
+                    if (!file.direct_link)
+                        arrayList.add(new FileEntity(false, file.origin_name, null, file.size, (file.create_date * 1000L), file.hash_name, type));
                 }
             }
 

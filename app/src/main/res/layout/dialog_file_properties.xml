@@ -15,15 +15,15 @@
             android:layout_marginBottom="@dimen/base15dp720sw">
 
             <TextView
-                android:text="@string/file_owner"
-                style="@style/FilePropertiesText" />
+                style="@style/FilePropertiesText"
+                android:text="@string/file_owner" />
 
             <TextView
+                android:id="@+id/file_owner_textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                tools:text="test4"
-                android:id="@+id/file_owner_textView" />
+                tools:text="test4" />
         </TableRow>
 
         <TableRow
@@ -32,39 +32,23 @@
             android:layout_marginBottom="@dimen/base5dp720sw">
 
             <TextView
-                android:text="@string/file_added"
-                style="@style/FilePropertiesText" />
+                style="@style/FilePropertiesText"
+                android:text="@string/file_added" />
 
             <TextView
+                android:id="@+id/file_added_textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/base20sp720sw"
-                tools:text="2015-02-26T13:41:01+0200"
-                android:id="@+id/file_added_textView" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
-
-            <TextView
-                android:text="@string/file_changed"
-                style="@style/FilePropertiesText" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/base20sp720sw"
-                tools:text="2015-02-26T13:41:01+0200"
-                android:id="@+id/file_changed_textView" />
+                tools:text="2015-02-26T13:41:01+0200" />
         </TableRow>
     </TableLayout>
 
     <ImageView
+        android:id="@+id/file_prop_close_imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/file_prop_close_imageView"
-        android:src="@drawable/button_close_test"
         android:layout_gravity="end|top"
-        android:contentDescription="@string/app_name" />
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/button_close_test" />
 </FrameLayout>

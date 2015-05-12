@@ -2,6 +2,7 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/app_background"
@@ -91,7 +92,7 @@
                             android:id="@+id/briefcase_fragment_user_photo"
                             android:layout_width="@dimen/base100dp720sw"
                             android:layout_height="@dimen/base100dp720sw"
-                            android:src="@drawable/photo_face"
+                            tools:src="@drawable/photo_face"
                             app:civ_border="true"
                             app:civ_border_color="@color/white"
                             app:civ_border_width="4dp" />

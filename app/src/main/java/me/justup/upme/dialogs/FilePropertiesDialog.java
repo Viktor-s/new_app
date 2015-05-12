@@ -38,7 +38,6 @@ public class FilePropertiesDialog extends DialogFragment {
 
     private TextView ownerName;
     private TextView dateAdded;
-    private TextView dateChanged;
     private SimpleDateFormat mDateFormat;
 
 
@@ -77,7 +76,6 @@ public class FilePropertiesDialog extends DialogFragment {
 
         ownerName = (TextView) dialogView.findViewById(R.id.file_owner_textView);
         dateAdded = (TextView) dialogView.findViewById(R.id.file_added_textView);
-        dateChanged = (TextView) dialogView.findViewById(R.id.file_changed_textView);
 
         builder.setView(dialogView);
 
@@ -101,7 +99,6 @@ public class FilePropertiesDialog extends DialogFragment {
             if (response != null && response.result != null) {
                 ownerName.setText(response.result.owner.name);
                 dateAdded.setText(formatDate(response.result.create_date));
-                dateChanged.setText(formatDate(response.result.update_date));
             }
         }
 

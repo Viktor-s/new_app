@@ -47,7 +47,10 @@ public class GPSTracker extends Service implements LocationListener {
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 100; // 100 meters
 
     // The minimum time between updates in milliseconds
-    private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 5; // 5 min
+    // private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 5; // 5 min
+    private static final long MIN_TIME_BW_UPDATES = 1000 * 60; // 1 min
+
+    private static final long TIMER_START = MIN_TIME_BW_UPDATES + 10000;
 
     // Declaring a Location Manager
     private LocationManager locationManager;
@@ -63,7 +66,7 @@ public class GPSTracker extends Service implements LocationListener {
 
         if (mTimer == null) {
             mTimer = new Timer();
-            mTimer.schedule(new SendGPS(), 0, TIMER_INTERVAL);
+            mTimer.schedule(new SendGPS(), TIMER_START, TIMER_INTERVAL);
         }
     }
 
@@ -159,11 +162,13 @@ public class GPSTracker extends Service implements LocationListener {
     }
 
     private class SendGPS extends TimerTask {
+        private static final int ARRAY_SIZE = 2;
+
         @Override
         public void run() {
             mGPSEntityArray.add(new GPSEntity((System.currentTimeMillis() / 1000), getLatitude(), getLongitude()));
 
-            if (mGPSEntityArray.size() >= 3)
+            if (mGPSEntityArray.size() >= ARRAY_SIZE)
                 if (ApiWrapper.isOnline()) {
                     LOGD(TAG, "Send to server: " + mGPSEntityArray.toString());
 

@@ -443,7 +443,7 @@ public class MailMessagesFragment extends Fragment {
                 }
 
                 if (response != null) {
-                    if (response.status.equals(SendFileToCloudResponse.STATUS_OK) || response.status.equals(SendFileToCloudResponse.STATUS_UPDATED)) {
+                    if (response.status) {
                         Toast.makeText(getActivity(), getString(R.string.file_in_cloud), Toast.LENGTH_SHORT).show();
                         addFileShareWith(response.file_hash);
 
@@ -465,23 +465,6 @@ public class MailMessagesFragment extends Fragment {
             }
         });
     }
-
-    /*
-    private void startNotificationIntent(int userId, String ownerName, int connectionType, String link, String fileName) {
-        SendNotificationQuery push = new SendNotificationQuery();
-        push.params.user_id = userId;
-        push.params.data.owner_name = ownerName;
-        push.params.data.connection_type = connectionType;
-        push.params.data.link = link;
-        push.params.data.text = fileName;
-
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(PushIntentService.PUSH_INTENT_QUERY_EXTRA, push);
-
-        Intent intent = new Intent(getActivity(), PushIntentService.class);
-        getActivity().startService(intent.putExtras(bundle));
-    }
-    */
 
     private void addFileShareWith(final String fileHash) {
         FileAddShareWithQuery query = new FileAddShareWithQuery();
