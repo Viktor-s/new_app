@@ -51,6 +51,8 @@ public class ApiWrapper {
     private static AsyncHttpClient syncClient = new SyncHttpClient();
     public static final Gson gson = new Gson();
 
+    private static final int SOCKET_TIMEOUT = 1000 * 30; // 30 sec
+
     // API methods constants
     public static final String AUTH_GET_VERIFICATION = "Auth.getVerificationPhoneCode";
     public static final String AUTH_CHECK_VERIFICATION = "Auth.checkVerificationPhoneCode";
@@ -108,7 +110,7 @@ public class ApiWrapper {
     }
 
     private static void syncPost(final StringEntity se, AsyncHttpResponseHandler responseHandler) {
-        syncClient.addHeader(AUTHORIZATION_HEADER, getToken());
+        addSyncClientHeader();
         // syncClient.post(null, URL, se, null, responseHandler);
         syncClient.post(null, serverSwitcher.getUrl(), se, null, responseHandler);
     }
@@ -180,17 +182,17 @@ public class ApiWrapper {
     }
 
     public static void downloadFileFromUrl(String url, FileAsyncHttpResponseHandler fileResponseHandler) {
-        AsyncHttpClient localClient = new AsyncHttpClient();
-        localClient.addHeader(AUTHORIZATION_HEADER, getToken());
-        localClient.get(url, fileResponseHandler);
+        // AsyncHttpClient localClient = new AsyncHttpClient();
+        addClientHeader();
+        client.get(url, fileResponseHandler);
     }
 
     public static void syncDownloadFileFromCloud(String fileHash, FileAsyncHttpResponseHandler fileResponseHandler) {
         // downloads bug
-        AsyncHttpClient localClient = new SyncHttpClient();
-        localClient.addHeader(AUTHORIZATION_HEADER, getToken());
+        // AsyncHttpClient localClient = new SyncHttpClient();
+        addSyncClientHeader();
         // localClient.get(CLOUD_STORAGE_URL + CALL_CLOUD_FILE + fileHash, fileResponseHandler);
-        localClient.get(serverSwitcher.getCloudStorageUrl() + CALL_CLOUD_FILE + fileHash, fileResponseHandler);
+        syncClient.get(serverSwitcher.getCloudStorageUrl() + CALL_CLOUD_FILE + fileHash, fileResponseHandler);
     }
 
     public static void syncSendFileToCloud(final File file, AsyncHttpResponseHandler responseHandler) {
@@ -203,13 +205,19 @@ public class ApiWrapper {
             LOGE(TAG, "syncSendFileToCloud()\n", e);
         }
 
-        syncClient.addHeader(AUTHORIZATION_HEADER, getToken());
+        addClientHeader();
         // syncClient.post(CLOUD_STORAGE_URL + CALL_CLOUD_UPLOAD, params, responseHandler);
         syncClient.post(serverSwitcher.getCloudStorageUrl() + CALL_CLOUD_UPLOAD, params, responseHandler);
     }
 
     private static void addClientHeader() {
+        client.setTimeout(SOCKET_TIMEOUT);
         client.addHeader(AUTHORIZATION_HEADER, getToken());
+    }
+
+    private static void addSyncClientHeader() {
+        syncClient.setTimeout(SOCKET_TIMEOUT);
+        syncClient.addHeader(AUTHORIZATION_HEADER, getToken());
     }
 
     public static String responseBodyToString(byte[] responseBody) {

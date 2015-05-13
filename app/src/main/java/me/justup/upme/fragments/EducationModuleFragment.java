@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -78,6 +79,7 @@ public class EducationModuleFragment extends Fragment {
     private LayoutInflater mLayoutInflater = null;
     private BroadcastReceiver mEducationModuleReceiver = null;
     private ProgressBar mProgressBar = null;
+    private FrameLayout mLargeProgressBar = null;
     private boolean isProgressBarShown = true;
     private String mSelectQuery = null;
     private EducationModuleEntity educationModuleEntity = null;
@@ -194,6 +196,8 @@ public class EducationModuleFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_education_module, container, false);
         mLayoutInflater = LayoutInflater.from(getActivity());
         mProgressBar = (ProgressBar) view.findViewById(R.id.education_module_progressbar);
+        mLargeProgressBar = (FrameLayout) view.findViewById(R.id.base_progressBar);
+
         mMainMaterialContainer = (GridLayout) view.findViewById(R.id.educ_module_main_material_container);
         mSecondaryMaterialContainer = (GridLayout) view.findViewById(R.id.educ_module_secondary_material_container);
         mPassTestLayout = (LinearLayout) view.findViewById(R.id.education_module_pass_test);
@@ -352,9 +356,8 @@ public class EducationModuleFragment extends Fragment {
                         getChildFragmentManager().beginTransaction().replace(R.id.fragment_module_youtube_container, YoutubeDefaultFragment.newInstance(link)).addToBackStack(null).commit();
                         mCloseYoutubeFragmentButton.setVisibility(View.VISIBLE);
                     } else {
-
+                        mLargeProgressBar.setVisibility(View.VISIBLE);
                         ApiWrapper.downloadFileFromUrl(link, new OnDownloadFileResponse(getActivity()));
-                        mProgressBar.setVisibility(View.VISIBLE);
                         // showViewPDFDialog("The fast forward mba in project management", "file:///android_asset/mba.pdf");
                     }
                 }
@@ -388,7 +391,7 @@ public class EducationModuleFragment extends Fragment {
             LOGD(TAG, "OnDownloadFileResponse onSuccess()");
 
             if (EducationModuleFragment.this.isAdded()) {
-                mProgressBar.setVisibility(View.GONE);
+                mLargeProgressBar.setVisibility(View.GONE);
                 showViewPDFDialog("PDF", file.getAbsolutePath());
             }
         }
@@ -401,7 +404,7 @@ public class EducationModuleFragment extends Fragment {
             }
 
             if (EducationModuleFragment.this.isAdded()) {
-                mProgressBar.setVisibility(View.GONE);
+                mLargeProgressBar.setVisibility(View.GONE);
                 Toast.makeText(getActivity(), "Server error", Toast.LENGTH_SHORT).show();
             }
         }

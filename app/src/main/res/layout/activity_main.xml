@@ -281,7 +281,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:contentDescription="@string/app_name"
-            android:padding="@dimen/base3dp720sw"
             android:src="@drawable/upme_main_logo" />
     </FrameLayout>
 

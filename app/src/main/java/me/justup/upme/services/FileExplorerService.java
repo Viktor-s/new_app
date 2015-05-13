@@ -279,18 +279,31 @@ public class FileExplorerService extends IntentService {
     }
 
     private Bitmap getResizedBitmap(Bitmap bm) {
-        final int REQUIRED_SIZE = 200;
+        final int width = bm.getWidth();
+        final int height = bm.getHeight();
 
-        int width = bm.getWidth();
-        int height = bm.getHeight();
+        final int scaleCounter = getRequiredSize(width);
 
-        float scaleWidth = ((float) REQUIRED_SIZE) / width;
-        float scaleHeight = ((float) REQUIRED_SIZE) / height;
+        float scaleWidth = ((float) width / scaleCounter) / width;
+        float scaleHeight = ((float) height / scaleCounter) / height;
 
         Matrix matrix = new Matrix();
         matrix.postScale(scaleWidth, scaleHeight);
 
         return Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
+    }
+
+    private int getRequiredSize(int sideSize) {
+        final int REQUIRED_SIZE = 250;
+
+        if (sideSize <= REQUIRED_SIZE) return 1;
+
+        int counter = 1;
+        while ((sideSize / counter) > REQUIRED_SIZE) {
+            counter++;
+        }
+
+        return counter;
     }
 
     private File saveBitmap(String filePath) {
@@ -312,6 +325,10 @@ public class FileExplorerService extends IntentService {
             }
         } catch (IOException e) {
             LOGE(TAG, "saveBitmap IOException" + e);
+        }
+
+        if (pictureBitmap != null && !pictureBitmap.isRecycled()) {
+            pictureBitmap.recycle();
         }
 
         return file;
