@@ -38,7 +38,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="@dimen/base10dp720sw"
                     android:layout_marginStart="@dimen/base10dp720sw"
-                    android:contentDescription="@string/app_name"
+                    android:contentDescription="@string/dummy_string"
                     android:src="@drawable/search_icon_test_light_blue" />
 
                 <me.justup.upme.utils.BackAwareEditText

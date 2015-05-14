@@ -15,6 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/accent_material_dark"
         tools:text="Текущий сервер: http://test.justup.me/uptabinterface/jsonrpc/" />
 
     <LinearLayout

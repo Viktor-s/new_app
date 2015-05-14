@@ -374,9 +374,11 @@ public class FileExplorerService extends IntentService {
             } else {
                 return false;
             }
-        }
 
-        return true;
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private boolean isExternalStorageWritable() {

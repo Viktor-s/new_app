@@ -1,26 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/base60dp720sw"
-    android:descendantFocusability="blocksDescendants"
-    android:orientation="vertical"
-    android:background="@color/education_list_color">
-
-
+    android:background="@color/education_list_color"
+    android:descendantFocusability="blocksDescendants">
 
     <TextView
         android:id="@+id/education_products_item_textView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerVertical="true"
+        android:layout_marginStart="@dimen/base15dp720sw"
         android:layout_toEndOf="@+id/mail_contacts_item_imageView"
-        android:text="New Text"
+        android:gravity="center|start"
+        android:paddingStart="@dimen/base15dp720sw"
         android:textColor="#4C576E"
-        android:layout_marginLeft="@dimen/base15dp720sw"
-        android:gravity="center|left"
-        android:textSize="@dimen/base24sp720sw"
-        android:paddingLeft="@dimen/base15dp720sw" />
-
-
+        android:textSize="@dimen/base20sp720sw"
+        tools:text="New Text" />
 </RelativeLayout>

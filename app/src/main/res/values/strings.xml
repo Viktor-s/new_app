@@ -430,5 +430,7 @@
     <string name="account_settings">Настройки аккаунта</string>
     <string name="select_option">Выберите опцию</string>
     <string name="avatar_is_update">Аватар обновлен</string>
+    <string name="study_main_material">Основной материал</string>
+    <string name="study_second_material">Дополнительный материал</string>
 
 </resources>

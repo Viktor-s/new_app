@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:id="@+id/fragment_education_module_action_bar"
@@ -83,6 +83,18 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/fragment_education_module_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/base3dp720sw"
+            android:layout_alignEnd="@+id/education_module_pass_workbook"
+            android:layout_alignTop="@+id/education_module_pass_workbook"
+            android:layout_marginStart="@dimen/base15dp720sw"
+            android:layout_toStartOf="@+id/education_module_pass_workbook"
+            android:textColor="@color/white"
+            android:textSize="@dimen/base16sp720sw"
+            tools:text="@string/dummy_string" />
     </RelativeLayout>
 
     <ProgressBar
@@ -95,61 +107,55 @@
         android:layout_gravity="center"
         android:indeterminate="false" />
 
-    <TextView
-        android:id="@+id/fragment_education_module_description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/fragment_education_module_action_bar"
-        android:layout_gravity="left"
-        android:layout_marginLeft="@dimen/base25dp720sw"
-        android:layout_marginTop="@dimen/base20dp720sw"
-        android:textColor="#4C576E"
-        android:textSize="@dimen/base22sp720sw" />
+    <ScrollView
+        android:id="@+id/base_study_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/fragment_education_module_action_bar">
 
-    <TextView
-        android:id="@+id/education_module_main_textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/fragment_education_module_description"
-        android:layout_marginStart="@dimen/base25dp720sw"
-        android:layout_marginTop="@dimen/base30dp720sw"
-        android:text="Основной материал"
-        android:textColor="@android:color/black"
-        android:textSize="@dimen/base22sp720sw"
-        android:textStyle="bold" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/base15dp720sw">
 
-    <GridLayout
-        android:id="@+id/educ_module_main_material_container"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/education_module_main_textView"
-        android:layout_marginLeft="@dimen/base25dp720sw"
-        android:layout_marginTop="@dimen/base30dp720sw"
-        android:columnCount="3"
-        android:rowCount="3" />
+            <TextView
+                android:id="@+id/education_module_main_textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/base15dp720sw"
+                android:text="@string/study_main_material"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/base24sp720sw"
+                android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/education_module_secondary_textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/educ_module_main_material_container"
-        android:layout_marginStart="@dimen/base25dp720sw"
-        android:layout_marginTop="@dimen/base30dp720sw"
-        android:text="Дополнительный материал"
-        android:textColor="@android:color/black"
-        android:textSize="@dimen/base22sp720sw"
-        android:textStyle="bold" />
+            <GridLayout
+                android:id="@+id/educ_module_main_material_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/base10dp720sw"
+                android:columnCount="3"
+                android:rowCount="3" />
 
-    <GridLayout
-        android:id="@+id/educ_module_secondary_material_container"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/education_module_secondary_textView"
-        android:layout_marginLeft="@dimen/base25dp720sw"
-        android:layout_marginTop="@dimen/base30dp720sw"
-        android:columnCount="3"
-        android:rowCount="3" />
+            <TextView
+                android:id="@+id/education_module_secondary_textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/base20dp720sw"
+                android:text="@string/study_second_material"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/base24sp720sw"
+                android:textStyle="bold" />
+
+            <GridLayout
+                android:id="@+id/educ_module_secondary_material_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/base10dp720sw"
+                android:columnCount="3"
+                android:rowCount="3" />
+        </LinearLayout>
+    </ScrollView>
 
     <Button
         android:id="@+id/education_module_close_button"
@@ -157,17 +163,19 @@
         android:layout_height="@dimen/base50dp720sw"
         android:layout_alignParentEnd="true"
         android:layout_below="@+id/fragment_education_module_action_bar"
-        android:layout_gravity="right|top"
+        android:layout_gravity="end|top"
         android:background="@drawable/button_close_test"
         android:clickable="false"
-        android:visibility="gone" />
+        android:visibility="gone"
+        tools:visibility="visible" />
 
     <FrameLayout
         android:id="@+id/fragment_module_youtube_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
-        android:layout_alignTop="@+id/education_module_main_textView" />
+        android:layout_below="@+id/education_module_close_button"
+        tools:visibility="gone" />
 
     <include
         layout="@layout/base_progress_bar"

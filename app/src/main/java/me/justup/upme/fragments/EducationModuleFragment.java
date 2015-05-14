@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -39,6 +40,7 @@ import me.justup.upme.entity.EducationMaterialEntity;
 import me.justup.upme.entity.EducationModuleEntity;
 import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.http.HttpIntentService;
+import me.justup.upme.utils.AsyncSaveFile;
 import me.justup.upme.utils.CommonUtils;
 
 import static me.justup.upme.db.DBHelper.EDUCATION_MODULES_MATERIAL_CONTENT_TYPE;
@@ -73,6 +75,9 @@ public class EducationModuleFragment extends Fragment {
     private static final String QUERY_MODULE = "SELECT * FROM education_product_module_table WHERE program_id=";
     private static final String QUERY_MATERIALS = "SELECT * FROM education_modules_material_table WHERE module_id=";
 
+    private static final int GRID_WIDTH = 460;
+    private static final int GRID_ITEM_MARGIN = 5;
+
     private String mProductName = null;
     private int mProductId;
     private SQLiteDatabase mDatabase = null;
@@ -92,6 +97,11 @@ public class EducationModuleFragment extends Fragment {
     private TextView mModuleMainTextView = null, mModuleSecondaryTextView = null;
     private LinearLayout mPassTestLayout = null;
     private Button mCloseYoutubeFragmentButton = null;
+
+    private int arrayCounter;
+    private String docFilePath;
+    private String docFileName;
+
 
     public static EducationModuleFragment newInstance(String productName, int productId) {
         EducationModuleFragment fragment = new EducationModuleFragment();
@@ -124,7 +134,7 @@ public class EducationModuleFragment extends Fragment {
         Display display = getActivity().getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
-        screenWidth = size.x - CommonUtils.convertDpToPixels(getActivity(), 440);
+        screenWidth = size.x - CommonUtils.convertDpToPixels(getActivity(), GRID_WIDTH);
     }
 
     @Override
@@ -310,10 +320,12 @@ public class EducationModuleFragment extends Fragment {
                 r++;
             }
 
+            arrayCounter = i;
+
             GridLayout.LayoutParams param = new GridLayout.LayoutParams();
             param.height = LinearLayout.LayoutParams.WRAP_CONTENT;
             param.width = (screenWidth / 3);
-            param.rightMargin = CommonUtils.convertDpToPixels(getActivity(), 16);
+            param.rightMargin = CommonUtils.convertDpToPixels(getActivity(), GRID_ITEM_MARGIN);
             // param.topMargin = 10;
             // param.setGravity(Gravity.CENTER);
             param.columnSpec = GridLayout.spec(c);
@@ -338,7 +350,7 @@ public class EducationModuleFragment extends Fragment {
             }
 
             // Set Type
-            ((TextView) categoryProductLayout.findViewById(R.id.education_module_item_main_type)).setText(entities.get(i).getContent_type());
+            // ((TextView) categoryProductLayout.findViewById(R.id.education_module_item_main_type)).setText(entities.get(i).getContent_type());
             // Set Text
             TextView mainTxtView = (TextView) categoryProductLayout.findViewById(R.id.education_module_item_main_text);
             mainTxtView.setText(entities.get(i).getName());
@@ -356,9 +368,18 @@ public class EducationModuleFragment extends Fragment {
                         getChildFragmentManager().beginTransaction().replace(R.id.fragment_module_youtube_container, YoutubeDefaultFragment.newInstance(link)).addToBackStack(null).commit();
                         mCloseYoutubeFragmentButton.setVisibility(View.VISIBLE);
                     } else {
-                        mLargeProgressBar.setVisibility(View.VISIBLE);
-                        ApiWrapper.downloadFileFromUrl(link, new OnDownloadFileResponse(getActivity()));
-                        // showViewPDFDialog("The fast forward mba in project management", "file:///android_asset/mba.pdf");
+                        docFileName = entities.get(arrayCounter).getName();
+
+                        if (isFileFind(docFileName)) {
+                            LOGI(TAG, "file found!");
+
+                            showViewPDFDialog(docFileName, docFilePath);
+                        } else {
+                            LOGD(TAG, "file NOT found!");
+
+                            mLargeProgressBar.setVisibility(View.VISIBLE);
+                            ApiWrapper.downloadFileFromUrl(link, new OnDownloadFileResponse(getActivity()));
+                        }
                     }
                 }
             });
@@ -379,6 +400,21 @@ public class EducationModuleFragment extends Fragment {
         dialog.show(getChildFragmentManager(), ViewPDFDialog.VIEW_PDF_DIALOG);
     }
 
+    private boolean isFileFind(String fileName) {
+        File mStorageDirectory = Environment.getExternalStorageDirectory();
+        File[] mDirList = mStorageDirectory.listFiles();
+
+        for (File file : mDirList) {
+            if (!file.isDirectory()) {
+                if (fileName.equals(file.getName())) {
+                    docFilePath = file.getAbsolutePath();
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 
     private class OnDownloadFileResponse extends FileAsyncHttpResponseHandler {
 
@@ -389,6 +425,8 @@ public class EducationModuleFragment extends Fragment {
         @Override
         public void onSuccess(int statusCode, Header[] headers, File file) {
             LOGD(TAG, "OnDownloadFileResponse onSuccess()");
+
+            new AsyncSaveFile(docFileName).execute(file);
 
             if (EducationModuleFragment.this.isAdded()) {
                 mLargeProgressBar.setVisibility(View.GONE);
