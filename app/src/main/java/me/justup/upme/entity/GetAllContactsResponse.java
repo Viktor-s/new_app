@@ -25,6 +25,12 @@ public class GetAllContactsResponse extends BaseHttpResponseEntity {
             public int level = 0;
             public String in_system = "";
             public int total_sum = 0;
+            private boolean status;
+
+            public int getStatus() {
+                if (status) return 1;
+                else return 0;
+            }
 
             @Override
             public String toString() {
@@ -42,6 +48,7 @@ public class GetAllContactsResponse extends BaseHttpResponseEntity {
                         ", level=" + level +
                         ", in_system=" + in_system +
                         ", total_sum=" + total_sum +
+                        ", status=" + status +
                         '}';
             }
         }

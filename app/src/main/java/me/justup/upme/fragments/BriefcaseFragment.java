@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
@@ -48,9 +49,9 @@ import static me.justup.upme.db.DBHelper.MAIL_CONTACT_IMG;
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_NAME;
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_PARENT_ID;
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_SERVER_ID;
+import static me.justup.upme.db.DBHelper.MAIL_CONTACT_STATUS;
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_TABLE_NAME;
 import static me.justup.upme.utils.LogUtils.LOGD;
-import static me.justup.upme.utils.LogUtils.LOGE;
 import static me.justup.upme.utils.LogUtils.LOGI;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
@@ -259,6 +260,7 @@ public class BriefcaseFragment extends Fragment {
             personBriefcaseEntity.setParentId(cursorPersons.getInt(cursorPersons.getColumnIndex(MAIL_CONTACT_PARENT_ID)));
             personBriefcaseEntity.setName(cursorPersons.getString(cursorPersons.getColumnIndex(MAIL_CONTACT_NAME)));
             personBriefcaseEntity.setPhoto(cursorPersons.getString(cursorPersons.getColumnIndex(MAIL_CONTACT_IMG)));
+            personBriefcaseEntity.setStatus(cursorPersons.getInt(cursorPersons.getColumnIndex(MAIL_CONTACT_STATUS)));
             personsList.add(personBriefcaseEntity);
         }
         if (cursorPersons != null) {
@@ -360,20 +362,34 @@ public class BriefcaseFragment extends Fragment {
 
             ImageView personPhoto = (ImageView) briefcaseItemLayout.findViewById(R.id.briefcase_fragment_user_photo);
             String imagePath = (personBriefcaseEntity.getPhoto() != null && personBriefcaseEntity.getPhoto().length() > 1) ? personBriefcaseEntity.getPhoto() : null;
-            if (imagePath == null) {
-                ColorGenerator generator = ColorGenerator.MATERIAL; // Or use DEFAULT
-                int color = generator.getColor(personBriefcaseEntity.getName());
 
+            if (personBriefcaseEntity.getStatus() != 1) {
                 TextDrawable drawable = TextDrawable.builder().beginConfig()
+                        .textColor(Color.LTGRAY)
                         .withBorder(4)
                         .useFont(Typeface.SANS_SERIF)
                         .toUpperCase()
                         .endConfig()
-                        .buildRound(Character.toString((personBriefcaseEntity.getName()).charAt(0)), color);
+                        .buildRound(Character.toString((personBriefcaseEntity.getName()).charAt(0)), Color.LTGRAY);
 
                 personPhoto.setImageDrawable(drawable);
+
             } else {
-                ApiWrapper.loadImage(imagePath, personPhoto);
+                if (imagePath == null) {
+                    ColorGenerator generator = ColorGenerator.MATERIAL; // Or use DEFAULT
+                    int color = generator.getColor(personBriefcaseEntity.getName());
+
+                    TextDrawable drawable = TextDrawable.builder().beginConfig()
+                            .withBorder(4)
+                            .useFont(Typeface.SANS_SERIF)
+                            .toUpperCase()
+                            .endConfig()
+                            .buildRound(Character.toString((personBriefcaseEntity.getName()).charAt(0)), color);
+
+                    personPhoto.setImageDrawable(drawable);
+                } else {
+                    ApiWrapper.loadImage(imagePath, personPhoto);
+                }
             }
 
             final TextView itemId = (TextView) photoLayoutInner.getChildAt(1);
@@ -385,48 +401,47 @@ public class BriefcaseFragment extends Fragment {
             photoLayoutMain.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    LOGE(TAG, "" + containerLayout.getChildCount());
-                    LOGE(TAG, "" + lastChoosenItem + " " + Integer.parseInt(itemId.getText().toString()));
+                    final int containerChildCount = containerLayout.getChildCount();
+                    final int itemID = Integer.parseInt(itemId.getText().toString());
 
-                    if (lastChoosenItem != Integer.parseInt(itemId.getText().toString())) {
+                    LOGD(TAG, "containerChildCount:" + containerChildCount + " lastChoosenItem:" + lastChoosenItem + " itemID:" + itemID);
 
+                    if (lastChoosenItem != itemID) {
                         if (totalItemCount > 1 && Integer.parseInt(parentId.getText().toString()) == userId) {
                             containerLayout.removeAllViews();
                             containerLayout.addView(levelGenerate(photoLayout, listPersonInner));
                             containerLayout.addView(levelGenerate(view, listPersonInner));
                             totalItemCount = 1;
+
                         } else {
                             int row = Integer.parseInt(((TextView) v.findViewById(R.id.row)).getText().toString());
-                            for (int i = containerLayout.getChildCount() - 1; i > row; i--) {
+                            for (int i = containerChildCount - 1; i > row; i--) {
                                 containerLayout.removeViewAt(i);
                             }
 
                             viewId = levelGenerate(view, listPersonInner);
                             containerLayout.addView(viewId);
 
-                            totalItemCount = containerLayout.getChildCount();
+                            totalItemCount = containerChildCount;
                         }
 
-                        lastChoosenItem = Integer.parseInt(itemId.getText().toString());
+                        lastChoosenItem = itemID;
                         view.findViewById(R.id.briefcase_ellipsis_imageView).setVisibility(View.GONE);
+
                     } else {
-                        // view.findViewById(R.id.briefcase_ellipsis_imageView).setVisibility(View.VISIBLE);
                         if (totalItemCount > 1) {
-                        // containerLayout.removeViewAt(containerLayout.getChildCount() - 1);
-                            for (int i = containerLayout.getChildCount() - 1; i > Integer.parseInt(((TextView) v.findViewById(R.id.row)).getText().toString()); i--) {
+                            for (int i = containerChildCount - 1; i > Integer.parseInt(((TextView) v.findViewById(R.id.row)).getText().toString()); i--) {
                                 containerLayout.removeViewAt(i);
                             }
 
-                            totalItemCount = containerLayout.getChildCount();
+                            totalItemCount = containerChildCount;
                             view.findViewById(R.id.briefcase_ellipsis_imageView).setVisibility(View.VISIBLE);
                         }
 
                         lastChoosenItem = -1;
-                        LOGE("pavel", "" + "need to remove :" + " ");
-                    }
 
-                    //if (Integer.parseInt(parentId.getText().toString()) == userId) {
-                    // }
+                        LOGD(TAG, "totalItemCount:" + totalItemCount);
+                    }
                 }
             });
 

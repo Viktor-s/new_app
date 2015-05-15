@@ -50,8 +50,7 @@ public class SettingsServersFragment extends Fragment {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
                     case R.id.server1_radioButton:
-                        ServerSwitcher.getInstance().setUrl("http://test.justup.me/uptabinterface/jsonrpc/");
-                        ServerSwitcher.getInstance().setCloudStorageUrl("http://test.justup.me/CloudStorage");
+                        ServerSwitcher.getInstance().setEasyUrl("test.justup.me");
 
                         updateServerInfo();
                         CommonUtils.clearAllAppData();

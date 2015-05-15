@@ -37,7 +37,7 @@ import me.justup.upme.utils.AppPreferences;
 import me.justup.upme.utils.BackAwareEditText;
 import me.justup.upme.utils.CommonUtils;
 
-import static me.justup.upme.db.DBHelper.MAIL_CONTACT_TABLE_NAME;
+import static me.justup.upme.db.DBHelper.*;
 import static me.justup.upme.utils.LogUtils.LOGE;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
@@ -84,7 +84,7 @@ public class MailFragment extends Fragment {
             mDatabase = DBAdapter.getInstance().openDatabase();
         }
 
-        mSelectQuery = "SELECT * FROM " + MAIL_CONTACT_TABLE_NAME;
+        mSelectQuery = "SELECT * FROM " + MAIL_CONTACT_TABLE_NAME + " WHERE " + MAIL_CONTACT_STATUS + "=1";
         mCursor = mDatabase.rawQuery(mSelectQuery, null);
 
         mMailContactsAdapter = new MailContactsAdapter(this, activity.getApplicationContext(), mCursor, 0);

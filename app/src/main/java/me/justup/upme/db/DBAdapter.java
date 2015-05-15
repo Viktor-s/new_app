@@ -225,6 +225,7 @@ public class DBAdapter {
             values.put(MAIL_CONTACT_LEVEL, user.level);
             values.put(MAIL_CONTACT_IN_SYSTEM, user.in_system);
             values.put(MAIL_CONTACT_TOTAL_SUM, user.total_sum);
+            values.put(MAIL_CONTACT_STATUS, user.getStatus());
 
             database.insertWithOnConflict(MAIL_CONTACT_TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
         }

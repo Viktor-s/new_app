@@ -8,7 +8,7 @@ import android.provider.BaseColumns;
 
 public class DBHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "upme.db";
-    private static final int DATABASE_VERSION = 23;
+    private static final int DATABASE_VERSION = 24;
 
     public static final String BASE_TABLE_NAME = "base_table";
     public static final String BASE_ID = BaseColumns._ID;
@@ -61,6 +61,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String MAIL_CONTACT_LEVEL = "level";
     public static final String MAIL_CONTACT_IN_SYSTEM = "in_system";
     public static final String MAIL_CONTACT_TOTAL_SUM = "total_sum";
+    public static final String MAIL_CONTACT_STATUS = "status";
 
     public static final String EVENT_CALENDAR_TABLE_NAME = "event_calendar_table";
     public static final String EVENT_CALENDAR_ID = BaseColumns._ID;
@@ -210,6 +211,7 @@ public class DBHelper extends SQLiteOpenHelper {
             + MAIL_CONTACT_LEVEL + " INTEGER, "
             + MAIL_CONTACT_IN_SYSTEM + " TEXT, "
             + MAIL_CONTACT_TOTAL_SUM + " INTEGER, "
+            + MAIL_CONTACT_STATUS + " INTEGER, "
             + MAIL_CONTACT_IMG + " TEXT" + ")";
 
 

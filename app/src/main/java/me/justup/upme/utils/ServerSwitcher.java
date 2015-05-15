@@ -41,10 +41,6 @@ public class ServerSwitcher {
         return cloudStorageUrl;
     }
 
-    public void setCloudStorageUrl(String cloudStorageUrl) {
-        this.cloudStorageUrl = cloudStorageUrl;
-    }
-
     public void setEasyUrl(String newUrl) {
         url = HTTP + newUrl + "/uptabinterface/jsonrpc/";
         cloudStorageUrl = HTTP + newUrl + "/CloudStorage";

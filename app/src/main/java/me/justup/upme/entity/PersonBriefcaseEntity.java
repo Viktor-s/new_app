@@ -7,6 +7,7 @@ public class PersonBriefcaseEntity {
     private int parentId;
     private String name;
     private String photo;
+    private int status;
 
     public PersonBriefcaseEntity(int id, int parent_id, String name, String photo) {
         this.id = id;
@@ -50,13 +51,23 @@ public class PersonBriefcaseEntity {
         this.photo = photo;
     }
 
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return "Person{" +
                 "id=" + id +
                 ", parentId=" + parentId +
-                ", name='" + name + '\'' +
-                ", photo='" + photo + '\'' +
+                ", name=" + name +
+                ", photo=" + photo +
+                ", status=" + status +
                 '}';
     }
+
 }
