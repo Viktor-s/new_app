@@ -8,6 +8,8 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
@@ -363,19 +365,24 @@ public class BriefcaseFragment extends Fragment {
             ImageView personPhoto = (ImageView) briefcaseItemLayout.findViewById(R.id.briefcase_fragment_user_photo);
             String imagePath = (personBriefcaseEntity.getPhoto() != null && personBriefcaseEntity.getPhoto().length() > 1) ? personBriefcaseEntity.getPhoto() : null;
 
-            if (personBriefcaseEntity.getStatus() != 1) {
-                TextDrawable drawable = TextDrawable.builder().beginConfig()
-                        .textColor(Color.LTGRAY)
-                        .withBorder(4)
-                        .useFont(Typeface.SANS_SERIF)
-                        .toUpperCase()
-                        .endConfig()
-                        .buildRound(Character.toString((personBriefcaseEntity.getName()).charAt(0)), Color.LTGRAY);
+            ColorMatrix matrix = new ColorMatrix();
+            matrix.setSaturation(0);
+            ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
 
-                personPhoto.setImageDrawable(drawable);
+            if (imagePath == null) {
+                if (personBriefcaseEntity.getStatus() != 1) {
+                    // person is disabled
+                    TextDrawable drawable = TextDrawable.builder().beginConfig()
+                            .textColor(Color.WHITE)
+                            .withBorder(4)
+                            .useFont(Typeface.SANS_SERIF)
+                            .toUpperCase()
+                            .endConfig()
+                            .buildRound(Character.toString((personBriefcaseEntity.getName()).charAt(0)), Color.LTGRAY);
 
-            } else {
-                if (imagePath == null) {
+                    personPhoto.setImageDrawable(drawable);
+
+                } else {
                     ColorGenerator generator = ColorGenerator.MATERIAL; // Or use DEFAULT
                     int color = generator.getColor(personBriefcaseEntity.getName());
 
@@ -387,9 +394,15 @@ public class BriefcaseFragment extends Fragment {
                             .buildRound(Character.toString((personBriefcaseEntity.getName()).charAt(0)), color);
 
                     personPhoto.setImageDrawable(drawable);
-                } else {
-                    ApiWrapper.loadImage(imagePath, personPhoto);
                 }
+
+            } else {
+                // person is disabled
+                if (personBriefcaseEntity.getStatus() != 1) {
+                    personPhoto.setColorFilter(filter);
+                }
+
+                ApiWrapper.loadImage(imagePath, personPhoto);
             }
 
             final TextView itemId = (TextView) photoLayoutInner.getChildAt(1);

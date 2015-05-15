@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/r_layout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -10,21 +11,12 @@
         android:layout_width="@dimen/base65dp720sw"
         android:layout_height="@dimen/base65dp720sw">
 
-        <!--<me.justup.upme.utils.CircularImageView-->
-        <!--android:id="@+id/briefcase_fragment_user_photo"-->
-        <!--android:layout_width="@dimen/base65dp720sw"-->
-        <!--android:layout_height="@dimen/base70dp720sw"-->
-        <!--android:src="@drawable/photo_face"-->
-        <!--app:civ_border="true"-->
-        <!--app:civ_border_color="@color/white"-->
-        <!--app:civ_border_width="@dimen/base5dp720sw" />-->
-
         <ImageView
             android:id="@+id/briefcase_fragment_user_photo"
             android:layout_width="@dimen/base65dp720sw"
             android:layout_height="@dimen/base55dp720sw"
-            android:layout_marginLeft="@dimen/base10dp720sw"
-            android:src="@drawable/photo_face" />
+            android:layout_marginStart="@dimen/base10dp720sw"
+            tools:src="@drawable/photo_face" />
 
         <TextView
             android:id="@+id/briefcase_fragment_idObject"
@@ -45,7 +37,6 @@
             android:id="@+id/briefcase_item_parent_id"
             android:layout_width="0dp"
             android:layout_height="0dp" />
-
     </RelativeLayout>
 
     <ImageView
@@ -75,6 +66,6 @@
         android:layout_marginLeft="@dimen/base10dp720sw"
         android:layout_toStartOf="@+id/image2"
         android:src="@drawable/briefcase_ellipsis"
-        android:visibility="gone" />
-
+        android:visibility="gone"
+        tools:visibility="visible" />
 </RelativeLayout>
