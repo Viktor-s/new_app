@@ -10,7 +10,7 @@
         style="@style/DocumentsSortPanelIcon"
         android:contentDescription="@string/dummy_string"
         android:layout_marginEnd="@dimen/doc_icon_star_end_dimen"
-        android:src="@drawable/ic_file_star_light_blue" />
+        android:src="@drawable/ic_file_star_gray" />
 
     <TextView
         android:id="@+id/sort_column_type"
@@ -59,13 +59,13 @@
         style="@style/DocumentsSortPanelIcon"
         android:layout_marginEnd="@dimen/doc_phone_margin_end_dimen"
         android:contentDescription="@string/dummy_string"
-        android:src="@drawable/ic_file_tab_light_blue" />
+        android:src="@drawable/ic_file_tab_gray" />
 
     <ImageView
         android:id="@+id/sort_column_cloud"
         style="@style/DocumentsSortPanelIcon"
         android:layout_marginEnd="@dimen/doc_cloud_margin_end_dimen"
         android:contentDescription="@string/dummy_string"
-        android:src="@drawable/ic_file_cloud_light_blue" />
+        android:src="@drawable/ic_file_cloud_gray" />
 
 </LinearLayout>

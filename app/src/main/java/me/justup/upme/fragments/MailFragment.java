@@ -39,6 +39,7 @@ import me.justup.upme.utils.CommonUtils;
 
 import static me.justup.upme.db.DBHelper.*;
 import static me.justup.upme.utils.LogUtils.LOGE;
+import static me.justup.upme.utils.LogUtils.LOGI;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 
@@ -165,11 +166,10 @@ public class MailFragment extends Fragment {
                 String friendName = push.getUserName();
                 String yourJabberId = appPreferences.getJabberId();
                 String yourName = appPreferences.getUserName();
-
+                LOGI(TAG, "Mail Fragment : friendJabberId : " + friendJabberId + ", friendName : " + friendName + ", yourJabberId : " + yourJabberId + ", yourName : " + yourName);
                 resizeContacts(true);
 
-                getChildFragmentManager().beginTransaction().
-                        replace(R.id.mail_messages_container_frameLayout, MailMessagesFragment.newInstance(yourName, yourJabberId, friendName, friendJabberId, push.getUserId())).commit();
+                getChildFragmentManager().beginTransaction().replace(R.id.mail_messages_container_frameLayout, MailMessagesFragment.newInstance(yourName, yourJabberId, friendName, friendJabberId, push.getUserId())).commit();
 
             } else if (push.getType() == WEBRTC) {
                 ((MainActivity) getActivity()).prepareAndCallRTC(String.valueOf(push.getRoom()), false, false, 0, 0, "");

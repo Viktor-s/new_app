@@ -144,7 +144,7 @@ public class MailMessagesFragment extends Fragment {
 
     public static MailMessagesFragment newInstance(String yourName, String yourJabberId, String userName, String userJabberId, int userId) {
         MailMessagesFragment fragment = new MailMessagesFragment();
-
+        LOGI("777", "MailMessagesFragment : yourName : " + yourName + ", yourJabberId : " + yourJabberId + ", userName : " + userName + ", userJabberId : " + userJabberId + ", userId : " + userId);
         Bundle args = new Bundle();
         args.putString(FRIEND_JABBER_ID, userJabberId);
         args.putString(FRIEND_NAME, userName);
@@ -351,6 +351,7 @@ public class MailMessagesFragment extends Fragment {
                     // SASLAuthentication.supportSASLMechanism("PLAIN", 0);
                     connection.login(mYourJabberId, mYourPassword);
                     LOGI(TAG, "Logged in as " + connection.getUser());
+                    LOGI(TAG, "Login : " + mYourJabberId + ", Password : " + mYourPassword);
 
                     Presence presence = new Presence(Presence.Type.available);
                     connection.sendPacket(presence);
