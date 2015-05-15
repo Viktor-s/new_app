@@ -41,6 +41,7 @@ import me.justup.upme.entity.ReferalAddQuery;
 import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.http.HttpIntentService;
 import me.justup.upme.utils.AppPreferences;
+import me.justup.upme.utils.CommonUtils;
 import me.justup.upme.view.dashboard.TileUtils;
 
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_IMG;
@@ -200,10 +201,16 @@ public class BriefcaseFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 addUserContainer.setVisibility(View.GONE);
-                if (nameField.getText().toString().length() > 1 && phoneField.getText().toString().length() == 13) {
-                    ((MainActivity) BriefcaseFragment.this.getActivity()).startHttpIntent(getReferalAddQuery(nameField.getText().toString() + " " + surnameField.getText().toString(), phoneField.getText().toString()), HttpIntentService.ADD_REFERAL);
+
+                String name = nameField.getText().toString();
+                String surname = surnameField.getText().toString();
+                String phone = phoneField.getText().toString();
+
+                if (name.length() > 1 && phone.length() > 10) {
+                    ((MainActivity) BriefcaseFragment.this.getActivity()).startHttpIntent(
+                            getReferalAddQuery(CommonUtils.convertToUTF8(name + " " + surname), phone), HttpIntentService.ADD_REFERAL);
                 } else {
-                    Toast.makeText(BriefcaseFragment.this.getActivity(), "wrong params", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BriefcaseFragment.this.getActivity(), "Неверно заполненны поля!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
