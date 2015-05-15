@@ -36,7 +36,7 @@ import static me.justup.upme.utils.LogUtils.LOGE;
 @ReportsCrashes
      (
         formKey = "",
-        mailTo = "initrod@gmail.com",
+        mailTo = "upMeUser@gmail.com",
         customReportContent = {ReportField.APP_VERSION_CODE, ReportField.APP_VERSION_NAME, ReportField.ANDROID_VERSION,
                                ReportField.PHONE_MODEL, ReportField.CUSTOM_DATA, ReportField.STACK_TRACE, ReportField.USER_COMMENT},
         mode = ReportingInteractionMode.DIALOG,
