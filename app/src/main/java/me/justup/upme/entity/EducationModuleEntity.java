@@ -67,4 +67,18 @@ public class EducationModuleEntity implements Serializable {
     public void setCreated_at(String created_at) {
         this.created_at = created_at;
     }
+
+    @Override
+    public String toString() {
+        return "EducationModuleEntity{" +
+                "id=" + id +
+                ", program_id=" + program_id +
+                ", name=" + name +
+                ", description=" + description +
+                ", created_at=" + created_at +
+                ", updated_at=" + updated_at +
+                ", materials=" + materials +
+                '}';
+    }
+
 }

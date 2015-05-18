@@ -10,6 +10,7 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.apache.http.Header;
 
+import java.util.Arrays;
 import java.util.List;
 
 import me.justup.upme.MainActivity;
@@ -178,7 +179,22 @@ public class HttpIntentService extends IntentService {
         @Override
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
             String content = ApiWrapper.responseBodyToString(responseBody);
-            LOGE(TAG, "onFailure(): " + content);
+
+            LOGE(TAG, "*** onFailure():");
+            LOGE(TAG, "* statusCode: " + statusCode);
+
+            if (headers != null)
+                LOGE(TAG, "* headers: " + Arrays.toString(headers));
+            else
+                LOGE(TAG, "* headers is NULL");
+
+            LOGE(TAG, "* responseBody: " + content);
+
+            if (error != null)
+                LOGE(TAG, "* error: ", error);
+            else
+                LOGE(TAG, "* error is NULL");
+
             //mDBAdapter.sendBroadcast(BROADCAST_INTENT_NEWS_FEED_SERVER_ERROR);
             switch (partNumber) {
                 case NEWS_PART_SHORT:

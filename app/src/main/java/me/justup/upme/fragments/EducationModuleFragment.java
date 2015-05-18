@@ -68,7 +68,9 @@ import static me.justup.upme.utils.LogUtils.makeLogTag;
 public class EducationModuleFragment extends Fragment {
     private static final String TAG = makeLogTag(EducationModuleFragment.class);
 
-    private static final String YOU_TUBE_VIDEO = "Video";
+    private static final String YOU_TUBE_VIDEO = "video";
+    private static final String PRIORITY_TYPE_PRIMARY = "primary";
+    private static final String PRIORITY_TYPE_SECONDARY = "secondary";
 
     private static final String ARG_PRODUCT_MODULE_NAME = "product_name";
     private static final String ARG_PRODUCT_MODULE_ID = "product_id";
@@ -295,7 +297,7 @@ public class EducationModuleFragment extends Fragment {
     private ArrayList<EducationMaterialEntity> getMainMaterialsList(ArrayList<EducationMaterialEntity> materialEntities) {
         ArrayList<EducationMaterialEntity> entities = new ArrayList<>();
         for (int i = 0; i < materialEntities.size(); i++) {
-            if (materialEntities.get(i).getPriority_type().equals("Primary")) {
+            if (materialEntities.get(i).getPriority_type().toLowerCase().equals(PRIORITY_TYPE_PRIMARY)) {
                 entities.add(materialEntities.get(i));
             }
         }
@@ -305,7 +307,7 @@ public class EducationModuleFragment extends Fragment {
     private ArrayList<EducationMaterialEntity> getSecondaryMaterialsList(ArrayList<EducationMaterialEntity> materialEntities) {
         ArrayList<EducationMaterialEntity> entities = new ArrayList<>();
         for (int i = 0; i < materialEntities.size(); i++) {
-            if (materialEntities.get(i).getPriority_type().equals("Secondary")) {
+            if (materialEntities.get(i).getPriority_type().toLowerCase().equals(PRIORITY_TYPE_SECONDARY)) {
                 entities.add(materialEntities.get(i));
             }
         }
@@ -343,7 +345,7 @@ public class EducationModuleFragment extends Fragment {
             moduleLink.setText(entities.get(i).getExtraLink());
 
             ImageView contentTypePhoto = (ImageView) categoryProductLayout.findViewById(R.id.education_module_item_image_view);
-            if (entities.get(i).getContent_type().equals(YOU_TUBE_VIDEO)) {
+            if (entities.get(i).getContent_type().toLowerCase().equals(YOU_TUBE_VIDEO)) {
                 contentTypePhoto.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.video_play));
             } else {
                 contentTypePhoto.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.education_book));
@@ -364,7 +366,7 @@ public class EducationModuleFragment extends Fragment {
                 public void onClick(View v) {
                     String contentType = ((TextView) v.findViewById(R.id.education_module_item_content_type)).getText().toString();
                     String link = ((TextView) v.findViewById(R.id.education_module_item_link)).getText().toString();
-                    if (contentType.equals(YOU_TUBE_VIDEO)) {
+                    if (contentType.toLowerCase().equals(YOU_TUBE_VIDEO)) {
                         getChildFragmentManager().beginTransaction().replace(R.id.fragment_module_youtube_container, YoutubeDefaultFragment.newInstance(link)).addToBackStack(null).commit();
                         mCloseYoutubeFragmentButton.setVisibility(View.VISIBLE);
                     } else {

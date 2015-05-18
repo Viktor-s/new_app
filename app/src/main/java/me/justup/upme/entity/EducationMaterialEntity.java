@@ -102,4 +102,22 @@ public class EducationMaterialEntity implements Serializable {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    @Override
+    public String toString() {
+        return "EducationMaterialEntity{" +
+                "id=" + id +
+                ", module_id=" + module_id +
+                ", content_type=" + content_type +
+                ", priority_type=" + priority_type +
+                ", sort_weight=" + sort_weight +
+                ", created_at=" + created_at +
+                ", updated_at=" + updated_at +
+                ", extraSource=" + extraSource +
+                ", extraLink=" + extraLink +
+                ", name=" + name +
+                ", description=" + description +
+                '}';
+    }
+
 }
