@@ -1,20 +1,27 @@
 package me.justup.upme;
 
-import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.StrictMode;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
 
-import me.justup.upme.utils.LogUtils;
+import me.justup.upme.api_rpc.request_model.service.RequestBaseServiceHelper;
+import me.justup.upme.api_rpc.request_model.service.RequestServiceCallbackListener;
+import me.justup.upme.fragments.ProgressDialog;
 
-public abstract class BaseActivity extends Activity {
+public abstract class BaseActivity extends FragmentActivity implements RequestServiceCallbackListener {
+    private static final String TAG = BaseActivity.class.getSimpleName();
+
+    // Service Helper
+    private RequestBaseServiceHelper mRequestBaseServiceHelper = null;
+
     // Default 4.4.2
     private int currentApiVersion = 19;
 
@@ -132,25 +139,49 @@ public abstract class BaseActivity extends Activity {
 
         // Get device API version
         currentApiVersion = android.os.Build.VERSION.SDK_INT;
-/*
-        if (LogUtils.DEVELOPER_MODE) {
-            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-                    .detectDiskReads()
-                    .detectDiskWrites()
-                    .detectNetwork()
-                    .penaltyLog()
-                    .build());
 
-            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-                    .detectLeakedSqlLiteObjects()
-                    .detectLeakedClosableObjects()
-                    .penaltyLog()
-                    .penaltyDeath()
-                    .build());
-        }
-*/
+//        if (LogUtils.DEVELOPER_MODE) {
+//            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+//                    .detectDiskReads()
+//                    .detectDiskWrites()
+//                    .detectNetwork()
+//                    .penaltyLog()
+//                    .build());
+//
+//            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+//                    .detectLeakedSqlLiteObjects()
+//                    .detectLeakedClosableObjects()
+//                    .penaltyLog()
+//                    .penaltyDeath()
+//                    .build());
+//        }
 
         super.onCreate(savedInstanceState);
+
+        mRequestBaseServiceHelper = JustUpApplication.getApplication().getApiHelper();
+    }
+
+    public RequestBaseServiceHelper getServiceHelper() {
+        return mRequestBaseServiceHelper;
+    }
+
+    protected void onResume() {
+        super.onResume();
+
+        mRequestBaseServiceHelper.addListener(this);
+    }
+
+    protected void onPause() {
+        super.onPause();
+
+        mRequestBaseServiceHelper.removeListener(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        mRequestBaseServiceHelper.removeListener(this);
     }
 
     public void hideNavBar() {
@@ -199,8 +230,8 @@ public abstract class BaseActivity extends Activity {
     }
 
     public void removeCurrentFragment(int layout){
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        Fragment currentFrag =  getFragmentManager().findFragmentById(layout);
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        Fragment currentFrag =  getSupportFragmentManager().findFragmentById(layout);
 
         String fragName = "NONE";
 
@@ -218,7 +249,7 @@ public abstract class BaseActivity extends Activity {
     public void replaceFragment (Fragment fragment, int layout){
         String backStateName = fragment.getClass().getName();
 
-        FragmentManager manager = getFragmentManager();
+        FragmentManager manager = getSupportFragmentManager();
         boolean fragmentPopped = manager.popBackStackImmediate (backStateName, 0);
 
         if (!fragmentPopped){ // fragment not in back stack, create it.
@@ -230,7 +261,6 @@ public abstract class BaseActivity extends Activity {
     }
 
     // Animation Listener
-
     public AnimationOpenFragmentListener mAnimationOpenFragmentListener = null;
     public AnimationCloseFragmentListener mAnimationCloseFragmentListener = null;
 
@@ -253,4 +283,37 @@ public abstract class BaseActivity extends Activity {
         void onEndAnim();
     }
 
+    public void showWaitDialog(String message, String tag) {
+        ProgressDialog df = ProgressDialog.newInstance(message);
+        df.show(getSupportFragmentManager(), tag);
+
+        getFragmentManager().executePendingTransactions();
+    }
+
+    public void dismissDialog(String tag) {
+        ProgressDialog dialogFragment = (ProgressDialog) getSupportFragmentManager().findFragmentByTag(tag);
+        if (dialogFragment != null) {
+            dialogFragment.dismissAllowingStateLoss();
+            dialogFragment.dismiss();
+        }
+    }
+
+    public void changeDialogText(int text, String tag){
+        ProgressDialog dialogFragment = (ProgressDialog) getSupportFragmentManager().findFragmentByTag(tag);
+        if (dialogFragment != null) {
+            dialogFragment.setText(text);
+        }
+    }
+
+    public void changeDialogText(String text, String tag){
+        ProgressDialog dialogFragment = (ProgressDialog) getSupportFragmentManager().findFragmentByTag(tag);
+        if (dialogFragment != null) {
+            dialogFragment.setText(text);
+        }
+    }
+
+    @Override
+    public void onServiceCallback(int requestId, Intent requestIntent, int resultCode, Bundle data) {
+
+    }
 }

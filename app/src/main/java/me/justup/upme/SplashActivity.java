@@ -29,7 +29,7 @@ import java.util.TimerTask;
 
 import me.justup.upme.entity.ErrorResponse;
 import me.justup.upme.entity.SetGooglePushIdQuery;
-import me.justup.upme.gcm.GCMIntentService;
+import me.justup.upme.gcm.GcmIntentService;
 import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.utils.CommonUtils;
 import me.justup.upme.utils.ThreadPolicyManager;
@@ -110,8 +110,8 @@ public class SplashActivity extends Activity {
 
     private void goToDashboardActivity() {
         if(isDeviceRegister!=null && isDeviceRegister) {
-            if(!JustUpApplication.getApplication().isMyServiceRunning(GCMIntentService.class)) {
-                startService(new Intent(this, GCMIntentService.class));
+            if(!JustUpApplication.getApplication().isMyServiceRunning(GcmIntentService.class)) {
+                startService(new Intent(this, GcmIntentService.class));
             }
 
             if (mTimer != null) {

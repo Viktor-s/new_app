@@ -25,20 +25,27 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <me.justup.upme.view.InteractiveScrollView
-            android:id="@+id/interactiveScrollView"
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentBottom="true"
-            android:scrollbars="none">
+            android:layout_height="match_parent">
 
-            <GridLayout
-                android:id="@+id/newsFeedGridLayout"
+            <me.justup.upme.view.InteractiveScrollView
+                android:id="@+id/interactiveScrollView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingLeft="@dimen/base15dp720sw" />
+                android:layout_alignParentBottom="true"
+                android:scrollbars="none">
 
-        </me.justup.upme.view.InteractiveScrollView>
+                <GridLayout
+                    android:id="@+id/newsFeedGridLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingLeft="@dimen/base15dp720sw" />
+
+            </me.justup.upme.view.InteractiveScrollView>
+
+        </android.support.v4.widget.SwipeRefreshLayout>
 
         <FrameLayout
             android:id="@+id/news_item_container_frameLayout"

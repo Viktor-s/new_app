@@ -43,10 +43,10 @@ public class WakefulGCMBroadcastReceiver extends WakefulBroadcastReceiver {
                 LOGI(TAG, "Object GCM : " + mGoogleCloudMessaging + ", RegId : " + mRegId);
                 if (!mRegId.isEmpty()) {
                     // Explicitly specify that GcmIntentService will handle the intent.
-                    ComponentName comp = new ComponentName(context.getPackageName(), GCMIntentService.class.getName());
+                    ComponentName comp = new ComponentName(context.getPackageName(), GcmIntentService.class.getName());
 
                     // Start the service, keeping the device awake while it is launching.
-                    if(!JustUpApplication.getApplication().isMyServiceRunning(GCMIntentService.class)) {
+                    if(!JustUpApplication.getApplication().isMyServiceRunning(GcmIntentService.class)) {
                         startWakefulService(context, (intent.setComponent(comp)));
                     }
                     setResultCode(Activity.RESULT_OK);

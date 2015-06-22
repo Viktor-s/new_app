@@ -5,8 +5,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
-
 public class DBHelper extends SQLiteOpenHelper {
+
     public static final String DATABASE_NAME = "upme.db";
     private static final int DATABASE_VERSION = 24;
 
@@ -15,30 +15,22 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String BASE_PROJECT_ID = "project_id";
     public static final String BASE_START_DATE = "start_date";
 
-    public static final String SHORT_NEWS_TABLE_NAME = "short_news_table";
-    public static final String SHORT_NEWS_ID = BaseColumns._ID;
-    public static final String SHORT_NEWS_SERVER_ID = "server_id";
-    public static final String SHORT_NEWS_TITLE = "title";
-    public static final String SHORT_NEWS_SHORT_DESCR = "short_descr";
-    public static final String SHORT_NEWS_THUMBNAIL = "thumbnail";
-    public static final String SHORT_NEWS_POSTED_AT = "posted_at";
-    public static final String SHORT_NEWS_IS_READED = "is_readed";
+    public static final String EVENT_CALENDAR_TABLE_NAME = "event_calendar_table";
+    public static final String EVENT_CALENDAR_ID = BaseColumns._ID;
+    public static final String EVENT_CALENDAR_SERVER_ID = "server_id";
+    public static final String EVENT_CALENDAR_NAME = "name";
+    public static final String EVENT_CALENDAR_DESCRIPTION = "description";
+    public static final String EVENT_CALENDAR_TYPE = "type";
+    public static final String EVENT_CALENDAR_OWNER_ID = "owner_id";
+    public static final String EVENT_CALENDAR_START_DATETIME = "start_datetime";
+    public static final String EVENT_CALENDAR_END_DATETIME = "end_datetime";
+    public static final String EVENT_CALENDAR_LOCATION = "location";
+    public static final String EVENT_CALENDAR_SHARED_WITH = "shared_with";
 
     public static final String FULL_NEWS_TABLE_NAME = "full_news_table";
     public static final String FULL_NEWS_ID = BaseColumns._ID;
     public static final String FULL_NEWS_SERVER_ID = "server_id";
     public static final String FULL_NEWS_FULL_DESCR = "full_descr";
-
-
-    public static final String SHORT_NEWS_COMMENTS_TABLE_NAME = "short_news_comments_table";
-    public static final String SHORT_NEWS_COMMENTS_ID = BaseColumns._ID;
-    public static final String SHORT_NEWS_COMMENTS_SERVER_ID = "server_id";
-    public static final String SHORT_NEWS_COMMENTS_ARTICLE_ID = "article_id";
-    public static final String SHORT_NEWS_COMMENTS_CONTENT = "content";
-    public static final String SHORT_NEWS_COMMENTS_AUTHOR_ID = "author_id";
-    public static final String SHORT_NEWS_COMMENTS_AUTHOR_NAME = "author_name";
-    public static final String SHORT_NEWS_COMMENTS_AUTHOR_IMAGE = "author_image";
-    public static final String SHORT_NEWS_COMMENTS_POSTED_AT = "posted_at";
 
     public static final String IS_SHORT_NEWS_READ_TABLE_NAME = "is_short_news_read_table";
     public static final String IS_SHORT_NEWS_READ_ID = BaseColumns._ID;
@@ -63,23 +55,6 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String MAIL_CONTACT_TOTAL_SUM = "total_sum";
     public static final String MAIL_CONTACT_STATUS = "status";
 
-    public static final String EVENT_CALENDAR_TABLE_NAME = "event_calendar_table";
-    public static final String EVENT_CALENDAR_ID = BaseColumns._ID;
-    public static final String EVENT_CALENDAR_SERVER_ID = "server_id";
-    public static final String EVENT_CALENDAR_NAME = "name";
-    public static final String EVENT_CALENDAR_DESCRIPTION = "description";
-    public static final String EVENT_CALENDAR_TYPE = "type";
-    public static final String EVENT_CALENDAR_OWNER_ID = "owner_id";
-    public static final String EVENT_CALENDAR_START_DATETIME = "start_datetime";
-    public static final String EVENT_CALENDAR_END_DATETIME = "end_datetime";
-    public static final String EVENT_CALENDAR_LOCATION = "location";
-    public static final String EVENT_CALENDAR_SHARED_WITH = "shared_with";
-
-    public static final String PRODUCTS_CATEGORIES_TABLE_NAME = "products_categories_table";
-    public static final String PRODUCTS_CATEGORIES_ID = BaseColumns._ID;
-    public static final String PRODUCTS_CATEGORIES_SERVER_ID = "server_id";
-    public static final String PRODUCTS_CATEGORIES_NAME = "name";
-
     public static final String PRODUCTS_BRAND_CATEGORIES_TABLE_NAME = "products_brand_table";
     public static final String PRODUCTS_BRAND_CATEGORIES_ID = BaseColumns._ID;
     public static final String PRODUCTS_BRAND_CATEGORIES_SERVER_ID = "server_id";
@@ -93,6 +68,16 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String PRODUCTS_BRAND_CATEGORIES_BRAND_ITEM_NAME = "brand_item_name";
     public static final String PRODUCTS_BRAND_CATEGORIES_BRAND_ITEM_DESCRIPTION = "brand_item_description";
 
+    public static final String PRODUCTS_CATEGORIES_TABLE_NAME = "products_categories_table";
+    public static final String PRODUCTS_CATEGORIES_ID = BaseColumns._ID;
+    public static final String PRODUCTS_CATEGORIES_SERVER_ID = "server_id";
+    public static final String PRODUCTS_CATEGORIES_NAME = "name";
+
+    public static final String PRODUCTS_HTML_TABLE_NAME = "products_html_table";
+    public static final String PRODUCTS_HTML_ID = BaseColumns._ID;
+    public static final String PRODUCTS_HTML_SERVER_ID = "server_id";
+    public static final String PRODUCTS_HTML_VERSION = "version";
+    public static final String PRODUCTS_HTML_CONTENT = "content";
 
     public static final String PRODUCTS_PRODUCT_TABLE_NAME = "products_product_table";
     public static final String PRODUCTS_PRODUCT_ID = BaseColumns._ID;
@@ -103,25 +88,37 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String PRODUCTS_PRODUCT_DESCRIPTION = "description";
     public static final String PRODUCTS_PRODUCT_IMAGE = "image";
 
-    public static final String PRODUCTS_HTML_TABLE_NAME = "products_html_table";
-    public static final String PRODUCTS_HTML_ID = BaseColumns._ID;
-    public static final String PRODUCTS_HTML_SERVER_ID = "server_id";
-    public static final String PRODUCTS_HTML_VERSION = "version";
-    public static final String PRODUCTS_HTML_CONTENT = "content";
+    public static final String SHORT_NEWS_COMMENTS_TABLE_NAME = "short_news_comments_table";
+    public static final String SHORT_NEWS_COMMENTS_ID = BaseColumns._ID;
+    public static final String SHORT_NEWS_COMMENTS_SERVER_ID = "server_id";
+    public static final String SHORT_NEWS_COMMENTS_ARTICLE_ID = "article_id";
+    public static final String SHORT_NEWS_COMMENTS_CONTENT = "content";
+    public static final String SHORT_NEWS_COMMENTS_AUTHOR_ID = "author_id";
+    public static final String SHORT_NEWS_COMMENTS_AUTHOR_NAME = "author_name";
+    public static final String SHORT_NEWS_COMMENTS_AUTHOR_IMAGE = "author_image";
+    public static final String SHORT_NEWS_COMMENTS_POSTED_AT = "posted_at";
 
+    public static final String SHORT_NEWS_TABLE_NAME = "short_news_table";
+    public static final String SHORT_NEWS_ID = BaseColumns._ID;
+    public static final String SHORT_NEWS_SERVER_ID = "server_id";
+    public static final String SHORT_NEWS_TITLE = "title";
+    public static final String SHORT_NEWS_SHORT_DESCR = "short_descr";
+    public static final String SHORT_NEWS_THUMBNAIL = "thumbnail";
+    public static final String SHORT_NEWS_POSTED_AT = "posted_at";
+    public static final String SHORT_NEWS_IS_READED = "is_readed";
 
-    protected static final String STATUS_BAR_PUSH_TABLE_NAME = "status_bar_push_table";
-    protected static final String STATUS_BAR_PUSH_ID = BaseColumns._ID;
-    protected static final String STATUS_BAR_PUSH_TYPE = "type";
-    protected static final String STATUS_BAR_PUSH_USER_ID = "user_id";
-    protected static final String STATUS_BAR_PUSH_USER_NAME = "user_name";
-    protected static final String STATUS_BAR_PUSH_DATE = "date";
-    protected static final String STATUS_BAR_PUSH_LINK = "link";
-    protected static final String STATUS_BAR_PUSH_JABBER = "jabber_id";
-    protected static final String STATUS_BAR_PUSH_FILE_NAME = "file_name";
-    protected static final String STATUS_BAR_PUSH_ROOM = "room_id";
-    protected static final String STATUS_BAR_PUSH_FORM_ID = "form_id";
-    protected static final String STATUS_BAR_PUSH_PUSH_DESCRIPTION = "push_description";
+    public static final String STATUS_BAR_PUSH_TABLE_NAME = "status_bar_push_table";
+    public static final String STATUS_BAR_PUSH_ID = BaseColumns._ID;
+    public static final String STATUS_BAR_PUSH_TYPE = "type";
+    public static final String STATUS_BAR_PUSH_USER_ID = "user_id";
+    public static final String STATUS_BAR_PUSH_USER_NAME = "user_name";
+    public static final String STATUS_BAR_PUSH_DATE = "date";
+    public static final String STATUS_BAR_PUSH_LINK = "link";
+    public static final String STATUS_BAR_PUSH_JABBER = "jabber_id";
+    public static final String STATUS_BAR_PUSH_FILE_NAME = "file_name";
+    public static final String STATUS_BAR_PUSH_ROOM = "room_id";
+    public static final String STATUS_BAR_PUSH_FORM_ID = "form_id";
+    public static final String STATUS_BAR_PUSH_PUSH_DESCRIPTION = "push_description";
 
     public static final String EDUCATION_PRODUCTS_TABLE_NAME = "education_products_table";
     public static final String EDUCATION_PRODUCTS_ID = BaseColumns._ID;
@@ -137,6 +134,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String EDUCATION_PRODUCT_MODULE_DESCRIPTION = "description";
     public static final String EDUCATION_PRODUCT_MODULE_CREATED_AT = "created_at";
     public static final String EDUCATION_PRODUCT_MODULE_UPDATED_AT = "updated_at";
+
 
     public static final String EDUCATION_MODULES_MATERIAL_TABLE_NAME = "education_modules_material_table";
     public static final String EDUCATION_MODULES_MATERIAL_ID = BaseColumns._ID;
@@ -164,7 +162,6 @@ public class DBHelper extends SQLiteOpenHelper {
             + IS_SHORT_NEWS_READ_ARTICLE_ID + " INTEGER PRIMARY KEY, "
             + IS_SHORT_NEWS_READ_VALUE + " INTEGER DEFAULT 0" + ")";
 
-
     protected static final String CREATE_TABLE_SHORT_NEWS_COMMENTS = "CREATE TABLE "
             + SHORT_NEWS_COMMENTS_TABLE_NAME + "("
             + SHORT_NEWS_COMMENTS_ID + " INTEGER, "
@@ -177,7 +174,6 @@ public class DBHelper extends SQLiteOpenHelper {
             + SHORT_NEWS_COMMENTS_POSTED_AT + " TEXT, "
             + SHORT_NEWS_IS_READED + " INTEGER" + ")";
 
-
     protected static final String CREATE_TABLE_SHORT_NEWS = "CREATE TABLE "
             + SHORT_NEWS_TABLE_NAME + "("
             + SHORT_NEWS_ID + " INTEGER, "
@@ -187,13 +183,11 @@ public class DBHelper extends SQLiteOpenHelper {
             + SHORT_NEWS_THUMBNAIL + " TEXT, "
             + SHORT_NEWS_POSTED_AT + " TEXT" + ")";
 
-
     protected static final String CREATE_TABLE_FULL_NEWS = "CREATE TABLE "
             + FULL_NEWS_TABLE_NAME + "("
             + FULL_NEWS_ID + " INTEGER, "
             + FULL_NEWS_SERVER_ID + " INTEGER PRIMARY KEY, "
             + FULL_NEWS_FULL_DESCR + " TEXT" + ")";
-
 
     protected static final String CREATE_TABLE_MAIL_CONTACT = "CREATE TABLE "
             + MAIL_CONTACT_TABLE_NAME + "("
@@ -214,13 +208,11 @@ public class DBHelper extends SQLiteOpenHelper {
             + MAIL_CONTACT_STATUS + " INTEGER, "
             + MAIL_CONTACT_IMG + " TEXT" + ")";
 
-
     protected static final String CREATE_TABLE_PRODUCTS_CATEGORIES = "CREATE TABLE "
             + PRODUCTS_CATEGORIES_TABLE_NAME + "("
             + PRODUCTS_CATEGORIES_ID + " INTEGER, "
             + PRODUCTS_CATEGORIES_SERVER_ID + " INTEGER PRIMARY KEY, "
             + PRODUCTS_CATEGORIES_NAME + " TEXT" + ")";
-
 
     protected static final String CREATE_TABLE_PRODUCTS_BRAND_CATEGORIES = "CREATE TABLE "
             + PRODUCTS_BRAND_CATEGORIES_TABLE_NAME + "("
@@ -236,7 +228,6 @@ public class DBHelper extends SQLiteOpenHelper {
             + PRODUCTS_BRAND_CATEGORIES_BRAND_ITEM_NAME + " TEXT, "
             + PRODUCTS_BRAND_CATEGORIES_BRAND_ITEM_DESCRIPTION + " TEXT" + ")";
 
-
     protected static final String CREATE_TABLE_PRODUCTS_PRODUCT = "CREATE TABLE "
             + PRODUCTS_PRODUCT_TABLE_NAME + "("
             + PRODUCTS_PRODUCT_ID + " INTEGER, "
@@ -247,14 +238,12 @@ public class DBHelper extends SQLiteOpenHelper {
             + PRODUCTS_PRODUCT_DESCRIPTION + " TEXT, "
             + PRODUCTS_PRODUCT_IMAGE + " TEXT" + ")";
 
-
     protected static final String CREATE_TABLE_PRODUCTS_HTML = "CREATE TABLE "
             + PRODUCTS_HTML_TABLE_NAME + "("
             + PRODUCTS_HTML_ID + " INTEGER, "
             + PRODUCTS_HTML_SERVER_ID + " INTEGER PRIMARY KEY, "
             + PRODUCTS_HTML_VERSION + " INTEGER, "
             + PRODUCTS_HTML_CONTENT + " TEXT" + ")";
-
 
     protected static final String CREATE_TABLE_EVENT_CALENDAR = "CREATE TABLE "
             + EVENT_CALENDAR_TABLE_NAME + "("
@@ -268,7 +257,6 @@ public class DBHelper extends SQLiteOpenHelper {
             + EVENT_CALENDAR_END_DATETIME + " TEXT, "
             + EVENT_CALENDAR_LOCATION + " TEXT, "
             + EVENT_CALENDAR_SHARED_WITH + " TEXT" + ")";
-
 
     protected static final String CREATE_TABLE_STATUS_BAR_PUSH = "CREATE TABLE "
             + STATUS_BAR_PUSH_TABLE_NAME + "("
@@ -317,7 +305,6 @@ public class DBHelper extends SQLiteOpenHelper {
             + EDUCATION_MODULES_MATERIAL_UPDATED_AT + " TEXT" + ")";
 
     // Tile Menu
-
     public static final String TILE_TABLE_NAME = "tile_table";
 
     public static final String TILE_ID = BaseColumns._ID;
@@ -367,7 +354,6 @@ public class DBHelper extends SQLiteOpenHelper {
         database.execSQL(CREATE_TABLE_EDUCATION_PRODUCTS);
         database.execSQL(CREATE_TABLE_EDUCATION_PRODUCT_MODULE);
         database.execSQL(CREATE_TABLE_EDUCATION_MODULES_MATERIAL);
-
     }
 
     @Override
@@ -388,6 +374,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + EDUCATION_PRODUCTS_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + EDUCATION_PRODUCT_MODULE_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + EDUCATION_MODULES_MATERIAL_TABLE_NAME);
+
         onCreate(db);
     }
 

@@ -89,9 +89,8 @@ public class CommonUtils {
     }
 
     public static void clearAllAppData() {
-        new AppPreferences(JustUpApplication.getApplication()).clearPreferences();
+        JustUpApplication.getApplication().getAppPreferences().clearPreferences();
         JustUpApplication.getApplication().deleteDatabase(DBHelper.DATABASE_NAME);
         JustUpApplication.getApplication().getSharedPreferences(SplashActivity.class.getSimpleName(), Context.MODE_PRIVATE).edit().clear().apply();
     }
-
 }

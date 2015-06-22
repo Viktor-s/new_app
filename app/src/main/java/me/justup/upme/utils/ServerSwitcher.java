@@ -15,6 +15,7 @@ public class ServerSwitcher {
 
 
     private ServerSwitcher() {
+
     }
 
     public static ServerSwitcher getInstance() {

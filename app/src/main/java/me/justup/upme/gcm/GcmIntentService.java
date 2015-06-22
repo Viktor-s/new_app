@@ -1,6 +1,5 @@
 package me.justup.upme.gcm;
 
-import android.app.Activity;
 import android.app.IntentService;
 import android.app.KeyguardManager;
 import android.content.Context;
@@ -8,7 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
-import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -23,8 +21,7 @@ import java.util.Date;
 import me.justup.upme.JustUpApplication;
 import me.justup.upme.MainActivity;
 import me.justup.upme.R;
-import me.justup.upme.db.DBAdapter;
-import me.justup.upme.entity.Push;
+import me.justup.upme.api_rpc.response_object.PushObject;
 import me.justup.upme.fragments.MailFragment;
 import me.justup.upme.fragments.StatusBarFragment;
 import me.justup.upme.services.SoundNotifyService;
@@ -68,20 +65,13 @@ public class GcmIntentService extends IntentService {
     }
 
     @Override
-    public void onCreate() {
-        super.onCreate();
-
-        DBAdapter.getInstance().openDatabase();
-    }
-
-    @Override
     protected void onHandleIntent(Intent intent) {
         Bundle extras = intent.getExtras();
         GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(this);
         // The getMessageType() intent parameter must be the intent you received in your BroadcastReceiver.
         String messageType = gcm.getMessageType(intent);
 
-        if (!extras.isEmpty()) {  // has effect of unparcelling Bundle
+        if (extras!=null && !extras.isEmpty()) {  // has effect of un-parcelling Bundle
 
             // wake up and unlock devices
             PowerManager pm = (PowerManager) getApplicationContext().getSystemService(Context.POWER_SERVICE);
@@ -106,7 +96,7 @@ public class GcmIntentService extends IntentService {
                 case GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE:
                     LOGI(TAG, "PUSH received : " + extras.toString());
 
-                    final Push push = createPushObject((String) extras.get(CONNECTIONS));
+                    final PushObject push = createPushObject((String) extras.get(CONNECTIONS));
 
                     // Post notification of received message.
                     if (push != null && push.getType() != 0) {
@@ -121,20 +111,13 @@ public class GcmIntentService extends IntentService {
         }
 
         // Release the wake lock provided by the WakefulBroadcastReceiver.
-        GcmBroadcastReceiver.completeWakefulIntent(intent);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-        DBAdapter.getInstance().closeDatabase();
+        WakefulGCMBroadcastReceiver.completeWakefulIntent(intent);
     }
 
     // Put the message into a notification and post it.
     // This is just one simple example of what you might choose to do with
     // a GCM message.
-    private void sendNotification(final Push push) {
+    private void sendNotification(final PushObject push) {
         LOGD(TAG, "Push message : " + push.toString());
 
         if (push.getType() == MailFragment.BREAK_CALL) {
@@ -169,7 +152,7 @@ public class GcmIntentService extends IntentService {
             push.setPushDescription("Payment OK");
         }
 
-        DBAdapter.getInstance().savePush(push, pushTime);
+        JustUpApplication.getApplication().getTransferActionStatusBarPush().insertStatusBarPush(getApplicationContext(), push, pushTime);
     }
 
     private void playNotify(int type) {
@@ -187,8 +170,8 @@ public class GcmIntentService extends IntentService {
         });
     }
 
-    private Push createPushObject(String jsonString) {
-        Push push = new Push();
+    private PushObject createPushObject(String jsonString) {
+        PushObject push = new PushObject();
 
         try {
             JSONArray jsonArray = new JSONArray(jsonString);

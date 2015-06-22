@@ -13,13 +13,14 @@ import me.justup.upme.R;
 
 
 public class FastPayingFragment extends Fragment implements View.OnClickListener {
-    private Button mPayCommunicationButton;
-    private Button mPayInternetButton;
-    private Button mRemittancesButton;
-    private Button mBankingButton;
+    private static final String TAG = FastPayingFragment.class.getSimpleName();
+
+    private Button mPayCommunicationButton = null;
+    private Button mPayInternetButton = null;
+    private Button mRemittancesButton = null;
+    private Button mBankingButton = null;
 
     private ArrayList<Button> mButtonList = new ArrayList<>();
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -75,9 +76,7 @@ public class FastPayingFragment extends Fragment implements View.OnClickListener
             button.setBackground(getResources().getDrawable(R.drawable.digit_button));
         }
 
-        getChildFragmentManager().beginTransaction().
-                setCustomAnimations(R.animator.slide_in_left, R.animator.slide_in_right).
-                replace(R.id.paying_fragment_panel, fragment).commit();
+        getChildFragmentManager().beginTransaction().setCustomAnimations(R.animator.slide_in_left, R.animator.slide_in_right). replace(R.id.paying_fragment_panel, fragment).commit();
 
         changeButtonState(activeButton);
     }
@@ -85,5 +84,4 @@ public class FastPayingFragment extends Fragment implements View.OnClickListener
     private void changeButtonState(Button activeButton) {
         activeButton.setBackground(getResources().getDrawable(R.drawable.pay_button_pressed));
     }
-
 }

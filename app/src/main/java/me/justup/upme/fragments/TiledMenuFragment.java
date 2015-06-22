@@ -3,7 +3,6 @@ package me.justup.upme.fragments;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Point;
@@ -11,6 +10,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.util.Log;
 import android.view.Display;
@@ -38,7 +38,6 @@ import java.util.List;
 import me.justup.upme.JustUpApplication;
 import me.justup.upme.MainActivity;
 import me.justup.upme.R;
-import me.justup.upme.db.DBAdapter;
 import me.justup.upme.utils.BackAwareEditText;
 import me.justup.upme.view.dashboard.CoolDragAndDropGridView;
 import me.justup.upme.view.dashboard.DashboardAdapter;
@@ -49,6 +48,7 @@ import me.justup.upme.view.dashboard.SpanVariableGridView;
 import me.justup.upme.view.dashboard.TileItem;
 import me.justup.upme.view.dashboard.TileUtils;
 
+import static me.justup.upme.utils.LogUtils.LOGE;
 import static me.justup.upme.utils.LogUtils.LOGI;
 
 public class TiledMenuFragment extends Fragment implements CoolDragAndDropGridView.DragAndDropListener,
@@ -184,9 +184,16 @@ public class TiledMenuFragment extends Fragment implements CoolDragAndDropGridVi
     private void initTileMenu(){
         mCoolDragAndDropGridView = (CoolDragAndDropGridView) mContentView.findViewById(R.id.coolDragAndDropGridView);
 
+        List<TileItem> tileItemList = null;
+
         // Get from db
-        DBAdapter.getInstance().openDatabase();
-        List<TileItem> tileItemList = DBAdapter.getInstance().getListTile();
+        try {
+            tileItemList = JustUpApplication.getApplication().getTransferActionTileMenu().getListTileItems(getActivity().getApplicationContext());
+        }catch (NullPointerException e){
+            LOGE(TAG, e.getMessage());
+
+            tileItemList = null;
+        }
 
         if(tileItemList!=null && !tileItemList.isEmpty() && tileItemList.size()>0){
             mTileItems = new ArrayList<TileItem>(tileItemList);
@@ -530,9 +537,7 @@ public class TiledMenuFragment extends Fragment implements CoolDragAndDropGridVi
         mRedactedView = null;
 
         // Save Tile Menu in DB
-        DBAdapter.getInstance().openDatabase();
-        DBAdapter.getInstance().saveTileMenu(mTileItems);
-        DBAdapter.getInstance().closeDatabase();
+        JustUpApplication.getApplication().getTransferActionTileMenu().insertTilesList(getActivity().getApplicationContext(), mTileItems);
     }
 
     private void showDeleteDialog(final TileItem item){

@@ -29,12 +29,10 @@ import me.justup.upme.JustUpApplication;
 import me.justup.upme.R;
 import me.justup.upme.entity.BaseHttpQueryEntity;
 import me.justup.upme.entity.OnHttpFailureResponse;
-import me.justup.upme.utils.AppPreferences;
 import me.justup.upme.utils.ServerSwitcher;
 
 import static me.justup.upme.utils.LogUtils.LOGE;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
-
 
 public class ApiWrapper {
     private static final String TAG = makeLogTag(ApiWrapper.class);
@@ -122,7 +120,7 @@ public class ApiWrapper {
     }
 
     private static String getToken() {
-        return new AppPreferences(JustUpApplication.getApplication().getApplicationContext()).getToken();
+        return JustUpApplication.getApplication().getAppPreferences().getToken();
     }
 
     private static StringEntity queryBuilder(BaseHttpQueryEntity obj) {
@@ -275,5 +273,4 @@ public class ApiWrapper {
 
         picasso.load(serverSwitcher.getAvatarUrl() + url).into(imageView);
     }
-
 }

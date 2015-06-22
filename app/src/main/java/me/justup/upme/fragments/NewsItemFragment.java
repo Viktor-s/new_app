@@ -1,13 +1,13 @@
 package me.justup.upme.fragments;
 
-import android.app.Activity;
+import android.annotation.TargetApi;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
@@ -29,8 +29,10 @@ import org.brickred.socialauth.android.SocialAuthAdapter.Provider;
 import org.brickred.socialauth.android.SocialAuthError;
 import org.brickred.socialauth.android.SocialAuthListener;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +49,6 @@ import me.justup.upme.entity.CommentAddQuery;
 import me.justup.upme.entity.CommentsArticleFullQuery;
 import me.justup.upme.http.HttpIntentService;
 import me.justup.upme.utils.AnimateButtonClose;
-import me.justup.upme.utils.AppPreferences;
 import me.justup.upme.utils.BackAwareEditText;
 import me.justup.upme.utils.CommonUtils;
 import me.justup.upme.view.cwvm.CWView;
@@ -70,8 +71,6 @@ public class NewsItemFragment extends Fragment {
     private static final String TAG = makeLogTag(NewsItemFragment.class);
 
     private static final String ARG_NEWS_FEED_ENTITY = "news_feed_entity";
-    private static final String QUERY_COMMENTS_PATH = "SELECT * FROM short_news_comments_table WHERE article_id=";
-    private static final String QUERY_FULL_ARTICLE_PATH = "SELECT * FROM full_news_table WHERE server_id=";
 
     private static final int LIST_DIVIDER_HEIGHT = 24;
     private static final int TIME_ANIM = 250;
@@ -83,20 +82,18 @@ public class NewsItemFragment extends Fragment {
     private ListView mNewsItemCommentsListView = null;
     private List<ArticleShortCommentEntity> articleCommentsList = null;
     private ArticleFullEntity mArticleFullEntity = null;
-    private String selectQueryFullNews = null;
+    private int mServerId;
     private boolean isBroadcastUpdateFullArticle = true;
     private boolean isBroadcastAddComment = false;
     private boolean isBroadcastUpdateComments = false;
     private SocialAuthAdapter mSocialAuthdapter = null;
     private Button mShareButton = null;
     public  BroadcastReceiver mReceiver = null;
-    private SQLiteDatabase mDatabase = null;
     private ArticleShortCommentEntity mLastShortComment = null;
     private ScrollView mNewsItemScrollView = null;
     private ProgressBar mProgressBar = null;
     private boolean isScreenOrienrtationChanged = false;
     private boolean isProgressBarShown = true;
-    private AppPreferences mAppPreferences = null;
 
     private View mContentView = null;
     private Button mNewsItemCloseButton = null;
@@ -112,14 +109,7 @@ public class NewsItemFragment extends Fragment {
         return fragment;
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
-        mDatabase = DBAdapter.getInstance().openDatabase();
-        mAppPreferences = new AppPreferences(JustUpApplication.getApplication().getApplicationContext());
-    }
-
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     @Override
     public void onDetach() {
         super.onDetach();
@@ -141,7 +131,6 @@ public class NewsItemFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        // mDBAdapter.open();
         LOGI(TAG, "RegisterRecNewsItem");
 
         mReceiver = new BroadcastReceiver() {
@@ -149,13 +138,11 @@ public class NewsItemFragment extends Fragment {
             public void onReceive(Context context, Intent intent) {
                 if (isBroadcastUpdateFullArticle) {
                     LOGI(TAG, "onReceive isBroadcastUpdateFullArticle");
-                    Cursor cursorNews = mDatabase.rawQuery(selectQueryFullNews, null);
+
+                    Cursor cursorNews = JustUpApplication.getApplication().getTransferActionFullNews().getCursorOfFullNewsByServerId(getActivity().getApplicationContext(), mServerId);
                     mArticleFullEntity = fillFullNewsFromCursor(cursorNews);
                     fillViewsWithData();
                     //updateFullNewsCursor();
-                    if (cursorNews != null) {
-                        cursorNews.close();
-                    }
 
                 } else if (isBroadcastAddComment) {
                     isBroadcastUpdateFullArticle = false;
@@ -178,7 +165,7 @@ public class NewsItemFragment extends Fragment {
             }
         };
             LocalBroadcastManager.getInstance(NewsItemFragment.this.getActivity()).registerReceiver(mReceiver, new IntentFilter(DBAdapter.NEWS_ITEM_SQL_BROADCAST_INTENT)
-        );
+            );
 
     }
 
@@ -187,13 +174,6 @@ public class NewsItemFragment extends Fragment {
         super.onPause();
         LOGI(TAG, "UnregisterRecNewsItem");
         LocalBroadcastManager.getInstance(NewsItemFragment.this.getActivity()).unregisterReceiver(mReceiver);
-    }
-
-    @Override
-    public void onDestroy() {
-        LOGI(TAG, "Fragment Destroy");
-        DBAdapter.getInstance().closeDatabase();
-        super.onDestroy();
     }
 
     @Override
@@ -223,7 +203,7 @@ public class NewsItemFragment extends Fragment {
     }
 
     public void initUI(int newsId){
-        selectQueryFullNews = QUERY_FULL_ARTICLE_PATH + newsId;
+        this.mServerId = newsId;
 
         mNewsItemScrollView = (ScrollView) mContentView.findViewById(R.id.news_item_scrollview);
         mProgressBar = (ProgressBar) mContentView.findViewById(R.id.news_feed_progressbar);
@@ -314,8 +294,8 @@ public class NewsItemFragment extends Fragment {
         // Set Data to Web View
         boolean onlyContent = false;
         int idNews = mArticleFullEntity.getId();
-        LOGI(TAG, "Id news : " + idNews + ", Is Demo-mode : " + mAppPreferences.isDemoMode() + ", HTML Data : " + mArticleFullEntity.getFull_descr());
-        if(mAppPreferences.isDemoMode()){
+        LOGI(TAG, "Id news : " + idNews + ", Is Demo-mode : " + JustUpApplication.getApplication().getAppPreferences().isDemoMode() + ", HTML Data : " + mArticleFullEntity.getFull_descr());
+        if(JustUpApplication.getApplication().getAppPreferences().isDemoMode()){
             switch (idNews){
                 case 1:
                     if(onlyContent) {
@@ -473,6 +453,40 @@ public class NewsItemFragment extends Fragment {
         updateCommentsList();
     }
 
+    public String ReadFromfile(String fileName, Context context) {
+        StringBuilder returnString = new StringBuilder();
+        InputStream fIn = null;
+        InputStreamReader isr = null;
+        BufferedReader input = null;
+        try {
+            fIn = context.getResources().getAssets()
+                    .open(fileName, Context.MODE_WORLD_READABLE);
+            isr = new InputStreamReader(fIn);
+            input = new BufferedReader(isr);
+            String line = "";
+            while ((line = input.readLine()) != null) {
+                returnString.append(line);
+            }
+        } catch (Exception e) {
+            e.getMessage();
+        } finally {
+            try {
+                if (isr != null)
+                    isr.close();
+                if (fIn != null)
+                    fIn.close();
+                if (input != null)
+                    input.close();
+            } catch (Exception e2) {
+                e2.getMessage();
+            }
+        }
+
+        return returnString.toString();
+    }
+
+
+
     private void updateCommentsList() {
         if (mArticleFullEntity.getComments() != null) {
             articleCommentsList = mArticleFullEntity.getComments();
@@ -504,8 +518,9 @@ public class NewsItemFragment extends Fragment {
             articleFullEntity.setId(cursorNews.getInt(cursorNews.getColumnIndex(FULL_NEWS_SERVER_ID)));
             articleFullEntity.setFull_descr(cursorNews.getString(cursorNews.getColumnIndex(FULL_NEWS_FULL_DESCR)));
             int news_id = cursorNews.getInt(cursorNews.getColumnIndex(FULL_NEWS_SERVER_ID));
-            String selectQueryShortNewsComments = QUERY_COMMENTS_PATH + news_id;
-            Cursor cursorComments = mDatabase.rawQuery(selectQueryShortNewsComments, null);
+
+            Cursor cursorComments = JustUpApplication.getApplication().getTransferActionNewsComments().getCursorOfNewsCommentsByArticleId(getActivity().getApplicationContext(), news_id);
+
             ArrayList<ArticleShortCommentEntity> commentsList = new ArrayList<>();
             if (cursorComments != null) {
                 for (cursorComments.moveToFirst(); !cursorComments.isAfterLast(); cursorComments.moveToNext()) {
@@ -518,12 +533,11 @@ public class NewsItemFragment extends Fragment {
                     articleShortCommentEntity.setPosted_at(cursorComments.getString(cursorComments.getColumnIndex(SHORT_NEWS_COMMENTS_POSTED_AT)));
                     commentsList.add(articleShortCommentEntity);
                 }
+
                 articleFullEntity.setComments(commentsList);
-                if (cursorComments != null) {
-                    cursorComments.close();
-                }
             }
         }
+
         return articleFullEntity;
     }
 
@@ -550,8 +564,8 @@ public class NewsItemFragment extends Fragment {
 
     private void addComment(String message) {
         mLastShortComment = new ArticleShortCommentEntity();
-        mLastShortComment.setAuthor_name(new AppPreferences(getActivity()).getUserName());
-        mLastShortComment.setAuthor_id(new AppPreferences(getActivity()).getUserId());
+        mLastShortComment.setAuthor_name(JustUpApplication.getApplication().getAppPreferences().getUserName());
+        mLastShortComment.setAuthor_id(JustUpApplication.getApplication().getAppPreferences().getUserId());
         mLastShortComment.setAuthor_img("http://droidtune.com/12535/luchshie-android-igry-2013-po-versii-hardcoredroid.html");
         mLastShortComment.setContent(message);
         ((MainActivity) NewsItemFragment.this.getActivity()).startHttpIntent(getAddCommentQuery(mArticleFullEntity.getId(), message), HttpIntentService.ADD_COMMENT);

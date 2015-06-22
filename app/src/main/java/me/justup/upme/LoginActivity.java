@@ -1,7 +1,13 @@
 package me.justup.upme;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.annotation.TargetApi;
+import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,23 +25,30 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.apache.http.Header;
 
+import me.justup.upme.db_upme.Constants;
+import me.justup.upme.db_upme.MetaData;
 import me.justup.upme.dialogs.WarningDialog;
 import me.justup.upme.entity.LoginPhoneQueryEntity;
 import me.justup.upme.entity.LoginPinCodeQueryEntity;
 import me.justup.upme.entity.LoginResponseEntity;
+import me.justup.upme.fragments.ProgressDialog;
 import me.justup.upme.fragments.SettingsFragment;
 import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.services.ApplicationSupervisorService;
 import me.justup.upme.services.StatusBarService;
-import me.justup.upme.utils.AppPreferences;
 import me.justup.upme.utils.Constance;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.LOGE;
+import static me.justup.upme.utils.LogUtils.LOGI;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 public class LoginActivity extends BaseActivity {
     private static final String TAG = makeLogTag(LoginActivity.class);
+
+    // Is From Auth Activity
+    public static final String INTENT_ACTION_ACCOUNT_AUTH = "me.justup.upme.account.auth";
+    public boolean mIsFromAuthActivity = false;
 
     private static final String IS_SHOW_PIN_PANEL = "is_show_pin_panel";
     private static final String ENTER_PIN_CODE_LIMIT = "ATTEMPTS_TO_LIMIT_EXCEEDED";
@@ -48,7 +61,6 @@ public class LoginActivity extends BaseActivity {
     private LinearLayout mLoginPinCodePanel;
 
     private StringBuilder mNumberString = new StringBuilder("+");
-    private AppPreferences mAppPreferences = null;
 
     private static final int phoneNumberLength = 12;
     private static final int minPhoneNumberLength = 11;
@@ -63,6 +75,7 @@ public class LoginActivity extends BaseActivity {
     private Button mPinLoginButton;
     private boolean isShowSettings;
 
+    private Account mAccount = null;
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
     @Override
@@ -80,8 +93,6 @@ public class LoginActivity extends BaseActivity {
         }
 
         setContentView(R.layout.activity_login);
-
-        mAppPreferences = new AppPreferences(JustUpApplication.getApplication().getApplicationContext());
 
         startService(new Intent(this, StatusBarService.class));
 
@@ -112,7 +123,7 @@ public class LoginActivity extends BaseActivity {
                 mLoginPinCodePanel.setVisibility(View.VISIBLE);
 
                 mNumberString.setLength(0);
-                mPhoneNumber = mAppPreferences.getPhoneNumber();
+                mPhoneNumber = JustUpApplication.getApplication().getAppPreferences().getPhoneNumber();
             } else {
                 loadSavedPhoneNumber();
             }
@@ -120,7 +131,7 @@ public class LoginActivity extends BaseActivity {
             loadSavedPhoneNumber();
         }
 
-        if (mAppPreferences.isMonitoring()) {
+        if (JustUpApplication.getApplication().getAppPreferences().isMonitoring()) {
             startService(new Intent(JustUpApplication.getApplication().getApplicationContext(), ApplicationSupervisorService.class));
         }
 
@@ -137,6 +148,13 @@ public class LoginActivity extends BaseActivity {
         }
 
         appVersion.setText("UPME v" + versionName);
+
+        // Registration Receiver
+        registerReceiver(syncAdapterStatusReceiver, new IntentFilter(Constants.SYNC_STATUS_RECEIVER));
+
+        if(INTENT_ACTION_ACCOUNT_AUTH.equals(getIntent().getAction())){
+            mIsFromAuthActivity = true;
+        }
     }
 
     @SuppressWarnings("UnusedDeclaration")
@@ -254,7 +272,7 @@ public class LoginActivity extends BaseActivity {
                 mLoginPinCodeQueryEntity.params.phone = mPhoneNumber;
                 mLoginPinCodeQueryEntity.params.code = mPinNumber;
 
-                mAppPreferences.setPinCode(mPinNumber);
+                JustUpApplication.getApplication().getAppPreferences().setPinCode(mPinNumber);
 
                 ApiWrapper.loginQuery(mLoginPinCodeQueryEntity, new OnLoginResponse());
             } else {
@@ -288,13 +306,12 @@ public class LoginActivity extends BaseActivity {
                     mNumberString.setLength(0);
                     isPhoneVerification = false;
 
-                    mAppPreferences.setPhoneNumber(mPhoneNumber);
+                    JustUpApplication.getApplication().getAppPreferences().setPhoneNumber(mPhoneNumber);
                 } else {
-                    mAppPreferences.setToken(response.result.token);
-                    mAppPreferences.setTokenLife(System.currentTimeMillis());
+                    JustUpApplication.getApplication().getAppPreferences().setToken(response.result.token);
+                    JustUpApplication.getApplication().getAppPreferences().setTokenLife(System.currentTimeMillis());
 
-                    startActivity(new Intent(LoginActivity.this, SplashActivity.class));
-                    LoginActivity.this.finish();
+                    addAccount(mPhoneNumber, mPinCodeField.getText().toString());
                 }
             } else {
                 if (response != null && response.error != null) {
@@ -354,7 +371,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void loadSavedPhoneNumber() {
-        String number = mAppPreferences.getPhoneNumber();
+        String number = JustUpApplication.getApplication().getAppPreferences().getPhoneNumber();
         if (number == null) {
             return;
         }
@@ -382,7 +399,7 @@ public class LoginActivity extends BaseActivity {
         @Override
         public void onClick(View v) {
             if (BuildConfig.FLAVOR.equals(Constance.APP_FLAVOR_APP)) {
-                if (mAppPreferences.isTokenLive()) {
+                if (JustUpApplication.getApplication().getAppPreferences().isTokenLive()) {
                     startActivity(new Intent(LoginActivity.this, SplashActivity.class));
                     LoginActivity.this.finish();
                 } else {
@@ -392,4 +409,132 @@ public class LoginActivity extends BaseActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        // Unreg.Receiver
+        unregisterReceiver(syncAdapterStatusReceiver);
+
+        if(mIsFromAuthActivity){
+            Intent returnIntent = new Intent();
+            setResult(RESULT_CANCELED, returnIntent);
+            finish();
+        }
+    }
+
+    private BroadcastReceiver syncAdapterStatusReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent != null) {
+                int statusText = intent.getIntExtra(Constants.SYNC_STATUS_TEXT, R.string.sync_adapter_dummy_data_sync);
+                String syncTag = intent.getStringExtra(Constants.SYNC_STATUS_TAG);
+
+                LOGD(TAG, "Sync msg : \nSync State : " + getString(statusText) + "\nKey : " + syncTag);
+
+                switch (statusText){
+                    case R.string.sync_adapter_product_categories_sync:
+                        if(syncTag.equals(Constants.SYNC_STATUS_START)){
+                            changeDialogText(statusText, ProgressDialog.TAG_WAIT_DIALOG);
+                        }else if(syncTag.equals(Constants.SYNC_STATUS_END)){
+                            // Start Sync Mail Account
+                            ContentResolver.setSyncAutomatically(mAccount, MetaData.AUTHORITY_MAIL_CONTACT, true);
+                        }
+
+                        break;
+                    case R.string.sync_adapter_mail_contact_sync:
+                        if(syncTag.equals(Constants.SYNC_STATUS_START)){
+                            changeDialogText(statusText, ProgressDialog.TAG_WAIT_DIALOG);
+                        }else if(syncTag.equals(Constants.SYNC_STATUS_END)){
+                            // Start Sync Calendar
+                            ContentResolver.setSyncAutomatically(mAccount, MetaData.AUTHORITY_SHORT_NEWS, true);
+                        }
+
+                        break;
+                    case R.string.sync_adapter_news_sync:
+
+                        if(syncTag.equals(Constants.SYNC_STATUS_START)){
+                            changeDialogText(statusText, ProgressDialog.TAG_WAIT_DIALOG);
+                        }else if(syncTag.equals(Constants.SYNC_STATUS_END)){
+                            changeDialogText(syncTag, ProgressDialog.TAG_WAIT_DIALOG);
+                            // Start Sync Contact
+                            ContentResolver.setSyncAutomatically(mAccount, MetaData.AUTHORITY_EVENT_CALENDAR, true);
+                        }
+
+                        break;
+                    case R.string.sync_adapter_calendar_sync:
+                        if(syncTag.equals(Constants.SYNC_STATUS_START)){
+                            changeDialogText(statusText, ProgressDialog.TAG_WAIT_DIALOG);
+                        }else if(syncTag.equals(Constants.SYNC_STATUS_END)){
+                            changeDialogText(syncTag, ProgressDialog.TAG_WAIT_DIALOG);
+
+                            dismissDialog(ProgressDialog.TAG_WAIT_DIALOG);
+                            goToSplashActivity(mAccount.name);
+                        }
+
+                        break;
+                }
+            }
+        }
+    };
+
+    public void addAccount(String user, String code){
+        // Check if account consist
+        Account account = JustUpApplication.getApplication().getAccount();
+        if(account!=null) {
+            LOGI(TAG, "Account Name : " + account.name + ", Login : " + user);
+        }else{
+            LOGI(TAG, "Account is NULL !");
+        }
+
+        // If Account consist update him
+        if(account!=null && account.name.equals(user)){
+            // Update password
+            Account newAccount = new Account(user, Constants.ACCOUNT_TYPE);
+            // Start Sync Account Data and show processing loading windows
+            mAccount = newAccount;
+
+            AccountManager.get(getApplicationContext()).setPassword(newAccount, code);
+        }else{ // If Account first added
+            // Add data to Android Account Manager
+            Account newAccount = new Account(user, Constants.ACCOUNT_TYPE);
+            AccountManager.get(getApplicationContext()).addAccountExplicitly(newAccount, code, null);
+
+            // Start Sync Account Data and show processing loading windows
+            mAccount = newAccount;
+
+            showWaitDialog(getResources().getString(R.string.sync_adapter_dummy_data_sync), ProgressDialog.TAG_WAIT_DIALOG);
+
+            // Start Sync Main App Data
+            ContentResolver.setSyncAutomatically(newAccount, MetaData.AUTHORITY_PRODUCT_CATEGORIES, true);
+            // ContentResolver.setSyncAutomatically(newAccount, MetaData.AUTHORITY_MAIL_CONTACT, true);
+            // ContentResolver.setSyncAutomatically(newAccount, MetaData.AUTHORITY_SHORT_NEWS, true);
+            // ContentResolver.setSyncAutomatically(newAccount, MetaData.AUTHORITY_EVENT_CALENDAR, true);
+
+            // Set Sync Period to all Sync Services
+            ContentResolver.addPeriodicSync(newAccount, MetaData.AUTHORITY_PRODUCT_CATEGORIES, new Bundle(), Constants.ONE_DAY);
+            ContentResolver.addPeriodicSync(newAccount, MetaData.AUTHORITY_MAIL_CONTACT, new Bundle(), Constants.ONE_DAY);
+            ContentResolver.addPeriodicSync(newAccount, MetaData.AUTHORITY_SHORT_NEWS, new Bundle(), Constants.ONE_DAY);
+            ContentResolver.addPeriodicSync(newAccount, MetaData.AUTHORITY_EVENT_CALENDAR, new Bundle(), Constants.ONE_DAY);
+
+            // Set Account to Application
+            (JustUpApplication.getApplication()).setAccount(newAccount);
+        }
+    }
+
+    public void goToSplashActivity(String login){
+        // Check from what Activity call
+        if(mIsFromAuthActivity){
+            Intent returnIntent = new Intent();
+            returnIntent.putExtra(AccountManager.KEY_ACCOUNT_NAME, login);
+            setResult(RESULT_OK, returnIntent);
+
+            LoginActivity.this.finish();
+        }else {
+            // Go to Splash Activity
+            startActivity(new Intent(LoginActivity.this, SplashActivity.class));
+            LoginActivity.this.finish();
+        }
+    }
 }

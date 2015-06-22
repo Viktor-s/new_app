@@ -6,10 +6,13 @@ import android.content.SharedPreferences;
 import me.justup.upme.BuildConfig;
 import me.justup.upme.fragments.BrowserFragment;
 
+import static me.justup.upme.utils.LogUtils.LOGI;
 
 public class AppPreferences {
-    private SharedPreferences mSharedPreferences;
-    private SharedPreferences.Editor mEditor;
+    private static final String TAG = AppPreferences.class.getSimpleName();
+
+    private SharedPreferences mSharedPreferences = null;
+    private SharedPreferences.Editor mEditor = null;
 
     private static final long _24h = 86400000;
 
@@ -28,19 +31,23 @@ public class AppPreferences {
     private static final String TAG_FILE_SORT_IS_DESC = "file_sort_is_desc";
     private static final String TAG_TOKEN_LIFE_TIME = "token_life_time";
 
-
     public AppPreferences(final Context context) {
         mSharedPreferences = context.getSharedPreferences(PREFS_FILE, Context.MODE_PRIVATE);
     }
 
     public void setToken(String token) {
+        LOGI(TAG, "SET TOKEN : " + token);
+
         mEditor = mSharedPreferences.edit();
         mEditor.putString(TAG_TOKEN, token);
         mEditor.apply();
     }
 
     public String getToken() {
-        return mSharedPreferences.getString(TAG_TOKEN, "token");
+        String token = mSharedPreferences.getString(TAG_TOKEN, "token");
+        LOGI(TAG, "GET TOKEN : " + token);
+
+        return token;
     }
 
     public void setPinCode(String pinCode) {
@@ -52,7 +59,6 @@ public class AppPreferences {
     public String getPinCode() {
         return mSharedPreferences.getString(TAG_PIN_CODE, "pin");
     }
-
 
     public void setUserName(String userName) {
         mEditor = mSharedPreferences.edit();
@@ -181,5 +187,4 @@ public class AppPreferences {
 
         return isLive;
     }
-
 }

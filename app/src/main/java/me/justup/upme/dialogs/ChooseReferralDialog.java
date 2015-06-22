@@ -8,12 +8,10 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,40 +29,37 @@ import java.util.List;
 import me.justup.upme.JustUpApplication;
 import me.justup.upme.MainActivity;
 import me.justup.upme.R;
-import me.justup.upme.db.DBAdapter;
 import me.justup.upme.entity.PersonBriefcaseEntity;
 import me.justup.upme.fragments.CalendarFragment;
-import me.justup.upme.utils.AppPreferences;
 import me.justup.upme.utils.BackAwareEditText;
 
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_IMG;
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_NAME;
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_PARENT_ID;
 import static me.justup.upme.db.DBHelper.MAIL_CONTACT_SERVER_ID;
-import static me.justup.upme.db.DBHelper.MAIL_CONTACT_TABLE_NAME;
+import static me.justup.upme.utils.LogUtils.LOGD;
 
 
 public class ChooseReferralDialog extends DialogFragment { // ChooseReferralDialog
+    private static final String TAG = ChooseReferralDialog.class.getSimpleName();
 
     public static final String CHOOSE_REFERRAL = "choose_referral";
 
-//    private SQLiteDatabase database;
-//    private List<PersonBriefcaseEntity> listPerson;
+    // private List<PersonBriefcaseEntity> mListPerson = null;
 
-    ChooseReferralAdapter chooseReferralAdapter;
+    ChooseReferralAdapter mChooseReferralAdapter = null;
 
-    List<PersonBriefcaseEntityExtend> listPerson;
-    List<PersonBriefcaseEntityExtend> searchListPerson;
+    List<PersonBriefcaseEntityExtend> mListPerson = null;
+    List<PersonBriefcaseEntityExtend> mSearchListPerson = null;
 
-
-    ArrayList<Integer> listChooseReferralId;
+    ArrayList<Integer> mListChooseReferralId = null;
 
     public static ChooseReferralDialog newInstance(ArrayList<Integer> listIdPerson) {
-
         Bundle args = new Bundle();
         args.putIntegerArrayList(CHOOSE_REFERRAL, listIdPerson);
         ChooseReferralDialog fragment = new ChooseReferralDialog();
         fragment.setArguments(args);
+
         return fragment;
     }
 
@@ -72,24 +67,22 @@ public class ChooseReferralDialog extends DialogFragment { // ChooseReferralDial
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        int currentUserId = new AppPreferences(JustUpApplication.getApplication().getApplicationContext()).getUserId();
+        int currentUserId = JustUpApplication.getApplication().getAppPreferences().getUserId();
 
-        SQLiteDatabase database = DBAdapter.getInstance().openDatabase();
-        String selectQuery = "SELECT * FROM " + MAIL_CONTACT_TABLE_NAME;
-        Cursor mCursor = database.rawQuery(selectQuery, null);
-        listPerson = fillPersonsFromCursor(mCursor);
+        Cursor mCursor = JustUpApplication.getApplication().getTransferActionMailContact().getCursorOfMailContact(getActivity().getApplicationContext());
+        mListPerson = fillPersonsFromCursor(mCursor);
 
-        Log.d("TAG2", listPerson.toString());
+        LOGD(TAG, mListPerson.toString());
 
-        listChooseReferralId = getArguments().getIntegerArrayList(CHOOSE_REFERRAL);
-        Log.d("TAG1", listChooseReferralId.toString());
-        for (Integer i : listChooseReferralId) {
-            for (PersonBriefcaseEntityExtend person : listPerson)
+        mListChooseReferralId = getArguments().getIntegerArrayList(CHOOSE_REFERRAL);
+        LOGD(TAG, mListChooseReferralId.toString());
+        for (Integer i : mListChooseReferralId) {
+            for (PersonBriefcaseEntityExtend person : mListPerson)
                 if (person.getId() == i)
                     person.setSelect(true);
         }
-        listChooseReferralId.clear();
-        searchListPerson = new ArrayList<>(listPerson);
+        mListChooseReferralId.clear();
+        mSearchListPerson = new ArrayList<>(mListPerson);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -98,9 +91,9 @@ public class ChooseReferralDialog extends DialogFragment { // ChooseReferralDial
         builder.setTitle(R.string.select_people);
         builder.setCancelable(false);
 
-        final ListView mListviewReferrals = (ListView) dialogView.findViewById(R.id.listview_referrals);
-        chooseReferralAdapter = new ChooseReferralAdapter(getActivity(), searchListPerson);
-        mListviewReferrals.setAdapter(chooseReferralAdapter);
+        final ListView mListViewReferrals = (ListView) dialogView.findViewById(R.id.listview_referrals);
+        mChooseReferralAdapter = new ChooseReferralAdapter(getActivity(), mSearchListPerson);
+        mListViewReferrals.setAdapter(mChooseReferralAdapter);
 
         final BackAwareEditText mUserName = (BackAwareEditText) dialogView.findViewById(R.id.search_people_by_name);
         mUserName.setBackPressedListener(new BackAwareEditText.BackPressedListener() {
@@ -120,17 +113,17 @@ public class ChooseReferralDialog extends DialogFragment { // ChooseReferralDial
                                              public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
                                                  String searchString = mUserName.getText().toString();
                                                  int textLength = searchString.length();
-                                                 if (searchListPerson != null) {
-                                                     searchListPerson.clear();
-                                                     for (int i = 0; i < listPerson.size(); i++) {
-                                                         String teamName = listPerson.get(i).getName();
+                                                 if (mSearchListPerson != null) {
+                                                     mSearchListPerson.clear();
+                                                     for (int i = 0; i < mListPerson.size(); i++) {
+                                                         String teamName = mListPerson.get(i).getName();
                                                          if (textLength <= teamName.length()) {
                                                              if (teamName.toLowerCase().contains(searchString.toLowerCase())) {
-                                                                 searchListPerson.add(listPerson.get(i));
+                                                                 mSearchListPerson.add(mListPerson.get(i));
                                                              }
                                                          }
                                                      }
-                                                     chooseReferralAdapter.notifyDataSetChanged();
+                                                     mChooseReferralAdapter.notifyDataSetChanged();
                                                  }
                                              }
 
@@ -142,14 +135,14 @@ public class ChooseReferralDialog extends DialogFragment { // ChooseReferralDial
         builder.setPositiveButton(R.string.button_select, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
-                for (PersonBriefcaseEntityExtend person : listPerson)
+                for (PersonBriefcaseEntityExtend person : mListPerson)
                     if (person.isSelect())
-                        listChooseReferralId.add(person.getId());
-                Log.d("TAG1_", "-------------------------------------------");
-                Log.d("TAG1_listPerson", listPerson.toString());
-                Log.d("TAG1_searchListPerson", searchListPerson.toString());
-                Log.d("TAG1_listChoose", listChooseReferralId.toString());
-                ((CalendarFragment) getParentFragment()).setPersonIdForNewEvent(listChooseReferralId);
+                        mListChooseReferralId.add(person.getId());
+                LOGD("TAG1_", "-------------------------------------------");
+                LOGD("TAG1_listPerson", mListPerson.toString());
+                LOGD("TAG1_searchListPerson", mSearchListPerson.toString());
+                LOGD("TAG1_listChoose", mListChooseReferralId.toString());
+                ((CalendarFragment) getParentFragment()).setPersonIdForNewEvent(mListChooseReferralId);
                 dialog.dismiss();
             }
         });
@@ -174,9 +167,7 @@ public class ChooseReferralDialog extends DialogFragment { // ChooseReferralDial
             personBriefcaseEntity.setPhoto(cursorPersons.getString(cursorPersons.getColumnIndex(MAIL_CONTACT_IMG)));
             personsList.add(personBriefcaseEntity);
         }
-        if (cursorPersons != null) {
-            cursorPersons.close();
-        }
+
         return personsList;
     }
 

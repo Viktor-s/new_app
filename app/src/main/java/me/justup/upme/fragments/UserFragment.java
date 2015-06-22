@@ -23,12 +23,12 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.apache.http.Header;
 
+import me.justup.upme.JustUpApplication;
 import me.justup.upme.R;
 import me.justup.upme.entity.BaseHttpQueryEntity;
 import me.justup.upme.entity.GetLoggedUserInfoResponse;
 import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.interfaces.OnCloseFragment;
-import me.justup.upme.utils.AppPreferences;
 import me.justup.upme.utils.CircularImageView;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
@@ -108,7 +108,7 @@ public class UserFragment extends Fragment implements OnMapReadyCallback, OnClos
         mUserOrderingFragment = UserOrderingFragment.newInstance(42);
 
         CircularImageView mUserAvatar = (CircularImageView) view.findViewById(R.id.user_image_imageView);
-        String imageUrl = new AppPreferences(getActivity()).getUserAvatarUrl();
+        String imageUrl = JustUpApplication.getApplication().getAppPreferences().getUserAvatarUrl();
         if (imageUrl != null)
             ApiWrapper.loadImage(imageUrl, mUserAvatar);
 
