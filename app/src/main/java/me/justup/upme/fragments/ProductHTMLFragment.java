@@ -3,20 +3,17 @@ package me.justup.upme.fragments;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
@@ -38,6 +35,7 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
+import me.justup.upme.JustUpApplication;
 import me.justup.upme.R;
 import me.justup.upme.db.DBAdapter;
 import me.justup.upme.entity.BaseHttpQueryEntity;
@@ -47,64 +45,128 @@ import me.justup.upme.entity.ProductsOrderCreateQuery;
 import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.http.HttpIntentService;
 import me.justup.upme.view.CustomWebView;
-import me.justup.upme.view.LiveWebView;
 
 import static me.justup.upme.db.DBHelper.PRODUCTS_HTML_CONTENT;
 import static me.justup.upme.db.DBHelper.PRODUCTS_HTML_SERVER_ID;
-import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.LOGE;
-import static me.justup.upme.utils.LogUtils.LOGI;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 public class ProductHTMLFragment extends Fragment {
-
     private static final String TAG = makeLogTag(NewsItemFragment.class);
-    private SQLiteDatabase database;
-    private BroadcastReceiver mProductHtmlReceiver;
+
     private static final String ARG_PRODUCT_ID = "product_id";
     private static final String ARG_PRODUCT_NAME = "product_name";
     private static final String ARG_PRODUCT_PATH = "product_path";
-    private int currentProductId;
-    private String currentProductName;
-    private String currentProductPath;
-    private ProductHtmlEntity mProductHtmlEntity;
-    private CustomWebView webView;
-    private FrameLayout mProgressBar;
 
-    public static ProductHTMLFragment newInstance(int prodyctId, String nameProduct, String namePath) {
+    private BroadcastReceiver mProductHtmlReceiver = null;
+    private int mCurrentProductId;
+    private String mCurrentProductName;
+    private String mCurrentProductPath;
+    private ProductHtmlEntity mProductHtmlEntity = null;
+    private CustomWebView mWebView = null;
+    private FrameLayout mProgressBar = null;
+
+    private View mContentView = null;
+
+    // Instance
+    public static ProductHTMLFragment newInstance() {
+        return new ProductHTMLFragment();
+    }
+
+    public static ProductHTMLFragment newInstance(int productId, String nameProduct, String namePath) {
         ProductHTMLFragment fragment = new ProductHTMLFragment();
         Bundle args = new Bundle();
-        args.putSerializable(ARG_PRODUCT_ID, prodyctId);
+        args.putSerializable(ARG_PRODUCT_ID, productId);
         args.putString(ARG_PRODUCT_NAME, nameProduct);
         args.putSerializable(ARG_PRODUCT_PATH, namePath);
         fragment.setArguments(args);
+
         return fragment;
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        database = DBAdapter.getInstance().openDatabase();
-        Bundle bundle = this.getArguments();
-        if (bundle != null) {
-            currentProductId = bundle.getInt(ARG_PRODUCT_ID);
-            currentProductName = bundle.getString(ARG_PRODUCT_NAME);
-            currentProductPath = bundle.getString(ARG_PRODUCT_PATH);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        mContentView = super.onCreateView(inflater, container, savedInstanceState);
+
+        if (mContentView == null) {
+            mContentView = inflater.inflate(R.layout.fragment_product_html, container, false);
         }
 
+        return mContentView;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            mCurrentProductId = bundle.getInt(ARG_PRODUCT_ID);
+            mCurrentProductName = bundle.getString(ARG_PRODUCT_NAME);
+            mCurrentProductPath = bundle.getString(ARG_PRODUCT_PATH);
+        }
+
+        // Init UI
+        if (getActivity() != null) {
+            initUI();
+        }
+    }
+
+    private void initUI(){
+        ((TextView) mContentView.findViewById(R.id.web_prod_category_top_title_main_textView)).setText(mCurrentProductPath);
+        ((TextView) mContentView.findViewById(R.id.web_prod_category_top_title_textView)).setText(mCurrentProductName);
+        mProgressBar = (FrameLayout) mContentView.findViewById(R.id.base_progressBar);
+
+        mWebView = (CustomWebView) mContentView.findViewById(R.id.product_html_webview);
+        mWebView.addJavascriptInterface(new AndroidBridge(getActivity()), "android");
+        mWebView.getSettings().setJavaScriptEnabled(true);
+
+        // Other options
+//        mWebView.getSettings().setLoadWithOverviewMode(true);
+//        mWebView.getSettings().setUseWideViewPort(true);
+//        mWebView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
+//        mWebView.setScrollbarFadingEnabled(false);
+//        mWebView.getSettings().setBuiltInZoomControls(true);
+
+        mWebView.setWebViewClient(new WebViewClient() {
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                view.loadUrl(url);
+                return true;
+            }
+
+            public void onLoadResource(WebView view, String url) {
+                mProgressBar.setVisibility(View.VISIBLE);
+            }
+
+            public void onPageFinished(WebView view, String url) {
+                mProgressBar.setVisibility(View.GONE);
+            }
+        });
+
+        Button mCloseButton = (Button) mContentView.findViewById(R.id.product_html_close_button);
+        mCloseButton.setOnClickListener(new View.OnClickListener() {
+            @SuppressWarnings("ConstantConditions")
+            @Override
+            public void onClick(View view) {
+                getFragmentManager().popBackStack();
+            }
+        });
+
+        updateProduct();
     }
 
     @Override
     public void onResume() {
         super.onResume();
         mProductHtmlReceiver = new BroadcastReceiver() {
+
             @Override
             public void onReceive(Context context, Intent intent) {
                 updateProduct();
             }
         };
-        LocalBroadcastManager.getInstance(getActivity())
-                .registerReceiver(mProductHtmlReceiver, new IntentFilter(DBAdapter.PRODUCT_HTML_SQL_BROADCAST_INTENT));
+
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mProductHtmlReceiver, new IntentFilter(DBAdapter.PRODUCT_HTML_SQL_BROADCAST_INTENT));
     }
 
     @Override
@@ -113,62 +175,9 @@ public class ProductHTMLFragment extends Fragment {
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mProductHtmlReceiver);
     }
 
-    @Override
-    public void onDestroy() {
-        DBAdapter.getInstance().closeDatabase();
-        super.onDestroy();
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_product_html, container, false);
-
-        ((TextView) view.findViewById(R.id.web_prod_category_top_title_main_textView)).setText(currentProductPath);
-        ((TextView) view.findViewById(R.id.web_prod_category_top_title_textView)).setText(currentProductName);
-        mProgressBar = (FrameLayout) view.findViewById(R.id.base_progressBar);
-
-        webView = (CustomWebView) view.findViewById(R.id.product_html_webview);
-        webView.addJavascriptInterface(new AndroidBridge(getActivity()), "android");
-        webView.getSettings().setJavaScriptEnabled(true);
-
-        // Other options
-//        webView.getSettings().setLoadWithOverviewMode(true);
-//        webView.getSettings().setUseWideViewPort(true);
-//        webView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
-//        webView.setScrollbarFadingEnabled(false);
-//        webView.getSettings().setBuiltInZoomControls(true);
-
-        webView.setWebViewClient(new WebViewClient() {
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
-                return true;
-            }
-            public void onLoadResource(WebView view, String url) {
-                mProgressBar.setVisibility(View.VISIBLE);
-            }
-            public void onPageFinished(WebView view, String url) {
-                mProgressBar.setVisibility(View.GONE);
-            }
-        });
-
-        Button mCloseButton = (Button) view.findViewById(R.id.product_html_close_button);
-        mCloseButton.setOnClickListener(new View.OnClickListener() {
-            @SuppressWarnings("ConstantConditions")
-            @Override
-            public void onClick(View view) {
-                getFragmentManager().popBackStack();
-            }
-        });
-        updateProduct();
-
-        return view;
-    }
-
-
     private void updateProduct() {
-        mProductHtmlEntity = fillProductHtmlFromDB(currentProductId);
-        LOGE("pavel", mProductHtmlEntity.getHtmlContent() + " " + mProductHtmlEntity.getId());
+        mProductHtmlEntity = fillProductHtmlFromDB(mCurrentProductId);
+        LOGE(TAG, mProductHtmlEntity.getHtmlContent() + " " + mProductHtmlEntity.getId());
         if (mProductHtmlEntity != null) {
             updateWebView(mProductHtmlEntity.getHtmlContent());
         }
@@ -176,20 +185,17 @@ public class ProductHTMLFragment extends Fragment {
     }
 
     private void updateWebView(String content) {
-        webView.loadDataWithBaseURL("", content, "text/html", "UTF-8", "");
+        mWebView.loadDataWithBaseURL("", content, "text/html", "UTF-8", "");
     }
 
     private ProductHtmlEntity fillProductHtmlFromDB(int id) {
-        String selectQueryBrands = "SELECT * FROM products_html_table WHERE server_id=" + id;
-        Cursor cursorProductHtml = database.rawQuery(selectQueryBrands, null);
+        Cursor cursorProductHtml = JustUpApplication.getApplication().getTransferActionProductHTML().getCursorOfProductHTMLByServerId(getActivity().getApplicationContext(), id);
         ProductHtmlEntity productHtmlEntity = new ProductHtmlEntity();
         if (cursorProductHtml != null && cursorProductHtml.moveToFirst()) {
             productHtmlEntity.setId(cursorProductHtml.getInt(cursorProductHtml.getColumnIndex(PRODUCTS_HTML_SERVER_ID)));
             productHtmlEntity.setHtmlContent(cursorProductHtml.getString(cursorProductHtml.getColumnIndex(PRODUCTS_HTML_CONTENT)));
         }
-        if (cursorProductHtml != null) {
-            cursorProductHtml.close();
-        }
+
         return productHtmlEntity;
     }
 
@@ -198,10 +204,9 @@ public class ProductHTMLFragment extends Fragment {
         data.put("color", paramColor);
         data.put("qty", paramQty);
         ProductsOrderCreateQuery productsOrderCreateQuery = new ProductsOrderCreateQuery();
-        productsOrderCreateQuery.params.product_id = currentProductId;
+        productsOrderCreateQuery.params.product_id = mCurrentProductId;
         productsOrderCreateQuery.params.data = data;
         startHttpIntent(productsOrderCreateQuery, HttpIntentService.PRODUCTS_CREATE_ORDER);
-
     }
 
     public void startHttpIntent(BaseHttpQueryEntity entity, int dbTable) {
@@ -213,8 +218,8 @@ public class ProductHTMLFragment extends Fragment {
     }
 
     public class AndroidBridge {
+        private final String TAG = AndroidBridge.class.getSimpleName();
 
-        private static final String TAG = "AndroidBridge";
         private final Handler handler = new Handler();
         private Activity activity;
 
@@ -232,6 +237,8 @@ public class ProductHTMLFragment extends Fragment {
 
         @JavascriptInterface
         public void submit(final String json, final String method) {
+            Log.i(TAG, "Json : " + json + ", Method : " + method);
+
             JSONObject jsonObject = null;
             String strData = "";
             String strProductId = "";
@@ -248,10 +255,15 @@ public class ProductHTMLFragment extends Fragment {
             }.getType();
             Map<String, String> map = gson.fromJson(strData, stringStringMap);
 
+            Log.i(TAG, "Data : " + strData + ", Product Id : " + strProductId);
+
             ProductsJSQuery productsJSQuery = new ProductsJSQuery();
             productsJSQuery.method = method;
             productsJSQuery.params.product_id = strProductId;
             productsJSQuery.params.data = map;
+
+            Log.i(TAG, "ProductsJSQuery : " + productsJSQuery.toString());
+
             ApiWrapper.query(productsJSQuery, new OnQueryResponse());
 
         }
@@ -260,31 +272,49 @@ public class ProductHTMLFragment extends Fragment {
         public void closePage() {
             getFragmentManager().popBackStack();
         }
-
-
     }
 
     private class OnQueryResponse extends AsyncHttpResponseHandler {
+        private final String TAG = OnQueryResponse.class.getSimpleName();
+
         @Override
         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
             String content = ApiWrapper.responseBodyToString(responseBody);
-            LOGD(TAG, "content --> " + content);
-            JSONObject jsonObject = null;
-            String hashStr = "";
+            Log.i(TAG, "Content : " + content);
+
             try {
-                jsonObject = new JSONObject(content);
+                JSONObject jsonObject = new JSONObject(content);
                 JSONObject jsonResult = (JSONObject) jsonObject.get("result");
-                hashStr = jsonResult.getString("hash");
+                String hashStr = jsonResult.getString("hash");
+
+                callJavaScriptFunctionBack(hashStr);
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage("Заказ № " + hashStr + " успешно создан")
+                        .setNegativeButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                            }
+                        }).create().show();
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            callJavaScriptFunctionBack(hashStr);
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setMessage("Заказ № " + hashStr + " успешно создан")
-                    .setNegativeButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                        }
-                    }).create().show();
+
+            try {
+                JSONObject jsonObject = new JSONObject(content);
+                JSONObject jsonResult = (JSONObject) jsonObject.get("error");
+                String code = jsonResult.getString("code");
+                String data = jsonResult.getString("data");
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage("Error code : " + code + ". Data : " + data)
+                        .setNegativeButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                            }
+                        }).create().show();
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
 
         @Override
@@ -296,10 +326,9 @@ public class ProductHTMLFragment extends Fragment {
     public void callJavaScriptFunctionBack(final String str) {
         getActivity().runOnUiThread(new Runnable() {
             public void run() {
-                webView.loadUrl("javascript:jsCallback(\"" + str + "\")");
+                mWebView.loadUrl("javascript:jsCallback(\"" + str + "\")");
             }
         });
     }
-
 
 }

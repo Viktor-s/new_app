@@ -18,6 +18,11 @@ public class ArticlesGetShortDescriptionResponse extends BaseHttpResponseEntity 
         public String thumbnail;
         public String posted_at;
         public List<Comment> comments;
+
+        @Override
+        public String toString() {
+            return super.toString();
+        }
     }
 
     public class Comment implements Serializable {

@@ -1,12 +1,12 @@
 package me.justup.upme.fragments;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Environment;
@@ -32,6 +32,7 @@ import org.apache.http.Header;
 import java.io.File;
 import java.util.ArrayList;
 
+import me.justup.upme.JustUpApplication;
 import me.justup.upme.R;
 import me.justup.upme.db.DBAdapter;
 import me.justup.upme.dialogs.ViewPDFDialog;
@@ -74,36 +75,33 @@ public class EducationModuleFragment extends Fragment {
 
     private static final String ARG_PRODUCT_MODULE_NAME = "product_name";
     private static final String ARG_PRODUCT_MODULE_ID = "product_id";
-    private static final String QUERY_MODULE = "SELECT * FROM education_product_module_table WHERE program_id=";
-    private static final String QUERY_MATERIALS = "SELECT * FROM education_modules_material_table WHERE module_id=";
 
     private static final int GRID_WIDTH = 460;
     private static final int GRID_ITEM_MARGIN = 5;
 
     private String mProductName = null;
-    private int mProductId;
-    private SQLiteDatabase mDatabase = null;
+    private int mProgramId;
     private LayoutInflater mLayoutInflater = null;
     private BroadcastReceiver mEducationModuleReceiver = null;
     private ProgressBar mProgressBar = null;
     private FrameLayout mLargeProgressBar = null;
     private boolean isProgressBarShown = true;
-    private String mSelectQuery = null;
-    private EducationModuleEntity educationModuleEntity = null;
+    private EducationModuleEntity mEducationModuleEntity = null;
     private TextView mModuleDescriptionTitle = null;
     private GridLayout mMainMaterialContainer = null, mSecondaryMaterialContainer = null;
-    private int column = 3;
-    private int screenWidth;
+    private int mColumn = 3;
+    private int mScreenWidth;
     private ArrayList<EducationMaterialEntity> mPrimaryMaterialsList = null;
     private ArrayList<EducationMaterialEntity> mSecondaryMaterialsList = null;
     private TextView mModuleMainTextView = null, mModuleSecondaryTextView = null;
     private LinearLayout mPassTestLayout = null;
     private Button mCloseYoutubeFragmentButton = null;
 
-    private int arrayCounter;
-    private String docFilePath;
-    private String docFileName;
+    private int mArrayCounter;
+    private String mDocFilePath = null;
+    private String mDocFileName = null;
 
+    private View mContentView = null;
 
     public static EducationModuleFragment newInstance(String productName, int productId) {
         EducationModuleFragment fragment = new EducationModuleFragment();
@@ -116,128 +114,78 @@ public class EducationModuleFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Bundle bundle = this.getArguments();
-        if (bundle != null) {
-            mProductName = bundle.getString(ARG_PRODUCT_MODULE_NAME);
-            mProductId = bundle.getInt(ARG_PRODUCT_MODULE_ID);
-        }
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
 
-        if (mDatabase != null) {
-            if (!mDatabase.isOpen()) {
-                mDatabase = DBAdapter.getInstance().openDatabase();
-            }
-        } else {
-            mDatabase = DBAdapter.getInstance().openDatabase();
-        }
-
-        mSelectQuery = QUERY_MODULE + mProductId;
-        Display display = getActivity().getWindowManager().getDefaultDisplay();
+        Display display = activity.getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
-        screenWidth = size.x - CommonUtils.convertDpToPixels(getActivity(), GRID_WIDTH);
+
+        mScreenWidth = size.x - CommonUtils.convertDpToPixels(getActivity(), GRID_WIDTH);
     }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        LocalBroadcastManager.getInstance(EducationModuleFragment.this.getActivity()).unregisterReceiver(mEducationModuleReceiver);
-        LOGI(TAG, "unregisterRecNewsFeed");
-    }
-
-    @Override
-    public void onDestroy() {
-        DBAdapter.getInstance().closeDatabase();
-        super.onDestroy();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        LOGI(TAG, "RegisterRecNewsFeed");
-        mEducationModuleReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-
-                if (DBAdapter.EDUCATION_GET_PRODUCT_MODULES_SQL_BROADCAST_INTENT.equals(intent.getAction())) {
-                    Cursor cursor = mDatabase.rawQuery(mSelectQuery, null);
-                    educationModuleEntity = fillModuleFromCursor(cursor);
-                    fillViewsWithData();
-                    if (cursor != null) {
-                        cursor.close();
-                    }
-                    mProgressBar.setVisibility(View.GONE);
-                    isProgressBarShown = false;
-                    mPrimaryMaterialsList = getMainMaterialsList(educationModuleEntity.getMaterials());
-                    mSecondaryMaterialsList = getSecondaryMaterialsList(educationModuleEntity.getMaterials());
-                    int rowMain = mPrimaryMaterialsList.size() / column;
-                    mMainMaterialContainer.setColumnCount(column);
-                    mMainMaterialContainer.setRowCount(rowMain + 1);
-                    updateView(mPrimaryMaterialsList, mMainMaterialContainer);
-                    int rowSecondary = mSecondaryMaterialsList.size() / column;
-                    mSecondaryMaterialContainer.setColumnCount(column);
-                    mSecondaryMaterialContainer.setRowCount(rowSecondary + 1);
-                    updateView(mSecondaryMaterialsList, mSecondaryMaterialContainer);
-                    if (mPrimaryMaterialsList.size() > 0) {
-                        mModuleMainTextView.setVisibility(View.VISIBLE);
-                    }
-                    if (mSecondaryMaterialsList.size() > 0) {
-                        mModuleSecondaryTextView.setVisibility(View.VISIBLE);
-                    }
-                    mPassTestLayout.setVisibility(View.VISIBLE);
-
-                }
-                if (HttpIntentService.BROADCAST_INTENT_EDUCATION_MODULE_SERVER_ERROR.equals(intent.getAction())) {
-                    LOGI(TAG, "onReceive, error");
-                    mProgressBar.setVisibility(View.GONE);
-                    isProgressBarShown = false;
-                }
-
-            }
-        };
-        IntentFilter filter = new IntentFilter(DBAdapter.EDUCATION_GET_PRODUCT_MODULES_SQL_BROADCAST_INTENT);
-        filter.addAction(HttpIntentService.BROADCAST_INTENT_EDUCATION_MODULE_SERVER_ERROR);
-        LocalBroadcastManager.getInstance(EducationModuleFragment.this.getActivity())
-                .registerReceiver(mEducationModuleReceiver, filter);
-    }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_education_module, container, false);
-        mLayoutInflater = LayoutInflater.from(getActivity());
-        mProgressBar = (ProgressBar) view.findViewById(R.id.education_module_progressbar);
-        mLargeProgressBar = (FrameLayout) view.findViewById(R.id.base_progressBar);
+        mContentView = super.onCreateView(inflater, container, savedInstanceState);
 
-        mMainMaterialContainer = (GridLayout) view.findViewById(R.id.educ_module_main_material_container);
-        mSecondaryMaterialContainer = (GridLayout) view.findViewById(R.id.educ_module_secondary_material_container);
-        mPassTestLayout = (LinearLayout) view.findViewById(R.id.education_module_pass_test);
+        if (mContentView == null) {
+            mContentView = inflater.inflate(R.layout.fragment_education_module, container, false);
+        }
+
+        return mContentView;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            mProductName = bundle.getString(ARG_PRODUCT_MODULE_NAME);
+            mProgramId = bundle.getInt(ARG_PRODUCT_MODULE_ID);
+        }
+
+        // Init UI
+        if (getActivity() != null) {
+            initUI();
+        }
+    }
+
+    private void initUI(){
+        mLayoutInflater = LayoutInflater.from(getActivity());
+        mProgressBar = (ProgressBar) mContentView.findViewById(R.id.education_module_progressbar);
+        mLargeProgressBar = (FrameLayout) mContentView.findViewById(R.id.base_progressBar);
+
+        mMainMaterialContainer = (GridLayout) mContentView.findViewById(R.id.educ_module_main_material_container);
+        mSecondaryMaterialContainer = (GridLayout) mContentView.findViewById(R.id.educ_module_secondary_material_container);
+        mPassTestLayout = (LinearLayout) mContentView.findViewById(R.id.education_module_pass_test);
         mPassTestLayout.setVisibility(View.INVISIBLE);
         mPassTestLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (educationModuleEntity.getId() > 0) {
-                    getChildFragmentManager().beginTransaction().replace(R.id.fragment_module_youtube_container, EducationTestFragment.newInstance(educationModuleEntity.getId())).addToBackStack(null).commit();
+                if (mEducationModuleEntity.getId() > 0) {
+                    getChildFragmentManager().beginTransaction().replace(R.id.fragment_module_youtube_container, EducationTestFragment.newInstance(mEducationModuleEntity.getId())).addToBackStack(null).commit();
                     mPassTestLayout.setVisibility(View.INVISIBLE);
                 }
             }
         });
-        mModuleDescriptionTitle = (TextView) view.findViewById(R.id.fragment_education_module_description);
+
+        mModuleDescriptionTitle = (TextView) mContentView.findViewById(R.id.fragment_education_module_description);
         if (isProgressBarShown) {
             mProgressBar.setVisibility(View.VISIBLE);
         } else {
             mProgressBar.setVisibility(View.GONE);
         }
-        TextView tvTitleMain = (TextView) view.findViewById(R.id.fragment_education_module_ab_title);
+
+        TextView tvTitleMain = (TextView) mContentView.findViewById(R.id.fragment_education_module_ab_title);
         tvTitleMain.setText(mProductName);
 
-        mModuleMainTextView = (TextView) view.findViewById(R.id.education_module_main_textView);
-        mModuleSecondaryTextView = (TextView) view.findViewById(R.id.education_module_secondary_textView);
+        mModuleMainTextView = (TextView) mContentView.findViewById(R.id.education_module_main_textView);
+        mModuleSecondaryTextView = (TextView) mContentView.findViewById(R.id.education_module_secondary_textView);
         mModuleMainTextView.setVisibility(View.INVISIBLE);
         mModuleSecondaryTextView.setVisibility(View.INVISIBLE);
 
-        mCloseYoutubeFragmentButton = (Button) view.findViewById(R.id.education_module_close_button);
+        mCloseYoutubeFragmentButton = (Button) mContentView.findViewById(R.id.education_module_close_button);
         mCloseYoutubeFragmentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -245,9 +193,68 @@ public class EducationModuleFragment extends Fragment {
                 mCloseYoutubeFragmentButton.setVisibility(View.GONE);
             }
         });
-        return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        LOGI(TAG, "RegisterRecNewsFeed");
+        mEducationModuleReceiver = new BroadcastReceiver() {
+
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (DBAdapter.EDUCATION_GET_PRODUCT_MODULES_SQL_BROADCAST_INTENT.equals(intent.getAction())) {
+                    Cursor cursor = JustUpApplication.getApplication().getTransferActionEducationProductModule().getCursorOfEducationProductModuleFromProgramId(getActivity().getApplicationContext(), mProgramId);
+                    mEducationModuleEntity = fillModuleFromCursor(cursor);
+                    fillViewsWithData();
+                    if (cursor != null) {
+                        cursor.close();
+                    }
+
+                    mProgressBar.setVisibility(View.GONE);
+                    isProgressBarShown = false;
+                    mPrimaryMaterialsList = getMainMaterialsList(mEducationModuleEntity.getMaterials());
+                    mSecondaryMaterialsList = getSecondaryMaterialsList(mEducationModuleEntity.getMaterials());
+                    int rowMain = mPrimaryMaterialsList.size() / mColumn;
+                    mMainMaterialContainer.setColumnCount(mColumn);
+                    mMainMaterialContainer.setRowCount(rowMain + 1);
+                    updateView(mPrimaryMaterialsList, mMainMaterialContainer);
+                    int rowSecondary = mSecondaryMaterialsList.size() / mColumn;
+                    mSecondaryMaterialContainer.setColumnCount(mColumn);
+                    mSecondaryMaterialContainer.setRowCount(rowSecondary + 1);
+                    updateView(mSecondaryMaterialsList, mSecondaryMaterialContainer);
+                    if (mPrimaryMaterialsList.size() > 0) {
+                        mModuleMainTextView.setVisibility(View.VISIBLE);
+                    }
+
+                    if (mSecondaryMaterialsList.size() > 0) {
+                        mModuleSecondaryTextView.setVisibility(View.VISIBLE);
+                    }
+
+                    mPassTestLayout.setVisibility(View.VISIBLE);
+                }
+
+                if (HttpIntentService.BROADCAST_INTENT_EDUCATION_MODULE_SERVER_ERROR.equals(intent.getAction())) {
+                    LOGI(TAG, "OnReceive, error");
+                    mProgressBar.setVisibility(View.GONE);
+                    isProgressBarShown = false;
+                }
+
+            }
+        };
+
+        IntentFilter filter = new IntentFilter(DBAdapter.EDUCATION_GET_PRODUCT_MODULES_SQL_BROADCAST_INTENT);
+        filter.addAction(HttpIntentService.BROADCAST_INTENT_EDUCATION_MODULE_SERVER_ERROR);
+        LocalBroadcastManager.getInstance(EducationModuleFragment.this.getActivity()).registerReceiver(mEducationModuleReceiver, filter);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        LocalBroadcastManager.getInstance(EducationModuleFragment.this.getActivity()).unregisterReceiver(mEducationModuleReceiver);
+        LOGI(TAG, "UnregisterRecNewsFeed");
+    }
 
     private EducationModuleEntity fillModuleFromCursor(Cursor cursor) {
         EducationModuleEntity educationModuleEntity = new EducationModuleEntity();
@@ -260,10 +267,11 @@ public class EducationModuleFragment extends Fragment {
             educationModuleEntity.setDescription(cursor.getString(cursor.getColumnIndex(EDUCATION_PRODUCT_MODULE_DESCRIPTION)));
             educationModuleEntity.setCreated_at(cursor.getString(cursor.getColumnIndex(EDUCATION_PRODUCT_MODULE_CREATED_AT)));
             educationModuleEntity.setUpdated_at(cursor.getString(cursor.getColumnIndex(EDUCATION_PRODUCT_MODULE_UPDATED_AT)));
-            String selectQueryMaterials = QUERY_MATERIALS + productId;
-            Cursor cursorMaterials = mDatabase.rawQuery(selectQueryMaterials, null);
+
+            Cursor cursorMaterials = JustUpApplication.getApplication().getTransferActionEducationProductModule().getCursorOfEducationProductModuleFromModuleId(getActivity().getApplicationContext(), productId);
 
             ArrayList<EducationMaterialEntity> materialEntities = new ArrayList<>();
+
             if (cursorMaterials != null) {
                 for (cursorMaterials.moveToFirst(); !cursorMaterials.isAfterLast(); cursorMaterials.moveToNext()) {
                     EducationMaterialEntity educationMaterialEntity = new EducationMaterialEntity();
@@ -280,18 +288,16 @@ public class EducationModuleFragment extends Fragment {
                     educationMaterialEntity.setDescription(cursorMaterials.getString(cursorMaterials.getColumnIndex(EDUCATION_MODULES_MATERIAL_DESCRIPTION)));
                     materialEntities.add(educationMaterialEntity);
                 }
+
                 educationModuleEntity.setMaterials(materialEntities);
-                if (cursorMaterials != null) {
-                    cursorMaterials.close();
-                }
             }
         }
+
         return educationModuleEntity;
     }
 
     private void fillViewsWithData() {
-        mModuleDescriptionTitle.setText(educationModuleEntity.getDescription());
-
+        mModuleDescriptionTitle.setText(mEducationModuleEntity.getDescription());
     }
 
     private ArrayList<EducationMaterialEntity> getMainMaterialsList(ArrayList<EducationMaterialEntity> materialEntities) {
@@ -301,6 +307,7 @@ public class EducationModuleFragment extends Fragment {
                 entities.add(materialEntities.get(i));
             }
         }
+
         return entities;
     }
 
@@ -311,22 +318,22 @@ public class EducationModuleFragment extends Fragment {
                 entities.add(materialEntities.get(i));
             }
         }
+
         return entities;
     }
 
-
     private void updateView(final ArrayList<EducationMaterialEntity> entities, GridLayout gridLayout) {
         for (int i = 0, c = 0, r = 0; i < entities.size(); i++, c++) {
-            if (c == column) {
+            if (c == mColumn) {
                 c = 0;
                 r++;
             }
 
-            arrayCounter = i;
+            mArrayCounter = i;
 
             GridLayout.LayoutParams param = new GridLayout.LayoutParams();
             param.height = LinearLayout.LayoutParams.WRAP_CONTENT;
-            param.width = (screenWidth / 3);
+            param.width = (mScreenWidth / 3);
             param.rightMargin = CommonUtils.convertDpToPixels(getActivity(), GRID_ITEM_MARGIN);
             // param.topMargin = 10;
             // param.setGravity(Gravity.CENTER);
@@ -370,14 +377,14 @@ public class EducationModuleFragment extends Fragment {
                         getChildFragmentManager().beginTransaction().replace(R.id.fragment_module_youtube_container, YoutubeDefaultFragment.newInstance(link)).addToBackStack(null).commit();
                         mCloseYoutubeFragmentButton.setVisibility(View.VISIBLE);
                     } else {
-                        docFileName = entities.get(arrayCounter).getName();
+                        mDocFileName = entities.get(mArrayCounter).getName();
 
-                        if (isFileFind(docFileName)) {
-                            LOGI(TAG, "file found!");
+                        if (isFileFind(mDocFileName)) {
+                            LOGI(TAG, "File found !");
 
-                            showViewPDFDialog(docFileName, docFilePath);
+                            showViewPDFDialog(mDocFileName, mDocFilePath);
                         } else {
-                            LOGD(TAG, "file NOT found!");
+                            LOGD(TAG, "File NOT found !");
 
                             mLargeProgressBar.setVisibility(View.VISIBLE);
                             ApiWrapper.downloadFileFromUrl(link, new OnDownloadFileResponse(getActivity()));
@@ -409,7 +416,7 @@ public class EducationModuleFragment extends Fragment {
         for (File file : mDirList) {
             if (!file.isDirectory()) {
                 if (fileName.equals(file.getName())) {
-                    docFilePath = file.getAbsolutePath();
+                    mDocFilePath = file.getAbsolutePath();
                     return true;
                 }
             }
@@ -428,7 +435,7 @@ public class EducationModuleFragment extends Fragment {
         public void onSuccess(int statusCode, Header[] headers, File file) {
             LOGD(TAG, "OnDownloadFileResponse onSuccess()");
 
-            new AsyncSaveFile(docFileName).execute(file);
+            new AsyncSaveFile(mDocFileName).execute(file);
 
             if (EducationModuleFragment.this.isAdded()) {
                 mLargeProgressBar.setVisibility(View.GONE);
@@ -449,5 +456,4 @@ public class EducationModuleFragment extends Fragment {
             }
         }
     }
-
 }

@@ -3324,7 +3324,8 @@ public class LauncherActivity extends BaseActivity implements
     }
 
     // TODO System Methods
-
+    // TODO WARNING !!! Error:(3329, 19) error: onRetainNonConfigurationInstance() in LauncherActivity cannot override onRetainNonConfigurationInstance() in FragmentActivity overridden method is final
+    /*
     @Override
     public Object onRetainNonConfigurationInstance() {
         // Flag the loader to stop early before switching
@@ -3335,13 +3336,13 @@ public class LauncherActivity extends BaseActivity implements
 
         return Boolean.TRUE;
     }
+    */
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         final int uniChar = event.getUnicodeChar();
         final boolean handled = super.onKeyDown(keyCode, event);
-        final boolean isKeyNotWhitespace = uniChar > 0
-                && !Character.isWhitespace(uniChar);
+        final boolean isKeyNotWhitespace = uniChar > 0 && !Character.isWhitespace(uniChar);
         if (!handled && acceptFilter() && isKeyNotWhitespace) {
             boolean gotKey = TextKeyListener.getInstance().onKeyDown(
                     mWorkspace, mDefaultKeySsb, keyCode, event);

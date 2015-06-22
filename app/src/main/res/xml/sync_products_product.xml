@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<sync-adapter xmlns:android="http://schemas.android.com/apk/res/android"
+    android:accountType="me.justup.upme.account"
+    android:contentAuthority="@string/content_authority_products_product"
+    android:userVisible="true"
+    android:supportsUploading="false"/>

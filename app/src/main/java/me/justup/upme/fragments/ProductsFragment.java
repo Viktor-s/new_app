@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
@@ -32,7 +31,6 @@ import me.justup.upme.db.DBAdapter;
 import me.justup.upme.entity.ProductCategoryEntity;
 import me.justup.upme.entity.ProductsCategoryBrandEntity;
 import me.justup.upme.entity.ProductsProductEntity;
-import me.justup.upme.utils.AppPreferences;
 
 import static me.justup.upme.db.DBHelper.PRODUCTS_BRAND_CATEGORIES_BRAND_ID;
 import static me.justup.upme.db.DBHelper.PRODUCTS_BRAND_CATEGORIES_IMAGE;
@@ -41,7 +39,6 @@ import static me.justup.upme.db.DBHelper.PRODUCTS_BRAND_CATEGORIES_SERVER_ID;
 import static me.justup.upme.db.DBHelper.PRODUCTS_BRAND_CATEGORIES_SHORT_DESCRIPTION;
 import static me.justup.upme.db.DBHelper.PRODUCTS_CATEGORIES_NAME;
 import static me.justup.upme.db.DBHelper.PRODUCTS_CATEGORIES_SERVER_ID;
-import static me.justup.upme.db.DBHelper.PRODUCTS_CATEGORIES_TABLE_NAME;
 import static me.justup.upme.db.DBHelper.PRODUCTS_PRODUCT_DESCRIPTION;
 import static me.justup.upme.db.DBHelper.PRODUCTS_PRODUCT_IMAGE;
 import static me.justup.upme.db.DBHelper.PRODUCTS_PRODUCT_NAME;
@@ -53,16 +50,15 @@ public class ProductsFragment extends Fragment {
     private static final String TAG = makeLogTag(ProductsFragment.class);
 
     private List<ProductCategoryEntity> mListCategory = null;
-    private SQLiteDatabase mDatabase = null;
     private BroadcastReceiver mProductsReceiver = null;
     private Cursor mCursorProducts = null;
-    private View mContentView = null;
     private LayoutInflater mLayoutInflater = null;
     private LinearLayout mContainerProductMain = null;
     private ArrayList<ProductsCategoryBrandEntity> mAllBrandsList = new ArrayList<>();
-    private AppPreferences mAppPreferences = null;
 
     private String[] mColorForProduct = null;
+
+    private View mContentView = null;
 
     // Instance
     public static ProductsFragment newInstance() {
@@ -73,10 +69,7 @@ public class ProductsFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
-        mAppPreferences = new AppPreferences(JustUpApplication.getApplication().getApplicationContext());
-
         mColorForProduct = getResources().getStringArray(R.array.color_for_product);
-        mDatabase = DBAdapter.getInstance().openDatabase();
 
         updateProductsList();
     }
@@ -87,12 +80,6 @@ public class ProductsFragment extends Fragment {
         // Link : http://stackoverflow.com/questions/11182180/understanding-fragments-setretaininstanceboolean
         setRetainInstance(false);
     }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
 
     @Override
     public void onResume() {
@@ -115,12 +102,6 @@ public class ProductsFragment extends Fragment {
     public void onPause() {
         super.onPause();
         LocalBroadcastManager.getInstance(ProductsFragment.this.getActivity()).unregisterReceiver(mProductsReceiver);
-    }
-
-    @Override
-    public void onDestroy() {
-        DBAdapter.getInstance().closeDatabase();
-        super.onDestroy();
     }
 
     @Override
@@ -173,7 +154,7 @@ public class ProductsFragment extends Fragment {
 
                 String imagePath = "fake";
 
-                if(mAppPreferences.isDemoMode()){
+                if(JustUpApplication.getApplication().getAppPreferences().isDemoMode()){
                     if(title.equals("Кредит наличными без залога") || title.equals("Кредит наличными под залог")){
                         // Set Image to Product Item
                         Picasso.with(getActivity()).load(R.drawable.prod_nalich_bez_zaloga).placeholder(R.mipmap.ic_launcher).into(groupProductPhoto);
@@ -272,13 +253,10 @@ public class ProductsFragment extends Fragment {
     }
 
     private void updateProductsList() {
-        mCursorProducts = mDatabase.rawQuery("SELECT * FROM " + PRODUCTS_CATEGORIES_TABLE_NAME, null);
+        mCursorProducts = JustUpApplication.getApplication().getTransferActionProductsCategories().getCursorOfProductsCategories(getActivity().getApplicationContext());
         mListCategory = fillProductsFromCursor(mCursorProducts);
 
         LOGD(TAG, mListCategory.toString());
-        if (mCursorProducts != null) {
-            mCursorProducts.close();
-        }
     }
 
     public List<ProductCategoryEntity> fillProductsFromCursor(Cursor cursorProducts) {
@@ -289,8 +267,8 @@ public class ProductsFragment extends Fragment {
             productCategoryEntity.setId(cursorProducts.getInt(cursorProducts.getColumnIndex(PRODUCTS_CATEGORIES_SERVER_ID)));
             productCategoryEntity.setName(cursorProducts.getString(cursorProducts.getColumnIndex(PRODUCTS_CATEGORIES_NAME)));
             int category_id = cursorProducts.getInt(cursorProducts.getColumnIndex(PRODUCTS_CATEGORIES_SERVER_ID));
-            String selectQueryBrands = "SELECT * FROM products_brand_table WHERE category_id=" + category_id;
-            Cursor cursorBrands = mDatabase.rawQuery(selectQueryBrands, null);
+
+            Cursor cursorBrands = JustUpApplication.getApplication().getTransferActionBrandCategories().getCursorOfProductsBrandByCategoriesId(getActivity().getApplicationContext(), category_id);
             ArrayList<ProductsCategoryBrandEntity> brandsList = new ArrayList<>();
 
             if (cursorBrands != null) {
@@ -301,8 +279,9 @@ public class ProductsFragment extends Fragment {
                     productsCategoryBrandEntity.setName(cursorBrands.getString(cursorBrands.getColumnIndex(PRODUCTS_BRAND_CATEGORIES_NAME)));
                     productsCategoryBrandEntity.setDescription(cursorBrands.getString(cursorBrands.getColumnIndex(PRODUCTS_BRAND_CATEGORIES_SHORT_DESCRIPTION)));
                     productsCategoryBrandEntity.setImage(cursorBrands.getString(cursorBrands.getColumnIndex(PRODUCTS_BRAND_CATEGORIES_IMAGE)));
-                    String selectQueryProduct = "SELECT * FROM products_product_table WHERE product_brand_id=" + brand_id;
-                    Cursor cursorBrandProduct = mDatabase.rawQuery(selectQueryProduct, null);
+
+                    Cursor cursorBrandProduct = JustUpApplication.getApplication().getTransferActionProductsProduct().getCursorOfProductsProductByBrandId(getActivity().getApplicationContext(), brand_id);
+
                     ArrayList<ProductsProductEntity> productsList = new ArrayList<>();
                     for (cursorBrandProduct.moveToFirst(); !cursorBrandProduct.isAfterLast(); cursorBrandProduct.moveToNext()) {
                         ProductsProductEntity productsProductEntity = new ProductsProductEntity();
@@ -312,19 +291,17 @@ public class ProductsFragment extends Fragment {
                         productsProductEntity.setImage(cursorBrandProduct.getString(cursorBrandProduct.getColumnIndex(PRODUCTS_PRODUCT_IMAGE)));
                         productsList.add(productsProductEntity);
                     }
+
                     productsCategoryBrandEntity.setProductEntityList(productsList);
                     //  LOGE("pavel", productsList.toString());
                     brandsList.add(productsCategoryBrandEntity);
-                    cursorBrandProduct.close();
                 }
+
                 productCategoryEntity.setBrandList(brandsList);
                 mAllBrandsList.addAll(brandsList);
             }
-            categoryEntities.add(productCategoryEntity);
 
-            if (cursorBrands != null) {
-                cursorBrands.close();
-            }
+            categoryEntities.add(productCategoryEntity);
         }
 
         return categoryEntities;

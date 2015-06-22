@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="config_app_name">UPME</string>
+
+    <string name="content_authority_base">me.justup.upme.provider.base</string>
+    <string name="content_authority_event_calendar">me.justup.upme.provider.event.calendar</string>
+    <string name="content_authority_full_news">me.justup.upme.provider.full.news</string>
+    <string name="content_authority_is_short_news_read">me.justup.upme.provider.is.short.news.read</string>
+    <string name="content_authority_mail_contact">me.justup.upme.provider.mail.contact</string>
+    <string name="content_authority_product_brand">me.justup.upme.provider.product.brand</string>
+    <string name="content_authority_product_categories">me.justup.upme.provider.product.categories</string>
+    <string name="content_authority_product_html">me.justup.upme.provider.product.html</string>
+    <string name="content_authority_products_product">me.justup.upme.provider.products.product</string>
+    <string name="content_authority_short_news_comments">me.justup.upme.provider.short.news.comments</string>
+    <string name="content_authority_short_news">me.justup.upme.provider.short.news</string>
+    <string name="content_authority_tile_menu">me.justup.upme.provider.tile.menu</string>
+    <string name="content_authority_status_bar_push">me.justup.upme.provider.status.bar.push</string>
+    <string name="content_authority_education_product">me.justup.upme.provider.education.product</string>
+    <string name="content_authority_education_product_module">me.justup.upme.provider.education.product.module</string>
+    <string name="content_authority_education_module_material">me.justup.upme.provider.education.module.material</string>
+
+    <string name="sync_tile_menu_provider_title">Tiles</string>
+    <string name="sync_brand_categories_provider_title">Brand Categories</string>
+    <string name="sync_education_modules_provider_title">Education Modules</string>
+    <string name="sync_education_product_module_provider_title">Education Product Module</string>
+    <string name="sync_education_product_provider_title">Education Product</string>
+    <string name="sync_event_calendar_provider_title">Event Calendar</string>
+    <string name="sync_full_news_provider_title">Full News</string>
+    <string name="sync_short_news_provider_title">Short News</string>
+    <string name="sync_mail_contact_provider_title">Contact</string>
+    <string name="sync_news_comment_provider_title">News Comments</string>
+    <string name="sync_product_html_provider_title">Product HTML</string>
+    <string name="sync_product_categories_provider_title">Product Categories</string>
+    <string name="sync_products_product_provider_title">Products List</string>
+    <string name="sync_push_object_provider_title">Push MSG</string>
+
+</resources>

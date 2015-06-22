@@ -17,5 +17,10 @@ public class CommentsArticleFullResponse implements Serializable {
             public String name;
             public String img;
         }
+
+        @Override
+        public String toString() {
+            return super.toString();
+        }
     }
 }

@@ -29,6 +29,7 @@ import java.util.TimerTask;
 
 import me.justup.upme.entity.ErrorResponse;
 import me.justup.upme.entity.SetGooglePushIdQuery;
+import me.justup.upme.gcm.GCMIntentService;
 import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.utils.CommonUtils;
 import me.justup.upme.utils.ThreadPolicyManager;
@@ -50,8 +51,8 @@ public class SplashActivity extends Activity {
     private static final String SENDER_ID = "896253211448";
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
-    private static final String PROPERTY_REG_ID = "registration_id";
-    private static final String PROPERTY_APP_VERSION = "appVersion";
+    public static final String PROPERTY_REG_ID = "registration_id";
+    public static final String PROPERTY_APP_VERSION = "appVersion";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -109,6 +110,9 @@ public class SplashActivity extends Activity {
 
     private void goToDashboardActivity() {
         if(isDeviceRegister!=null && isDeviceRegister) {
+            if(!JustUpApplication.getApplication().isMyServiceRunning(GCMIntentService.class)) {
+                startService(new Intent(this, GCMIntentService.class));
+            }
 
             if (mTimer != null) {
                 mTimer.cancel();
@@ -206,7 +210,7 @@ public class SplashActivity extends Activity {
     /**
      * @return Application's version code from the {@code PackageManager}.
      */
-    private static int getAppVersion(Context context) {
+    public static int getAppVersion(Context context) {
         try {
             PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
 

@@ -19,6 +19,16 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_SMS"/>
+
+    <!--Accounts-->
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS"/>
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS"/>
 
     <uses-permission android:name="android.permission.BROADCAST_PACKAGE_ADDED" />
     <uses-permission android:name="android.permission.BROADCAST_PACKAGE_REMOVED" />
@@ -82,7 +92,7 @@
 
         <service android:name=".http.HttpIntentService" />
         <service android:name=".services.GPSTracker" />
-        <service android:name=".gcm.GcmIntentService" />
+        <service android:name=".gcm.GCMIntentService" />
         <service android:name=".services.StatusBarService" />
         <service android:name=".services.PushIntentService" />
         <service android:name=".services.FileExplorerService" />
@@ -90,7 +100,7 @@
         <service android:name=".services.ApplicationSupervisorService" />
 
         <receiver
-            android:name=".gcm.GcmBroadcastReceiver"
+            android:name=".gcm.WakefulGCMBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
@@ -257,6 +267,196 @@
             android:screenOrientation="fullUser"
             android:theme="@style/CallActivityTheme"/>
         <!--AppRTC Second point to app ^ up ^ -->
+
+        <!--Request service-->
+        <service
+            android:name="me.justup.upme.api_rpc.request_model.RequestService"
+            android:exported="false" />
+
+        <activity
+            android:name="me.justup.upme.RequestTestActivity"
+            android:label="UpMe Request Test"/>
+
+        <!--Sync DB -->
+        <!--http://www.c99.org/2010/01/23/writing-an-android-sync-provider-part-2/-->
+        <!--http://habrahabr.ru/sandbox/27407/-->
+
+        <!--Login Activity-->
+        <activity
+            android:name="me.justup.upme.db_upme.account_activity.AccountAuthActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
+            android:excludeFromRecents="true"
+            android:label="Регистрация нового аккаунта"
+            android:screenOrientation="portrait" />
+
+        <!--Fail Activity-->
+        <activity
+            android:name="me.justup.upme.db_upme.account_activity.AccountFailActivity"
+            android:configChanges="orientation|screenSize"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait" />
+
+        <!--Authorisation service-->
+        <service
+            android:name="me.justup.upme.db_upme.sync_service.AccountAuthenticatorService"
+            android:exported="false"
+            android:process=":auth">
+
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/sync_authenticator" />
+        </service>
+
+        <!--Calendar Event Service-->
+        <service
+            android:name="me.justup.upme.db_upme.sync_service.EventCalendarSyncAdapterService"
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/sync_event_calendar" />
+        </service>
+
+        <!--Mail Contact Service-->
+        <service
+            android:name="me.justup.upme.db_upme.sync_service.MailContactSyncAdapterService"
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/sync_mail_contact" />
+        </service>
+
+        <!--Product Categories Service-->
+        <service
+            android:name="me.justup.upme.db_upme.sync_service.ProductCategoriesSyncAdapterService"
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/sync_product_categories" />
+        </service>
+
+        <!--Short News Service-->
+        <service
+            android:name="me.justup.upme.db_upme.sync_service.ShortNewsSyncAdapterService"
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/sync_short_news" />
+        </service>
+
+        <provider
+            android:name="me.justup.upme.db_upme.providers.ActionTileMenuProvider"
+            android:authorities="@string/content_authority_tile_menu"
+            android:exported="false"
+            android:label="@string/sync_tile_menu_provider_title"/>
+
+        <provider
+            android:name="me.justup.upme.db_upme.providers.BrandCategoriesProvider"
+            android:authorities="@string/content_authority_product_brand"
+            android:exported="false"
+            android:label="@string/sync_brand_categories_provider_title"/>
+
+        <provider
+            android:name="me.justup.upme.db_upme.providers.EducationModulesMaterialProvider"
+            android:authorities="@string/content_authority_education_module_material"
+            android:exported="false"
+            android:label="@string/sync_education_modules_provider_title"/>
+
+        <provider
+            android:name="me.justup.upme.db_upme.providers.EducationProductModuleProvider"
+            android:authorities="@string/content_authority_education_product_module"
+            android:exported="false"
+            android:label="@string/sync_education_product_module_provider_title"/>
+
+        <provider
+            android:name="me.justup.upme.db_upme.providers.EducationProductProvider"
+            android:authorities="@string/content_authority_education_product"
+            android:exported="false"
+            android:label="@string/sync_education_product_provider_title"/>
+
+        <provider
+            android:name="me.justup.upme.db_upme.providers.EventCalendarProvider"
+            android:authorities="@string/content_authority_event_calendar"
+            android:exported="false"
+            android:label="@string/sync_event_calendar_provider_title"/>
+
+        <provider
+            android:name="me.justup.upme.db_upme.providers.FullNewsProvider"
+            android:authorities="@string/content_authority_full_news"
+            android:exported="false"
+            android:label="@string/sync_full_news_provider_title"/>
+
+        <provider
+            android:name="me.justup.upme.db_upme.providers.IsShortNewsReadProvider"
+            android:authorities="@string/content_authority_is_short_news_read"
+            android:exported="false"
+            android:label="@string/sync_short_news_provider_title"/>
+
+        <provider
+            android:name="me.justup.upme.db_upme.providers.MailContactProvider"
+            android:authorities="@string/content_authority_mail_contact"
+            android:exported="false"
+            android:label="@string/sync_mail_contact_provider_title"/>
+
+        <provider
+            android:name="me.justup.upme.db_upme.providers.NewsCommentsProvider"
+            android:authorities="@string/content_authority_short_news_comments"
+            android:exported="false"
+            android:label="@string/sync_news_comment_provider_title"/>
+
+        <provider
+            android:name="me.justup.upme.db_upme.providers.ProductHTMLProvider"
+            android:authorities="@string/content_authority_product_html"
+            android:exported="false"
+            android:label="@string/sync_product_html_provider_title"/>
+
+        <provider
+            android:name="me.justup.upme.db_upme.providers.ProductsCategoriesProvider"
+            android:authorities="@string/content_authority_product_categories"
+            android:exported="false"
+            android:label="@string/sync_product_categories_provider_title"/>
+
+        <provider
+            android:name="me.justup.upme.db_upme.providers.ProductsProductProvider"
+            android:authorities="@string/content_authority_products_product"
+            android:exported="false"
+            android:label="@string/sync_products_product_provider_title"/>
+
+        <provider
+            android:name="me.justup.upme.db_upme.providers.ShortNewsProvider"
+            android:authorities="@string/content_authority_short_news"
+            android:exported="false"
+            android:label="@string/sync_short_news_provider_title"/>
+
+        <provider
+            android:name="me.justup.upme.db_upme.providers.StatusBarPushProvider"
+            android:authorities="@string/content_authority_status_bar_push"
+            android:exported="false"
+            android:label="@string/sync_push_object_provider_title"/>
 
     </application>
 

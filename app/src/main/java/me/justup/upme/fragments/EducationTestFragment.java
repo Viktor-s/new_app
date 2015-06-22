@@ -1,5 +1,6 @@
 package me.justup.upme.fragments;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -40,89 +41,116 @@ import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 public class EducationTestFragment extends Fragment {
     private static final String TAG = makeLogTag(EducationTestFragment.class);
+
     private static final String ARG_MODULE_ID = "module_id";
-    private int currentModuleId;
-    private TextView questionNameTextview, questionContentTextView;
-    private Button previousQuestionButton, nextQuestionButton, sendButton;
-    private GridLayout answersContainerLayout;
-    private RadioGroup hourRadioGroup;
-    private int column = 3;
-    private int screenWidth;
-    private LayoutInflater layoutInflater;
 
+    private int mCurrentModuleId;
+    private TextView mQuestionNameTextView = null, mQuestionContentTextView = null;
+    private Button mPreviousQuestionButton = null, mNextQuestionButton = null, mSendButton = null;
+    private GridLayout mAnswersContainerLayout = null;
+    private RadioGroup mHourRadioGroup = null;
+    private int mColumn = 3;
+    private int mScreenWidth;
+    private LayoutInflater mLayoutInflater = null;
 
-    private EducationTestEntity educationTestEntity;
+    private EducationTestEntity mEducationTestEntity = null;
 
-    private int currentQuestionListPosition;
+    private int mCurrentQuestionListPosition;
 
-    private ArrayList<String> answeredQuestions = new ArrayList<>();
+    private ArrayList<String> mAnsweredQuestions = new ArrayList<>();
+
+    private View mContentView = null;
 
     public static EducationTestFragment newInstance(int moduleId) {
         EducationTestFragment fragment = new EducationTestFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_MODULE_ID, moduleId);
         fragment.setArguments(args);
+
         return fragment;
     }
 
-
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Bundle bundle = this.getArguments();
-        if (bundle != null) {
-            currentModuleId = bundle.getInt(ARG_MODULE_ID);
-            Display display = getActivity().getWindowManager().getDefaultDisplay();
-            Point size = new Point();
-            display.getSize(size);
-            screenWidth = size.x - CommonUtils.convertDpToPixels(getActivity(), 440);
-        }
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
 
-
+        Display display = activity.getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        mScreenWidth = size.x - CommonUtils.convertDpToPixels(getActivity(), 440);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_education_test, container, false);
-        layoutInflater = LayoutInflater.from(getActivity());
-        questionNameTextview = (TextView) view.findViewById(R.id.education_test_question_name_textView);
-        questionContentTextView = (TextView) view.findViewById(R.id.education_test_question_content_textView);
-        previousQuestionButton = (Button) view.findViewById(R.id.education_test_previous_button);
-        nextQuestionButton = (Button) view.findViewById(R.id.education_test_next_button);
-        sendButton = (Button) view.findViewById(R.id.education_test_send_button);
-        questionNameTextview.setVisibility(View.INVISIBLE);
-        questionContentTextView.setVisibility(View.INVISIBLE);
-        previousQuestionButton.setVisibility(View.INVISIBLE);
-        nextQuestionButton.setVisibility(View.INVISIBLE);
+        mContentView = super.onCreateView(inflater, container, savedInstanceState);
 
-//        answersContainerLayout = (GridLayout) view.findViewById(R.id.education_test_answers_container);
-        hourRadioGroup = (RadioGroup) view.findViewById(R.id.hour_radio_group);
+        if (mContentView == null) {
+            mContentView = inflater.inflate(R.layout.fragment_education_test, container, false);
+        }
 
-        previousQuestionButton.setOnClickListener(new View.OnClickListener() {
+        return mContentView;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        Bundle bundle = this.getArguments();
+
+        if (bundle != null) {
+            mCurrentModuleId = bundle.getInt(ARG_MODULE_ID);
+        }
+
+        // Init UI
+        if (getActivity() != null) {
+            initUI();
+        }
+    }
+
+    private void initUI(){
+        mLayoutInflater = LayoutInflater.from(getActivity());
+        mQuestionNameTextView = (TextView) mContentView.findViewById(R.id.education_test_question_name_textView);
+        mQuestionContentTextView = (TextView) mContentView.findViewById(R.id.education_test_question_content_textView);
+        mPreviousQuestionButton = (Button) mContentView.findViewById(R.id.education_test_previous_button);
+        mNextQuestionButton = (Button) mContentView.findViewById(R.id.education_test_next_button);
+        mSendButton = (Button) mContentView.findViewById(R.id.education_test_send_button);
+
+        mQuestionNameTextView.setVisibility(View.INVISIBLE);
+        mQuestionContentTextView.setVisibility(View.INVISIBLE);
+        mPreviousQuestionButton.setVisibility(View.INVISIBLE);
+        mNextQuestionButton.setVisibility(View.INVISIBLE);
+
+        // mAnswersContainerLayout = (GridLayout) view.findViewById(R.id.education_test_answers_container);
+        mHourRadioGroup = (RadioGroup) mContentView.findViewById(R.id.hour_radio_group);
+
+        mPreviousQuestionButton.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
                 setAnswerArr();
-                currentQuestionListPosition = currentQuestionListPosition - 1;
-                updateQuestion(currentQuestionListPosition);
+                mCurrentQuestionListPosition = mCurrentQuestionListPosition - 1;
+                updateQuestion(mCurrentQuestionListPosition);
 
             }
         });
 
-        nextQuestionButton.setOnClickListener(new View.OnClickListener() {
+        mNextQuestionButton.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
                 setAnswerArr();
-                currentQuestionListPosition = currentQuestionListPosition + 1;
-                updateQuestion(currentQuestionListPosition);
+                mCurrentQuestionListPosition = mCurrentQuestionListPosition + 1;
+                updateQuestion(mCurrentQuestionListPosition);
 
             }
         });
 
-        sendButton.setOnClickListener(new View.OnClickListener() {
+        mSendButton.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
                 setAnswerArr();
-                for (String str : answeredQuestions)
+                for (String str : mAnsweredQuestions)
                     if (str.equals("")) {
                         WarningDialog dialog = WarningDialog.newInstance(getString(R.string.test_warning), "Вы не ответили на все вопросы!");
                         dialog.show(getChildFragmentManager(), WarningDialog.WARNING_DIALOG);
@@ -131,48 +159,48 @@ public class EducationTestFragment extends Fragment {
                 ((EducationModuleFragment) getParentFragment()).closeTest();
             }
         });
-        EducationGetTestsQuery testsQuery = new EducationGetTestsQuery();
-        testsQuery.params.module_id = currentModuleId;
-        ApiWrapper.query(testsQuery, new OnTestResponse());
 
-        return view;
+        EducationGetTestsQuery testsQuery = new EducationGetTestsQuery();
+        testsQuery.params.module_id = mCurrentModuleId;
+        ApiWrapper.query(testsQuery, new OnTestResponse());
     }
 
     private void setAnswerArr() {
-        int radioButtonID = hourRadioGroup.getCheckedRadioButtonId();
-        View radioButton = hourRadioGroup.findViewById(radioButtonID);
-        int index = hourRadioGroup.indexOfChild(radioButton);
-        EducationTestQuestionEntity questionEntity = educationTestEntity.getQuestions().get(currentQuestionListPosition);
+        int radioButtonID = mHourRadioGroup.getCheckedRadioButtonId();
+        View radioButton = mHourRadioGroup.findViewById(radioButtonID);
+        int index = mHourRadioGroup.indexOfChild(radioButton);
+        EducationTestQuestionEntity questionEntity = mEducationTestEntity.getQuestions().get(mCurrentQuestionListPosition);
         String currentHash = (index == -1) ? "" : questionEntity.getAnswers().get(index).getAnswer_hash();
-        answeredQuestions.set(currentQuestionListPosition, currentHash);
+        mAnsweredQuestions.set(mCurrentQuestionListPosition, currentHash);
     }
 
     private void updateQuestion(int positionInList) {
-        LOGE("pavel", " " + positionInList);
+        LOGE(TAG, "PositionInList :  " + positionInList);
+
         if (positionInList == 0) {
-            previousQuestionButton.setVisibility(View.INVISIBLE);
-            nextQuestionButton.setVisibility(View.VISIBLE);
-        } else if (positionInList == educationTestEntity.getQuestions().size() - 1) {
-            nextQuestionButton.setVisibility(View.INVISIBLE);
-            previousQuestionButton.setVisibility(View.VISIBLE);
-            sendButton.setVisibility(View.VISIBLE);
+            mPreviousQuestionButton.setVisibility(View.INVISIBLE);
+            mNextQuestionButton.setVisibility(View.VISIBLE);
+        } else if (positionInList == mEducationTestEntity.getQuestions().size() - 1) {
+            mNextQuestionButton.setVisibility(View.INVISIBLE);
+            mPreviousQuestionButton.setVisibility(View.VISIBLE);
+            mSendButton.setVisibility(View.VISIBLE);
         } else {
-            nextQuestionButton.setVisibility(View.VISIBLE);
-            previousQuestionButton.setVisibility(View.VISIBLE);
-            sendButton.setVisibility(View.GONE);
+            mNextQuestionButton.setVisibility(View.VISIBLE);
+            mPreviousQuestionButton.setVisibility(View.VISIBLE);
+            mSendButton.setVisibility(View.GONE);
         }
-        if (positionInList <= educationTestEntity.getQuestions().size() - 1) {
-            EducationTestQuestionEntity questionEntity = educationTestEntity.getQuestions().get(positionInList);
-            questionContentTextView.setText(questionEntity.getQuestion_text());
+
+        if (positionInList <= mEducationTestEntity.getQuestions().size() - 1) {
+            EducationTestQuestionEntity questionEntity = mEducationTestEntity.getQuestions().get(positionInList);
+            mQuestionContentTextView.setText(questionEntity.getQuestion_text());
 
             generateAnswersView(positionInList, questionEntity.getAnswers());
         }
     }
 
-
     private void generateAnswersView(final int questionNumber, ArrayList<EducationTestAnswerEntity> testAnswerEntities) {
-        hourRadioGroup.removeAllViews();
-        String answerNumber = answeredQuestions.get(questionNumber);
+        mHourRadioGroup.removeAllViews();
+        String answerNumber = mAnsweredQuestions.get(questionNumber);
         int index = -1;
         int i = -1;
         for (EducationTestAnswerEntity itemAnswer : testAnswerEntities) {
@@ -191,35 +219,39 @@ public class EducationTestFragment extends Fragment {
             if (itemAnswer.getAnswer_hash().equals(answerNumber))
                 index = i;
 
-            hourRadioGroup.addView(radioButtonView);
+            mHourRadioGroup.addView(radioButtonView);
         }
 
-        if (index != -1)
-            ((RadioButton) hourRadioGroup.getChildAt(index)).setChecked(true);
+        if (index != -1) {
+            ((RadioButton) mHourRadioGroup.getChildAt(index)).setChecked(true);
+        }
     }
 
     private void generateAnswersViewOld(final String rightHash, ArrayList<EducationTestAnswerEntity> testAnswerEntities) {
-        answersContainerLayout.removeAllViews();
+        mAnswersContainerLayout.removeAllViews();
+
         for (int i = 0, c = 0, r = 0; i < testAnswerEntities.size(); i++, c++) {
-            if (c == column) {
+            if (c == mColumn) {
                 c = 0;
                 r++;
             }
+
             GridLayout.LayoutParams param = new GridLayout.LayoutParams();
             param.height = LinearLayout.LayoutParams.WRAP_CONTENT;
-            param.width = (screenWidth / 3);
+            param.width = (mScreenWidth / 3);
             param.leftMargin = CommonUtils.convertDpToPixels(getActivity(), 25);
             param.topMargin = CommonUtils.convertDpToPixels(getActivity(), 10);
-            //  param.setGravity(Gravity.CENTER);
+            // param.setGravity(Gravity.CENTER);
             param.columnSpec = GridLayout.spec(c);
             param.rowSpec = GridLayout.spec(r);
-            LinearLayout answerItemLayout = (LinearLayout) layoutInflater.inflate(R.layout.education_test_anser_item, null, false);
+            LinearLayout answerItemLayout = (LinearLayout) mLayoutInflater.inflate(R.layout.education_test_anser_item, null, false);
             TextView answerHash = (TextView) answerItemLayout.findViewById(R.id.education_test_item_hash);
             answerHash.setText(testAnswerEntities.get(i).getAnswer_hash());
             Button answerButton = (Button) answerItemLayout.findViewById(R.id.education_test_item_button);
             answerButton.setText(testAnswerEntities.get(i).getAnswer_text());
             answerItemLayout.setLayoutParams(param);
             answerItemLayout.setOnClickListener(new View.OnClickListener() {
+
                 @Override
                 public void onClick(View v) {
                     String answerHash = ((TextView) v.findViewById(R.id.education_test_item_hash)).getText().toString();
@@ -230,7 +262,8 @@ public class EducationTestFragment extends Fragment {
                     }
                 }
             });
-            answersContainerLayout.addView(answerItemLayout);
+
+            mAnswersContainerLayout.addView(answerItemLayout);
         }
     }
 
@@ -239,16 +272,17 @@ public class EducationTestFragment extends Fragment {
         @Override
         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
             String content = ApiWrapper.responseBodyToString(responseBody);
-            LOGI("pavel", "onSuccess : " + content);
+            LOGI(TAG, "onSuccess : " + content);
+
             EducationGetTestsResponse response = null;
             try {
                 response = ApiWrapper.gson.fromJson(content, EducationGetTestsResponse.class);
             } catch (JsonSyntaxException e) {
-                LOGE("pavel", "OnPushEducationGetTestsResponse gson.fromJson:\n" + content);
+                LOGE(TAG, "OnPushEducationGetTestsResponse gson.fromJson:\n" + content);
             }
 
             if (response != null) {
-                //тут будет выбор теста сначала
+                // TODO тут будет выбор теста сначала
                 EducationChoseTestDialog educationChoseTestDialog = new EducationChoseTestDialog(EducationTestFragment.this, response, getActivity());
                 educationChoseTestDialog.show();
 
@@ -258,21 +292,21 @@ public class EducationTestFragment extends Fragment {
         @Override
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
             String content = ApiWrapper.responseBodyToString(responseBody);
-            LOGI("pavel", "OnFailure : " + content);
+            LOGI(TAG, "OnFailure : " + content);
         }
     }
 
     public void generateViewFromChosenTest(EducationGetTestsResponse response, int testPosition) {
-        questionNameTextview.setVisibility(View.VISIBLE);
-        questionContentTextView.setVisibility(View.VISIBLE);
-        previousQuestionButton.setVisibility(View.VISIBLE);
-        nextQuestionButton.setVisibility(View.VISIBLE);
-        educationTestEntity = new EducationTestEntity();
-        educationTestEntity.setId(response.result.get(testPosition).id);
-        educationTestEntity.setModule_id(response.result.get(testPosition).module_id);
-        educationTestEntity.setName(response.result.get(testPosition).name);
-        educationTestEntity.setDescription(response.result.get(testPosition).description);
-        educationTestEntity.setPass_limit(response.result.get(testPosition).pass_limit);
+        mQuestionNameTextView.setVisibility(View.VISIBLE);
+        mQuestionContentTextView.setVisibility(View.VISIBLE);
+        mPreviousQuestionButton.setVisibility(View.VISIBLE);
+        mNextQuestionButton.setVisibility(View.VISIBLE);
+        mEducationTestEntity = new EducationTestEntity();
+        mEducationTestEntity.setId(response.result.get(testPosition).id);
+        mEducationTestEntity.setModule_id(response.result.get(testPosition).module_id);
+        mEducationTestEntity.setName(response.result.get(testPosition).name);
+        mEducationTestEntity.setDescription(response.result.get(testPosition).description);
+        mEducationTestEntity.setPass_limit(response.result.get(testPosition).pass_limit);
         ArrayList<EducationTestQuestionEntity> testQuestionEntities = new ArrayList<>();
         for (int i = 0; i < response.result.get(testPosition).questions.size(); i++) {
             EducationTestQuestionEntity questionEntity = new EducationTestQuestionEntity();
@@ -287,12 +321,13 @@ public class EducationTestFragment extends Fragment {
             }
             questionEntity.setAnswers(answerEntities);
             testQuestionEntities.add(questionEntity);
-            answeredQuestions.add("");
+            mAnsweredQuestions.add("");
         }
-        educationTestEntity.setQuestions(testQuestionEntities);
-        LOGE("pavel", educationTestEntity.toString());
-        currentQuestionListPosition = 0;
-        questionNameTextview.setText(educationTestEntity.getName());
-        updateQuestion(currentQuestionListPosition);
+
+        mEducationTestEntity.setQuestions(testQuestionEntities);
+        LOGE(TAG, mEducationTestEntity.toString());
+        mCurrentQuestionListPosition = 0;
+        mQuestionNameTextView.setText(mEducationTestEntity.getName());
+        updateQuestion(mCurrentQuestionListPosition);
     }
 }

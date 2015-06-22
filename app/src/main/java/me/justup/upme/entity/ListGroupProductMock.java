@@ -10,6 +10,7 @@ import me.justup.upme.R;
 /**
  * Created by bogdan on 28.01.15.
  */
+// TODO WTF?
 public class ListGroupProductMock {
 
     private List<GroupProductEntity> listGroupProduct;

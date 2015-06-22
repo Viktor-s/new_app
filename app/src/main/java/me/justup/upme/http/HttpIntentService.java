@@ -3,7 +3,6 @@ package me.justup.upme.http;
 import android.app.IntentService;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.google.gson.JsonSyntaxException;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -13,8 +12,8 @@ import org.apache.http.Header;
 import java.util.Arrays;
 import java.util.List;
 
+import me.justup.upme.JustUpApplication;
 import me.justup.upme.MainActivity;
-import me.justup.upme.db.DBAdapter;
 import me.justup.upme.entity.ArticleFullResponse;
 import me.justup.upme.entity.ArticlesGetShortDescriptionResponse;
 import me.justup.upme.entity.BaseHttpQueryEntity;
@@ -34,7 +33,6 @@ import static me.justup.upme.utils.LogUtils.LOGE;
 import static me.justup.upme.utils.LogUtils.LOGI;
 import static me.justup.upme.utils.LogUtils.makeLogTag;
 
-
 public class HttpIntentService extends IntentService {
     private static final String TAG = makeLogTag(HttpIntentService.class);
 
@@ -50,7 +48,7 @@ public class HttpIntentService extends IntentService {
     public static final int MAIL_CONTACT_PART = 5;
     public static final int ADD_COMMENT = 6;
     public static final int GET_COMMENTS_FULL_ARTICLE = 7;
-    public static final int ADD_REFERAL = 8;
+    public static final int ADD_REFERRAL = 8;
     public static final int CALENDAR_PART = 9;
     public static final int CALENDAR_ADD_EVENT = 10;
     public static final int CALENDAR_REMOVE_EVENT = 11;
@@ -61,53 +59,35 @@ public class HttpIntentService extends IntentService {
     public static final int EDUCATION_GET_PRODUCTS = 16;
     public static final int EDUCATION_GET_PRODUCT_MODULES = 17;
 
-
-    //private DBAdapter mDBAdapter;
-    private int partNumber;
-
+    private int mPartNumber;
 
     public HttpIntentService() {
         super(TAG);
     }
 
     @Override
-    public void onCreate() {
-        super.onCreate();
-
-//        mDBAdapter = new DBAdapter(AppContext.getAppContext());
-//        mDBAdapter.open();
-        DBAdapter.getInstance().openDatabase();
-    }
-
-    @Override
     protected void onHandleIntent(Intent intent) {
         BaseHttpQueryEntity mQueryEntity = (BaseHttpQueryEntity) intent.getSerializableExtra(HTTP_INTENT_QUERY_EXTRA);
-        partNumber = intent.getIntExtra(HTTP_INTENT_PART_EXTRA, 0);
+        mPartNumber = intent.getIntExtra(HTTP_INTENT_PART_EXTRA, 0);
         ApiWrapper.syncQuery(mQueryEntity, new OnQueryResponse());
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-        //mDBAdapter.close();
-        DBAdapter.getInstance().closeDatabase();
     }
 
     private class OnQueryResponse extends AsyncHttpResponseHandler {
         @Override
         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
             String content = ApiWrapper.responseBodyToString(responseBody);
-            LOGD(TAG, "onSuccess(): " + content);
-            // LOGI(TAG, "onSuccess(): headers:" + Arrays.toString(headers) + " status code:" + statusCode);
+            LOGD(TAG, "OnSuccess() : " + content);
+            LOGI(TAG, "OnSuccess() : headers : " + Arrays.toString(headers) + ", status code : " + statusCode);
 
-            switch (partNumber) {
+            switch (mPartNumber) {
                 case NEWS_PART_SHORT:
                     fillNewsShortDB(content);
                     break;
+
                 case NEWS_PART_FULL:
                     fillNewsFullDB(content);
                     break;
+
                 case PRODUCTS_PART:
                     fillProductsDB(content);
                     break;
@@ -121,35 +101,35 @@ public class HttpIntentService extends IntentService {
                     break;
 
                 case ADD_COMMENT:
-                    DBAdapter.getInstance().sendBroadcast(DBAdapter.NEWS_ITEM_SQL_BROADCAST_INTENT);
+                    // TODO 22.06.15 DBAdapter.getInstance().sendBroadcast(DBAdapter.NEWS_ITEM_SQL_BROADCAST_INTENT);
                     break;
 
                 case GET_COMMENTS_FULL_ARTICLE:
                     fillCommentsFullDB(content, NewsItemFragment.mNewsFeedEntityId);
                     break;
 
-                case ADD_REFERAL:
+                case ADD_REFERRAL:
                     BaseMethodEmptyQuery query = new BaseMethodEmptyQuery();
                     query.method = ApiWrapper.ACCOUNT_GET_ALL_CONTACTS;
                     startHttpIntent(query, HttpIntentService.MAIL_CONTACT_PART);
                     break;
 
                 case CALENDAR_PART:
-                    Log.d("TAG333_selectQuery", " OnQueryResponse ---------------------------");
+                    LOGD(TAG, "OnQueryResponse");
                     fillEventsCalendarDB(content);
                     break;
 
                 case CALENDAR_ADD_EVENT:
-                    startHttpIntent(MainActivity.getEventCalendarQuery(CalendarFragment.firstDayCurrentWeek), HttpIntentService.CALENDAR_PART);
+                    startHttpIntent(MainActivity.getEventCalendarQuery(CalendarFragment.mFirstDayCurrentWeek), HttpIntentService.CALENDAR_PART);
                     break;
 
                 case CALENDAR_REMOVE_EVENT:
-                    startHttpIntent(MainActivity.getEventCalendarQuery(CalendarFragment.firstDayCurrentWeek), HttpIntentService.CALENDAR_PART);
+                    startHttpIntent(MainActivity.getEventCalendarQuery(CalendarFragment.mFirstDayCurrentWeek), HttpIntentService.CALENDAR_PART);
                     break;
 
                 case CALENDAR_UPDATE_EVENT:
 
-                    startHttpIntent(MainActivity.getEventCalendarQuery(CalendarFragment.firstDayCurrentWeek), HttpIntentService.CALENDAR_PART);
+                    startHttpIntent(MainActivity.getEventCalendarQuery(CalendarFragment.mFirstDayCurrentWeek), HttpIntentService.CALENDAR_PART);
                     break;
 
                 case PRODUCTS_GET_ALL_CATEGORIES:
@@ -157,7 +137,7 @@ public class HttpIntentService extends IntentService {
                     break;
 
                 case PRODUCTS_GET_HTML_BY_ID:
-                    fillProductHtmlDB(content);
+                    fillProductHTML(content);
                     break;
                 case PRODUCTS_CREATE_ORDER:
 
@@ -180,28 +160,29 @@ public class HttpIntentService extends IntentService {
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
             String content = ApiWrapper.responseBodyToString(responseBody);
 
-            LOGE(TAG, "*** onFailure():");
-            LOGE(TAG, "* statusCode: " + statusCode);
+            LOGE(TAG, "OnFailure / StatusCode : " + statusCode);
 
-            if (headers != null)
-                LOGE(TAG, "* headers: " + Arrays.toString(headers));
-            else
-                LOGE(TAG, "* headers is NULL");
+            if (headers != null) {
+                LOGE(TAG, "Headers: " + Arrays.toString(headers));
+            }else{
+                LOGE(TAG, "Headers is NULL");
+            }
 
-            LOGE(TAG, "* responseBody: " + content);
+            LOGE(TAG, "ResponseBody: " + content);
 
-            if (error != null)
-                LOGE(TAG, "* error: ", error);
-            else
-                LOGE(TAG, "* error is NULL");
+            if (error != null) {
+                LOGE(TAG, "Error: ", error);
+            }else {
+                LOGE(TAG, "Error is NULL");
+            }
 
-            //mDBAdapter.sendBroadcast(BROADCAST_INTENT_NEWS_FEED_SERVER_ERROR);
-            switch (partNumber) {
+            // mDBAdapter.sendBroadcast(BROADCAST_INTENT_NEWS_FEED_SERVER_ERROR);
+            switch (mPartNumber) {
                 case NEWS_PART_SHORT:
-                    DBAdapter.getInstance().sendBroadcast(BROADCAST_INTENT_NEWS_FEED_SERVER_ERROR);
+                    // TODO 22.06.15 DBAdapter.getInstance().sendBroadcast(BROADCAST_INTENT_NEWS_FEED_SERVER_ERROR);
                     break;
                 case EDUCATION_GET_PRODUCT_MODULES:
-                    DBAdapter.getInstance().sendBroadcast(BROADCAST_INTENT_EDUCATION_MODULE_SERVER_ERROR);
+                    // TODO 22.06.15 DBAdapter.getInstance().sendBroadcast(BROADCAST_INTENT_EDUCATION_MODULE_SERVER_ERROR);
                     break;
 
                 default:
@@ -209,7 +190,6 @@ public class HttpIntentService extends IntentService {
             }
         }
     }
-
 
     public void startHttpIntent(BaseHttpQueryEntity entity, int dbTable) {
         Bundle bundle = new Bundle();
@@ -225,13 +205,19 @@ public class HttpIntentService extends IntentService {
         try {
             response = ApiWrapper.gson.fromJson(content, ArticlesGetShortDescriptionResponse.class);
         } catch (JsonSyntaxException e) {
-            LOGE(TAG, "gson.fromJson:\n" + content);
+            LOGE(TAG, "Gson.fromJson:\n" + content);
         }
 
         if (response != null && response.result != null) {
-            DBAdapter.getInstance().saveShortNews(response);
+            for (int i = 0; i < response.result.size(); i++) {
+                JustUpApplication.getApplication().getTransferActionShortNews().insertShortNewsOld(getApplicationContext(), response.result.get(i));
+
+                for (int j = 0; j < response.result.get(i).comments.size(); j++) {
+                    JustUpApplication.getApplication().getTransferActionNewsComments().insertNewsCommentsOld(getApplicationContext(), response.result.get(i), j);
+                }
+            }
         } else {
-            DBAdapter.getInstance().sendBroadcast(BROADCAST_INTENT_NEWS_FEED_SERVER_ERROR);
+            // TODO 22.06.15 DBAdapter.getInstance().sendBroadcast(BROADCAST_INTENT_NEWS_FEED_SERVER_ERROR);
         }
     }
 
@@ -240,11 +226,14 @@ public class HttpIntentService extends IntentService {
         try {
             response = ApiWrapper.gson.fromJson(content, ArticleFullResponse.class);
         } catch (JsonSyntaxException e) {
-            LOGE(TAG, "gson.fromJson:\n" + content);
+            LOGE(TAG, "Gson.fromJson:\n" + content);
         }
 
         if (response != null && response.result != null) {
-            DBAdapter.getInstance().saveFullNews(response);
+            JustUpApplication.getApplication().getTransferActionFullNews().insertFullNewsOld(getApplicationContext(), response);
+            for (int j = 0; j < response.result.comments.size(); j++) {
+                JustUpApplication.getApplication().getTransferActionNewsComments().insertNewsCommentsOld(getApplicationContext(), response.result, j);
+            }
         }
     }
 
@@ -253,78 +242,91 @@ public class HttpIntentService extends IntentService {
         try {
             response = ApiWrapper.gson.fromJson(content, CommentsArticleFullResponse.class);
         } catch (JsonSyntaxException e) {
-            LOGE(TAG, "gson.fromJson:\n" + content);
+            LOGE(TAG, "Gson.fromJson:\n" + content);
         }
 
         if (response != null && response.result != null) {
-            DBAdapter.getInstance().saveArticleFullComments(response, article_id);
+            for (int j = 0; j < response.result.size(); j++) {
+                JustUpApplication.getApplication().getTransferActionNewsComments().insertNewsCommentsOldFullWithArticleId(getApplicationContext(), response.result.get(j), article_id);
+            }
         }
     }
 
     private void fillBriefcaseDB(String content) {
-        LOGI(TAG, "fillBriefcaseDB");
+        LOGI(TAG, "FillBriefcase DB");
     }
 
-
     private void fillMailContactDB(String content) {
-        LOGI(TAG, "fillMailContactDB");
+        LOGI(TAG, "FillMailContact DB");
+
         GetAllContactsResponse response = null;
 
         try {
             response = ApiWrapper.gson.fromJson(content, GetAllContactsResponse.class);
         } catch (JsonSyntaxException e) {
-            LOGE(TAG, "gson.fromJson:\n" + content);
+            LOGE(TAG, "Gson.fromJson : \n" + content);
         }
 
         if (response != null && response.result != null) {
-            LOGI(TAG, response.toString());
+            LOGI(TAG, "Response : " + response.toString());
 
             final List<GetAllContactsResponse.Result.Parents> allUsers = response.result.getAllUsers();
             if (allUsers != null) {
-                DBAdapter.getInstance().saveContactsArray(allUsers);
+                JustUpApplication.getApplication().getTransferActionMailContact().insertContactListOld(getApplicationContext(), allUsers);
             }
         }
+
         //  DBAdapter.getInstance().sendBroadcast(DBAdapter.MAIL_SQL_BROADCAST_INTENT);
     }
-
 
     private void fillEventsCalendarDB(String content) {
         CalendarGetEventsResponse response = null;
         try {
             response = ApiWrapper.gson.fromJson(content, CalendarGetEventsResponse.class);
         } catch (JsonSyntaxException e) {
-            LOGE(TAG, "gson.fromJson:\n" + content);
+            LOGE(TAG, "Gson.fromJson:\n" + content);
         }
 
         if (response != null && response.result != null) {
-            DBAdapter.getInstance().saveEventsCalendar(response);
+            for (int i = 0; i < response.result.size(); i++) {
+                JustUpApplication.getApplication().getTransferActionEventCalendar().insertEventCalendarOld(getApplicationContext(), response.result.get(i));
+            }
         }
     }
-
 
     private void fillProductsDB(String content) {
         ProductsGetAllCategoriesResponse response = null;
         try {
             response = ApiWrapper.gson.fromJson(content, ProductsGetAllCategoriesResponse.class);
         } catch (JsonSyntaxException e) {
-            LOGE(TAG, "gson.fromJson:\n" + content);
+            LOGE(TAG, "Gson.fromJson:\n" + content);
         }
 
         if (response != null && response.result != null) {
-            DBAdapter.getInstance().saveAllProducts(response);
+            for (int i = 0; i < response.result.size(); i++) {
+                JustUpApplication.getApplication().getTransferActionProductsCategories().insertProductCategoriesOld(getApplicationContext(), response.result.get(i));
+
+                for (int j = 0; j < response.result.get(i).brandCategories.size(); j++) {
+                    JustUpApplication.getApplication().getTransferActionBrandCategories().insertBrandCategoriesOld(getApplicationContext(), response.result.get(i).brandCategories.get(j));
+
+                    for (int k = 0; k < response.result.get(i).brandCategories.get(j).products.size(); k++) {
+                        JustUpApplication.getApplication().getTransferActionProductsProduct().insertProductsProductOld(getApplicationContext(), response.result.get(i).brandCategories.get(j).products.get(k), response.result.get(i).brandCategories.get(j).brandId);
+                    }
+                }
+            }
         }
     }
 
-    private void fillProductHtmlDB(String content) {
+    private void fillProductHTML(String content) {
         GetProductHtmlByIdResponse response = null;
         try {
             response = ApiWrapper.gson.fromJson(content, GetProductHtmlByIdResponse.class);
         } catch (JsonSyntaxException e) {
-            LOGE(TAG, "gson.fromJson:\n" + content);
+            LOGE(TAG, "Gson.fromJson:\n" + content);
         }
 
         if (response != null && response.result != null) {
-            DBAdapter.getInstance().saveProductHtml(response);
+            JustUpApplication.getApplication().getTransferActionProductHTML().insertProductHtmlOld(getApplicationContext(), response);
         }
     }
 
@@ -333,11 +335,13 @@ public class HttpIntentService extends IntentService {
         try {
             response = ApiWrapper.gson.fromJson(content, EducationGetProgramsResponse.class);
         } catch (JsonSyntaxException e) {
-            LOGE(TAG, "gson.fromJson:\n" + content);
+            LOGE(TAG, "Gson.fromJson:\n" + content);
         }
 
         if (response != null && response.result != null) {
-            DBAdapter.getInstance().saveEducationProducts(response);
+            for (int i = 0; i < response.result.size(); i++) {
+                JustUpApplication.getApplication().getTransferActionEducationProducts().insertEducationProductOld(getApplicationContext(), response.result.get(i));
+            }
         }
     }
 
@@ -350,9 +354,15 @@ public class HttpIntentService extends IntentService {
         }
 
         if (response != null && response.result != null) {
-            DBAdapter.getInstance().saveEducationProductModules(response);
+            for (int i = 0; i < response.result.size(); i++) {
+                JustUpApplication.getApplication().getTransferActionEducationProductModule().insertEducationProductModuleOld(getApplicationContext(), response.result.get(i));
+
+                for (int j = 0; j < response.result.get(i).materials.size(); j++) {
+                    JustUpApplication.getApplication().getTransferActionEducationModulesMaterial().insertEducationModulesMaterialOld(getApplicationContext(), response.result.get(i).materials.get(j));
+                }
+            }
         } else {
-            DBAdapter.getInstance().sendBroadcast(BROADCAST_INTENT_EDUCATION_MODULE_SERVER_ERROR);
+            // TODO 22.06.15 DBAdapter.getInstance().sendBroadcast(BROADCAST_INTENT_EDUCATION_MODULE_SERVER_ERROR);
         }
     }
 

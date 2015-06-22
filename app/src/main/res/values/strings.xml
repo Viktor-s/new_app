@@ -433,4 +433,11 @@
     <string name="study_main_material">Основной материал</string>
     <string name="study_second_material">Дополнительный материал</string>
 
+    <!--Sync Data-->
+    <string name="sync_adapter_dummy_data_sync">Data synchronization...</string>
+    <string name="sync_adapter_product_categories_sync">Product Categories synchronization...</string>
+    <string name="sync_adapter_mail_contact_sync">Contact synchronization...</string>
+    <string name="sync_adapter_news_sync">News synchronization...</string>
+    <string name="sync_adapter_calendar_sync">Calendar synchronization...</string>
+
 </resources>

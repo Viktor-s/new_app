@@ -18,9 +18,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import me.justup.upme.JustUpApplication;
 import me.justup.upme.R;
-import me.justup.upme.db.DBAdapter;
-import me.justup.upme.entity.Push;
+import me.justup.upme.api_rpc.response_object.PushObject;
 import me.justup.upme.fragments.MailFragment;
 import me.justup.upme.fragments.StatusBarFragment;
 import me.justup.upme.interfaces.OnDownloadCloudFile;
@@ -33,6 +33,7 @@ import static me.justup.upme.utils.LogUtils.makeLogTag;
 
 public class StatusBarSliderDialog extends DialogFragment {
     private static final String TAG = makeLogTag(StatusBarSliderDialog.class);
+
     public static final String STATUS_BAR_DIALOG = "status_bar_dialog";
 
     private static final String TIME_FORMAT = "HH:mm";
@@ -41,11 +42,10 @@ public class StatusBarSliderDialog extends DialogFragment {
     private static final String LEFT_BRACERS = "[ ";
     private static final String RIGHT_BRACERS = " ]";
 
-    private LinearLayout mPushContainer;
+    private LinearLayout mPushContainer = null;
     private StringBuilder mStringBuilder = new StringBuilder();
-    private OnLoadMailFragment mOnLoadMailFragment;
-    private OnDownloadCloudFile mOnDownloadCloudFile;
-
+    private OnLoadMailFragment mOnLoadMailFragment = null;
+    private OnDownloadCloudFile mOnDownloadCloudFile = null;
 
     public static StatusBarSliderDialog newInstance() {
         return new StatusBarSliderDialog();
@@ -71,8 +71,6 @@ public class StatusBarSliderDialog extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        DBAdapter.getInstance().openDatabase();
 
         Intent i = new Intent(StatusBarFragment.BROADCAST_ACTION_PUSH);
         i.putExtra(StatusBarFragment.BROADCAST_EXTRA_IS_NEW_MESSAGE, false);
@@ -103,11 +101,11 @@ public class StatusBarSliderDialog extends DialogFragment {
         mClearAllMessages.setOnClickListener(new OnClearAllPush());
 
         @SuppressWarnings("unchecked")
-        ArrayList<Push> mPushArray = DBAdapter.getInstance().loadPushArray();
-        LOGD(TAG, "mPushArray: " + mPushArray.toString());
+        ArrayList<PushObject> mPushArray = JustUpApplication.getApplication().getTransferActionStatusBarPush().getListPushObject(getActivity());
+        LOGD(TAG, "PushArray: " + mPushArray.toString());
 
         if (mPushArray.size() > 0) {
-            for (Push push : mPushArray) {
+            for (PushObject push : mPushArray) {
                 addPushToList(push);
             }
         }
@@ -117,15 +115,8 @@ public class StatusBarSliderDialog extends DialogFragment {
         return builder.create();
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        DBAdapter.getInstance().closeDatabase();
-    }
-
     @SuppressLint("InflateParams")
-    private void addPushToList(final Push push) {
+    private void addPushToList(final PushObject push) {
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View item = inflater.inflate(R.layout.item_push, null);
 
@@ -164,7 +155,8 @@ public class StatusBarSliderDialog extends DialogFragment {
         item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DBAdapter.getInstance().deletePush(push.getId());
+                // Delete Push
+                JustUpApplication.getApplication().getTransferActionStatusBarPush().deleteOnePush(getActivity(), push.getId());
 
                 if (push.getType() != MailFragment.FILE) {
                     if (push.getType() == MailFragment.WEBRTC) {
@@ -188,7 +180,8 @@ public class StatusBarSliderDialog extends DialogFragment {
     private class OnClearAllPush implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            DBAdapter.getInstance().deleteAllPush();
+            // Delete All Push
+            JustUpApplication.getApplication().getTransferActionStatusBarPush().deleteAllPush(getActivity());
             dismiss();
         }
     }

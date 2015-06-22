@@ -5,17 +5,15 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PowerManager;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.TextView;
 
 import me.justup.upme.R;
+import me.justup.upme.api_rpc.response_object.PushObject;
 import me.justup.upme.entity.Push;
 import me.justup.upme.entity.WebRtcStopCallQuery;
 import me.justup.upme.interfaces.OnLoadMailFragment;
@@ -59,7 +57,7 @@ public class CallDialog extends DialogFragment {
 //        wl.release();
 //        getDialog().getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
 
-        final Push push = (Push) getArguments().getSerializable(CALL_PUSH);
+        final PushObject push = (PushObject) getArguments().getSerializable(CALL_PUSH);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();

@@ -12,8 +12,8 @@ import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
+import me.justup.upme.JustUpApplication;
 import me.justup.upme.R;
-import me.justup.upme.utils.AppPreferences;
 
 public class BrowserFragment extends Fragment implements View.OnClickListener {
     private static final String TAG = BrowserFragment.class.getSimpleName();
@@ -26,13 +26,11 @@ public class BrowserFragment extends Fragment implements View.OnClickListener {
 
     private View mContentView = null;
 
-    private AppPreferences mAppPreferences = null;
-
     @Override
     public void onStart() {
         super.onStart();
 
-        String url = mAppPreferences.getBrowserUrl();
+        String url = JustUpApplication.getApplication().getAppPreferences().getBrowserUrl();
         mWebView.loadUrl(url);
     }
 
@@ -40,7 +38,7 @@ public class BrowserFragment extends Fragment implements View.OnClickListener {
     public void onStop() {
         super.onStop();
 
-        mAppPreferences.setBrowserUrl(mWebView.getUrl());
+        JustUpApplication.getApplication().getAppPreferences().setBrowserUrl(mWebView.getUrl());
         mWebView.onPause();
     }
 
@@ -60,8 +58,6 @@ public class BrowserFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        mAppPreferences = new AppPreferences(getActivity().getApplicationContext());
 
         // Init UI
         if (getActivity() != null) {

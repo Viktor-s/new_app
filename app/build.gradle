@@ -5,6 +5,7 @@ android {
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
     enforceUniquePackageName = false
+    // compileOptions.encoding = 'windows-1251'
 
     dexOptions {
         preDexLibraries = false
@@ -21,9 +22,13 @@ android {
         abortOnError false
     }
 
+    packagingOptions {
+        exclude 'LICENSE.txt'
+    }
+
     defaultConfig {
         applicationId "me.justup.upme"
-        testInstrumentationRunner "android.test.InstrumentationTestRunner"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner" // "android.test.InstrumentationTestRunner"
 
         minSdkVersion 17
         targetSdkVersion 21
@@ -96,18 +101,16 @@ android {
             resValue "string", "app_name_launcher_launcher", "UPME Launcher"
             minSdkVersion 17
             targetSdkVersion 21
-            testInstrumentationRunner 'android.test.InstrumentationTestRunner'
+            testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner" // "android.test.InstrumentationTestRunner"
             versionCode 1
             versionName '0.12'
             signingConfig signingConfigs.release
-
             ndk {
                 abiFilter "armeabi-v7a"
 //                abiFilter "arm64-v8a"
 //                abiFilter "x86"
 //                abiFilter "x86_64"
             }
-
             applicationVariants.all { variant ->
                 variant.outputs.each { output ->
                     output.processManifest.doLast {
@@ -143,24 +146,21 @@ android {
                 }
             }
         }
-
         app {
             applicationId 'me.justup.upme'
             resValue "string", "app_name", "UPME"
             minSdkVersion 17
             targetSdkVersion 21
-            testInstrumentationRunner 'android.test.InstrumentationTestRunner'
+            testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner" // "android.test.InstrumentationTestRunner"
             versionCode 1
             versionName '0.37'
             signingConfig signingConfigs.release
-
             ndk {
                 abiFilter "armeabi-v7a"
 //                abiFilter "arm64-v8a"
 //                abiFilter "x86"
 //                abiFilter "x86_64"
             }
-
             applicationVariants.all { variant ->
                 variant.outputs.each { output ->
                     output.processManifest.doLast {
@@ -200,8 +200,9 @@ android {
 }
 
 dependencies {
+
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile files('libs/autobanh.jar')
+
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.android.support:recyclerview-v7:21.0.3'
     compile 'com.google.android.gms:play-services-maps:6.5.87'
@@ -211,6 +212,7 @@ dependencies {
     compile('ch.acra:acra:4.5.0') {
         exclude group: 'org.json'
     }
+
     compile 'com.squareup.picasso:picasso:2.4.+'
     compile 'com.squareup.okhttp:okhttp:2.2.+'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.2.+'
@@ -218,12 +220,15 @@ dependencies {
     compile 'com.github.alamkanak:android-week-view:1.2.1'
     compile 'com.joanzapata.pdfview:android-pdfview:1.0.2@aar'
     compile files('libs/YouTubeAndroidPlayerApi.jar')
-
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.daimajia.easing:library:1.0.1@aar'
     compile 'com.daimajia.androidanimations:library:1.1.3@aar'
-
     compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
+
+    // Testing-only dependencies
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.0'
+    androidTestCompile 'com.android.support.test:testing-support-lib:0.1'
+    androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.3.1'
 }
 
 afterEvaluate {

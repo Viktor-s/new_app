@@ -17,7 +17,6 @@ import java.util.Comparator;
 import me.justup.upme.JustUpApplication;
 import me.justup.upme.R;
 import me.justup.upme.entity.FileEntity;
-import me.justup.upme.utils.AppPreferences;
 import me.justup.upme.utils.ExplorerUtils;
 import me.justup.upme.view.dashboard.TileUtils;
 
@@ -210,11 +209,9 @@ public class DocumentsSortPanelFragment extends Fragment implements View.OnClick
         public static final int SORT_BY_IN_TABLET = 6;
         public static final int SORT_BY_IN_CLOUD = 7;
 
-        private static AppPreferences prefs = new AppPreferences(JustUpApplication.getApplication());
-
         public static void sort(final ArrayList<FileEntity> array, final int sortType, final boolean isDesk) {
-            prefs.setFileSortType(sortType);
-            prefs.setDescFileSort(isDesk);
+            JustUpApplication.getApplication().getAppPreferences().setFileSortType(sortType);
+            JustUpApplication.getApplication().getAppPreferences().setDescFileSort(isDesk);
 
             switch (sortType) {
                 case SORT_BY_FAVOR:
@@ -279,5 +276,4 @@ public class DocumentsSortPanelFragment extends Fragment implements View.OnClick
             LOGE(TAG, e.getMessage());
         }
     }
-
 }

@@ -44,7 +44,6 @@ import me.justup.upme.entity.SetAvatarQuery;
 import me.justup.upme.entity.SetAvatarResponse;
 import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.services.FileExplorerService;
-import me.justup.upme.utils.AppPreferences;
 
 import static me.justup.upme.services.FileExplorerService.AVATARS;
 import static me.justup.upme.services.FileExplorerService.BROADCAST_EXTRA_ACTION_TYPE;
@@ -113,7 +112,7 @@ public class AccountSettingsFragment extends Fragment {
 
         mUserAvatar = (ImageView) view.findViewById(R.id.avatar_image);
 
-        String imageUrl = new AppPreferences(getActivity()).getUserAvatarUrl();
+        String imageUrl = JustUpApplication.getApplication().getAppPreferences().getUserAvatarUrl();
         if (imageUrl != null)
             ApiWrapper.loadImage(imageUrl, mUserAvatar);
 

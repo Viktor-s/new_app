@@ -36,6 +36,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import me.justup.upme.JustUpApplication;
 import me.justup.upme.MainActivity;
 import me.justup.upme.R;
 import me.justup.upme.dialogs.FilePropertiesDialog;
@@ -51,7 +52,6 @@ import me.justup.upme.entity.FileGetAllResponse;
 import me.justup.upme.http.ApiWrapper;
 import me.justup.upme.services.FileExplorerService;
 import me.justup.upme.utils.AppLocale;
-import me.justup.upme.utils.AppPreferences;
 import me.justup.upme.utils.ExplorerUtils;
 
 import static me.justup.upme.services.FileExplorerService.BROADCAST_EXTRA_ACTION_TYPE;
@@ -111,7 +111,6 @@ public class DocumentsFragment extends Fragment {
     private static final int FILE_SHARE_PROPERTIES = 6;
 
     private ArrayList<FileEntity> mFileArray = null;
-    private AppPreferences mAppPreferences = null;
     private EditText mSearchField;
 
 
@@ -140,8 +139,6 @@ public class DocumentsFragment extends Fragment {
 
         ImageButton mClearSearchField = (ImageButton) view.findViewById(R.id.doc_clear_search_text);
         mClearSearchField.setOnClickListener(new ClearSearchField());
-
-        mAppPreferences = new AppPreferences(getActivity());
 
         getChildFragmentManager().beginTransaction().add(R.id.doc_sort_panel_fragment, new DocumentsSortPanelFragment()).commit();
 
@@ -622,7 +619,7 @@ public class DocumentsFragment extends Fragment {
     }
 
     public void setFileArray(ArrayList<FileEntity> array) {
-        DocumentsSortPanelFragment.FileSort.sort(array, mAppPreferences.getFileSortType(), mAppPreferences.isDescFileSort());
+        DocumentsSortPanelFragment.FileSort.sort(array, JustUpApplication.getApplication().getAppPreferences().getFileSortType(), JustUpApplication.getApplication().getAppPreferences().isDescFileSort());
         mFileArray = array;
     }
 
@@ -639,17 +636,17 @@ public class DocumentsFragment extends Fragment {
     }
 
     public int initialSortPanelType() {
-        return mAppPreferences.getFileSortType();
+        return JustUpApplication.getApplication().getAppPreferences().getFileSortType();
     }
 
     public boolean initialSortPanelIsDesc() {
-        return mAppPreferences.isDescFileSort();
+        return JustUpApplication.getApplication().getAppPreferences().isDescFileSort();
     }
 
     private class SearchTextWatcher implements TextWatcher {
+
         @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        }
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -679,8 +676,7 @@ public class DocumentsFragment extends Fragment {
         }
 
         @Override
-        public void afterTextChanged(Editable s) {
-        }
+        public void afterTextChanged(Editable s) { }
     }
 
     private class ClearSearchField implements View.OnClickListener {
@@ -689,5 +685,4 @@ public class DocumentsFragment extends Fragment {
             mSearchField.setText("");
         }
     }
-
 }

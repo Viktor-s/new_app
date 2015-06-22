@@ -27,6 +27,7 @@ import org.joda.time.LocalDateTime;
 
 import java.util.ArrayList;
 
+import me.justup.upme.api_rpc.response_object.PushObject;
 import me.justup.upme.dialogs.BreakCallDialog;
 import me.justup.upme.dialogs.CallDialog;
 import me.justup.upme.dialogs.OrderDialog;
@@ -62,7 +63,6 @@ import me.justup.upme.http.HttpIntentService;
 import me.justup.upme.interfaces.OnDownloadCloudFile;
 import me.justup.upme.interfaces.OnLoadMailFragment;
 import me.justup.upme.services.GPSTracker;
-import me.justup.upme.utils.AppPreferences;
 import me.justup.upme.utils.CircularImageView;
 import me.justup.upme.utils.CommonUtils;
 import me.justup.upme.utils.Constance;
@@ -99,7 +99,7 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
 
     private ArrayList<Button> mButtonList = new ArrayList<>();
     private Button mNewsButton, mMailButton, mCalendarButton, mProductsButton, mBriefcaseButton, mDocsButton, mStudyButton, mBrowserButton, mSettingsButton;
-    private Push push;
+    private PushObject push;
     private String shareFileName;
     private Button mExitButton = null;
 
@@ -659,7 +659,7 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
     }
 
     @Override
-    public void onLoadMailFragment(final Push push) {
+    public void onLoadMailFragment(final PushObject push) {
         setPush(push);
 
         if (push != null && push.getType() == MailFragment.WEBRTC) {
@@ -688,11 +688,11 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
         }
     }
 
-    public Push getPush() {
+    public PushObject getPush() {
         return push;
     }
 
-    public void setPush(Push push) {
+    public void setPush(PushObject push) {
         this.push = push;
     }
 
@@ -745,14 +745,13 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
                 mUserName.setText(userName);
                 mUserInSystem.setText(response.result.in_system);
 
-                AppPreferences appPreferences = new AppPreferences(getApplicationContext());
-                appPreferences.setUserName(userName);
-                appPreferences.setUserId(response.result.id);
-                appPreferences.setJabberId(response.result.jabber_id);
+                JustUpApplication.getApplication().getAppPreferences().setUserName(userName);
+                JustUpApplication.getApplication().getAppPreferences().setUserId(response.result.id);
+                JustUpApplication.getApplication().getAppPreferences().setJabberId(response.result.jabber_id);
 
                 if (response.result.img != null && !response.result.img.equals("")) {
                     ApiWrapper.loadImage(response.result.img, mLoadAccountSettings);
-                    appPreferences.setUserAvatarUrl(response.result.img);
+                    JustUpApplication.getApplication().getAppPreferences().setUserAvatarUrl(response.result.img);
                 }
 
                 BaseMethodEmptyQuery query = new BaseMethodEmptyQuery();
@@ -964,6 +963,11 @@ public class MainActivity extends LauncherActivity implements View.OnClickListen
                 isAccountSettingsLoad = false;
             }
         }
+    }
+
+    @Override
+    public void onServiceCallback(int requestId, Intent requestIntent, int resultCode, Bundle data) {
+
     }
 
 }

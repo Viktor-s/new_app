@@ -15,12 +15,12 @@ import me.justup.upme.R;
 public class SettingsFragment extends Fragment implements View.OnClickListener {
     private static final String TAG = SettingsFragment.class.getSimpleName();
 
-    private TextView mWiFiMenu;
-    private TextView mScreenSoundMenu;
-    private TextView mSocialMenu;
-    private TextView mMonitoringMenu;
-    private TextView mWebRTCMenu;
-    private TextView mServersMenu;
+    private TextView mWiFiMenu = null;
+    private TextView mScreenSoundMenu = null;
+    private TextView mSocialMenu = null;
+    private TextView mMonitoringMenu = null;
+    private TextView mWebRTCMenu = null;
+    private TextView mServersMenu = null;
     private ArrayList<TextView> mButtonList = new ArrayList<>();
 
     @Override

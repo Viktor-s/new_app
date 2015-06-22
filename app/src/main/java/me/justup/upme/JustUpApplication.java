@@ -1,5 +1,8 @@
 package me.justup.upme;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.Application;
 import android.app.SearchManager;
@@ -24,11 +27,28 @@ import org.acra.annotation.ReportsCrashes;
 import java.lang.ref.WeakReference;
 import java.util.Random;
 
-import me.justup.upme.db.DBAdapter;
+import me.justup.upme.api_rpc.request_model.service.RequestServiceHelper;
+import me.justup.upme.db_upme.Constants;
+import me.justup.upme.db_upme.transfers.TransferActionBrandCategories;
+import me.justup.upme.db_upme.transfers.TransferActionEducationModulesMaterial;
+import me.justup.upme.db_upme.transfers.TransferActionEducationProductModule;
+import me.justup.upme.db_upme.transfers.TransferActionEducationProducts;
+import me.justup.upme.db_upme.transfers.TransferActionEventCalendar;
+import me.justup.upme.db_upme.transfers.TransferActionFullNews;
+import me.justup.upme.db_upme.transfers.TransferActionIsShortNewsRead;
+import me.justup.upme.db_upme.transfers.TransferActionMailContact;
+import me.justup.upme.db_upme.transfers.TransferActionNewsComments;
+import me.justup.upme.db_upme.transfers.TransferActionProductHTML;
+import me.justup.upme.db_upme.transfers.TransferActionProductsCategories;
+import me.justup.upme.db_upme.transfers.TransferActionProductsProduct;
+import me.justup.upme.db_upme.transfers.TransferActionShortNews;
+import me.justup.upme.db_upme.transfers.TransferActionStatusBarPush;
+import me.justup.upme.db_upme.transfers.TransferActionTileMenu;
 import me.justup.upme.launcher.IconCache;
 import me.justup.upme.launcher.LauncherModel;
 import me.justup.upme.launcher.LauncherProvider;
 import me.justup.upme.launcher.LauncherSettings;
+import me.justup.upme.utils.AppPreferences;
 
 import static me.justup.upme.utils.LogUtils.LOGD;
 import static me.justup.upme.utils.LogUtils.LOGE;
@@ -37,8 +57,14 @@ import static me.justup.upme.utils.LogUtils.LOGE;
      (
         formKey = "",
         mailTo = "upMeUser@gmail.com",
-        customReportContent = {ReportField.APP_VERSION_CODE, ReportField.APP_VERSION_NAME, ReportField.ANDROID_VERSION,
-                               ReportField.PHONE_MODEL, ReportField.CUSTOM_DATA, ReportField.STACK_TRACE, ReportField.USER_COMMENT},
+        customReportContent = {
+                ReportField.APP_VERSION_CODE,
+                ReportField.APP_VERSION_NAME,
+                ReportField.ANDROID_VERSION,
+                ReportField.PHONE_MODEL,
+                ReportField.CUSTOM_DATA,
+                ReportField.STACK_TRACE,
+                ReportField.USER_COMMENT},
         mode = ReportingInteractionMode.DIALOG,
         resToastText = R.string.crash_toast_text,
         resDialogText = R.string.crash_dialog_text,
@@ -50,6 +76,54 @@ import static me.justup.upme.utils.LogUtils.LOGE;
 
 public class JustUpApplication extends Application {
     private static final String TAG = JustUpApplication.class.getSimpleName();
+
+    // Client-Server Communication Object
+    private RequestServiceHelper mRequestServiceHelper = null;
+
+    /**
+     * @return Main Api Request and Response Class
+     */
+    public RequestServiceHelper getApiHelper() {
+        if(mRequestServiceHelper==null){
+            mRequestServiceHelper = new RequestServiceHelper(this);
+        }
+
+        return mRequestServiceHelper;
+    }
+
+    // App Preferences
+    private AppPreferences mAppPreferences = null;
+
+    /**
+     * @return AppPreferences Class
+     */
+    public AppPreferences getAppPreferences() {
+        if(mAppPreferences==null){
+            mAppPreferences = new AppPreferences(this);
+        }
+
+        return mAppPreferences;
+    }
+
+    // DB Transfers Object
+    private TransferActionBrandCategories mTransferActionBrandCategories = null;
+    private TransferActionEducationModulesMaterial mTransferActionEducationModulesMaterial = null;
+    private TransferActionEducationProductModule mTransferActionEducationProductModule = null;
+    private TransferActionEducationProducts mTransferActionEducationProducts = null;
+    private TransferActionEventCalendar mTransferActionEventCalendar = null;
+    private TransferActionFullNews mTransferActionFullNews = null;
+    private TransferActionIsShortNewsRead mTransferActionIsShortNewsRead = null;
+    private TransferActionMailContact mTransferActionMailContact = null;
+    private TransferActionNewsComments mTransferActionNewsComments = null;
+    private TransferActionProductHTML mTransferActionProductHTML = null;
+    private TransferActionProductsCategories mTransferActionProductsCategories = null;
+    private TransferActionProductsProduct mTransferActionProductsProduct = null;
+    private TransferActionShortNews mTransferActionShortNews = null;
+    private TransferActionStatusBarPush mTransferActionStatusBarPush = null;
+    private TransferActionTileMenu mTransferActionTileMenu = null;
+
+    private static AccountManager mAccountManager = null;
+    private Account mAccount = null;
 
     private static JustUpApplication mJustUpApplication = null;
     synchronized public static JustUpApplication getApplication() {
@@ -129,6 +203,15 @@ public class JustUpApplication extends Application {
     }
 
     private void initApplication(){
+        // Client-Server Object init
+        mRequestServiceHelper = new RequestServiceHelper(this);
+
+        // Init App Preferences
+        mAppPreferences = new AppPreferences(this);
+
+        // Check this App for Account
+        checkAppAccount();
+
         // Launcher
         sIsScreenLarge = getResources().getBoolean(R.bool.is_large_screen);
         sScreenDensity = getResources().getDisplayMetrics().density;
@@ -187,9 +270,6 @@ public class JustUpApplication extends Application {
         keyprefRoomServerUrl = getString(R.string.pref_room_server_url_key);
         keyprefRoom = getString(R.string.pref_room_key);
         keyprefRoomList = getString(R.string.pref_room_list_key);
-
-        // Main App DB Singleton
-        DBAdapter.initInstance();
     }
 
     public Bundle prepareCallParam(String roomId, Boolean loopback, Boolean commandLineRun, int runTimeMs, int idPerson, String contactName){
@@ -386,5 +466,197 @@ public class JustUpApplication extends Application {
 
     public static int getScreenDensityDpi(){
         return (int)(sScreenDensity * 160f);
+    }
+
+    // DB
+    private void checkAppAccount(){
+        // Check AccountManager for NULL
+        if(mAccountManager==null) {
+            mAccountManager = AccountManager.get(this);
+        }
+
+        // Init Account
+        mAccount = getAppAccount(this);
+
+        if (mAccount != null) {
+              mTransferActionBrandCategories = new TransferActionBrandCategories(mAccount.name);
+              mTransferActionEducationModulesMaterial = new TransferActionEducationModulesMaterial(mAccount.name);
+              mTransferActionEducationProductModule = new TransferActionEducationProductModule(mAccount.name);
+              mTransferActionEducationProducts = new TransferActionEducationProducts(mAccount.name);
+              mTransferActionEventCalendar = new TransferActionEventCalendar(mAccount.name);
+              mTransferActionFullNews = new TransferActionFullNews(mAccount.name);
+              mTransferActionIsShortNewsRead = new TransferActionIsShortNewsRead(mAccount.name);
+              mTransferActionMailContact = new TransferActionMailContact(mAccount.name);
+              mTransferActionNewsComments = new TransferActionNewsComments(mAccount.name);
+              mTransferActionProductHTML = new TransferActionProductHTML(mAccount.name);
+              mTransferActionProductsCategories = new TransferActionProductsCategories(mAccount.name);
+              mTransferActionProductsProduct = new TransferActionProductsProduct(mAccount.name);
+              mTransferActionShortNews = new TransferActionShortNews(mAccount.name);
+              mTransferActionStatusBarPush = new TransferActionStatusBarPush(mAccount.name);
+              mTransferActionTileMenu = new TransferActionTileMenu(mAccount.name);
+
+            LOGD(TAG, "Account = " + mAccount + "\nName : " + mAccount.name + "\nPassword : " + mAccountManager.getPassword(mAccount));
+        }
+    }
+
+    /**
+     * Return My Application Main Account
+     */
+    public static Account getAppAccount(Context context) {
+        // Check if Account Manager Init
+        if(mAccountManager==null){
+            mAccountManager = AccountManager.get(context);
+        }
+
+        Account[] accounts = mAccountManager.getAccountsByType(Constants.ACCOUNT_TYPE);
+
+        return accounts.length > 0 ? accounts[0] : null;
+    }
+
+    /**
+     * Update Account Password
+     */
+    public void updateAppAccountPassword(String newPass) {
+        mAccountManager.setPassword(getAppAccount(this), newPass);
+    }
+
+    public Account getAccount() {
+        return mAccount;
+    }
+
+    public void setAccount(Account account) {
+        this.mAccount = account;
+    }
+
+    public TransferActionBrandCategories getTransferActionBrandCategories() { return mTransferActionBrandCategories; }
+    public TransferActionEducationModulesMaterial getTransferActionEducationModulesMaterial() { return mTransferActionEducationModulesMaterial; }
+    public TransferActionEducationProductModule getTransferActionEducationProductModule() { return mTransferActionEducationProductModule; }
+    public TransferActionEducationProducts getTransferActionEducationProducts() { return mTransferActionEducationProducts; }
+    public TransferActionEventCalendar getTransferActionEventCalendar() { return mTransferActionEventCalendar; }
+    public TransferActionFullNews getTransferActionFullNews() { return mTransferActionFullNews; }
+    public TransferActionIsShortNewsRead getTransferActionIsShortNewsRead() { return mTransferActionIsShortNewsRead; }
+    public TransferActionMailContact getTransferActionMailContact() { return mTransferActionMailContact; }
+    public TransferActionNewsComments getTransferActionNewsComments() { return mTransferActionNewsComments; }
+    public TransferActionProductHTML getTransferActionProductHTML() { return mTransferActionProductHTML; }
+    public TransferActionProductsCategories getTransferActionProductsCategories() { return mTransferActionProductsCategories; }
+    public TransferActionProductsProduct getTransferActionProductsProduct() { return mTransferActionProductsProduct; }
+    public TransferActionShortNews getTransferActionShortNews() { return mTransferActionShortNews; }
+    public TransferActionStatusBarPush getTransferActionStatusBarPush() { return mTransferActionStatusBarPush; }
+    public TransferActionTileMenu getTransferActionTileMenu() { return mTransferActionTileMenu; }
+
+    public void setTransferActionBrandCategories(CharSequence name) {
+        // Init Transfer App Account DB Class
+        if (mTransferActionBrandCategories == null) {
+            this.mTransferActionBrandCategories = new TransferActionBrandCategories(name);
+        }
+    }
+
+    public void setTransferActionEducationModulesMaterial(CharSequence name) {
+        // Init Transfer App Account DB Class
+        if (mTransferActionEducationModulesMaterial == null) {
+            this.mTransferActionEducationModulesMaterial = new TransferActionEducationModulesMaterial(name);
+        }
+    }
+
+    public void setTransferActionEducationProductModule(CharSequence name) {
+        // Init Transfer App Account DB Class
+        if (mTransferActionEducationProductModule == null) {
+            this.mTransferActionEducationProductModule = new TransferActionEducationProductModule(name);
+        }
+    }
+
+    public void setTransferActionEducationProducts(CharSequence name) {
+        // Init Transfer App Account DB Class
+        if (mTransferActionEducationProducts == null) {
+            this.mTransferActionEducationProducts = new TransferActionEducationProducts(name);
+        }
+    }
+
+    public void setTransferActionEventCalendar(CharSequence name) {
+        // Init Transfer App Account DB Class
+        if (mTransferActionEventCalendar == null) {
+            this.mTransferActionEventCalendar = new TransferActionEventCalendar(name);
+        }
+    }
+
+    public void setTransferActionFullNews(CharSequence name) {
+        // Init Transfer App Account DB Class
+        if (mTransferActionFullNews == null) {
+            this.mTransferActionFullNews = new TransferActionFullNews(name);
+        }
+    }
+
+    public void setTransferActionIsShortNewsRead(CharSequence name) {
+        // Init Transfer App Account DB Class
+        if (mTransferActionIsShortNewsRead == null) {
+            this.mTransferActionIsShortNewsRead = new TransferActionIsShortNewsRead(name);
+        }
+    }
+
+    public void setTransferActionMailContact(CharSequence name) {
+        // Init Transfer App Account DB Class
+        if (mTransferActionMailContact == null) {
+            this.mTransferActionMailContact = new TransferActionMailContact(name);
+        }
+    }
+
+    public void setTransferActionNewsComments(CharSequence name) {
+        // Init Transfer App Account DB Class
+        if (mTransferActionNewsComments == null) {
+            this.mTransferActionNewsComments = new TransferActionNewsComments(name);
+        }
+    }
+
+    public void setTransferActionProductHTML(CharSequence name) {
+        // Init Transfer App Account DB Class
+        if (mTransferActionProductHTML == null) {
+            this.mTransferActionProductHTML = new TransferActionProductHTML(name);
+        }
+    }
+
+    public void setTransferActionProductsCategories(CharSequence name) {
+        // Init Transfer App Account DB Class
+        if (mTransferActionProductsCategories == null) {
+            this.mTransferActionProductsCategories = new TransferActionProductsCategories(name);
+        }
+    }
+
+    public void setTransferActionProductsProduct(CharSequence name) {
+        // Init Transfer App Account DB Class
+        if (mTransferActionProductsProduct == null) {
+            this.mTransferActionProductsProduct = new TransferActionProductsProduct(name);
+        }
+    }
+
+    public void setTransferActionShortNews(CharSequence name) {
+        // Init Transfer App Account DB Class
+        if (mTransferActionShortNews == null) {
+            this.mTransferActionShortNews = new TransferActionShortNews(name);
+        }
+    }
+
+    public void setTransferActionStatusBarPush(CharSequence name) {
+        // Init Transfer App Account DB Class
+        if (mTransferActionStatusBarPush == null) {
+            this.mTransferActionStatusBarPush = new TransferActionStatusBarPush(name);
+        }
+    }
+
+    public void setTransferActionTileMenu(CharSequence name) {
+        // Init Transfer App Account DB Class
+        if (mTransferActionTileMenu == null) {
+            this.mTransferActionTileMenu = new TransferActionTileMenu(name);
+        }
+    }
+
+    public boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
